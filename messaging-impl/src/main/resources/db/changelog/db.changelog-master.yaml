@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: mhafizov
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/create_message_table.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
+#  - changeSet:
+#      id: 2
+#      author: mhafizov
+#      changes:
+#        - sqlFile:
+#            encoding: utf8
+#            path: sql/create_message_log_table.sql
+#            relativeToChangelogFile: true
+#            splitStatements: true
+#            stripComments: true

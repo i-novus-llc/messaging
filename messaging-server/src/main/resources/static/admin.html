@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>I-Novus Messaging Admin Console</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+<div id="main-content" class="container">
+    <div id="messages"></div>
+    <form class="">
+        <div class="form-group row">
+            <label for="user" class="col-sm-5 col-form-label">User</label>
+            <div class="col-sm-10">
+                <input type="text" id="user" autocomplete="off"
+                       class="form-control" placeholder="User name or empty (for all)">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="caption" class="col-sm-5 col-form-label">Caption</label>
+            <div class="col-sm-10">
+                <input type="text" id="caption" autocomplete="off"
+                       class="form-control" placeholder="Enter caption">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="caption" class="col-sm-5 col-form-label">Alert type</label>
+            <div class="col-sm-10">
+                <select id="alertType">
+                    <option value="BLOCKER">BLOCKER</option>
+                    <option value="POPUP">POPUP</option>
+                    <option value="HIDDEN">HIDDEN</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="message" class="col-sm-5 col-form-label">Message</label>
+            <div class="col-sm-10">
+                    <textarea placeholder="Enter message..." autocomplete="off" id="message"
+                              onkeyup="messageChange(this)" class="form-control"></textarea>
+            </div>
+        </div>
+        <button id="send" class="btn btn-default" type="button" onclick="sendMessage()" disabled>Send</button>
+    </form>
+</div>
+<script src="/webjars/jquery/jquery.min.js"></script>
+<script src="/webjars/momentjs/min/moment.min.js"></script>
+<script>
+    var inpUser   = document.getElementById('user')
+      , taMessage = document.getElementById('message')
+      , btnSend   = document.getElementById('send');
+
+    function messageChange(el) {
+        if (el.value) {
+            btnSend.removeAttribute('disabled');
+        } else {
+            btnSend.setAttribute('disabled', '');
+        }
+    }
+
+    function showAlert(message) {
+        var m = document.getElementById('messages');
+        m.innerHTML = '<div class="alert alert-success">' + message + '</div>';
+        setTimeout(() => m.innerHTML='', 3000);
+    }
+
+    function sendMessage() {
+        var user = inpUser.value;
+        $.ajax({
+            type: 'POST',
+            url: '/messages',
+            headers: {},
+            contentType: 'application/json; charset=utf8',
+            data: JSON.stringify({ message:    { text   :   taMessage.value
+                                               , caption:   document.getElementById('caption').value
+                                               , alertType: document.getElementById('alertType').value
+                                               , severity:  'WARNING'
+                                               , id : new Date().getTime()
+                                               , sentAt:     moment.utc().format('YYYY-MM-DDTHH:mm:ss.SSS') }
+                                 , recipients: [{ user: user ? user : null
+                                                , recipientType: user ? 'USER' : 'ALL' }]}),
+            success: (data) => showAlert('Message sent')
+            });
+    }
+</script>
+</body>
+</html>

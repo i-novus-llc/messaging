@@ -1,0 +1,15 @@
+{
+  "modules": {
+    "Messaging": {
+      "src": "novus/messaging/messaging",
+      "notWaitReady": true,
+      "options" : {
+        "address" : {"ws"   : "${messaging.system.ws.url}",
+                     "rest" : "${messaging.system.rest.url}"}
+      }
+    }
+  },
+  "formattingFunctions": {
+    "custom": "novus/messaging/formatting.date"
+  }
+}

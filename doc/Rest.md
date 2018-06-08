@@ -1,0 +1,21 @@
+# RESTful API
+- Подтверждение прочтения: 
+```
+POST /messages/{messageId}/read
+```
+- Список сообщений
+```
+GET /messages?user=1
+```
+- Получение сообщения по идентификатору
+```
+GET /messages/123
+```
+- Отправка сообщений: 
+```json
+POST /messages
+
+{"caption":"Заголовок", "text":"Содержимое",
+"severity":"ERROR", "alertType":"BLOCKER", "sentAt":"2018-07-02T12:16:37",
+"recipients": [{"recipientType":"USER", "user":"1"}]}
+```

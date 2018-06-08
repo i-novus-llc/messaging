@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>I-Novus Messaging</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+<div id="main-content" class="container">
+
+    <div class="row">
+        <div class="col-md-6">
+            <form class="form-inline" action="">
+                <div class="form-group">
+                    <label for="connect">WebSocket connection:</label>
+                    <button id="connect" class="btn btn-default" type="button">
+                        Connect
+                    </button>
+                    <button id="disconnect" class="btn btn-default" type="button" disabled>
+                        Disconnect
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="name">What is your name?</label>
+                    <input onkeyup="nameChange(this)" type="text" id="name" autocomplete="off"
+                           class="form-control" placeholder="Your name here..." value="foo">
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table id="conversation" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Messages</th>
+                </tr>
+                </thead>
+                <tbody id="messages">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</div>
+<script src="/webjars/jquery/jquery.min.js"></script>
+<script>
+    var ws = null;
+
+    var btnConn      = document.getElementById('connect')
+      , btnDisconn   = document.getElementById('disconnect')
+      , inpName      = document.getElementById('name')
+      , connected    = false;
+
+    function setConnected(val) {
+        connected = val;
+        if (connected) {
+            btnConn.setAttribute('disabled', '');
+            btnDisconn.removeAttribute('disabled');
+        } else {
+            btnDisconn.setAttribute('disabled', '');
+            if (inpName.value) {
+                btnConn.removeAttribute('disabled');
+            }
+        }
+    }
+
+    function nameChange(el) {
+        if (el.value && !connected) {
+            btnConn.removeAttribute('disabled');
+        }
+        if (!el.value && !connected) {
+            btnConn.setAttribute('disabled', '');
+        }
+    }
+
+    function connect() {
+        ws = new WebSocket('ws://localhost:8080/ws');
+        var name = document.getElementById('name').value
+        var headers = {};
+        headers[csrf.headerName] = csrf.token;
+        headers['X-Auth-Token'] = name;
+        ws.onopen = () => {
+            setConnected(true);
+            ws.send(JSON.stringify({'headers': headers, 'type': 'CONNECT'}));
+        }
+        ws.onmessage = (message) => {
+            showMessage(JSON.parse(message.data).content);
+        }
+    }
+
+    function disconnect() {
+        if (ws !== null) {
+            ws.close();
+        }
+        setConnected(false);
+        console.log("Disconnected");
+    }
+
+    function showMessage(message) {
+        //alert('Got message: ' + message);
+        var tb = document.getElementById('messages');
+        var tr = document.createElement('tr');
+        var td = document.createElement('td');
+        td.textContent = message;
+        tr.append(td);
+        tb.append(tr);
+    }
+
+    btnConn.onclick = connect;
+    btnDisconn.onclick = disconnect;
+</script>
+</body>
+</html>

@@ -1,0 +1,281 @@
+<div class="popup-message-miniicons" >
+    {#boxes}
+        <div class="popup-message-miniicons__iconbox" data-boxid="{@idx}{.}{/idx}" data-messageid="{id}"  style="background-color:
+    {@select key=level}
+        {@eq value=1}#3276B1{/eq}
+        {@eq value=2}#C79121{/eq}
+        {@eq value=3}#C46A69{/eq}
+    {/select};">
+            <div class="popup-message-miniicons__icon">
+                {@select key=level}
+                    {@eq value=1}<i class="glyphicons glyphicons-ok popup-message-box__icon--swing"></i>{/eq}
+                    {@eq value=2}<i class="glyphicons glyphicons-warning-sign popup-message-box__icon--swing"></i>{/eq}
+                    {@eq value=3}<i class="glyphicons glyphicons-alert popup-message-box__icon--swing"></i>{/eq}
+                {/select}
+            </div>
+        </div>
+    {/boxes}
+</div>
+<div class="popup-message-boxes">
+    {#boxes}
+    <div class="popup-message-box" data-boxid="{@idx}{.}{/idx}" style="background-color:
+    {@select key=level}
+        {@eq value=1}#3276B1{/eq}
+        {@eq value=2}#C79121{/eq}
+        {@eq value=3}#C46A69{/eq}
+    {/select};">
+        <div class="popup-message-box__container">
+            <i class="popup-message__button--close glyphicons glyphicons-remove" data-boxid="{@idx}{.}{/idx}" data-messageid="{id}"></i>
+            <span class="popup-message-box__caption">{caption}</span>
+            <p class="popup-message-box__text">{text|s}</p>
+            <div class="popup-message-box__icon">
+                {@select key=level}
+                    {@eq value=1}<i class="glyphicons glyphicons-ok popup-message-box__icon--swing"></i>{/eq}
+                    {@eq value=2}<i class="glyphicons glyphicons-warning-sign popup-message-box__icon--swing"></i>{/eq}
+                    {@eq value=3}<i class="glyphicons glyphicons-alert popup-message-box__icon--swing"></i>{/eq}
+                {/select}
+            </div>
+            <!--<span class="popup-message-box__number">{@idx}{.}{/idx}, msgLogId: {msgLogId}</span>-->
+        </div>
+    </div>
+    {/boxes}
+</div>
+
+
+<style type="text/css">
+
+.popup-message-miniicons__iconbox--active {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.popup-message-box__number {
+    font-size: 10px;
+    text-align: left;
+    position: absolute;
+    top: 132px;
+    right: 10px;
+    z-index: 0;
+}
+
+.popup-message-miniicons {
+    position: fixed;
+    width: 415px;
+    right: 10px;
+    bottom: 180px;
+    z-index: 9999;
+    float: right;
+}
+
+.popup-message-miniicons__iconbox {
+    text-align: center;
+    vertical-align: middle;
+    padding: 4px 6px;
+    color: #FFF;
+    float: right;
+    cursor: pointer;
+    display: block;
+    /*background-color: #3276B1;*/
+    font-size: 17px;
+    margin-left: 4px;
+    margin-top: 5px;
+}
+
+.popup-message-box__icon--swing {
+    -webkit-transform-origin: top center;
+    -moz-transform-origin: top center;
+    -o-transform-origin: top center;
+    transform-origin: top center;
+    -webkit-animation-name: swing;
+    -moz-animation-name: swing;
+    -o-animation-name: swing;
+    animation-name: swing;
+    -webkit-animation-duration: 1s;
+    -moz-animation-duration: 1s;
+    -o-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    -moz-animation-fill-mode: both;
+    -o-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+.popup-message-box__icon {
+    font-size: 30px;
+    text-align: left;
+    position: absolute;
+    top: 120px;
+    left: 6px;
+    z-index: 0;
+}
+
+.popup-message-box__text {
+    font-size: 13px;
+    margin-top: 10px;
+    max-height: 60px;
+    overflow: auto;
+}
+
+.popup-message-box {
+    background-color: rgb(50, 118, 177);
+    /*				z-index: 9999;*/
+    animation: fadeIn .5s;
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+    /*				background-color: #004d60;*/
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    width: 390px;
+    height: 150px;
+    color: #fff;
+    z-index: 9999;
+    box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    border-left: 5px solid rgba(0, 0, 0, .15);
+    overflow: hidden;
+}
+
+.popup-message-box__container {
+    animation: fadeIn .5s;
+}
+
+.popup-message-box__caption {
+    font-size: 17px;
+    font-weight: 300;
+    letter-spacing: -1px;
+    padding: 5px 0 !important;
+    display: block;
+}
+
+.popup-message__button--close {
+    position: absolute;
+    right: 10px;
+    height: 16px;
+    width: 15px;
+    cursor: pointer;
+    font-size: 18px;
+    opacity: .5;
+    display: block;
+    top: 15px;
+}
+
+@-webkit-keyframes fadeIn {
+    0% {
+        opacity: 0
+    }
+    100% {
+        opacity: 1
+    }
+}
+
+@-moz-keyframes fadeIn {
+    0% {
+        opacity: 0
+    }
+    100% {
+        opacity: 1
+    }
+}
+
+@-o-keyframes fadeIn {
+    0% {
+        opacity: 0
+    }
+    100% {
+        opacity: 1
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0
+    }
+    100% {
+        opacity: 1
+    }
+}
+
+@-webkit-keyframes swing {
+    100%,
+    20%,
+    40%,
+    60%,
+    80% {
+        -webkit-transform-origin: top center
+    }
+    20% {
+        -webkit-transform: rotate(15deg)
+    }
+    40% {
+        -webkit-transform: rotate(-10deg)
+    }
+    60% {
+        -webkit-transform: rotate(5deg)
+    }
+    80% {
+        -webkit-transform: rotate(-5deg)
+    }
+    100% {
+        -webkit-transform: rotate(0deg)
+    }
+}
+
+@-moz-keyframes swing {
+    20% {
+        -moz-transform: rotate(15deg)
+    }
+    40% {
+        -moz-transform: rotate(-10deg)
+    }
+    60% {
+        -moz-transform: rotate(5deg)
+    }
+    80% {
+        -moz-transform: rotate(-5deg)
+    }
+    100% {
+        -moz-transform: rotate(0deg)
+    }
+}
+
+@-o-keyframes swing {
+    20% {
+        -o-transform: rotate(15deg)
+    }
+    40% {
+        -o-transform: rotate(-10deg)
+    }
+    60% {
+        -o-transform: rotate(5deg)
+    }
+    80% {
+        -o-transform: rotate(-5deg)
+    }
+    100% {
+        -o-transform: rotate(0deg)
+    }
+}
+
+@keyframes swing {
+    20% {
+        transform: rotate(15deg)
+    }
+    40% {
+        transform: rotate(-10deg)
+    }
+    60% {
+        transform: rotate(5deg)
+    }
+    80% {
+        transform: rotate(-5deg)
+    }
+    100% {
+        transform: rotate(0deg)
+    }
+}
+
+</style>
