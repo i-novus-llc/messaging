@@ -11,7 +11,7 @@ GET /messages?user=1
 ```
 GET /messages/123
 ```
-- Отправка сообщений: 
+- Отправка сообщений
 ```
 POST /messages
 
