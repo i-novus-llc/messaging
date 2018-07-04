@@ -18,7 +18,7 @@ Endpoint: `/ws`
 ### Пометить сообщение прочитанным
 ```json
 { "type" : "READ", "message" : {"id" : "message-id" }, 
-headers" : {"X-Auth-Token" : "user-id"} }
+  headers" : {"X-Auth-Token" : "user-id"} }
 ```
 
 ## Сообщения
