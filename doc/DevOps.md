@@ -9,7 +9,7 @@ bin/kafka-server-start.sh config/server.properties
 1. Качаем `messaging-server-$VERSION.jar` c [сервера CI](https://ci.i-novus.ru/job/messaging/lastSuccessfulBuild/ru.i-novus.messaging$messaging-server/)
 2. Создаём файл `application.yaml`
 3. Указываем настройки соединения с БД
-```yaml
+```
 spring.datasource:
   url: jdbc:postgresql://localhost/messaging
   username: postgres
@@ -17,7 +17,7 @@ spring.datasource:
   driver-class-name: org.postgresql.Driver
 ```
 4. Указываем настройки kafka
-```yaml
+```
 spring.kafka.bootstrap-servers: localhost:9092
 ```
 5. `java -jar messaging-server-$VERSION.jar`
