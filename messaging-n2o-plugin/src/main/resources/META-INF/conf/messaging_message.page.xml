@@ -10,7 +10,8 @@
     <regions>
         <region place="single" type="tabs">
             <container id="main">
-                <wgt:form>
+                <wgt:form customize="js" css-class="messaging-message-form"
+                          src="novus/messaging/message.form">
                     <wgt:query-id>messaging_message</wgt:query-id>
                     <fs:field-set field-label-align="left" type="none">
                         <fs:row>
