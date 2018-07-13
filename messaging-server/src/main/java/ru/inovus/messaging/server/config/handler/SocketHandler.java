@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.jooq.DSLContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
@@ -32,6 +33,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class SocketHandler extends TextWebSocketHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(SocketHandler.class);
 
     private ObjectMapper mapper = new ObjectMapper();
     private Map<String, MessageListenerContainer> containers = new ConcurrentHashMap<>();
@@ -70,7 +73,10 @@ public class SocketHandler extends TextWebSocketHandler {
     private void handleEvent(WebSocketSession session, SocketEvent socketEvent) {
         String authToken = socketEvent.getHeaders().get(authHeaderName);
         if (SocketEventType.READ.equals(socketEvent.getType())) {
-            messageService.markRead(socketEvent.getMessage().getId());
+            if (socketEvent.getMessage() != null)
+                messageService.markRead(socketEvent.getMessage().getId());
+            else
+                messageService.markReadAll(authToken);
         }
         UnreadMessagesInfo unreadMessages = messageService.getUnreadMessages(authToken);
         sendMessage(session, unreadMessages);
@@ -102,12 +108,15 @@ public class SocketHandler extends TextWebSocketHandler {
         return consumerConfigs;
     }
 
-    private boolean isMessagePass(MessageOutbox msg, String recipient) {
+    private boolean isNotExpired(MessageOutbox msg) {
+        //todo
+        return true; //msg.getMessage().getSentAt() == null ||
+//                !msg.getMessage().getSentAt().plus(timeout, ChronoUnit.SECONDS)
+//                        .isBefore(LocalDateTime.now(Clock.systemUTC()));
+    }
+
+    private boolean checkRecipient(MessageOutbox msg, String recipient) {
         if (msg == null || msg.getRecipients() == null || msg.getRecipients().isEmpty())
-            return false;
-        if (msg.getMessage().getSentAt() != null &&
-                msg.getMessage().getSentAt().plus(timeout, ChronoUnit.SECONDS)
-                        .isBefore(LocalDateTime.now(Clock.systemUTC())))
             return false;
         for (Recipient r : msg.getRecipients()) {
             if (r.getRecipientType() == RecipientType.ALL)
@@ -127,11 +136,18 @@ public class SocketHandler extends TextWebSocketHandler {
     }
 
     private void sendTo(WebSocketSession user, MessageOutbox msg, String recipient) {
-        Message message = messageService.createMessage(msg.getMessage(), recipient);
-        UnreadMessagesInfo unreadMessages = messageService.getUnreadMessages(recipient);
-        sendMessage(user, unreadMessages);
-        if (isMessagePass(msg, recipient)) {
-            sendMessage(user, message);
+        if (checkRecipient(msg, recipient)) {
+            Message message = messageService.createMessage(msg.getMessage(), recipient);
+            UnreadMessagesInfo unreadMessages = messageService.getUnreadMessages(recipient);
+            sendMessage(user, unreadMessages);
+            if (isNotExpired(msg)) {
+                sendMessage(user, message);
+            } else if (logger.isDebugEnabled()) {
+                logger.debug("Did not send message with id {} due to expiration {}",
+                        message.getId(), message.getSentAt());
+            }
+        } else if (logger.isDebugEnabled()) {
+            logger.debug("No recipients for message");
         }
     }
 

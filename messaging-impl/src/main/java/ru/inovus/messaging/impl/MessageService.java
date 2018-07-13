@@ -1,7 +1,6 @@
 package ru.inovus.messaging.impl;
 
 import org.jooq.*;
-import org.jooq.impl.DSL;
 import org.springframework.stereotype.Service;
 import ru.inovus.messaging.api.Message;
 import ru.inovus.messaging.api.UnreadMessagesInfo;
@@ -29,14 +28,14 @@ public class MessageService {
         message.setSentAt(record.getSentAt());
         return message;
     };
-    private final DSLContext dslContext;
+    private final DSLContext dsl;
 
-    public MessageService(DSLContext dslContext) {
-        this.dslContext = dslContext;
+    public MessageService(DSLContext dsl) {
+        this.dsl = dsl;
     }
 
     public Message createMessage(Message message, String recipient) {
-        InsertResultStep<MessageRecord> returning = dslContext
+        InsertResultStep<MessageRecord> returning = dsl
                 .insertInto(Tables.MESSAGE)
                 .values(MESSAGE_ID_SEQ.nextval(), message.getCaption(), message.getText(),
                         message.getSeverity(), message.getAlertType(), message.getSentAt(),
@@ -47,7 +46,7 @@ public class MessageService {
     }
 
     public UnreadMessagesInfo getUnreadMessages(String recipient) {
-        Integer count = dslContext
+        Integer count = dsl
                 .selectCount()
                 .from(Tables.MESSAGE)
                 .where(Tables.MESSAGE.READ_AT.isNull(), Tables.MESSAGE.RECIPIENT.eq(recipient))
@@ -56,17 +55,27 @@ public class MessageService {
     }
 
     public void markRead(String messageId) {
-        dslContext.update(Tables.MESSAGE)
+        dsl
+                .update(Tables.MESSAGE)
                 .set(Tables.MESSAGE.READ_AT, LocalDateTime.now(Clock.systemUTC()))
                 .where(Tables.MESSAGE.ID.eq(Integer.valueOf(messageId)))
                 .execute();
     }
 
+    public void markReadAll(String recipient) {
+        dsl
+                .update(Tables.MESSAGE)
+                .set(Tables.MESSAGE.READ_AT, LocalDateTime.now(Clock.systemUTC()))
+                .where(Tables.MESSAGE.RECIPIENT.eq(recipient))
+                .execute();
+    }
+
     public MessagingResponse getMessages(MessagingCriteria criteria) {
         Condition condition = Tables.MESSAGE.RECIPIENT.eq(criteria.getUser());
-        SelectConditionStep<MessageRecord> query = dslContext.selectFrom(Tables.MESSAGE)
+        SelectConditionStep<MessageRecord> query = dsl
+                .selectFrom(Tables.MESSAGE)
                 .where(condition);
-        int count = dslContext.fetchCount(query);
+        int count = dsl.fetchCount(query);
         List<Message> collection = query
                 .orderBy(Tables.MESSAGE.SENT_AT.desc())
                 .limit(criteria.getSize())
@@ -76,7 +85,8 @@ public class MessageService {
     }
 
     public Message getMessage(String messageId) {
-        return dslContext.selectFrom(Tables.MESSAGE)
+        return dsl
+                .selectFrom(Tables.MESSAGE)
                 .where(Tables.MESSAGE.ID.cast(String.class).eq(messageId))
                 .fetchOne(MAPPER);
     }

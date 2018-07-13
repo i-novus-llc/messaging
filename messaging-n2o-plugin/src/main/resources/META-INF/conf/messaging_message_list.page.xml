@@ -37,22 +37,28 @@
                         </wgt:column>
                     </wgt:columns>
                     <wgt:action-menu>
-                        <wgt:menu-item id="view" label="Просмотр" context="true" default="true">
+                        <wgt:menu-item id="view" label="Просмотр" context="true" default="true"
+                                       refresh-policy="all">
                             <wgt:event>
-                                <wgt:custom src="novus/messaging/show.messages.page"/>
+                                <!--<wgt:custom src="novus/messaging/show.messages.page"/>-->
+                                <wgt:open-page page-id="messaging_message" refresh-on-close="true"/>
                             </wgt:event>
                         </wgt:menu-item>
 
-                        <!--<wgt:menu-item id="read" label="Пометить прочтенным" context="true">
+                        <wgt:menu-item id="read" label="Пометить все прочтенным" context="false">
                             <wgt:event>
-                                <wgt:custom src="novus/messaging/mark.read.state"/>
+                                <wgt:custom src="novus/messaging/mark.read.state">
+                                    <wgt:properties>
+                                        <wgt:property key="all" value="true"/>
+                                    </wgt:properties>
+                                </wgt:custom>
                             </wgt:event>
-                            <wgt:conditions>
+                            <!--<wgt:conditions>
                                 <wgt:visibility-condition>
                                     <wgt:expression>unread</wgt:expression>
                                 </wgt:visibility-condition>
-                            </wgt:conditions>
-                        </wgt:menu-item>-->
+                            </wgt:conditions>-->
+                        </wgt:menu-item>
 
                     </wgt:action-menu>
                 </wgt:table>

@@ -177,9 +177,9 @@
       },
       confirmAllFullscreenMessages: function() {
         this.idsToConfirm.forEach((function(_this) {
-          return function(messageid) {
-            _this.confirmReading(messageid);
-            return _this.idsToConfirm.splice(_this.idsToConfirm.indexOf(messageid + ''), 1);
+          return function(messageId) {
+            _this.confirmReading(messageId);
+            return _this.idsToConfirm.splice(_this.idsToConfirm.indexOf(messageId + ''), 1);
           };
         })(this));
         this.$el.find('#' + this.fullScreenElementId).html('');
@@ -196,8 +196,8 @@
       },
       confirmReading: function(messageId) {
         this.getUserId().done(function(result) {
-            this.ws.send(JSON.stringify({ type: 'READ'
-                                        , message: { id : messageId }
+            this.ws.send(JSON.stringify({ type:    'READ'
+                                        , message: messageId ? { id : messageId } : null
                                         , headers: {'X-Auth-Token': result['user.id']} }));
         }.bind(this));
       },

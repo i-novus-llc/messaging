@@ -20,6 +20,18 @@
                             <ctrl:text-area id="text" label="Текст"/>
                         </fs:row>
                     </fs:field-set>
+                    <wgt:action-menu>
+                        <wgt:menu-item id="read" label="Пометить прочтенным">
+                            <wgt:event>
+                                <wgt:custom src="novus/messaging/mark.read.state"/>
+                            </wgt:event>
+                            <wgt:conditions>
+                                <wgt:visibility-condition>
+                                    <wgt:expression>!readAt</wgt:expression>
+                                </wgt:visibility-condition>
+                            </wgt:conditions>
+                        </wgt:menu-item>
+                    </wgt:action-menu>
                 </wgt:form>
             </container>
         </region>

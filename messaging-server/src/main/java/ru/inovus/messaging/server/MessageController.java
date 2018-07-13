@@ -13,6 +13,8 @@ import ru.inovus.messaging.impl.MessageService;
 import ru.inovus.messaging.impl.rest.MessagingCriteria;
 import ru.inovus.messaging.impl.rest.MessagingResponse;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -43,8 +45,10 @@ public class MessageController {
 
     @PostMapping
     @ResponseBody
-    public ResponseEntity<ActionStatus> notify(final @RequestBody MessageOutbox message) {
-        kafkaTemplate.send(topic, message.getMessage().getId(), message);
+    public ResponseEntity<ActionStatus> sendMessage(final @RequestBody MessageOutbox message) {
+        if (message.getMessage().getSentAt() == null)
+            message.getMessage().setSentAt(LocalDateTime.now(Clock.systemUTC()));
+        kafkaTemplate.send(topic, String.valueOf(System.currentTimeMillis()), message);
         return new ResponseEntity<>(new ActionStatus("Sent successfully"), HttpStatus.OK);
     }
 
