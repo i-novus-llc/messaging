@@ -9,8 +9,10 @@ import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 import ru.inovus.messaging.api.*;
 
+import java.nio.charset.Charset;
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class MessagingClient {
@@ -28,7 +30,8 @@ public class MessagingClient {
         try {
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
+            MediaType mediaType = new MediaType("application", "json", Charset.forName("UTF-8"));
+            headers.setContentType(mediaType);
 
             if (message.getMessage().getSentAt() == null)
                 message.getMessage().setSentAt(LocalDateTime.now(Clock.systemUTC()));
@@ -43,8 +46,8 @@ public class MessagingClient {
         MessageOutbox messageOutbox = new MessageOutbox();
         Message message = new Message();
         message.setSentAt(LocalDateTime.now(Clock.systemUTC()));
-        message.setCaption("test");
-        message.setText("hello");
+        message.setCaption("хай");
+        message.setText("привет");
         message.setAlertType(AlertType.POPUP);
         message.setSeverity(Severity.WARNING);
         messageOutbox.setMessage(message);
