@@ -2,15 +2,15 @@
     {#boxes}
         <div class="popup-message-miniicons__iconbox" data-boxid="{@idx}{.}{/idx}" data-messageid="{id}"  style="background-color:
     {@select key=severity}
-        {@eq value=INFO}#3276B1{/eq}
-        {@eq value=WARNING}#C79121{/eq}
-        {@eq value=ERROR}#C46A69{/eq}
+        {@eq value="INFO"}#3276B1{/eq}
+        {@eq value="WARNING"}#C79121{/eq}
+        {@eq value="ERROR"}#C46A69{/eq}
     {/select};">
             <div class="popup-message-miniicons__icon">
                 {@select key=severity}
-                    {@eq value=INFO}<i class="glyphicons glyphicons-ok popup-message-box__icon--swing"></i>{/eq}
-                    {@eq value=WARNING}<i class="glyphicons glyphicons-warning-sign popup-message-box__icon--swing"></i>{/eq}
-                    {@eq value=ERROR}<i class="glyphicons glyphicons-alert popup-message-box__icon--swing"></i>{/eq}
+                    {@eq value="INFO"}<i class="glyphicons glyphicons-ok popup-message-box__icon--swing"></i>{/eq}
+                    {@eq value="WARNING"}<i class="glyphicons glyphicons-warning-sign popup-message-box__icon--swing"></i>{/eq}
+                    {@eq value="ERROR"}<i class="glyphicons glyphicons-alert popup-message-box__icon--swing"></i>{/eq}
                 {/select}
             </div>
         </div>
@@ -20,9 +20,9 @@
     {#boxes}
     <div class="popup-message-box" data-boxid="{@idx}{.}{/idx}" style="background-color:
     {@select key=severity}
-        {@eq value=INFO}#3276B1{/eq}
-        {@eq value=WARNING}#C79121{/eq}
-        {@eq value=ERROR}#C46A69{/eq}
+        {@eq value="INFO"}#3276B1{/eq}
+        {@eq value="WARNING"}#C79121{/eq}
+        {@eq value="ERROR"}#C46A69{/eq}
     {/select};">
         <div class="popup-message-box__container">
             <i class="popup-message__button--close glyphicons glyphicons-remove" data-boxid="{@idx}{.}{/idx}" data-messageid="{id}"></i>
@@ -30,9 +30,9 @@
             <p class="popup-message-box__text">{text|s}</p>
             <div class="popup-message-box__icon">
                 {@select key=severity}
-                    {@eq value=INFO}<i class="glyphicons glyphicons-ok popup-message-box__icon--swing"></i>{/eq}
-                    {@eq value=WARNING}<i class="glyphicons glyphicons-warning-sign popup-message-box__icon--swing"></i>{/eq}
-                    {@eq value=ERROR}<i class="glyphicons glyphicons-alert popup-message-box__icon--swing"></i>{/eq}
+                    {@eq value="INFO"}<i class="glyphicons glyphicons-ok popup-message-box__icon--swing"></i>{/eq}
+                    {@eq value="WARNING"}<i class="glyphicons glyphicons-warning-sign popup-message-box__icon--swing"></i>{/eq}
+                    {@eq value="ERROR"}<i class="glyphicons glyphicons-alert popup-message-box__icon--swing"></i>{/eq}
                 {/select}
             </div>
             <!--<span class="popup-message-box__number">{@idx}{.}{/idx}, msgLogId: {msgLogId}</span>-->
