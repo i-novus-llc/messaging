@@ -5,7 +5,8 @@
       "notWaitReady": true,
       "options" : {
         "address" : {"ws"   : "${messaging.system.ws.url}",
-                     "rest" : "${messaging.system.rest.url}"}
+                     "rest" : "${messaging.system.rest.url}"},
+        "enabled" : ${messaging.system.notifications.enabled}
       }
     }
   },

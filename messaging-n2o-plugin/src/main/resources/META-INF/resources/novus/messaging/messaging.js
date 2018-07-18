@@ -41,18 +41,20 @@
         }
       },
       initialize: function(target, view) {
-        this.WS_URL = this.options.address.ws + '/ws';
-        this.REST_URL = this.options.address.rest;
-        this.render();
-        this.clearLocalStorageVars();
-        this.setStorageListeners();
-        window.application.once('initialized', (function(_this) {
-          return function() {
-            localStorage[_this.requestCountKey] = '';
-            localStorage[_this.requestCountKey] = 'true';
-            return _this.runChecker();
-          };
-        })(this));
+        if (this.options.enabled) {
+            this.WS_URL = this.options.address.ws + '/ws';
+            this.REST_URL = this.options.address.rest;
+            this.render();
+            this.clearLocalStorageVars();
+            this.setStorageListeners();
+            window.application.once('initialized', (function(_this) {
+              return function() {
+                localStorage[_this.requestCountKey] = '';
+                localStorage[_this.requestCountKey] = 'true';
+                return _this.runChecker();
+              };
+            })(this));
+        }
       },
       setStorageListeners: function() {
         window.addEventListener('storage', (function(_this) {
