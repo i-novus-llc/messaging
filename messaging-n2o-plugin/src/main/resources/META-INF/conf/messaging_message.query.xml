@@ -43,6 +43,13 @@
             </filters>
         </field>
         <field>
+            <id>systemId</id>
+            <domain>string</domain>
+            <filters>
+                <filter type="eq" filter-field="systemId" default-value="${mtr.region.okato}"/>
+            </filters>
+        </field>
+        <field>
             <id>readAt</id>
             <domain>string</domain>
             <display/>

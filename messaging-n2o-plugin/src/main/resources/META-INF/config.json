@@ -6,6 +6,7 @@
       "options" : {
         "address" : {"ws"   : "${messaging.system.ws.url}",
                      "rest" : "${messaging.system.rest.url}"},
+        "system"  : {"id"   : "${mtr.region.okato}"},
         "enabled" : ${messaging.system.notifications.enabled}
       }
     }

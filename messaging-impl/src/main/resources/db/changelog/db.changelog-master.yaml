@@ -9,13 +9,13 @@ databaseChangeLog:
             relativeToChangelogFile: true
             splitStatements: true
             stripComments: true
-#  - changeSet:
-#      id: 2
-#      author: mhafizov
-#      changes:
-#        - sqlFile:
-#            encoding: utf8
-#            path: sql/create_message_log_table.sql
-#            relativeToChangelogFile: true
-#            splitStatements: true
-#            stripComments: true
+  - changeSet:
+      id: 2
+      author: mhafizov
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/add_system_id_column.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true

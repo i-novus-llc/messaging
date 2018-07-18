@@ -34,22 +34,25 @@ public class MessageService {
         this.dsl = dsl;
     }
 
-    public Message createMessage(Message message, String recipient) {
+    public Message createMessage(Message message, String recipient, String systemId) {
         InsertResultStep<MessageRecord> returning = dsl
                 .insertInto(Tables.MESSAGE)
                 .values(MESSAGE_ID_SEQ.nextval(), message.getCaption(), message.getText(),
                         message.getSeverity(), message.getAlertType(), message.getSentAt(),
-                        null, recipient)
+                        null, recipient, systemId)
                 .returning();
         message.setId(String.valueOf(returning.fetch().get(0).getId()));
         return message;
     }
 
-    public UnreadMessagesInfo getUnreadMessages(String recipient) {
+    public UnreadMessagesInfo getUnreadMessages(String recipient, String systemId) {
         Integer count = dsl
                 .selectCount()
                 .from(Tables.MESSAGE)
-                .where(Tables.MESSAGE.READ_AT.isNull(), Tables.MESSAGE.RECIPIENT.eq(recipient))
+                .where(
+                        Tables.MESSAGE.READ_AT.isNull(),
+                        Tables.MESSAGE.RECIPIENT.eq(recipient),
+                        Tables.MESSAGE.SYSTEM_ID.eq(systemId))
                 .fetchOne().value1();
         return new UnreadMessagesInfo(count);
     }
@@ -62,16 +65,17 @@ public class MessageService {
                 .execute();
     }
 
-    public void markReadAll(String recipient) {
+    public void markReadAll(String recipient, String systemId) {
         dsl
                 .update(Tables.MESSAGE)
                 .set(Tables.MESSAGE.READ_AT, LocalDateTime.now(Clock.systemUTC()))
-                .where(Tables.MESSAGE.RECIPIENT.eq(recipient))
+                .where(Tables.MESSAGE.RECIPIENT.eq(recipient), Tables.MESSAGE.SYSTEM_ID.eq(systemId))
                 .execute();
     }
 
     public MessagingResponse getMessages(MessagingCriteria criteria) {
-        Condition condition = Tables.MESSAGE.RECIPIENT.eq(criteria.getUser());
+        Condition condition = Tables.MESSAGE.RECIPIENT.eq(criteria.getUser())
+                .and(Tables.MESSAGE.SYSTEM_ID.eq(criteria.getSystemId()));
         SelectConditionStep<MessageRecord> query = dsl
                 .selectFrom(Tables.MESSAGE)
                 .where(condition);
