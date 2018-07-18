@@ -41,19 +41,18 @@ public class SocketHandler extends TextWebSocketHandler {
     private final KafkaProperties properties;
     private final Long timeout;
     private final String topic;
-    private final String authHeaderName;
     private final MessageService messageService;
+    private static final String AUTH_TOKEN_HEADER = "X-Auth-Token";
+    private static final String SYSTEM_ID_HEADER = "X-System-Id";
 
     public SocketHandler(KafkaProperties properties,
                          @Value("${novus.messaging.timeout}") Long timeout,
                          @Value("${novus.messaging.topic}") String topic,
-                         @Value("${novus.messaging.auth-header-name}") String authHeaderName,
                          MessageService messageService) {
         mapper.registerModule(new JavaTimeModule());
         this.properties = properties;
         this.timeout = timeout;
         this.topic = topic;
-        this.authHeaderName = authHeaderName;
         this.messageService = messageService;
     }
 
@@ -71,19 +70,20 @@ public class SocketHandler extends TextWebSocketHandler {
     }
 
     private void handleEvent(WebSocketSession session, SocketEvent socketEvent) {
-        String authToken = socketEvent.getHeaders().get(authHeaderName);
+        String authToken = socketEvent.getHeaders().get(AUTH_TOKEN_HEADER);
+        String systemId = socketEvent.getHeaders().get(SYSTEM_ID_HEADER);
         if (SocketEventType.READ.equals(socketEvent.getType())) {
             if (socketEvent.getMessage() != null)
                 messageService.markRead(socketEvent.getMessage().getId());
             else
-                messageService.markReadAll(authToken);
+                messageService.markReadAll(authToken, systemId);
         }
-        UnreadMessagesInfo unreadMessages = messageService.getUnreadMessages(authToken);
+        UnreadMessagesInfo unreadMessages = messageService.getUnreadMessages(authToken, systemId);
         sendMessage(session, unreadMessages);
         if (SocketEventType.CONNECT.equals(socketEvent.getType())) {
             ContainerProperties containerProperties = new ContainerProperties(topic);
             containerProperties.setMessageListener((MessageListener<String, MessageOutbox>)
-                    data -> sendTo(session, data.value(), authToken));
+                    data -> sendTo(session, data.value(), authToken, systemId));
             Map<String, Object> consumerConfigs = getConsumerConfigs(authToken);
             containers.put(session.getId(), createContainer(consumerConfigs, containerProperties));
         }
@@ -115,13 +115,13 @@ public class SocketHandler extends TextWebSocketHandler {
 //                        .isBefore(LocalDateTime.now(Clock.systemUTC()));
     }
 
-    private boolean checkRecipient(MessageOutbox msg, String recipient) {
+    private boolean checkRecipient(MessageOutbox msg, String recipient, String systemId) {
         if (msg == null || msg.getRecipients() == null || msg.getRecipients().isEmpty())
             return false;
         for (Recipient r : msg.getRecipients()) {
             if (r.getRecipientType() == RecipientType.ALL)
                 return true;
-            if (r.getUser().equals(recipient))
+            if (r.getUser().equals(recipient) && r.getSystemId().equals(systemId))
                 return true;
         }
         return false;
@@ -135,10 +135,10 @@ public class SocketHandler extends TextWebSocketHandler {
         }
     }
 
-    private void sendTo(WebSocketSession user, MessageOutbox msg, String recipient) {
-        if (checkRecipient(msg, recipient)) {
-            Message message = messageService.createMessage(msg.getMessage(), recipient);
-            UnreadMessagesInfo unreadMessages = messageService.getUnreadMessages(recipient);
+    private void sendTo(WebSocketSession user, MessageOutbox msg, String recipient, String systemId) {
+        if (checkRecipient(msg, recipient, systemId)) {
+            Message message = messageService.createMessage(msg.getMessage(), recipient, systemId);
+            UnreadMessagesInfo unreadMessages = messageService.getUnreadMessages(recipient, systemId);
             sendMessage(user, unreadMessages);
             if (isNotExpired(msg)) {
                 sendMessage(user, message);

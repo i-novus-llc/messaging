@@ -46,7 +46,7 @@ import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Message extends TableImpl<MessageRecord> {
 
-    private static final long serialVersionUID = -1598607947;
+    private static final long serialVersionUID = 963969082;
 
     /**
      * The reference instance of <code>public.message</code>
@@ -102,6 +102,11 @@ public class Message extends TableImpl<MessageRecord> {
     public final TableField<MessageRecord, String> RECIPIENT = createField("recipient", org.jooq.impl.SQLDataType.VARCHAR, this, "Получатель");
 
     /**
+     * The column <code>public.message.system_id</code>. Идентификатор системы
+     */
+    public final TableField<MessageRecord, String> SYSTEM_ID = createField("system_id", org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Идентификатор системы");
+
+    /**
      * Create a <code>public.message</code> table reference
      */
     public Message() {
@@ -147,7 +152,7 @@ public class Message extends TableImpl<MessageRecord> {
      */
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.MESSAGE_PKEY);
+        return Arrays.<Index>asList(Indexes.IX_MESSAGE_RECIPIENT, Indexes.IX_MESSAGE_SYSTEM_ID, Indexes.MESSAGE_PKEY);
     }
 
     /**
