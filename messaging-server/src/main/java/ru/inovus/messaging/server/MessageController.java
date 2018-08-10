@@ -3,8 +3,6 @@ package ru.inovus.messaging.server;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.inovus.messaging.api.ActionStatus;
 import ru.inovus.messaging.api.Message;
@@ -12,24 +10,25 @@ import ru.inovus.messaging.api.MessageOutbox;
 import ru.inovus.messaging.impl.MessageService;
 import ru.inovus.messaging.impl.rest.MessagingCriteria;
 import ru.inovus.messaging.impl.rest.MessagingResponse;
+import ru.inovus.messaging.server.mq.MqProvider;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @RestController
 @RequestMapping("/messages")
 public class MessageController {
 
-    private final KafkaTemplate<String, MessageOutbox> kafkaTemplate;
-    private final String topic;
     private final MessageService messageService;
+    private final Long timeout;
+    private final MqProvider mqProvider;
 
-    public MessageController(KafkaTemplate<String, MessageOutbox> kafkaTemplate,
-                             @Value("${novus.messaging.topic}") String topic, MessageService messageService) {
-        this.kafkaTemplate = kafkaTemplate;
-        this.topic = topic;
+    public MessageController(MessageService messageService,
+                             @Value("${novus.messaging.timeout}") Long timeout,
+                             MqProvider mqProvider) {
         this.messageService = messageService;
+        this.timeout = timeout;
+        this.mqProvider = mqProvider;
     }
 
     @GetMapping
@@ -48,7 +47,7 @@ public class MessageController {
     public ResponseEntity<ActionStatus> sendMessage(final @RequestBody MessageOutbox message) {
         if (message.getMessage().getSentAt() == null)
             message.getMessage().setSentAt(LocalDateTime.now(Clock.systemUTC()));
-        kafkaTemplate.send(topic, String.valueOf(System.currentTimeMillis()), message);
+        mqProvider.publish(message);
         return new ResponseEntity<>(new ActionStatus("Sent successfully"), HttpStatus.OK);
     }
 
