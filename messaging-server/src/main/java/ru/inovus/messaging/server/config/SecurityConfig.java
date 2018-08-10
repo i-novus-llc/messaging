@@ -12,7 +12,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/admin.html")
+                .antMatchers("/admin.html", "/actuator/**")
                 .authenticated()
                 .anyRequest().permitAll();
         http.logout()

@@ -30,3 +30,8 @@ novus.messaging:
   timeout: 60
   topic: novus-messaging-notify
   auth-header-name: X-Auth-Token
+
+management:
+  context-path: /actuator
+  security:
+    roles: SUPERUSER
