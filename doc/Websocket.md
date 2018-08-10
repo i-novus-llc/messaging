@@ -4,23 +4,31 @@ Endpoint: `/ws`
 
 ### Соединение
 ```json
-{ "type" : "CONNECT", "headers" : { "X-Auth-Token" : "user-name-or-id"} }
+{ "type" : "CONNECT", "headers" : { "X-Auth-Token" : "user-name-or-id" 
+                                  , "X-System-Id" : "system-id" } }
 ```
+
+Хедер `X-System-Id` нужен для того, чтобы можно было использовать один и тот же сервис
+сообщений с разными системами. В МТР это разные региональные системы 
+и центральный. Все хедеры являются обязательными. Без них сервис не сможет
+идентифицировать клиента.
 
 Для авторизации пока что используется просто имя пользователя, в дальнейшем
 это будет что-то типа JWT.
 
 ### Запрос количества не прочтенных сообещний
 ```json
-{ "type" : "COUNT", "headers" : {"X-Auth-Token" : "user-id"} }
+{ "type" : "COUNT", "headers" : { "X-Auth-Token" : "user-id"
+                                , "X-System-Id" : "system-id" } }
 ```
 
 ### Подтверждение прочтения
 ```json
-{ "type" : "READ", "headers" : {"X-Auth-Token" : "user-id" } 
+{ "type" : "READ", "headers" : { "X-Auth-Token" : "user-id"
+                               , "X-System-Id" : "system-id" }} 
 , "message" : { "id" : "message-id" }}
 ```
-Если не указать `message`, то *все* сообщения для данного пользователя будут
+Если не указать `message.id`, то *все* сообщения для данного пользователя будут
 помечены прочтенными.
 
 ## Сообщения

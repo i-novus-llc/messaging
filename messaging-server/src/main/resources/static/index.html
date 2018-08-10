@@ -38,7 +38,8 @@
             <table id="conversation" class="table table-striped">
                 <thead>
                 <tr>
-                    <th>Messages</th>
+                    <th style="width:200px">Caption</th>
+                    <th>Text</th>
                 </tr>
                 </thead>
                 <tbody id="messages">
@@ -81,17 +82,21 @@
     }
 
     function connect() {
-        ws = new WebSocket('ws://localhost:8080/ws');
+        ws = new WebSocket((location.protocol == 'http:' ? 'ws://' : 'wss://')
+                + location.host + '/ws');
         var name = document.getElementById('name').value
         var headers = {};
-        headers[csrf.headerName] = csrf.token;
+        //headers[csrf.headerName] = csrf.token;
         headers['X-Auth-Token'] = name;
+        headers['X-System-Id'] = 'example';
         ws.onopen = () => {
             setConnected(true);
             ws.send(JSON.stringify({'headers': headers, 'type': 'CONNECT'}));
         }
         ws.onmessage = (message) => {
-            showMessage(JSON.parse(message.data).content);
+            var data = JSON.parse(message.data);
+            if (data.text)
+                showMessage(data);
         }
     }
 
@@ -107,9 +112,12 @@
         //alert('Got message: ' + message);
         var tb = document.getElementById('messages');
         var tr = document.createElement('tr');
-        var td = document.createElement('td');
-        td.textContent = message;
-        tr.append(td);
+        var text = document.createElement('tr');
+        var caption = document.createElement('td');
+        caption.textContent = message.caption;
+        text.textContent = message.text;
+        tr.append(caption);
+        tr.append(text);
         tb.append(tr);
     }
 

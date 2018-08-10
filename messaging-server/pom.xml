@@ -10,7 +10,7 @@
     <parent>
         <groupId>ru.i-novus.messaging</groupId>
         <artifactId>messaging-pom</artifactId>
-        <version>1.0.5</version>
+        <version>1.0.6</version>
     </parent>
 
     <dependencies>
@@ -29,6 +29,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-activemq</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
