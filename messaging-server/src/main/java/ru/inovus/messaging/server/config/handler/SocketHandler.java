@@ -12,7 +12,7 @@ import ru.inovus.messaging.api.*;
 import ru.inovus.messaging.impl.MessageService;
 import ru.inovus.messaging.server.model.SocketEvent;
 import ru.inovus.messaging.server.model.SocketEventType;
-import ru.inovus.messaging.server.mq.MqProvider;
+import ru.inovus.messaging.api.MqProvider;
 
 import java.io.IOException;
 
@@ -24,8 +24,8 @@ public class SocketHandler extends TextWebSocketHandler {
     private final ObjectMapper mapper;
     private final MqProvider mqProvider;
     private final MessageService messageService;
-    private static final String AUTH_TOKEN_HEADER = "X-Auth-Token";
-    private static final String SYSTEM_ID_HEADER = "X-System-Id";
+    public static final String AUTH_TOKEN_HEADER = "X-Auth-Token";
+    public static final String SYSTEM_ID_HEADER = "X-System-Id";
 
     public SocketHandler(ObjectMapper mapper, MqProvider mqProvider, MessageService messageService) {
         this.mapper = mapper;
@@ -88,7 +88,7 @@ public class SocketHandler extends TextWebSocketHandler {
         }
     }
 
-    private void sendTo(WebSocketSession user, MessageOutbox msg, String recipient, String systemId) {
+    public void sendTo(WebSocketSession user, MessageOutbox msg, String recipient, String systemId) {
         if (checkRecipient(msg, recipient, systemId)) {
             Message message = messageService.createMessage(msg.getMessage(), recipient, systemId);
             UnreadMessagesInfo unreadMessages = messageService.getUnreadMessages(recipient, systemId);

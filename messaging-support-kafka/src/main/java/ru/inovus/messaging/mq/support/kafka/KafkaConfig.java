@@ -1,4 +1,4 @@
-package ru.inovus.messaging.server.config;
+package ru.inovus.messaging.mq.support.kafka;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -16,7 +16,6 @@ import java.util.Map;
 
 @Configuration
 @EnableKafka
-@ConditionalOnClass(org.springframework.kafka.core.KafkaTemplate.class)
 public class KafkaConfig {
 
     private final KafkaProperties properties;

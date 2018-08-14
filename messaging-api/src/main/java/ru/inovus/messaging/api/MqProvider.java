@@ -1,4 +1,4 @@
-package ru.inovus.messaging.server.mq;
+package ru.inovus.messaging.api;
 
 import ru.inovus.messaging.api.MessageOutbox;
 

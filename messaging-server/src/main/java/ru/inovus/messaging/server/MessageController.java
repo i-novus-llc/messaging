@@ -10,7 +10,7 @@ import ru.inovus.messaging.api.MessageOutbox;
 import ru.inovus.messaging.impl.MessageService;
 import ru.inovus.messaging.impl.rest.MessagingCriteria;
 import ru.inovus.messaging.impl.rest.MessagingResponse;
-import ru.inovus.messaging.server.mq.MqProvider;
+import ru.inovus.messaging.api.MqProvider;
 
 import java.time.Clock;
 import java.time.LocalDateTime;

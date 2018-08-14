@@ -1,4 +1,4 @@
-package ru.inovus.messaging.server.mq.impl;
+package ru.inovus.messaging.mq.support.activemq;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,15 +7,12 @@ import org.apache.activemq.command.ActiveMQTopic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.context.annotation.Profile;
-import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.stereotype.Component;
 import ru.inovus.messaging.api.MessageOutbox;
-import ru.inovus.messaging.server.mq.MqProvider;
+import ru.inovus.messaging.api.MqProvider;
 
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
@@ -25,7 +22,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 @Component
-@ConditionalOnClass(ActiveMQConnectionFactory.class)
 public class ActiveMqProvider implements MqProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(ActiveMqProvider.class);
@@ -42,7 +38,8 @@ public class ActiveMqProvider implements MqProvider {
         this.objectMapper = objectMapper;
         activeMQConnectionFactory = new ActiveMQConnectionFactory();
         activeMQConnectionFactory.setBrokerURL(brokerUrl);
-        this.jmsTemplate = new JmsTemplate(new CachingConnectionFactory(activeMQConnectionFactory));;
+        this.jmsTemplate = new JmsTemplate(new CachingConnectionFactory(activeMQConnectionFactory));
+        ;
         this.topic = topic;
     }
 

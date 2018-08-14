@@ -1,4 +1,4 @@
-package ru.inovus.messaging.server.config;
+package ru.inovus.messaging.mq.support.kafka;
 
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serializer;
