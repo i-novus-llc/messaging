@@ -1,12 +1,9 @@
-package ru.inovus.messaging.server.mq.impl;
+package ru.inovus.messaging.mq.support.kafka;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
-import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.listener.KafkaMessageListenerContainer;
@@ -16,8 +13,7 @@ import org.springframework.kafka.listener.config.ContainerProperties;
 import org.springframework.stereotype.Component;
 import ru.inovus.messaging.api.Message;
 import ru.inovus.messaging.api.MessageOutbox;
-import ru.inovus.messaging.server.config.ObjectSerializer;
-import ru.inovus.messaging.server.mq.MqProvider;
+import ru.inovus.messaging.api.MqProvider;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -25,7 +21,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 @Component
-@ConditionalOnClass(KafkaTemplate.class)
 public class KafkaMqProvider implements MqProvider {
 
     private Map<Serializable, MessageListenerContainer> containers = new ConcurrentHashMap<>();

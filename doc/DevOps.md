@@ -2,8 +2,8 @@
 Для работы сервера нужен работающий инстанс Apache Kafka или ActiveMQ.
 ## Сборка сервера
 Сервер работает в 3х режимах
-1. Встроенный брокер ActiveMQ - по умолчанию
-2. Выделенный брокер ActiveMQ ( профили maven: `-P production` )
+1. Встроенный брокер ActiveMQ ( профили maven: `-P embedded-broker`) включен по умолчанию
+2. Выделенный брокер ActiveMQ ( профили maven: `-P activemq` )
 3. Kafka ( профили maven: `-P kafka` )
 
 ## Запуск Kafka
@@ -13,8 +13,8 @@ bin/kafka-server-start.sh config/server.properties
 ```
 
 # Запуск сервиса
-1. Качаем `messaging-server-$VERSION.jar` c [сервера CI](https://ci.i-novus.ru/job/messaging${buildType}/lastSuccessfulBuild/ru.i-novus.messaging$messaging-server/)
-где `${buildType} = .kafka` или пусто для ActiveMQ.
+1. Качаем `messaging-server-$VERSION.jar` c сервера CI [сборку с поддержкой ActiveMQ](https://ci.i-novus.ru/job/messaging/lastSuccessfulBuild/ru.i-novus.messaging$messaging-server/)
+ или [сборку с поддержкой Kafka](https://ci.i-novus.ru/job/messaging.kafka/lastSuccessfulBuild/ru.i-novus.messaging$messaging-server/)
 2. Создаём файл `application.yaml`
 3. Указываем настройки соединения с БД
 ```

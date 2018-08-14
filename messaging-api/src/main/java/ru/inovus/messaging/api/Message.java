@@ -15,6 +15,13 @@ public class Message implements Serializable {
     private LocalDateTime sentAt;
     private LocalDateTime readAt;
 
+    public Message() {
+    }
+
+    public Message(String id) {
+        this.id = id;
+    }
+
     public String getId() {
         return id;
     }
@@ -73,5 +80,18 @@ public class Message implements Serializable {
 
     public Boolean getUnread() {
         return this.readAt == null;
+    }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "id='" + id + '\'' +
+                ", caption='" + caption + '\'' +
+                ", text='" + text + '\'' +
+                ", severity=" + severity +
+                ", alertType=" + alertType +
+                ", sentAt=" + sentAt +
+                ", readAt=" + readAt +
+                '}';
     }
 }

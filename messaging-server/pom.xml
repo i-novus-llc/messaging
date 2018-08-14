@@ -31,10 +31,6 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-activemq</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-messaging</artifactId>
         </dependency>
@@ -83,11 +79,6 @@
             <version>2.22.1</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>${jackson.version}</version>
@@ -106,13 +97,33 @@
     <profiles>
         <profile>
             <id>production</id>
+        </profile>
+        <profile>
+            <id>embedded-broker</id>
             <activation>
-                <activeByDefault>false</activeByDefault>
+                <activeByDefault>true</activeByDefault>
             </activation>
             <dependencies>
                 <dependency>
                     <groupId>org.apache.activemq</groupId>
                     <artifactId>activemq-broker</artifactId>
+                    <scope>runtime</scope>
+                </dependency>
+                <dependency>
+                    <groupId>ru.i-novus.messaging</groupId>
+                    <artifactId>messaging-support-activemq</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>activemq</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>ru.i-novus.messaging</groupId>
+                    <artifactId>messaging-support-activemq</artifactId>
                 </dependency>
             </dependencies>
         </profile>
@@ -123,19 +134,8 @@
             </activation>
             <dependencies>
                 <dependency>
-                    <groupId>org.springframework.kafka</groupId>
-                    <artifactId>spring-kafka</artifactId>
-                    <scope>compile</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-activemq</artifactId>
-                    <scope>provided</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.activemq</groupId>
-                    <artifactId>activemq-broker</artifactId>
-                    <scope>provided</scope>
+                    <groupId>ru.i-novus.messaging</groupId>
+                    <artifactId>messaging-support-kafka</artifactId>
                 </dependency>
             </dependencies>
         </profile>
