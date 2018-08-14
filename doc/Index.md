@@ -15,3 +15,4 @@
 - [WebSocket интерфейс](Websocket.md) для взаимодействия с GUI
 
 [Свойства сервиса](Properties.md)
+[Инструкция для DevOps](DevOps.md)

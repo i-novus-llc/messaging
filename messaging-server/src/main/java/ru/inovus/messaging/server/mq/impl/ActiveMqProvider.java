@@ -7,6 +7,7 @@ import org.apache.activemq.command.ActiveMQTopic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.connection.CachingConnectionFactory;
@@ -24,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 @Component
-@Profile("activemq")
+@ConditionalOnClass(ActiveMQConnectionFactory.class)
 public class ActiveMqProvider implements MqProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(ActiveMqProvider.class);
@@ -36,7 +37,7 @@ public class ActiveMqProvider implements MqProvider {
     private Map<Serializable, DefaultMessageListenerContainer> containers = new ConcurrentHashMap<>();
 
     public ActiveMqProvider(ObjectMapper objectMapper,
-                            @Value("${activemq.broker-url}") String brokerUrl,
+                            @Value("${spring.activemq.broker-url}") String brokerUrl,
                             @Value("${novus.messaging.topic}") String topic) {
         this.objectMapper = objectMapper;
         activeMQConnectionFactory = new ActiveMQConnectionFactory();
