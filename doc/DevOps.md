@@ -13,7 +13,8 @@ bin/kafka-server-start.sh config/server.properties
 ```
 
 # Запуск сервиса
-1. Качаем `messaging-server-$VERSION.jar` c [сервера CI](https://ci.i-novus.ru/job/messaging/lastSuccessfulBuild/ru.i-novus.messaging$messaging-server/)
+1. Качаем `messaging-server-$VERSION.jar` c [сервера CI](https://ci.i-novus.ru/job/messaging${buildType}/lastSuccessfulBuild/ru.i-novus.messaging$messaging-server/)
+где `${buildType} = .kafka` или пусто для ActiveMQ.
 2. Создаём файл `application.yaml`
 3. Указываем настройки соединения с БД
 ```
