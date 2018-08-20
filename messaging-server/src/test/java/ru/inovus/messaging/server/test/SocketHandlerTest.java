@@ -38,7 +38,12 @@ public class SocketHandlerTest {
     private ObjectMapper objectMapper;
     private SocketHandler socketHandler;
     private MqProvider mqProvider;
-    private Map<String, String> headers = new HashMap<>();
+    public static Map<String, String> headers = new HashMap<>();
+
+    static {
+        headers.put(SocketHandler.AUTH_TOKEN_HEADER, "1");
+        headers.put(SocketHandler.SYSTEM_ID_HEADER, "default");
+    }
 
     @Before
     public void init() {
@@ -65,8 +70,6 @@ public class SocketHandlerTest {
             return null;
         }).when(mqProvider).unsubscribe(any());
         socketHandler = new SocketHandler(objectMapper, mqProvider, messageService);
-        headers.put(SocketHandler.AUTH_TOKEN_HEADER, "1");
-        headers.put(SocketHandler.SYSTEM_ID_HEADER, "default");
     }
 
     private WebSocketSession getWebSocketSession() throws IOException {
