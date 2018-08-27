@@ -17,13 +17,13 @@ bin/kafka-server-start.sh config/server.properties
  или [сборку с поддержкой Kafka](https://ci.i-novus.ru/job/messaging.kafka/lastSuccessfulBuild/ru.i-novus.messaging$messaging-server/)
 2. Создаём файл `application.yaml`
 3. Указываем настройки соединения с БД
-
+<pre>
     spring.datasource:
       url: jdbc:postgresql://localhost/messaging
       username: postgres
       password: postgres
       driver-class-name: org.postgresql.Driver
-      
+</pre> 
 4.1. Указываем настройки Kafka (если выбрали Kafka)
 ```
 spring.kafka.bootstrap-servers: localhost:9092
