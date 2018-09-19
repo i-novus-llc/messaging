@@ -18,7 +18,7 @@
                             <ctrl:output-text id="caption" label="Заголовок"/>
                         </fs:row>
                         <fs:row>
-                            <ctrl:text-area id="text" label="Текст"/>
+                            <ctrl:html id="text" label="Текст"/>
                         </fs:row>
                     </fs:field-set>
                     <!--<wgt:action-menu>
