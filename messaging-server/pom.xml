@@ -10,7 +10,7 @@
     <parent>
         <groupId>ru.i-novus.messaging</groupId>
         <artifactId>messaging-pom</artifactId>
-        <version>1.1.1</version>
+        <version>1.2.1-SNAPSHOT</version>
     </parent>
 
     <dependencies>
@@ -47,14 +47,6 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>webjars-locator-core</artifactId>
         </dependency>
@@ -82,6 +74,19 @@
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.n2oapp.platform</groupId>
+            <artifactId>n2o-platform-starter-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ru.i-novus.messaging</groupId>
+            <artifactId>messaging-client</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
