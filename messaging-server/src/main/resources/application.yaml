@@ -10,9 +10,6 @@ spring.jooq.sql-dialect: Postgres
 
 spring.jackson.serialization.write_dates_as_timestamps: false
 
-#spring.security.user:
-#  name: admin
-#  password: admin
 security.user:
   name: admin
   password: admin
