@@ -38,7 +38,7 @@
         <field>
             <id>sentAt</id>
             <domain>date</domain>
-            <sorting>field=sent_at&amp;direction=:direction</sorting>
+            <sorting>sorting.field=sent_at&amp;sorting.direction=:direction</sorting>
             <display/>
         </field>
 
