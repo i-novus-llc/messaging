@@ -3,7 +3,6 @@ package ru.inovus.messaging.impl;
 import net.n2oapp.criteria.api.Direction;
 import net.n2oapp.criteria.api.Sorting;
 import org.jooq.*;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.stereotype.Service;
 import ru.inovus.messaging.api.Message;
 import ru.inovus.messaging.api.UnreadMessagesInfo;
@@ -108,21 +107,19 @@ public class MessageService {
         }
 
         for (Sorting sorting : sortingList) {
-            //todo get table field by name
-            TableField tableField = Tables.MESSAGE.SENT_AT;
-
-            SortField<?> querySortField = convertTableFieldToSortField(tableField, sorting.getDirection());
+            Field field = Tables.MESSAGE.field(sorting.getField());
+            SortField<?> querySortField = convertFieldToSortField(field, sorting.getDirection());
             querySortFields.add(querySortField);
         }
 
         return querySortFields;
     }
 
-    private SortField<?> convertTableFieldToSortField(TableField tableField, Direction sortDirection) {
+    private SortField<?> convertFieldToSortField(Field field, Direction sortDirection) {
         if (sortDirection == Direction.ASC) {
-            return tableField.asc();
+            return field.asc();
         } else  {
-            return tableField.desc();
+            return field.desc();
         }
     }
 
