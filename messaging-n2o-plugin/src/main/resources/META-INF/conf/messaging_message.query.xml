@@ -3,10 +3,13 @@
        xmlns="http://n2oapp.net/framework/config/schema/query-3.0">
     <object-id>messaging_message</object-id>
     <name>Сообщение для пользователя</name>
+
     <execution>
         <n2o:rest>
             <n2o:query>${messaging.system.rest.url}/messages</n2o:query>
             <n2o:query-by-id>${messaging.system.rest.url}/messages/{id}</n2o:query-by-id>
+
+            <n2o:sorting-direction asc="ASC" desc="DESC"/>
         </n2o:rest>
     </execution>
 
@@ -15,26 +18,30 @@
             <id>id</id>
             <domain>integer</domain>
             <display/>
-            <sorting/>
             <filters>
                 <filter type="eq" filter-field="id">:id</filter>
             </filters>
         </field>
+
         <field>
             <id>caption</id>
             <domain>string</domain>
             <display/>
         </field>
+
         <field>
             <id>text</id>
             <domain>string</domain>
             <display/>
         </field>
+
         <field>
             <id>sentAt</id>
-            <domain>string</domain>
+            <domain>date</domain>
+            <sorting>field=sent_at&amp;direction=:direction</sorting>
             <display/>
         </field>
+
         <field>
             <id>user</id>
             <domain>string</domain>
@@ -42,18 +49,21 @@
                 <filter type="eq" filter-field="user" default-value="#{user.id}"/>
             </filters>
         </field>
+
         <field>
             <id>systemId</id>
             <domain>string</domain>
             <filters>
-                <filter type="eq" filter-field="systemId" default-value="${mtr.region.okato}"/>
+                <filter type="eq" filter-field="systemId" default-value="${messaging.system.id}"/>
             </filters>
         </field>
+
         <field>
             <id>readAt</id>
-            <domain>string</domain>
+            <domain>date</domain>
             <display/>
         </field>
+
         <field>
             <id>unread</id>
             <domain>boolean</domain>
