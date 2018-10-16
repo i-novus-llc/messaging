@@ -13,16 +13,17 @@ POST /messages
 ```
 ```
 {
-  "caption": "Заголовок",
-  "text": "Содержимое",
-  "severity": "ERROR",
-  "alertType": "BLOCKER",
-  "sentAt": "2018-07-02T12:16:37",
-  "recipients": [
+"message": {
+  "caption": "Test caption",
+  "text": "Test content",
+      "severity": "INFO",
+      "alertType": "POPUP",
+      "sentAt": "2018-10-16T07:38:13.07"},
+	"recipients": [
     {
       "recipientType": "USER",
-      "user": "18",
-      "systemId": "regiona"
+      "user": "1",
+      "systemId": "dev.1265"
     }
   ]
 }
