@@ -12,6 +12,11 @@
             <container id="main">
                 <wgt:table customize="css" src="novus/messaging/message_list">
                     <wgt:query-id>messaging_message</wgt:query-id>
+
+                    <wgt:settings visible="true">
+                        <wgt:word-wrap visible="true" default-value="true"/>
+                    </wgt:settings>
+
                     <wgt:columns>
                         <wgt:column name="Заголовок" column-field-id="caption">
                             <wgt:text>
@@ -20,6 +25,7 @@
                                 </wgt:switch>
                             </wgt:text>
                         </wgt:column>
+
                         <wgt:column name="Текст" column-field-id="text">
                             <wgt:text>
                                 <wgt:switch value-field-id="unread">
@@ -27,6 +33,7 @@
                                 </wgt:switch>
                             </wgt:text>
                         </wgt:column>
+
                         <wgt:column name="Дата отправки" column-field-id="sentAt"
                             format="utcToLocal 'DD.MM.YYYY HH:mm'">
                             <wgt:text>
@@ -36,11 +43,11 @@
                             </wgt:text>
                         </wgt:column>
                     </wgt:columns>
+
                     <wgt:action-menu>
                         <wgt:menu-item id="view" label="Просмотр" context="true" default="true"
                                        refresh-policy="all">
                             <wgt:event>
-                                <!--<wgt:custom src="novus/messaging/show.messages.page"/>-->
                                 <wgt:open-page page-id="messaging_message" refresh-on-close="true"/>
                             </wgt:event>
                         </wgt:menu-item>
@@ -53,17 +60,10 @@
                                     </wgt:properties>
                                 </wgt:custom>
                             </wgt:event>
-                            <!--<wgt:conditions>
-                                <wgt:visibility-condition>
-                                    <wgt:expression>unread</wgt:expression>
-                                </wgt:visibility-condition>
-                            </wgt:conditions>-->
                         </wgt:menu-item>
-
                     </wgt:action-menu>
                 </wgt:table>
             </container>
         </region>
     </regions>
-
 </page>

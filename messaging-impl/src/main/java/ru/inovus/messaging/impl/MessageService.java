@@ -1,5 +1,7 @@
 package ru.inovus.messaging.impl;
 
+import net.n2oapp.criteria.api.Direction;
+import net.n2oapp.criteria.api.Sorting;
 import org.jooq.*;
 import org.springframework.stereotype.Service;
 import ru.inovus.messaging.api.Message;
@@ -11,6 +13,8 @@ import ru.inovus.messaging.impl.rest.MessagingResponse;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static ru.inovus.messaging.impl.jooq.Sequences.MESSAGE_ID_SEQ;
@@ -81,7 +85,7 @@ public class MessageService {
                 .where(condition);
         int count = dsl.fetchCount(query);
         List<Message> collection = query
-                .orderBy(Tables.MESSAGE.SENT_AT.desc())
+                .orderBy(getSortFields(criteria.getSortings()))
                 .limit(criteria.getSize())
                 .offset(criteria.getFirst())
                 .fetch(MAPPER);
@@ -93,6 +97,30 @@ public class MessageService {
                 .selectFrom(Tables.MESSAGE)
                 .where(Tables.MESSAGE.ID.cast(String.class).eq(messageId))
                 .fetchOne(MAPPER);
+    }
+
+    private Collection<SortField<?>> getSortFields(List<Sorting> sortingList) {
+        Collection<SortField<?>> querySortFields = new ArrayList<>();
+
+        if (sortingList == null) {
+            return querySortFields;
+        }
+
+        for (Sorting sorting : sortingList) {
+            Field field = Tables.MESSAGE.field(sorting.getField());
+            SortField<?> querySortField = convertFieldToSortField(field, sorting.getDirection());
+            querySortFields.add(querySortField);
+        }
+
+        return querySortFields;
+    }
+
+    private SortField<?> convertFieldToSortField(Field field, Direction sortDirection) {
+        if (sortDirection == Direction.ASC) {
+            return field.asc();
+        } else  {
+            return field.desc();
+        }
     }
 
 }
