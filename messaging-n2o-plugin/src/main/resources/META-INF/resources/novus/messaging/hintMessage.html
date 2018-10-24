@@ -1,44 +1,74 @@
 <div class="popup-message-miniicons" >
+
     {#boxes}
-        <div class="popup-message-miniicons__iconbox" data-boxid="{@idx}{.}{/idx}" data-messageid="{id}"  style="background-color:
-    {@select key=severity}
-        {@eq value="INFO"}#3276B1{/eq}
-        {@eq value="WARNING"}#C79121{/eq}
-        {@eq value="ERROR"}#C46A69{/eq}
-    {/select};">
-            <div class="popup-message-miniicons__icon">
+        {@if cond="{$idx} == ({$len} - 1)"}
+            <span id="popup-message-miniicons__hide-all"
+                  class="popup-message-miniicons__hide-all"
+                  style="background-color:
+                    {@select key=severity}
+                        {@eq value="INFO"}#3276B1{/eq}
+                        {@eq value="WARNING"}#C79121{/eq}
+                        {@eq value="ERROR"}#C46A69{/eq}
+                    {/select};">
+               Скрыть все
+            </span>
+
+            {@gt key=LENGTH value=boxes.length}
+                <a href="#messaging_message_list"
+                   id="popup-message-miniicons__show-more"
+                   class="popup-message-miniicons__show-more" style="background-color:
+                    {@select key=severity}
+                        {@eq value="INFO"}#3276B1{/eq}
+                        {@eq value="WARNING"}#C79121{/eq}
+                        {@eq value="ERROR"}#C46A69{/eq}
+                    {/select};">
+                 Еще {@math key=LENGTH method="subtract" operand=boxes.length/}
+                </a>
+            {/gt}
+        {/if}
+
+            <div class="popup-message-miniicons__iconbox" data-boxid="{@idx}{.}{/idx}" data-messageid="{id}"  style="background-color:
                 {@select key=severity}
-                    {@eq value="INFO"}<i class="glyphicons glyphicons-ok popup-message-box__icon--swing"></i>{/eq}
-                    {@eq value="WARNING"}<i class="glyphicons glyphicons-warning-sign popup-message-box__icon--swing"></i>{/eq}
-                    {@eq value="ERROR"}<i class="glyphicons glyphicons-alert popup-message-box__icon--swing"></i>{/eq}
-                {/select}
+                    {@eq value="INFO"}#3276B1{/eq}
+                    {@eq value="WARNING"}#C79121{/eq}
+                    {@eq value="ERROR"}#C46A69{/eq}
+                {/select};">
+                <div class="popup-message-miniicons__icon">
+                    {@select key=severity}
+                        {@eq value="INFO"}<i class="glyphicons glyphicons-ok popup-message-box__icon--swing"></i>{/eq}
+                        {@eq value="WARNING"}<i class="glyphicons glyphicons-warning-sign popup-message-box__icon--swing"></i>{/eq}
+                        {@eq value="ERROR"}<i class="glyphicons glyphicons-alert popup-message-box__icon--swing"></i>{/eq}
+                    {/select}
+                </div>
             </div>
-        </div>
     {/boxes}
+
 </div>
 <div class="popup-message-boxes">
+
     {#boxes}
-    <div class="popup-message-box" data-boxid="{@idx}{.}{/idx}" style="background-color:
-    {@select key=severity}
-        {@eq value="INFO"}#3276B1{/eq}
-        {@eq value="WARNING"}#C79121{/eq}
-        {@eq value="ERROR"}#C46A69{/eq}
-    {/select};">
-        <div class="popup-message-box__container">
-            <i class="popup-message__button--close glyphicons glyphicons-remove" data-boxid="{@idx}{.}{/idx}" data-messageid="{id}"></i>
-            <span class="popup-message-box__caption">{caption}</span>
-            <p class="popup-message-box__text">{text|s}</p>
-            <div class="popup-message-box__icon">
-                {@select key=severity}
-                    {@eq value="INFO"}<i class="glyphicons glyphicons-ok popup-message-box__icon--swing"></i>{/eq}
-                    {@eq value="WARNING"}<i class="glyphicons glyphicons-warning-sign popup-message-box__icon--swing"></i>{/eq}
-                    {@eq value="ERROR"}<i class="glyphicons glyphicons-alert popup-message-box__icon--swing"></i>{/eq}
-                {/select}
+        <div class="popup-message-box" data-boxid="{@idx}{.}{/idx}" data-messageid="{id}" style="background-color:
+        {@select key=severity}
+            {@eq value="INFO"}#3276B1{/eq}
+            {@eq value="WARNING"}#C79121{/eq}
+            {@eq value="ERROR"}#C46A69{/eq}
+        {/select};">
+            <div class="popup-message-box__container">
+                <i class="popup-message__button--close glyphicons glyphicons-remove" data-boxid="{@idx}{.}{/idx}" data-messageid="{id}"></i>
+                <span class="popup-message-box__caption">{caption}</span>
+                <p class="popup-message-box__text">{text|s}</p>
+                <!--<div class="popup-message-box__icon">-->
+                    <!--{@select key=severity}-->
+                        <!--{@eq value="INFO"}<i class="glyphicons glyphicons-ok popup-message-box__icon&#45;&#45;swing"></i>{/eq}-->
+                        <!--{@eq value="WARNING"}<i class="glyphicons glyphicons-warning-sign popup-message-box__icon&#45;&#45;swing"></i>{/eq}-->
+                        <!--{@eq value="ERROR"}<i class="glyphicons glyphicons-alert popup-message-box__icon&#45;&#45;swing"></i>{/eq}-->
+                    <!--{/select}-->
+                <!--</div>-->
+                <!--<span class="popup-message-box__number">{@idx}{.}{/idx}, msgLogId: {msgLogId}</span>-->
             </div>
-            <!--<span class="popup-message-box__number">{@idx}{.}{/idx}, msgLogId: {msgLogId}</span>-->
         </div>
-    </div>
     {/boxes}
+
 </div>
 
 
@@ -48,6 +78,12 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
+
+.popup-message-miniicons__iconbox--active .glyphicons{
+    color: white;
+}
+
+
 
 .popup-message-box__number {
     font-size: 10px;
@@ -71,14 +107,40 @@
     text-align: center;
     vertical-align: middle;
     padding: 4px 6px;
-    color: #FFF;
     float: right;
     cursor: pointer;
     display: block;
+    color: gray;
     /*background-color: #3276B1;*/
     font-size: 17px;
     margin-left: 4px;
     margin-top: 5px;
+}
+
+.popup-message-miniicons__show-more{
+    float: left;
+    display: inline-block;
+    padding: 7px;
+    color: white;
+    font-size: 13px;
+    text-decoration: underline;
+    margin-top: 5px;
+}
+
+.popup-message-miniicons__show-more:hover{
+   color: white;
+}
+
+.popup-message-miniicons__hide-all{
+    float: left;
+    display: inline-block;
+    padding: 7px;
+    color: white;
+    font-size: 13px;
+    text-decoration: underline;
+    margin-right: 5px;
+    margin-top: 5px;
+    cursor: pointer;
 }
 
 .popup-message-box__icon--swing {
@@ -157,18 +219,18 @@
     font-size: 17px;
     font-weight: 300;
     letter-spacing: -1px;
-    padding: 5px 0 !important;
+    padding: 5px 50px 5px 0px !important;
     display: block;
 }
 
 .popup-message__button--close {
     position: absolute;
-    right: 10px;
-    height: 16px;
-    width: 15px;
+    right: 22px;
+    height: 7px;
+    width: 18px;
     cursor: pointer;
-    font-size: 18px;
-    opacity: .5;
+    font-size: 28px;
+    /* opacity: .5; */
     display: block;
     top: 15px;
 }

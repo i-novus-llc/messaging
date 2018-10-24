@@ -6,6 +6,12 @@
       WS_URL: '',
       REST_URL: '',
       SYSTEM_ID: '',
+      MAX_VISIBLE_MESSAGE: 7,
+      MESSAGES_COLOR: {
+        'INFO': '#3276B1',
+        'WARNING': '#C79121',
+        'ERROR': '#C46A69'
+      },
       AUTH_TOKEN_HEADER: 'X-Auth-Token',
       SYSTEM_ID_HEADER: 'X-System-Id',
       dataKey: 'notification_data',
@@ -31,15 +37,19 @@
         'click .popup-message__button--close': function(e) {
           localStorage[this.hintMessageConfirmKey] = e.currentTarget.dataset.boxid;
           this.confirmReading(+e.currentTarget.dataset.messageid);
-          this.closeHintMessage(+e.currentTarget.dataset.boxid);
+          this.closeHintMessage(+e.currentTarget.dataset.messageid);
         },
         'click .popup-message-miniicons__iconbox': function(e) {
-          this.gotoHintMessage(+e.currentTarget.dataset.boxid);
+          this.gotoHintMessage(+e.currentTarget.dataset.boxid, +e.currentTarget.dataset.messageid, this);
           this.$el.find('.popup-message-miniicons__iconbox').removeClass('popup-message-miniicons__iconbox--active');
           e.currentTarget.className += ' popup-message-miniicons__iconbox--active';
+
         },
         'click #fullscreenMessageConfirmButton': function(e) {
           this.confirmAllFullscreenMessages();
+        },
+        'click .popup-message-miniicons__hide-all': function () {
+          this.closeAllMessage();
         }
       },
       initialize: function(target, view) {
@@ -58,6 +68,10 @@
               };
             })(this));
         }
+      },
+      closeAllMessage: function(){
+          this.hintMessages.boxes = [];
+          return this.renderHintMessages();
       },
       setStorageListeners: function() {
         window.addEventListener('storage', (function(_this) {
@@ -135,7 +149,10 @@
         if (newmessage) {
           this.hintMessages.boxes.push(newmessage);
         }
-        this.getTpl(this.hintMessages, './novus/messaging/hintMessage.html').done((function(_this) {
+        this.getTpl({
+            LENGTH: this.hintMessages.boxes.length,
+            boxes: this.hintMessages.boxes.slice(0, this.MAX_VISIBLE_MESSAGE).reverse()
+        }, './novus/messaging/hintMessage.html').done((function(_this) {
           return function(out) {
             var hintMessageElement;
             hintMessageElement = $(out);
@@ -144,12 +161,16 @@
           };
         })(this));
       },
-      gotoHintMessage: function(boxid) {
+
+      gotoHintMessage: function(boxid, messageid) {
         this.$el.find('.popup-message-box').css('z-index', '9998');
-        this.$el.find('.popup-message-box[data-boxid=' + boxid + ']').css('z-index', '9999');
+        this.$el.find('.popup-message-box[data-messageid=' + messageid + ']').css('z-index', '9999');
+        var severity = this.hintMessages.boxes.filter(v => v.id == messageid)[0]['severity'];
+        this.$el.find('#popup-message-miniicons__hide-all').css('background-color', this.MESSAGES_COLOR[severity]);
+        this.$el.find('#popup-message-miniicons__show-more').css('background-color', this.MESSAGES_COLOR[severity]);
       },
-      closeHintMessage: function(boxid) {
-        this.hintMessages.boxes.splice(boxid, 1);
+      closeHintMessage: function(messageId) {
+          this.hintMessages.boxes = this.hintMessages.boxes.filter(v => v.id != messageId);
         return this.renderHintMessages();
       },
       addMessageToFullscreenMessages: function(message) {
