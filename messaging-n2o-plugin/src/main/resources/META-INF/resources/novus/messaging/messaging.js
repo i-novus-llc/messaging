@@ -163,7 +163,7 @@
                     return $hintEl.html(hintMessageElement);
                 };
             })(this));
-      }, 200),
+      }, 1000),
 
       gotoHintMessage: function(boxid, messageid) {
         this.$el.find('.popup-message-box').css('z-index', '9998');
