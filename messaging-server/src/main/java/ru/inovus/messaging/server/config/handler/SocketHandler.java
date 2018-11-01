@@ -3,6 +3,7 @@ package ru.inovus.messaging.server.config.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -15,6 +16,9 @@ import ru.inovus.messaging.server.model.SocketEventType;
 import ru.inovus.messaging.api.MqProvider;
 
 import java.io.IOException;
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Component
 public class SocketHandler extends TextWebSocketHandler {
@@ -26,6 +30,9 @@ public class SocketHandler extends TextWebSocketHandler {
     private final MessageService messageService;
     public static final String AUTH_TOKEN_HEADER = "X-Auth-Token";
     public static final String SYSTEM_ID_HEADER = "X-System-Id";
+
+    @Value("${novus.messaging.timeout}")
+    private Integer timeout;
 
     public SocketHandler(ObjectMapper mapper, MqProvider mqProvider, MessageService messageService) {
         this.mapper = mapper;
@@ -62,10 +69,9 @@ public class SocketHandler extends TextWebSocketHandler {
     }
 
     private boolean isNotExpired(MessageOutbox msg) {
-        //todo
-        return true; //msg.getMessage().getSentAt() == null ||
-//                !msg.getMessage().getSentAt().plus(timeout, ChronoUnit.SECONDS)
-//                        .isBefore(LocalDateTime.now(Clock.systemUTC()));
+        return msg.getMessage().getSentAt() == null ||
+                !msg.getMessage().getSentAt().plus(timeout, ChronoUnit.SECONDS)
+                        .isBefore(LocalDateTime.now(Clock.systemUTC()));
     }
 
     private boolean checkRecipient(MessageOutbox msg, String recipient, String systemId) {
