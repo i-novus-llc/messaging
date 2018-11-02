@@ -26,13 +26,13 @@
                             </wgt:text>
                         </wgt:column>
 
-                        <wgt:column name="Текст" column-field-id="text">
-                            <wgt:text>
-                                <wgt:switch value-field-id="unread">
-                                    <wgt:case value="true">font-weight-bold</wgt:case>
-                                </wgt:switch>
-                            </wgt:text>
-                        </wgt:column>
+                        <!--<wgt:column name="Текст" column-field-id="text">-->
+                            <!--<wgt:text>-->
+                                <!--<wgt:switch value-field-id="unread">-->
+                                    <!--<wgt:case value="true">font-weight-bold</wgt:case>-->
+                                <!--</wgt:switch>-->
+                            <!--</wgt:text>-->
+                        <!--</wgt:column>-->
 
                         <wgt:column name="Дата отправки" column-field-id="sentAt"
                             format="utcToLocal 'DD.MM.YYYY HH:mm'">
