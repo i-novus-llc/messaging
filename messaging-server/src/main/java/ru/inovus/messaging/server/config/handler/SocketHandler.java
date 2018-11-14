@@ -31,8 +31,12 @@ public class SocketHandler extends TextWebSocketHandler {
     public static final String AUTH_TOKEN_HEADER = "X-Auth-Token";
     public static final String SYSTEM_ID_HEADER = "X-System-Id";
 
-    @Value("${novus.messaging.timeout}")
     private Integer timeout;
+
+    @Value("${novus.messaging.timeout}")
+    public void setTimeout(Integer timeout) {
+        this.timeout = timeout;
+    }
 
     public SocketHandler(ObjectMapper mapper, MqProvider mqProvider, MessageService messageService) {
         this.mapper = mapper;

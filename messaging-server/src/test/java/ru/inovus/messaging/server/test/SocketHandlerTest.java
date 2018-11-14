@@ -70,6 +70,7 @@ public class SocketHandlerTest {
             return null;
         }).when(mqProvider).unsubscribe(any());
         socketHandler = new SocketHandler(objectMapper, mqProvider, messageService);
+        socketHandler.setTimeout(60);
     }
 
     private WebSocketSession getWebSocketSession() throws IOException {
@@ -149,6 +150,7 @@ public class SocketHandlerTest {
     public void testCheckRecipientAll() {
         mockPublish("1234", "default");
         MessageOutbox message = new MessageOutbox();
+        message.setMessage(new Message());
         message.setRecipients(Collections.singletonList(new Recipient(RecipientType.ALL)));
         mqProvider.publish(message);
         assertTrue(messageSent); // message should be sent, because it was addressed to all users
@@ -186,6 +188,7 @@ public class SocketHandlerTest {
     public void testCheckRecipientOK() {
         mockPublish("123", "default"); // it' OK
         MessageOutbox message = new MessageOutbox();
+        message.setMessage(new Message());
         message.setRecipients(Collections.singletonList(
                 new Recipient(RecipientType.USER, "123", "default")));
         mqProvider.publish(message);
