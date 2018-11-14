@@ -8,6 +8,7 @@ public class MessageOutbox implements Serializable {
     private static final long serialVersionUID = -5227708517651903498L;
 
     private Message message;
+    private ControlMessage command;
     private List<Recipient> recipients;
 
     public Message getMessage() {
@@ -16,6 +17,14 @@ public class MessageOutbox implements Serializable {
 
     public void setMessage(Message message) {
         this.message = message;
+    }
+
+    public ControlMessage getCommand() {
+        return command;
+    }
+
+    public void setCommand(ControlMessage command) {
+        this.command = command;
     }
 
     public List<Recipient> getRecipients() {

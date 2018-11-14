@@ -3,6 +3,7 @@ package ru.inovus.messaging.impl;
 import net.n2oapp.criteria.api.Direction;
 import net.n2oapp.criteria.api.Sorting;
 import org.jooq.*;
+import org.jooq.impl.DSL;
 import org.springframework.stereotype.Service;
 import ru.inovus.messaging.api.Message;
 import ru.inovus.messaging.api.UnreadMessagesInfo;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import static ru.inovus.messaging.impl.jooq.Sequences.MESSAGE_ID_SEQ;
 
@@ -41,7 +43,8 @@ public class MessageService {
     public Message createMessage(Message message, String recipient, String systemId) {
         InsertResultStep<MessageRecord> returning = dsl
                 .insertInto(Tables.MESSAGE)
-                .values(MESSAGE_ID_SEQ.nextval(), message.getCaption(), message.getText(),
+                .values(message.getId() != null ? message.getId() : MESSAGE_ID_SEQ.nextval(),
+                        message.getCaption(), message.getText(),
                         message.getSeverity(), message.getAlertType(), message.getSentAt(),
                         null, recipient, systemId)
                 .returning();
@@ -61,11 +64,11 @@ public class MessageService {
         return new UnreadMessagesInfo(count);
     }
 
-    public void markRead(String messageId) {
+    public void markRead(String... messageId) {
         dsl
                 .update(Tables.MESSAGE)
                 .set(Tables.MESSAGE.READ_AT, LocalDateTime.now(Clock.systemUTC()))
-                .where(Tables.MESSAGE.ID.eq(Integer.valueOf(messageId)))
+                .where(Tables.MESSAGE.ID.in(messageId))
                 .execute();
     }
 

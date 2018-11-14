@@ -2,6 +2,7 @@ package ru.inovus.messaging.api;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 public class Message implements Serializable {
 
@@ -14,6 +15,7 @@ public class Message implements Serializable {
     private AlertType alertType;
     private LocalDateTime sentAt;
     private LocalDateTime readAt;
+    private Map<String, String> data;
 
     public Message() {
     }
@@ -82,6 +84,14 @@ public class Message implements Serializable {
         return this.readAt == null;
     }
 
+    public Map<String, String> getData() {
+        return data;
+    }
+
+    public void setData(Map<String, String> data) {
+        this.data = data;
+    }
+
     @Override
     public String toString() {
         return "Message{" +
@@ -92,6 +102,7 @@ public class Message implements Serializable {
                 ", alertType=" + alertType +
                 ", sentAt=" + sentAt +
                 ", readAt=" + readAt +
+                ", data=" + data +
                 '}';
     }
 }

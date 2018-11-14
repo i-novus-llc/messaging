@@ -64,7 +64,7 @@ public class Message extends TableImpl<MessageRecord> {
     /**
      * The column <code>public.message.id</code>. Уникальный идентификатор
      */
-    public final TableField<MessageRecord, Integer> ID = createField("id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "Уникальный идентификатор");
+    public final TableField<MessageRecord, String> ID = createField("id", org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Уникальный идентификатор");
 
     /**
      * The column <code>public.message.caption</code>. Заголовок
