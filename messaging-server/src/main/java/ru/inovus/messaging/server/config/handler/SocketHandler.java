@@ -96,14 +96,18 @@ public class SocketHandler extends TextWebSocketHandler {
 
     public void sendTo(WebSocketSession user, MessageOutbox msg, String recipient, String systemId) {
         if (checkRecipient(msg, recipient, systemId)) {
-            Message message = messageService.createMessage(msg.getMessage(), recipient, systemId);
-            UnreadMessagesInfo unreadMessages = messageService.getUnreadMessages(recipient, systemId);
-            sendMessage(user, unreadMessages);
-            if (isNotExpired(msg)) {
-                sendMessage(user, message);
-            } else if (logger.isDebugEnabled()) {
-                logger.debug("Did not send message with id {} due to expiration {}",
-                        message.getId(), message.getSentAt());
+            if (msg.getMessage() != null) {
+                Message message = messageService.createMessage(msg.getMessage(), recipient, systemId);
+                UnreadMessagesInfo unreadMessages = messageService.getUnreadMessages(recipient, systemId);
+                sendMessage(user, unreadMessages);
+                if (isNotExpired(msg)) {
+                    sendMessage(user, message);
+                } else if (logger.isDebugEnabled()) {
+                    logger.debug("Did not send message with id {} due to expiration {}",
+                            message.getId(), message.getSentAt());
+                }
+            } else if (msg.getCommand() != null){
+                sendMessage(user, messageService.getUnreadMessages(recipient, systemId));
             }
         } else if (logger.isDebugEnabled()) {
             logger.debug("No recipients for message");

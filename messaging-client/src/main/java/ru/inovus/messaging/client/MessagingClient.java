@@ -32,8 +32,7 @@ public class MessagingClient {
             HttpHeaders headers = new HttpHeaders();
             MediaType mediaType = new MediaType("application", "json", Charset.forName("UTF-8"));
             headers.setContentType(mediaType);
-
-            if (message.getMessage().getSentAt() == null)
+            if (message.getMessage() != null && message.getMessage().getSentAt() == null)
                 message.getMessage().setSentAt(LocalDateTime.now(Clock.systemUTC()));
             HttpEntity<String> entity = new HttpEntity<>(mapper.writeValueAsString(message), headers);
             return restTemplate.postForObject(url, entity, ActionStatus.class);
@@ -42,16 +41,21 @@ public class MessagingClient {
         }
     }
 
-//    public static void main(String[] args) {
-//        MessageOutbox messageOutbox = new MessageOutbox();
+    public static void main(String[] args) {
+        MessageOutbox messageOutbox = new MessageOutbox();
 //        Message message = new Message();
 //        message.setSentAt(LocalDateTime.now(Clock.systemUTC()));
 //        message.setCaption("хай");
 //        message.setText("привет");
 //        message.setAlertType(AlertType.POPUP);
 //        message.setSeverity(Severity.WARNING);
+//        message.setData(Collections.singletonMap("foo", "bar"));
 //        messageOutbox.setMessage(message);
-//        messageOutbox.setRecipients(Collections.singletonList(new Recipient(RecipientType.ALL)));
-//        System.out.println(new MessagingClient("http://localhost:8081").sendMessage(messageOutbox));
-//    }
+        ControlMessage command = new ControlMessage();
+        command.setCommand(ControlCommand.DISMISS);
+        command.setMessageIds(Arrays.asList("1", "1541076587355"));
+        messageOutbox.setCommand(command);
+        messageOutbox.setRecipients(Collections.singletonList(new Recipient(RecipientType.ALL)));
+        System.out.println(new MessagingClient("http://localhost:8081").sendMessage(messageOutbox));
+    }
 }
