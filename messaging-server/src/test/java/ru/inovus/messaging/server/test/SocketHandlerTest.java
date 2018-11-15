@@ -53,7 +53,7 @@ public class SocketHandlerTest {
         doAnswer(invocation -> {
             markedRead = true;
             return null;
-        }).when(messageService).markRead(messageId);
+        }).when(messageService).markRead("default", messageId);
         doAnswer(invocation -> {
             markedReadAll = true;
             return null;

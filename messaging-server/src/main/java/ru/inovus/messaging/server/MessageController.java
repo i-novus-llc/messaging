@@ -45,14 +45,8 @@ public class MessageController {
         if (message.getMessage() != null) {
             if (message.getMessage().getSentAt() == null)
                 message.getMessage().setSentAt(LocalDateTime.now(Clock.systemUTC()));
-            mqProvider.publish(message);
-        } else if (message.getCommand() != null) {
-            ControlMessage command = message.getCommand();
-            if (ControlCommand.DISMISS.equals(command.getCommand())) {
-                messageService.markRead(command.getMessageIds().toArray(new String[0]));
-            }
-            mqProvider.publish(message);
         }
+        mqProvider.publish(message);
         return new ResponseEntity<>(new ActionStatus("Sent successfully"), HttpStatus.OK);
     }
 
