@@ -3,7 +3,6 @@ package ru.inovus.messaging.impl;
 import net.n2oapp.criteria.api.Direction;
 import net.n2oapp.criteria.api.Sorting;
 import org.jooq.*;
-import org.jooq.impl.DSL;
 import org.springframework.stereotype.Service;
 import ru.inovus.messaging.api.Message;
 import ru.inovus.messaging.api.UnreadMessagesInfo;
@@ -17,7 +16,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 import static ru.inovus.messaging.impl.jooq.Sequences.MESSAGE_ID_SEQ;
 
@@ -64,11 +62,12 @@ public class MessageService {
         return new UnreadMessagesInfo(count);
     }
 
-    public void markRead(String... messageId) {
+    public void markRead(String systemId, String... messageId) {
         dsl
                 .update(Tables.MESSAGE)
                 .set(Tables.MESSAGE.READ_AT, LocalDateTime.now(Clock.systemUTC()))
-                .where(Tables.MESSAGE.ID.in(messageId))
+                .where(Tables.MESSAGE.ID.in(messageId),
+                        Tables.MESSAGE.SYSTEM_ID.eq(systemId))
                 .execute();
     }
 
@@ -121,7 +120,7 @@ public class MessageService {
     private SortField<?> convertFieldToSortField(Field field, Direction sortDirection) {
         if (sortDirection == Direction.ASC) {
             return field.asc();
-        } else  {
+        } else {
             return field.desc();
         }
     }

@@ -60,7 +60,7 @@ public class SocketHandler extends TextWebSocketHandler {
         String systemId = socketEvent.getHeaders().get(SYSTEM_ID_HEADER);
         if (SocketEventType.READ.equals(socketEvent.getType())) {
             if (socketEvent.getMessage() != null)
-                messageService.markRead(socketEvent.getMessage().getId());
+                messageService.markRead(systemId, socketEvent.getMessage().getId());
             else
                 messageService.markReadAll(authToken, systemId);
         }
@@ -110,7 +110,8 @@ public class SocketHandler extends TextWebSocketHandler {
                     logger.debug("Did not send message with id {} due to expiration {}",
                             message.getId(), message.getSentAt());
                 }
-            } else if (msg.getCommand() != null){
+            } else if (msg.getCommand() != null) {
+                messageService.markRead(systemId, msg.getCommand().getMessageIds().toArray(new String[0]));
                 sendMessage(user, messageService.getUnreadMessages(recipient, systemId));
             }
         } else if (logger.isDebugEnabled()) {
