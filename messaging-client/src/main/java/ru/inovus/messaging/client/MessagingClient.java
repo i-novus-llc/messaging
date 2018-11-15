@@ -40,22 +40,4 @@ public class MessagingClient {
             throw new RuntimeException(e);
         }
     }
-
-    public static void main(String[] args) {
-        MessageOutbox messageOutbox = new MessageOutbox();
-//        Message message = new Message();
-//        message.setSentAt(LocalDateTime.now(Clock.systemUTC()));
-//        message.setCaption("хай");
-//        message.setText("привет");
-//        message.setAlertType(AlertType.POPUP);
-//        message.setSeverity(Severity.WARNING);
-//        message.setData(Collections.singletonMap("foo", "bar"));
-//        messageOutbox.setMessage(message);
-        ControlMessage command = new ControlMessage();
-        command.setCommand(ControlCommand.DISMISS);
-        command.setMessageIds(Arrays.asList("1", "1541076587355"));
-        messageOutbox.setCommand(command);
-        messageOutbox.setRecipients(Collections.singletonList(new Recipient(RecipientType.ALL)));
-        System.out.println(new MessagingClient("http://localhost:8081").sendMessage(messageOutbox));
-    }
 }
