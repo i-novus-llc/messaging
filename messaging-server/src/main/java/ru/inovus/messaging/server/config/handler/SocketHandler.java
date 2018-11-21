@@ -74,7 +74,7 @@ public class SocketHandler extends TextWebSocketHandler {
 
     private boolean isNotExpired(MessageOutbox msg) {
         return msg.getMessage().getSentAt() == null ||
-                !msg.getMessage().getSentAt().plus(timeout, ChronoUnit.SECONDS)
+                msg.getMessage().getSentAt().plus(timeout, ChronoUnit.SECONDS)
                         .isBefore(LocalDateTime.now(Clock.systemUTC()));
     }
 
