@@ -13,11 +13,12 @@ import ru.inovus.messaging.api.*;
 import ru.inovus.messaging.impl.MessageService;
 import ru.inovus.messaging.server.model.SocketEvent;
 import ru.inovus.messaging.server.model.SocketEventType;
-import ru.inovus.messaging.api.MqProvider;
 
 import java.io.IOException;
 import java.time.Clock;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
 @Component
@@ -72,10 +73,15 @@ public class SocketHandler extends TextWebSocketHandler {
         }
     }
 
-    private boolean isNotExpired(MessageOutbox msg) {
-        return msg.getMessage().getSentAt() == null ||
-                msg.getMessage().getSentAt().plus(timeout, ChronoUnit.SECONDS)
-                        .isBefore(LocalDateTime.now(Clock.systemUTC()));
+    private boolean isNotExpired(Message msg) {
+        return isNotExpired(msg.getSentAt(), LocalDateTime.now(Clock.systemUTC()), timeout);
+    }
+
+    /**
+     * the law: {@code end - start <= timeout => end - timeout <= start}
+     */
+    public static boolean isNotExpired(LocalDateTime start, LocalDateTime end, Integer timeout) {
+        return start == null || end == null || end.minus(timeout, ChronoUnit.SECONDS).isBefore(start);
     }
 
     private boolean checkRecipient(MessageOutbox msg, String recipient, String systemId) {
@@ -107,7 +113,7 @@ public class SocketHandler extends TextWebSocketHandler {
                 Message message = messageService.createMessage(msg.getMessage(), recipient, systemId);
                 UnreadMessagesInfo unreadMessages = messageService.getUnreadMessages(recipient, systemId);
                 sendMessage(user, unreadMessages);
-                if (isNotExpired(msg)) {
+                if (isNotExpired(msg.getMessage())) {
                     sendMessage(user, message);
                 } else if (logger.isDebugEnabled()) {
                     logger.debug("Did not send message with id {} due to expiration {}",

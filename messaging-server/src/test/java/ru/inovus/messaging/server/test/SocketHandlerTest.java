@@ -14,6 +14,7 @@ import ru.inovus.messaging.server.model.SocketEvent;
 import ru.inovus.messaging.server.model.SocketEventType;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +23,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+import static ru.inovus.messaging.server.config.handler.SocketHandler.isNotExpired;
 
 //@SpringBootTest
 //@RunWith(SpringRunner.class)
@@ -193,5 +195,17 @@ public class SocketHandlerTest {
                 new Recipient(RecipientType.USER, "123", "default")));
         mqProvider.publish(message);
         assertTrue(messageSent); // message should be sent
+    }
+
+    @Test
+    public void testExpiration() {
+        assertTrue("Shouldn't be expired", isNotExpired(
+                LocalDateTime.parse("2018-11-21T15:30:00"),
+                LocalDateTime.parse("2018-11-21T15:30:59"),
+                60));
+        assertFalse("Should be expired", isNotExpired(
+                LocalDateTime.parse("2018-11-21T15:30:00"),
+                LocalDateTime.parse("2018-11-21T15:31:00"),
+                60));
     }
 }
