@@ -7,7 +7,7 @@
     <groupId>ru.i-novus.messaging</groupId>
     <artifactId>messaging-pom</artifactId>
     <packaging>pom</packaging>
-    <version>1.4.3-SNAPSHOT</version>
+    <version>1.4.4-SNAPSHOT</version>
 
     <modules>
         <module>messaging-api</module>
