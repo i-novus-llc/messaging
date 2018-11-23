@@ -24,6 +24,7 @@ spring.activemq:
 novus.messaging:
   timeout: 60
   topic: novus-messaging-notify
+  durable: true
   auth-header-name: X-Auth-Token
 
 management:
