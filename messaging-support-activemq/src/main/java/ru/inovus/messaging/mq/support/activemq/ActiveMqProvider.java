@@ -32,10 +32,14 @@ public class ActiveMqProvider implements MqProvider {
     private final String topic;
     private Map<Serializable, DefaultMessageListenerContainer> containers = new ConcurrentHashMap<>();
 
+    private final Boolean durable;
+
     public ActiveMqProvider(ObjectMapper objectMapper,
                             @Value("${spring.activemq.broker-url}") String brokerUrl,
-                            @Value("${novus.messaging.topic}") String topic) {
+                            @Value("${novus.messaging.topic}") String topic,
+                            @Value("${novus.messaging.durable}") Boolean durable) {
         this.objectMapper = objectMapper;
+        this.durable = durable;
         activeMQConnectionFactory = new ActiveMQConnectionFactory();
         activeMQConnectionFactory.setBrokerURL(brokerUrl);
         this.jmsTemplate = new JmsTemplate(new CachingConnectionFactory(activeMQConnectionFactory));
@@ -59,10 +63,12 @@ public class ActiveMqProvider implements MqProvider {
             }
         });
         container.setConnectionFactory(activeMQConnectionFactory);
-        container.setSubscriptionDurable(true);
         container.setDestination(new ActiveMQTopic(topic));
-        container.setClientId(systemId + "." + authToken);
-        container.setDurableSubscriptionName(topic + "." + systemId + "." + authToken);
+        if (Boolean.TRUE.equals(durable)) {
+            container.setSubscriptionDurable(true);
+            container.setClientId(systemId + "." + authToken);
+            container.setDurableSubscriptionName(topic + "." + systemId + "." + authToken);
+        }
         container.afterPropertiesSet();
         container.start();
         containers.put(subscriber, container);
