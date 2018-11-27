@@ -7,3 +7,4 @@ spring:
       port: 8500
       config:
         enabled: true
+        fail-fast: false
