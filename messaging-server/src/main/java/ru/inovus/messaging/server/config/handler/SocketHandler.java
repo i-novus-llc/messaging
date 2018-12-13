@@ -107,7 +107,7 @@ public class SocketHandler extends TextWebSocketHandler {
     public void sendTo(WebSocketSession user, MessageOutbox msg, String recipient, String systemId) {
         if (msg.getCommand() != null) {
             messageService.markRead(systemId, msg.getCommand().getMessageIds().toArray(new String[0]));
-            sendMessage(user, messageService.getUnreadMessages(recipient, systemId));
+            sendMessage(user, msg.getCommand());
         } else if (checkRecipient(msg, recipient, systemId)) {
             if (msg.getMessage() != null) {
                 Message message = messageService.createMessage(msg.getMessage(), recipient, systemId);

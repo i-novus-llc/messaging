@@ -29,3 +29,13 @@ databaseChangeLog:
             relativeToChangelogFile: true
             splitStatements: true
             stripComments: true
+  - changeSet:
+      id: 4
+      author: mhafizov
+      changes:
+        -sqlFile:
+          encoding: utf8
+          path: sql/change_pk.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          stripComments: true
