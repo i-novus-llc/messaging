@@ -34,8 +34,8 @@ databaseChangeLog:
       author: mhafizov
       changes:
         - sqlFile:
-          encoding: utf8
-          path: sql/change_pk.sql
-          relativeToChangelogFile: true
-          splitStatements: true
-          stripComments: true
+            encoding: utf8
+            path: sql/change_pk.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
