@@ -33,7 +33,7 @@ databaseChangeLog:
       id: 4
       author: mhafizov
       changes:
-        -sqlFile:
+        - sqlFile:
           encoding: utf8
           path: sql/change_pk.sql
           relativeToChangelogFile: true
