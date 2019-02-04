@@ -21,7 +21,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static ru.inovus.messaging.server.config.handler.SocketHandler.isNotExpired;
 
@@ -142,7 +142,7 @@ public class SocketHandlerTest {
 
     private void mockPublish(String recipient, String systemId) {
         doAnswer(invocation -> {
-            MessageOutbox messageOutbox = invocation.getArgumentAt(0, MessageOutbox.class);
+            MessageOutbox messageOutbox = invocation.getArgument(0);
             socketHandler.sendTo(getWebSocketSession(), messageOutbox, recipient, systemId);
             return null;
         }).when(mqProvider).publish(any());
