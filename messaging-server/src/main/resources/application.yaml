@@ -31,3 +31,7 @@ management:
   context-path: /actuator
   security:
     roles: SUPERUSER
+
+
+#fix compability with spring-cloud: https://github.com/spring-cloud/spring-cloud-config/issues/1142#issuecomment-440538196
+spring.main.allow-bean-definition-overriding: true
