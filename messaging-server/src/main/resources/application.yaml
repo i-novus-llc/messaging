@@ -35,3 +35,37 @@ management:
 
 #fix compability with spring-cloud: https://github.com/spring-cloud/spring-cloud-config/issues/1142#issuecomment-440538196
 spring.main.allow-bean-definition-overriding: true
+
+cxf.path: /api
+cxf.jaxrs.component-scan: true
+cxf.servlet.init.service-list-path: /info
+
+security.enabled: false
+security.basic.enabled: false
+spring.http.encoding.forceResponse: true
+spring.http.encoding.force: true
+
+keycloak.redirect-url: http://localhost:8080
+#keycloak.server-url:http://keycloak.i-novus.ru/auth
+keycloak.server-url: http://localhost:8180/auth
+#keycloak.serverUrl: http://keycloak.i-novus.ru/auth
+keycloak.serverUrl: http://localhost:8180/auth
+keycloak.realm: security-admin
+
+security:
+  oauth2:
+    auth-server-uri: ${keycloak.server-url}/realms/${keycloak.realm}/protocol/openid-connect
+    resource:
+      id: messaging-service
+      token-info-uri: ${security.oauth2.auth-server-uri}/token/introspect
+      user-info-uri: ${security.oauth2.auth-server-uri}/userinfo
+      jwt.key-value: |
+        -----BEGIN PUBLIC KEY-----
+        MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApN1dhbcszQIEa5Z0BCxjMlchaRCKVHXB0T2Cta3muLtTHfZlC/wJqJlq64QDgS40okUXffP2pSsHCJH8+sKl3wwC6Bm3owJ+zN6ghmfXJThcJWzuNcQkqOhPQxx7NYxxPgXCtQFFI+gnnWrJeVNi7OJRY73rCEo6lDDZsM7E09FLBaMX3TuxRpNeVqrXmqEYM4Porxh8Ztbqvkyl6VdB3XEkyxbD8WKWuNaILsDmqJgoOB84e59yyEMuUjmjIehCKmLHtn/jSLuRM5axiUH1NKWOVBw8PHeyYHuzNH/6mSIx6FDVWgiuqJYyT6iiRzZxZNmu+A2ClrCpf3eNEBki8QIDAQAB
+        -----END PUBLIC KEY-----
+#    client:
+#      client-id: messaging-service
+#      client-secret: 0172295d-3343-4068-9d13-b6f9df3157b3
+#      scope: senduser,sendgroup,sendall
+#      access-token-uri: ${security.oauth2.auth-server-uri}/token
+#      grant-type: client_credentials

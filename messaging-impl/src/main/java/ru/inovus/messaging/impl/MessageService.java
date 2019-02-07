@@ -3,12 +3,15 @@ package ru.inovus.messaging.impl;
 import net.n2oapp.criteria.api.Direction;
 import net.n2oapp.criteria.api.Sorting;
 import org.jooq.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.inovus.messaging.api.Message;
 import ru.inovus.messaging.api.UnreadMessagesInfo;
 import ru.inovus.messaging.impl.jooq.Tables;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
-import ru.inovus.messaging.impl.rest.MessagingCriteria;
+import ru.inovus.messaging.api.MessagingCriteria;
 import ru.inovus.messaging.impl.rest.MessagingResponse;
 
 import java.time.Clock;
@@ -79,7 +82,7 @@ public class MessageService {
                 .execute();
     }
 
-    public MessagingResponse getMessages(MessagingCriteria criteria) {
+    public Page<Message> getMessages(MessagingCriteria criteria) {
         Condition condition = Tables.MESSAGE.RECIPIENT.eq(criteria.getUser())
                 .and(Tables.MESSAGE.SYSTEM_ID.eq(criteria.getSystemId()));
         SelectConditionStep<MessageRecord> query = dsl
@@ -87,11 +90,11 @@ public class MessageService {
                 .where(condition);
         int count = dsl.fetchCount(query);
         List<Message> collection = query
-                .orderBy(getSortFields(criteria.getSortings()))
-                .limit(criteria.getSize())
-                .offset(criteria.getFirst())
+                .orderBy(getSortFields(criteria.getOrders()))
+                .limit(criteria.getPageSize())
+                .offset((int)criteria.getOffset())
                 .fetch(MAPPER);
-        return new MessagingResponse(count, collection);
+        return new PageImpl<>(collection, criteria, count);
     }
 
     public Message getMessage(String messageId) {
@@ -101,15 +104,15 @@ public class MessageService {
                 .fetchOne(MAPPER);
     }
 
-    private Collection<SortField<?>> getSortFields(List<Sorting> sortingList) {
+    private Collection<SortField<?>> getSortFields(List<Sort.Order> sortingList) {
         Collection<SortField<?>> querySortFields = new ArrayList<>();
 
         if (sortingList == null) {
             return querySortFields;
         }
 
-        for (Sorting sorting : sortingList) {
-            Field field = Tables.MESSAGE.field(sorting.getField());
+        for (Sort.Order sorting : sortingList) {
+            Field field = Tables.MESSAGE.field(sorting.getProperty());
             SortField<?> querySortField = convertFieldToSortField(field, sorting.getDirection());
             querySortFields.add(querySortField);
         }
@@ -117,8 +120,8 @@ public class MessageService {
         return querySortFields;
     }
 
-    private SortField<?> convertFieldToSortField(Field field, Direction sortDirection) {
-        if (sortDirection == Direction.ASC) {
+    private SortField<?> convertFieldToSortField(Field field, Sort.Direction sortDirection) {
+        if (sortDirection == Sort.Direction.ASC) {
             return field.asc();
         } else {
             return field.desc();

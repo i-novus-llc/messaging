@@ -1,20 +1,16 @@
 package ru.inovus.messaging.server;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Controller;
 import ru.inovus.messaging.api.*;
 import ru.inovus.messaging.impl.MessageService;
-import ru.inovus.messaging.impl.rest.MessagingCriteria;
-import ru.inovus.messaging.impl.rest.MessagingResponse;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
 
-@RestController
-@RequestMapping("/messages")
-public class MessageController {
+@Controller
+public class MessageController implements MessagingRest {
 
     private final MessageService messageService;
     private final Long timeout;
@@ -28,32 +24,27 @@ public class MessageController {
         this.mqProvider = mqProvider;
     }
 
-    @GetMapping
-    @ResponseBody
-    public ResponseEntity<MessagingResponse> getMessages(@ModelAttribute MessagingCriteria criteria) {
-        return new ResponseEntity<>(messageService.getMessages(criteria), HttpStatus.OK);
+    @Override
+    public Page<Message> getMessages(MessagingCriteria criteria) {
+         return messageService.getMessages(criteria);
     }
 
-    @GetMapping(path = "/{id}")
-    public ResponseEntity<Message> getMessage(@PathVariable("id") String id) {
-        return new ResponseEntity<>(messageService.getMessage(id), HttpStatus.OK);
+    @Override
+    public Message getMessage(String id) {
+        return messageService.getMessage(id);
     }
 
-    @PostMapping
-    @ResponseBody
-    public ResponseEntity<ActionStatus> sendMessage(final @RequestBody MessageOutbox message) {
+    @Override
+    public void sendMessage(final MessageOutbox message) {
         if (message.getMessage() != null) {
             if (message.getMessage().getSentAt() == null)
                 message.getMessage().setSentAt(LocalDateTime.now(Clock.systemUTC()));
         }
         mqProvider.publish(message);
-        return new ResponseEntity<>(new ActionStatus("Sent successfully"), HttpStatus.OK);
     }
 
-    @PostMapping(path = "/{id}/read")
-    @ResponseBody
-    public ResponseEntity<ActionStatus> markRead(@PathVariable("id") String id) {
+    @Override
+    public void markRead(String id) {
         messageService.markRead(id);
-        return new ResponseEntity<>(new ActionStatus("Marked as read"), HttpStatus.OK);
     }
 }
