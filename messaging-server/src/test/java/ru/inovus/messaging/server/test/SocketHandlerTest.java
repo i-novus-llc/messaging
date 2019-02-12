@@ -9,6 +9,7 @@ import org.springframework.web.socket.WebSocketSession;
 import ru.inovus.messaging.api.*;
 import ru.inovus.messaging.impl.MessageService;
 import ru.inovus.messaging.server.MessagingApplication;
+import ru.inovus.messaging.server.auth.NoAuthAuthenticator;
 import ru.inovus.messaging.server.config.handler.SocketHandler;
 import ru.inovus.messaging.server.model.SocketEvent;
 import ru.inovus.messaging.server.model.SocketEventType;
@@ -71,7 +72,11 @@ public class SocketHandlerTest {
             unsubscribed = true;
             return null;
         }).when(mqProvider).unsubscribe(any());
-        socketHandler = new SocketHandler(objectMapper, mqProvider, messageService);
+        socketHandler = new SocketHandler();
+        socketHandler.setAuthenticator(new NoAuthAuthenticator());
+        socketHandler.setMapper(objectMapper);
+        socketHandler.setMessageService(messageService);
+        socketHandler.setMqProvider(mqProvider);
         socketHandler.setTimeout(60);
     }
 

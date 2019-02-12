@@ -3,7 +3,11 @@ package ru.inovus.messaging.server.config.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -11,10 +15,12 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import ru.inovus.messaging.api.*;
 import ru.inovus.messaging.impl.MessageService;
+import ru.inovus.messaging.server.auth.WebSocketAuthenticator;
 import ru.inovus.messaging.server.model.SocketEvent;
 import ru.inovus.messaging.server.model.SocketEventType;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,22 +32,41 @@ public class SocketHandler extends TextWebSocketHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(SocketHandler.class);
 
-    private final ObjectMapper mapper;
-    private final MqProvider mqProvider;
-    private final MessageService messageService;
     public static final String AUTH_TOKEN_HEADER = "X-Auth-Token";
     public static final String SYSTEM_ID_HEADER = "X-System-Id";
 
     private Integer timeout;
+
+    private WebSocketAuthenticator authenticator;
+
+    private ObjectMapper mapper;
+
+    private MqProvider mqProvider;
+
+    private MessageService messageService;
 
     @Value("${novus.messaging.timeout}")
     public void setTimeout(Integer timeout) {
         this.timeout = timeout;
     }
 
-    public SocketHandler(ObjectMapper mapper, MqProvider mqProvider, MessageService messageService) {
-        this.mapper = mapper;
+    @Autowired
+    public void setAuthenticator(WebSocketAuthenticator authenticator) {
+        this.authenticator = authenticator;
+    }
+
+    @Autowired
+    public void setMqProvider(MqProvider mqProvider) {
         this.mqProvider = mqProvider;
+    }
+
+    @Autowired
+    public void setMapper(ObjectMapper mapper) {
+        this.mapper = mapper;
+    }
+
+    @Autowired
+    public void setMessageService(MessageService messageService) {
         this.messageService = messageService;
     }
 
@@ -57,20 +82,34 @@ public class SocketHandler extends TextWebSocketHandler {
     }
 
     private void handleEvent(WebSocketSession session, SocketEvent socketEvent) {
-        String authToken = socketEvent.getHeaders().get(AUTH_TOKEN_HEADER);
         String systemId = socketEvent.getHeaders().get(SYSTEM_ID_HEADER);
+        if (SocketEventType.CONNECT.equals(socketEvent.getType())) {
+            String authToken = socketEvent.getHeaders().get(AUTH_TOKEN_HEADER);
+            Authentication user = authenticator.authenticate(authToken);
+            if (user == null) {
+                try {
+                    session.close(CloseStatus.NOT_ACCEPTABLE);
+                } catch (IOException e) {
+                    logger.error("Close error", e);
+                }
+                return;
+            }
+            SecurityContextHolder.setContext(new SecurityContextImpl(user));
+            UnreadMessagesInfo unreadMessages = messageService.getUnreadMessages(user.getName(), systemId);
+            sendMessage(session, unreadMessages);
+            mqProvider.subscribe(session.getId(), systemId, authToken, messageOutbox ->
+                    sendTo(session, messageOutbox, authToken, systemId));
+        }
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        UnreadMessagesInfo unreadMessages = messageService.getUnreadMessages(userName, systemId);
+        sendMessage(session, unreadMessages);
         if (SocketEventType.READ.equals(socketEvent.getType())) {
             if (socketEvent.getMessage() != null)
                 messageService.markRead(systemId, socketEvent.getMessage().getId());
             else
-                messageService.markReadAll(authToken, systemId);
+                messageService.markReadAll(userName, systemId);
         }
-        UnreadMessagesInfo unreadMessages = messageService.getUnreadMessages(authToken, systemId);
-        sendMessage(session, unreadMessages);
-        if (SocketEventType.CONNECT.equals(socketEvent.getType())) {
-            mqProvider.subscribe(session.getId(), systemId, authToken, messageOutbox ->
-                    sendTo(session, messageOutbox, authToken, systemId));
-        }
+
     }
 
     private boolean isNotExpired(Message msg) {

@@ -45,7 +45,7 @@ security.basic.enabled: false
 spring.http.encoding.forceResponse: true
 spring.http.encoding.force: true
 
-keycloak.redirect-url: http://localhost:8080
+keycloak.redirect-url: http://localhost:8081
 #keycloak.server-url:http://keycloak.i-novus.ru/auth
 keycloak.server-url: http://localhost:8180/auth
 #keycloak.serverUrl: http://keycloak.i-novus.ru/auth
@@ -61,7 +61,7 @@ security:
       user-info-uri: ${security.oauth2.auth-server-uri}/userinfo
       jwt.key-value: |
         -----BEGIN PUBLIC KEY-----
-        MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApN1dhbcszQIEa5Z0BCxjMlchaRCKVHXB0T2Cta3muLtTHfZlC/wJqJlq64QDgS40okUXffP2pSsHCJH8+sKl3wwC6Bm3owJ+zN6ghmfXJThcJWzuNcQkqOhPQxx7NYxxPgXCtQFFI+gnnWrJeVNi7OJRY73rCEo6lDDZsM7E09FLBaMX3TuxRpNeVqrXmqEYM4Porxh8Ztbqvkyl6VdB3XEkyxbD8WKWuNaILsDmqJgoOB84e59yyEMuUjmjIehCKmLHtn/jSLuRM5axiUH1NKWOVBw8PHeyYHuzNH/6mSIx6FDVWgiuqJYyT6iiRzZxZNmu+A2ClrCpf3eNEBki8QIDAQAB
+        MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAi54+TgAUWz3rUrAqdjBcmw6lueJdDcDh5ymU3uuNJsBOTz4mI3lFle505/xta6mpaMZynoS9Nbs6HJswWScCNilc97GFpFpn1KMYV0Ct8Mk0R2gEBk3ky+ASjhMXdd0UIhFywHivU0eaVQVXLfFFg68b/MK4NyJTR33pgUy7VZTtup+h8UFWzVuKu1tfrI6rVe6o2biKM+z258uWXxbEI08DyBTyvAL+GKb0HY1G59BQ/6rziYCVDSO3EQgb+rL4ZNmlVb13W0ePfyWUKnBPcmk9TRejaYmYSZiwQjDgx9+1yBCEeDPPt/LyVAac2Bd5Vq2VVJfz7bUf2TTwT9hBdQIDAQAB
         -----END PUBLIC KEY-----
 #    client:
 #      client-id: messaging-service
