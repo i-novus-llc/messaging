@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <groupId>net.n2oapp.platform</groupId>
+        <artifactId>n2o-platform-parent</artifactId>
+        <version>1.6.1-SNAPSHOT</version>
+        <!--TODO: после перехода n2o на второй boot сделать parent messaging-pom-->
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>messaging-n2o</artifactId>
+
+    <properties>
+        <backend.default.path>http://localhost:8080/messaging/api</backend.default.path>
+        <frontend.default.port>8081</frontend.default.port>
+        <config.server.enable>false</config.server.enable>
+
+        <n2o.version>7.0.6</n2o.version>
+        <security.admin.version>3.0-SNAPSHOT</security.admin.version>
+        <jaxws.version>2.3.2</jaxws.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>net.n2oapp.framework</groupId>
+            <artifactId>n2o-spring-boot-starter</artifactId>
+            <version>${n2o.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.n2oapp.framework.security</groupId>
+            <artifactId>security-auth-oauth2</artifactId>
+            <version>${security.admin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.n2oapp.framework.security</groupId>
+            <artifactId>security-admin-rest-client</artifactId>
+            <version>${security.admin.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.n2oapp.framework</groupId>
+            <artifactId>n2o-header</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.n2oapp.framework</groupId>
+            <artifactId>n2o-engine-rest</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.n2oapp.platform</groupId>
+            <artifactId>n2o-platform-starter-jaxrs-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-consul-config</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.n2oapp.platform</groupId>
+            <artifactId>n2o-platform-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sun.xml.ws</groupId>
+            <artifactId>rt</artifactId>
+            <version>${jaxws.version}</version>
+        </dependency>
+
+    </dependencies>
+
+
+    <build>
+        <resources>
+            <resource>
+                <directory>messaging-react/build</directory>
+                <targetPath>META-INF/resources</targetPath>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <finalName>messaging</finalName>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>3.2.1</version>
+                    <configuration>
+                        <failOnMissingWebXml>false</failOnMissingWebXml>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>production</id>
+            <properties>
+                <backend.default.path>http://backend:8080/messaging/api</backend.default.path>
+                <frontend.default.port>8080</frontend.default.port>
+                <config.server.enable>true</config.server.enable>
+            </properties>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <executable>true</executable>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>

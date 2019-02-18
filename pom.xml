@@ -12,9 +12,9 @@
     <modules>
         <module>messaging-api</module>
         <module>messaging-impl</module>
-        <module>messaging-server</module>
+        <module>messaging-rest</module>
         <module>messaging-client</module>
-        <module>messaging-n2o-plugin</module>
+        <module>messaging-n2o</module>
         <module>messaging-support-activemq</module>
         <module>messaging-support-kafka</module>
     </modules>
@@ -82,11 +82,6 @@
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-messaging</artifactId>
                 <version>${spring-security.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.webjars</groupId>
-                <artifactId>webjars-locator-core</artifactId>
-                <version>0.33</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
