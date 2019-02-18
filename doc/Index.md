@@ -16,3 +16,4 @@
 
 [Свойства сервиса](Properties.md)
 [Инструкция для DevOps](DevOps.md)
+[Security](Security.md)
