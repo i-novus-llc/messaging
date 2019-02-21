@@ -96,6 +96,18 @@
                                     <types>.*</types>
                                 </forcedType>
                                 <forcedType>
+                                    <userType>ru.inovus.messaging.api.InfoType</userType>
+                                    <converter>ru.inovus.messaging.impl.InfoTypeConverter</converter>
+                                    <expression>.*\.info_type.*</expression>
+                                    <types>.*</types>
+                                </forcedType>
+                                <forcedType>
+                                    <userType>ru.inovus.messaging.api.FormationType</userType>
+                                    <converter>ru.inovus.messaging.impl.FormationTypeConverter</converter>
+                                    <expression>.*\.formation_type.*</expression>
+                                    <types>.*</types>
+                                </forcedType>
+                                <forcedType>
                                     <userType>java.time.LocalDateTime</userType>
                                     <converter>org.jooq.impl.TimestampToLocalDateTimeConverter</converter>
                                     <expression>.*_at</expression>

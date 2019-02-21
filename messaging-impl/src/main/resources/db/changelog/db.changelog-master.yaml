@@ -39,3 +39,13 @@ databaseChangeLog:
             relativeToChangelogFile: true
             splitStatements: true
             stripComments: true
+  - changeSet:
+      id: MICROSERVICES-58
+      author: mhafizov
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/MICROSERVICES-58.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true

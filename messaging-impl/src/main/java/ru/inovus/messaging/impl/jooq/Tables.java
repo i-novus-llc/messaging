@@ -4,9 +4,9 @@
 package ru.inovus.messaging.impl.jooq;
 
 
-import javax.annotation.Generated;
+import ru.inovus.messaging.impl.jooq.tables.*;
 
-import ru.inovus.messaging.impl.jooq.tables.Message;
+import javax.annotation.Generated;
 
 
 /**
@@ -23,7 +23,27 @@ import ru.inovus.messaging.impl.jooq.tables.Message;
 public class Tables {
 
     /**
+     * Компоненты системы
+     */
+    public static final Component COMPONENT = ru.inovus.messaging.impl.jooq.tables.Component.COMPONENT;
+
+    /**
      * Сообщения
      */
     public static final Message MESSAGE = ru.inovus.messaging.impl.jooq.tables.Message.MESSAGE;
+
+    /**
+     * Шаблоны уведомлений (общесистемные настройки)
+     */
+    public static final MessageSetting MESSAGE_SETTING = ru.inovus.messaging.impl.jooq.tables.MessageSetting.MESSAGE_SETTING;
+
+    /**
+     * Получатели сообщения
+     */
+    public static final Recipient RECIPIENT = ru.inovus.messaging.impl.jooq.tables.Recipient.RECIPIENT;
+
+    /**
+     * Пользовательские настройки уведомлений
+     */
+    public static final UserSetting USER_SETTING = ru.inovus.messaging.impl.jooq.tables.UserSetting.USER_SETTING;
 }

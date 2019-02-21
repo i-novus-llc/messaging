@@ -10,7 +10,7 @@ import javax.ws.rs.core.MediaType;
 @Path("/messages")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public interface MessagingRest {
+public interface MessageRest {
     @GET
     @ApiOperation("Получение страницы сообщений по критериям поиска")
     @ApiResponse(code = 200, message = "Страница сообщений")

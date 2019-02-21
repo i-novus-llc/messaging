@@ -1,26 +1,31 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import N2O from 'n2o';
+import DataGrid from 'n2o-data-grid';
+import 'n2o-data-grid/css/DataGrid.css';
+import { authProvider } from 'n2o-auth';
+
+const config = {
+  widgets: {
+    DataGrid: (props) => <DataGrid
+        id='DataGrid'
+        fetchOnInit={true}
+        minHeight={500}
+        rowHeight={50}
+        filterable={true}
+        {...props}
+        />
+  },
+  security: {
+    authProvider,
+    externalLoginUrl: '/'
+  }
+
+};
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+        <N2O {...config}  />
     );
   }
 }

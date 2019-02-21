@@ -4,18 +4,16 @@
 package ru.inovus.messaging.impl.jooq;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.annotation.Generated;
-
 import org.jooq.Catalog;
 import org.jooq.Sequence;
 import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
+import ru.inovus.messaging.impl.jooq.tables.*;
 
-import ru.inovus.messaging.impl.jooq.tables.Message;
+import javax.annotation.Generated;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -31,7 +29,7 @@ import ru.inovus.messaging.impl.jooq.tables.Message;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Public extends SchemaImpl {
 
-    private static final long serialVersionUID = -1772002947;
+    private static final long serialVersionUID = -1717588378;
 
     /**
      * The reference instance of <code>public</code>
@@ -39,9 +37,29 @@ public class Public extends SchemaImpl {
     public static final Public PUBLIC = new Public();
 
     /**
+     * Компоненты системы
+     */
+    public final Component COMPONENT = ru.inovus.messaging.impl.jooq.tables.Component.COMPONENT;
+
+    /**
      * Сообщения
      */
     public final Message MESSAGE = ru.inovus.messaging.impl.jooq.tables.Message.MESSAGE;
+
+    /**
+     * Шаблоны уведомлений (общесистемные настройки)
+     */
+    public final MessageSetting MESSAGE_SETTING = ru.inovus.messaging.impl.jooq.tables.MessageSetting.MESSAGE_SETTING;
+
+    /**
+     * Получатели сообщения
+     */
+    public final Recipient RECIPIENT = ru.inovus.messaging.impl.jooq.tables.Recipient.RECIPIENT;
+
+    /**
+     * Пользовательские настройки уведомлений
+     */
+    public final UserSetting USER_SETTING = ru.inovus.messaging.impl.jooq.tables.UserSetting.USER_SETTING;
 
     /**
      * No further instances allowed
@@ -68,7 +86,9 @@ public class Public extends SchemaImpl {
 
     private final List<Sequence<?>> getSequences0() {
         return Arrays.<Sequence<?>>asList(
-            Sequences.MESSAGE_ID_SEQ);
+            Sequences.MESSAGE_ID_SEQ,
+            Sequences.MESSAGE_SETTING_ID_SEQ,
+            Sequences.RECIPIENT_ID_SEQ);
     }
 
     @Override
@@ -80,6 +100,10 @@ public class Public extends SchemaImpl {
 
     private final List<Table<?>> getTables0() {
         return Arrays.<Table<?>>asList(
-            Message.MESSAGE);
+            Component.COMPONENT,
+            Message.MESSAGE,
+            MessageSetting.MESSAGE_SETTING,
+            Recipient.RECIPIENT,
+            UserSetting.USER_SETTING);
     }
 }

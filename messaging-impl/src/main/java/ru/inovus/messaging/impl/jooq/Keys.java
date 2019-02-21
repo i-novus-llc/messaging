@@ -4,13 +4,13 @@
 package ru.inovus.messaging.impl.jooq;
 
 
-import javax.annotation.Generated;
-
+import org.jooq.ForeignKey;
 import org.jooq.UniqueKey;
 import org.jooq.impl.Internal;
+import ru.inovus.messaging.impl.jooq.tables.*;
+import ru.inovus.messaging.impl.jooq.tables.records.*;
 
-import ru.inovus.messaging.impl.jooq.tables.Message;
-import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
+import javax.annotation.Generated;
 
 
 /**
@@ -36,18 +36,35 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final UniqueKey<ComponentRecord> COMPONENT_PKEY = UniqueKeys0.COMPONENT_PKEY;
     public static final UniqueKey<MessageRecord> MESSAGE_PKEY = UniqueKeys0.MESSAGE_PKEY;
+    public static final UniqueKey<MessageSettingRecord> MESSAGE_SETTING_PKEY = UniqueKeys0.MESSAGE_SETTING_PKEY;
+    public static final UniqueKey<RecipientRecord> RECIPIENT_PKEY = UniqueKeys0.RECIPIENT_PKEY;
+    public static final UniqueKey<UserSettingRecord> USER_SETTING_PKEY = UniqueKeys0.USER_SETTING_PKEY;
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final ForeignKey<MessageRecord, ComponentRecord> MESSAGE__MESSAGE_COMPONENT_ID_FKEY = ForeignKeys0.MESSAGE__MESSAGE_COMPONENT_ID_FKEY;
+    public static final ForeignKey<MessageSettingRecord, ComponentRecord> MESSAGE_SETTING__MESSAGE_SETTING_COMPONENT_ID_FKEY = ForeignKeys0.MESSAGE_SETTING__MESSAGE_SETTING_COMPONENT_ID_FKEY;
+    public static final ForeignKey<RecipientRecord, MessageRecord> RECIPIENT__RECIPIENT_MESSAGE_ID_FKEY = ForeignKeys0.RECIPIENT__RECIPIENT_MESSAGE_ID_FKEY;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
     // -------------------------------------------------------------------------
 
     private static class UniqueKeys0 {
+        public static final UniqueKey<ComponentRecord> COMPONENT_PKEY = Internal.createUniqueKey(Component.COMPONENT, "component_pkey", Component.COMPONENT.ID);
         public static final UniqueKey<MessageRecord> MESSAGE_PKEY = Internal.createUniqueKey(Message.MESSAGE, "message_pkey", Message.MESSAGE.ID);
+        public static final UniqueKey<MessageSettingRecord> MESSAGE_SETTING_PKEY = Internal.createUniqueKey(MessageSetting.MESSAGE_SETTING, "message_setting_pkey", MessageSetting.MESSAGE_SETTING.ID);
+        public static final UniqueKey<RecipientRecord> RECIPIENT_PKEY = Internal.createUniqueKey(Recipient.RECIPIENT, "recipient_pkey", Recipient.RECIPIENT.ID);
+        public static final UniqueKey<UserSettingRecord> USER_SETTING_PKEY = Internal.createUniqueKey(UserSetting.USER_SETTING, "user_setting_pkey", UserSetting.USER_SETTING.ID);
+    }
+
+    private static class ForeignKeys0 {
+        public static final ForeignKey<MessageRecord, ComponentRecord> MESSAGE__MESSAGE_COMPONENT_ID_FKEY = Internal.createForeignKey(ru.inovus.messaging.impl.jooq.Keys.COMPONENT_PKEY, Message.MESSAGE, "message__message_component_id_fkey", Message.MESSAGE.COMPONENT_ID);
+        public static final ForeignKey<MessageSettingRecord, ComponentRecord> MESSAGE_SETTING__MESSAGE_SETTING_COMPONENT_ID_FKEY = Internal.createForeignKey(ru.inovus.messaging.impl.jooq.Keys.COMPONENT_PKEY, MessageSetting.MESSAGE_SETTING, "message_setting__message_setting_component_id_fkey", MessageSetting.MESSAGE_SETTING.COMPONENT_ID);
+        public static final ForeignKey<RecipientRecord, MessageRecord> RECIPIENT__RECIPIENT_MESSAGE_ID_FKEY = Internal.createForeignKey(ru.inovus.messaging.impl.jooq.Keys.MESSAGE_PKEY, Recipient.RECIPIENT, "recipient__recipient_message_id_fkey", Recipient.RECIPIENT.MESSAGE_ID);
     }
 }

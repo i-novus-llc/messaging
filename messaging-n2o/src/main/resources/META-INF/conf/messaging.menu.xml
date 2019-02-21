@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<menu xmlns="http://n2oapp.net/framework/config/schema/simple-menu-1.0">
+    <page page-id="messageList" label="Сообщения"/>
+    <sub-menu label="Администрирование">
+        <a href="${messaging.user.admin.url}" label="Настройка доступа" />
+    </sub-menu>
+</menu>

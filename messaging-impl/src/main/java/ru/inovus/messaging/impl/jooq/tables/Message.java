@@ -4,33 +4,27 @@
 package ru.inovus.messaging.impl.jooq.tables;
 
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.annotation.Generated;
-
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Index;
-import org.jooq.Name;
-import org.jooq.Record;
-import org.jooq.Schema;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
 import org.jooq.impl.TimestampToLocalDateTimeConverter;
-
 import ru.inovus.messaging.api.AlertType;
+import ru.inovus.messaging.api.FormationType;
+import ru.inovus.messaging.api.InfoType;
 import ru.inovus.messaging.api.Severity;
 import ru.inovus.messaging.impl.AlertTypeConverter;
+import ru.inovus.messaging.impl.FormationTypeConverter;
+import ru.inovus.messaging.impl.InfoTypeConverter;
 import ru.inovus.messaging.impl.SeverityConverter;
 import ru.inovus.messaging.impl.jooq.Indexes;
 import ru.inovus.messaging.impl.jooq.Keys;
 import ru.inovus.messaging.impl.jooq.Public;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
+
+import javax.annotation.Generated;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -46,7 +40,7 @@ import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Message extends TableImpl<MessageRecord> {
 
-    private static final long serialVersionUID = 963969082;
+    private static final long serialVersionUID = 1028967209;
 
     /**
      * The reference instance of <code>public.message</code>
@@ -99,12 +93,27 @@ public class Message extends TableImpl<MessageRecord> {
     /**
      * The column <code>public.message.recipient</code>. Получатель
      */
-    public final TableField<MessageRecord, String> RECIPIENT = createField("recipient", org.jooq.impl.SQLDataType.VARCHAR, this, "Получатель");
+    public final TableField<MessageRecord, String> RECIPIENT = createField("recipient", org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Получатель");
 
     /**
      * The column <code>public.message.system_id</code>. Идентификатор системы
      */
     public final TableField<MessageRecord, String> SYSTEM_ID = createField("system_id", org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Идентификатор системы");
+
+    /**
+     * The column <code>public.message.info_type</code>. Вид информирования по событию (почта, центр уведомления)
+     */
+    public final TableField<MessageRecord, InfoType> INFO_TYPE = createField("info_type", org.jooq.impl.SQLDataType.VARCHAR.nullable(false).defaultValue(org.jooq.impl.DSL.field("'NOTICE'::character varying", org.jooq.impl.SQLDataType.VARCHAR)), this, "Вид информирования по событию (почта, центр уведомления)", new InfoTypeConverter());
+
+    /**
+     * The column <code>public.message.component_id</code>. Компонент Системы, к которому относится уведомление
+     */
+    public final TableField<MessageRecord, Integer> COMPONENT_ID = createField("component_id", org.jooq.impl.SQLDataType.INTEGER, this, "Компонент Системы, к которому относится уведомление");
+
+    /**
+     * The column <code>public.message.formation_type</code>. Тип формирования уведомления
+     */
+    public final TableField<MessageRecord, FormationType> FORMATION_TYPE = createField("formation_type", org.jooq.impl.SQLDataType.VARCHAR.nullable(false).defaultValue(org.jooq.impl.DSL.field("'AUTO'::character varying", org.jooq.impl.SQLDataType.VARCHAR)), this, "Тип формирования уведомления", new FormationTypeConverter());
 
     /**
      * Create a <code>public.message</code> table reference
@@ -169,6 +178,18 @@ public class Message extends TableImpl<MessageRecord> {
     @Override
     public List<UniqueKey<MessageRecord>> getKeys() {
         return Arrays.<UniqueKey<MessageRecord>>asList(Keys.MESSAGE_PKEY);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<ForeignKey<MessageRecord, ?>> getReferences() {
+        return Arrays.<ForeignKey<MessageRecord, ?>>asList(Keys.MESSAGE__MESSAGE_COMPONENT_ID_FKEY);
+    }
+
+    public Component component() {
+        return new Component(this, Keys.MESSAGE__MESSAGE_COMPONENT_ID_FKEY);
     }
 
     /**

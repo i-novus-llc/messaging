@@ -4,10 +4,10 @@
 package ru.inovus.messaging.impl.jooq;
 
 
-import javax.annotation.Generated;
-
 import org.jooq.Sequence;
 import org.jooq.impl.SequenceImpl;
+
+import javax.annotation.Generated;
 
 
 /**
@@ -27,4 +27,14 @@ public class Sequences {
      * The sequence <code>public.message_id_seq</code>
      */
     public static final Sequence<Long> MESSAGE_ID_SEQ = new SequenceImpl<Long>("message_id_seq", Public.PUBLIC, org.jooq.impl.SQLDataType.BIGINT.nullable(false));
+
+    /**
+     * The sequence <code>public.message_setting_id_seq</code>
+     */
+    public static final Sequence<Long> MESSAGE_SETTING_ID_SEQ = new SequenceImpl<Long>("message_setting_id_seq", Public.PUBLIC, org.jooq.impl.SQLDataType.BIGINT.nullable(false));
+
+    /**
+     * The sequence <code>public.recipient_id_seq</code>
+     */
+    public static final Sequence<Long> RECIPIENT_ID_SEQ = new SequenceImpl<Long>("recipient_id_seq", Public.PUBLIC, org.jooq.impl.SQLDataType.BIGINT.nullable(false));
 }

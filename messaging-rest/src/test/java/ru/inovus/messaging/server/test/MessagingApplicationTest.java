@@ -7,8 +7,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.socket.*;
@@ -16,7 +16,7 @@ import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import ru.inovus.messaging.client.MessagingClient;
 import ru.inovus.messaging.impl.rest.MessagingResponse;
-import ru.inovus.messaging.server.MessageController;
+import ru.inovus.messaging.server.MessageRestImpl;
 import ru.inovus.messaging.server.MessagingApplication;
 import ru.inovus.messaging.server.model.SocketEvent;
 import ru.inovus.messaging.server.model.SocketEventType;
@@ -42,7 +42,7 @@ public class MessagingApplicationTest {
     private ObjectMapper mapper;
 
     @Autowired
-    private MessageController controller;
+    private MessageRestImpl controller;
 
     private WebSocketClient wsClient = new StandardWebSocketClient();
     private MessagingClient messagingClient;

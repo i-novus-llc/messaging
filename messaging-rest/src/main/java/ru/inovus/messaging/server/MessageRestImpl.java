@@ -10,15 +10,15 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 
 @Controller
-public class MessageController implements MessagingRest {
+public class MessageRestImpl implements MessageRest {
 
     private final MessageService messageService;
     private final Long timeout;
     private final MqProvider mqProvider;
 
-    public MessageController(MessageService messageService,
-                             @Value("${novus.messaging.timeout}") Long timeout,
-                             MqProvider mqProvider) {
+    public MessageRestImpl(MessageService messageService,
+                           @Value("${novus.messaging.timeout}") Long timeout,
+                           MqProvider mqProvider) {
         this.messageService = messageService;
         this.timeout = timeout;
         this.mqProvider = mqProvider;
