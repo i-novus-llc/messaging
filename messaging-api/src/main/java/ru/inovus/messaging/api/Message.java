@@ -15,6 +15,9 @@ public class Message implements Serializable {
     private AlertType alertType;
     private LocalDateTime sentAt;
     private LocalDateTime readAt;
+    private InfoType infoType;
+    private Component component;
+    private FormationType formationType;
     private Map<String, String> data;
 
     public Message() {
@@ -78,6 +81,30 @@ public class Message implements Serializable {
 
     public void setReadAt(LocalDateTime readAt) {
         this.readAt = readAt;
+    }
+
+    public InfoType getInfoType() {
+        return infoType;
+    }
+
+    public void setInfoType(InfoType infoType) {
+        this.infoType = infoType;
+    }
+
+    public Component getComponent() {
+        return component;
+    }
+
+    public void setComponent(Component component) {
+        this.component = component;
+    }
+
+    public FormationType getFormationType() {
+        return formationType;
+    }
+
+    public void setFormationType(FormationType formationType) {
+        this.formationType = formationType;
     }
 
     public Boolean getUnread() {

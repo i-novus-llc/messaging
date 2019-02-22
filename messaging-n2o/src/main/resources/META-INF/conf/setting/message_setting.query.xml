@@ -2,11 +2,13 @@
 <query xmlns="http://n2oapp.net/framework/config/schema/query-4.0">
 
     <list result-mapping="['content']" count-mapping="['totalElements']">
-        <rest filters-separator="&amp;">messages?{filters}</rest>
+        <rest filters-separator="&amp;">settings?{filters}</rest>
     </list>
 
     <fields>
-        <field id="id" domain="integer" name="Идентификатор"/>
+        <field id="id" domain="integer" name="Идентификатор">
+
+        </field>
 
         <field id="component.id" domain="integer">
             <filters>
@@ -21,7 +23,14 @@
             </filters>
         </field>
         <field id="severityName" domain="string"/>
-        
+
+        <field id="alertType" domain="string">
+            <filters>
+                <eq filter-id="alertType.id">alertType.id={alertType.id}</eq>
+            </filters>
+        </field>
+        <field id="alertTypeName" domain="string"/>
+
         <field id="infoType" domain="string">
             <filters>
                 <eq filter-id="infoType.id">infoType.id={infoType.id}</eq>
@@ -29,20 +38,17 @@
         </field>
         <field id="infoTypeName" domain="string"/>
 
-        <field id="sentAt">
-            <sorting/>
+        <field id="name" domain="string" name="Наименование шаблона">
             <filters>
-                <more filter-id="sentAt.begin" domain="date">sentAt.begin={sentAt.begin}</more>
-                <less filter-id="sentAt.end" domain="date">sentAt.end={sentAt.end}</less>
+                <eq filter-id="name">name={name}</eq>
             </filters>
         </field>
 
-        <field id="systemId">
+        <field id="enabled" domain="string">
             <filters>
-                <eq filter-id="systemId">systemId={systemId}</eq><!--TODO: default-value from context-->
+                <eq filter-id="enabled.id">enabled.id={enabled.id}</eq>
             </filters>
         </field>
-
     </fields>
 
 </query>

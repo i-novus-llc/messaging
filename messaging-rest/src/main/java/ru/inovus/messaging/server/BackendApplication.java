@@ -17,9 +17,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
         UserDetailsServiceAutoConfiguration.class})
 @EnableTransactionManagement
 @ComponentScan({"ru.inovus.messaging"})
-public class MessagingApplication {
+public class BackendApplication {
     public static void main(String[] args) {
-        SpringApplication.run(MessagingApplication.class, args);
+        SpringApplication.run(BackendApplication.class, args);
     }
 
     public ObjectMapper objectMapper() {

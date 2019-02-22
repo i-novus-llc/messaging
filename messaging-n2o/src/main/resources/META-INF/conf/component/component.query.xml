@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0">
+
+    <list result-mapping="['content']" count-mapping="['totalElements']">
+        <rest method="GET">components</rest>
+    </list>
+
+    <fields>
+        <field id="id" domain="integer" name="Идентификатор"/>
+        <field id="name" domain="string" name="Наименование"/>
+    </fields>
+
+</query>

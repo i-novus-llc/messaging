@@ -14,7 +14,7 @@ public interface MessageRest {
     @GET
     @ApiOperation("Получение страницы сообщений по критериям поиска")
     @ApiResponse(code = 200, message = "Страница сообщений")
-    Page<Message> getMessages(@BeanParam MessagingCriteria criteria);
+    Page<Message> getMessages(@BeanParam MessageCriteria criteria);
 
     @GET
     @Path("/{id}")

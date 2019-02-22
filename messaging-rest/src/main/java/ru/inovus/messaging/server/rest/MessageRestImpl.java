@@ -1,4 +1,4 @@
-package ru.inovus.messaging.server;
+package ru.inovus.messaging.server.rest;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -25,7 +25,7 @@ public class MessageRestImpl implements MessageRest {
     }
 
     @Override
-    public Page<Message> getMessages(MessagingCriteria criteria) {
+    public Page<Message> getMessages(MessageCriteria criteria) {
          return messageService.getMessages(criteria);
     }
 

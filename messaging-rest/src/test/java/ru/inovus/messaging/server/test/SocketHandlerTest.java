@@ -8,7 +8,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import ru.inovus.messaging.api.*;
 import ru.inovus.messaging.impl.MessageService;
-import ru.inovus.messaging.server.MessagingApplication;
+import ru.inovus.messaging.server.BackendApplication;
 import ru.inovus.messaging.server.auth.NoAuthAuthenticator;
 import ru.inovus.messaging.server.config.handler.SocketHandler;
 import ru.inovus.messaging.server.model.SocketEvent;
@@ -62,7 +62,7 @@ public class SocketHandlerTest {
             return null;
         }).when(messageService).markReadAll(any(), any());
         when(messageService.getUnreadMessages(any(), any())).thenReturn(new UnreadMessagesInfo(1));
-        objectMapper = new MessagingApplication().objectMapper();
+        objectMapper = new BackendApplication().objectMapper();
         mqProvider = mock(MqProvider.class);
         doAnswer(invocation -> {
             subscribed = true;
