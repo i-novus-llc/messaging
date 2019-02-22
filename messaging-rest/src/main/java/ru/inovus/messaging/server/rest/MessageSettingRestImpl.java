@@ -74,7 +74,12 @@ public class MessageSettingRestImpl implements MessageSettingRest {
     }
 
     @Override
-    public MessageSetting geSetting(String id) {
+    public void createSetting(MessageSetting messageSetting) {
+        System.out.println(messageSetting);
+    }
+
+    @Override
+    public MessageSetting getSetting(String id) {
         return null;
     }
 }

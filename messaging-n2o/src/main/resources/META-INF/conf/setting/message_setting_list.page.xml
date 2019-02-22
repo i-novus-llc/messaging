@@ -59,7 +59,14 @@
                 <checkbox/>
             </column>
         </columns>
+        <toolbar>
+            <button label="Добавить" id="create" model="filter" icon="fa fa-plus">
+                <show-modal page-id="message_setting" submit-operation-id="create" upload="defaults"/>
+            </button>
+            <button label="Изменить" id="update" model="resolve" icon="fa fa-edit">
+                <show-modal page-id="message_setting" submit-operation-id="update"/>
+            </button>
+        </toolbar>
     </table>
-
 
 </simple-page>

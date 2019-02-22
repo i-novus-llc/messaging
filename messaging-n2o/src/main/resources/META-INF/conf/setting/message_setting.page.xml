@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-2.0">
+
+    <form name="Шаблон уведомления" id="message_setting" query-id="message_setting">
+        <fields>
+            <row>
+                <input-text id="name" label="Наименование шаблона" required="true"/>
+                <checkbox id="disabled" label="Отключить"/>
+            </row>
+            <row>
+                <input-select id="component" label="Компонент" query-id="component"/>
+            </row>
+            <row>
+                <input-select id="severity" label="Уровень важности" required="true">
+                    <options>
+                        <option id="SEVERE" name="Важный"/>
+                        <option id="ERROR" name="Ошибка"/>
+                        <option id="WARNING" name="Предупреждение"/>
+                        <option id="INFO" name="Информация"/>
+                    </options>
+                </input-select>
+                <input-select id="alertType" label="Способ отображения" required="true">
+                    <options>
+                        <option id="BLOCKER" name="Блокирующее сообщение"/>
+                        <option id="POPUP" name="Всплывающее сообщение"/>
+                        <option id="HIDDEN" name="Лента уведомлений"/>
+                    </options>
+                </input-select>
+                <input-select id="infoType" label="Информирование" required="true">
+                    <options>
+                        <option id="ALL" name="Все"/>
+                        <option id="EMAIL" name="Электронная почта"/>
+                        <option id="NOTICE" name="Центр уведомлений"/>
+                    </options>
+                </input-select>
+                <hidden id="formationType.id" default-value="HAND"/>
+            </row>
+            <row>
+                <text-area id="caption" label="Заголовок уведомления" rows="3" required="true"/>
+            </row>
+            <row>
+                <text-area id="text" label="Текст уведомления" rows="5" required="true"/>
+            </row>
+        </fields>
+    </form>
+
+</simple-page>

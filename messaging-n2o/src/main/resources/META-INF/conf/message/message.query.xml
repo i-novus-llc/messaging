@@ -5,6 +5,10 @@
         <rest filters-separator="&amp;">messages?{filters}</rest>
     </list>
 
+    <unique>
+        <rest>messages/{id}</rest>
+    </unique>
+
     <fields>
         <field id="id" domain="integer" name="Идентификатор"/>
 
