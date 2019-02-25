@@ -51,10 +51,10 @@
         <columns>
             <column text-field-id="component.name" label="Компонент"/>
             <column text-field-id="name" label="Наименование шаблона"/>
-            <column text-field-id="severityName" label="Уровень важности"/>
-            <column text-field-id="alertTypeName" label="Способ отображения"/>
-            <column text-field-id="infoTypeName" label="Информирование"/>
-            <column text-field-id="formationTypeName" label="Тип уведомления"/>
+            <column text-field-id="severity.name" label="Уровень важности"/>
+            <column text-field-id="alertType.name" label="Способ отображения"/>
+            <column text-field-id="infoType.name" label="Информирование"/>
+            <column text-field-id="formationType.name" label="Тип уведомления"/>
             <column text-field-id="enabled" label="Включено">
                 <checkbox/>
             </column>
@@ -64,7 +64,10 @@
                 <show-modal page-id="message_setting" submit-operation-id="create" upload="defaults"/>
             </button>
             <button label="Изменить" id="update" model="resolve" icon="fa fa-edit">
-                <show-modal page-id="message_setting" submit-operation-id="update"/>
+                <show-modal page-id="message_setting" submit-operation-id="update" close-after-submit="true"/>
+            </button>
+            <button label="Удалить" id="delete" model="resolve" icon="fa fa-remove">
+                <invoke operation-id="delete"/>
             </button>
         </toolbar>
     </table>

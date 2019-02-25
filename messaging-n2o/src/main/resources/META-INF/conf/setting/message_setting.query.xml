@@ -5,48 +5,88 @@
         <rest filters-separator="&amp;">settings?{filters}</rest>
     </list>
 
+    <unique filters="id">
+        <rest>settings/{id}</rest>
+    </unique>
+
     <fields>
         <field id="id" domain="integer" name="Идентификатор">
-
+            <select/>
+            <filters>
+                <eq filter-id="id">:id</eq>
+            </filters>
         </field>
 
         <field id="component.id" domain="integer">
+            <select/>
             <filters>
                 <eq filter-id="component.id">component.id={component.id}</eq>
             </filters>
         </field>
-        <field id="component.name" domain="string"/>
+        <field id="component.name" domain="string">
+            <select/>
+        </field>
 
-        <field id="severity" domain="string">
+        <field id="severity.id" domain="string">
+            <select mapping="['severity']"/>
             <filters>
                 <eq filter-id="severity.id">severity.id={severity.id}</eq>
             </filters>
         </field>
-        <field id="severityName" domain="string"/>
+        <field id="severity.name" domain="string">
+            <select mapping="['severityName']"/>
+        </field>
 
-        <field id="alertType" domain="string">
+        <field id="alertType.id" domain="string">
+            <select mapping="['alertType']"/>
             <filters>
                 <eq filter-id="alertType.id">alertType.id={alertType.id}</eq>
             </filters>
         </field>
-        <field id="alertTypeName" domain="string"/>
+        <field id="alertType.name" domain="string">
+            <select mapping="['alertTypeName']"/>
+        </field>
 
-        <field id="infoType" domain="string">
+        <field id="infoType.id" domain="string">
+            <select mapping="['infoType']"/>
             <filters>
                 <eq filter-id="infoType.id">infoType.id={infoType.id}</eq>
             </filters>
         </field>
-        <field id="infoTypeName" domain="string"/>
+        <field id="infoType.name" domain="string">
+            <select mapping="['infoTypeName']"/>
+        </field>
+
+        <field id="formationType.id" domain="string">
+            <select mapping="['formationType']"/>
+        </field>
+        <field id="formationType.name" domain="string">
+            <select mapping="['formationTypeName']"/>
+        </field>
 
         <field id="name" domain="string" name="Наименование шаблона">
+            <select/>
             <filters>
                 <eq filter-id="name">name={name}</eq>
             </filters>
         </field>
 
-        <field id="enabled" domain="string">
+        <field id="caption" domain="string">
+            <select/>
+        </field>
+
+        <field id="text" domain="string">
+            <select/>
+        </field>
+
+        <field id="disabled" domain="boolean">
+            <select/>
+        </field>
+
+        <field id="enabled" domain="boolean">
+            <select mapping="!#this['disabled']"/>
             <filters>
-                <eq filter-id="enabled.id">enabled.id={enabled.id}</eq>
+                <eq filter-id="enabled.id" domain="string">enabled.id={enabled.id}</eq>
             </filters>
         </field>
     </fields>

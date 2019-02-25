@@ -27,4 +27,16 @@ public interface MessageSettingRest {
     @ApiResponse(code = 200, message = "Шаблон успешно создан")
     void createSetting(MessageSetting messageSetting);
 
+    @PUT
+    @Path("/{id}")
+    @ApiOperation("Изменение шаблона")
+    @ApiResponse(code = 200, message = "Шаблон успешно сохранен")
+    void updateSetting(@PathParam("id") Integer id, MessageSetting messageSetting);
+
+    @DELETE
+    @Path("/{id}")
+    @ApiOperation("Удаление шаблона")
+    @ApiResponse(code = 200, message = "Шаблон успешно удален")
+    void deleteSetting(@PathParam("id") Integer id);
+
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import ru.inovus.messaging.api.Component;
 import ru.inovus.messaging.api.MessageSetting;
 import ru.inovus.messaging.api.MessageSettingCriteria;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static ru.inovus.messaging.impl.jooq.Sequences.MESSAGE_SETTING_ID_SEQ;
 import static ru.inovus.messaging.impl.jooq.Tables.COMPONENT;
 import static ru.inovus.messaging.impl.jooq.Tables.MESSAGE_SETTING;
 
@@ -59,10 +61,12 @@ public class MessageSettingRestImpl implements MessageSettingRest {
                     messageSetting.setName(r.getName());
                     messageSetting.setAlertType(r.getAlertType());
                     messageSetting.setSeverity(r.getSeverity());
+                    messageSetting.setInfoType(r.getInfoType());
                     messageSetting.setCaption(r.getCaption());
                     messageSetting.setText(r.getText());
                     messageSetting.setComponent(new Component(r.getComponentId(), rec.into(COMPONENT).getName()));
                     messageSetting.setFormationType(r.getFormationType());
+                    messageSetting.setDisabled(r.getIsDisabled());
                     return messageSetting;
                 });
         Integer count = dsl
@@ -74,8 +78,47 @@ public class MessageSettingRestImpl implements MessageSettingRest {
     }
 
     @Override
+    @Transactional
     public void createSetting(MessageSetting messageSetting) {
-        System.out.println(messageSetting);
+        Long id = dsl.nextval(MESSAGE_SETTING_ID_SEQ);
+        dsl
+                .insertInto(MESSAGE_SETTING)
+                .columns(MESSAGE_SETTING.ID, MESSAGE_SETTING.NAME, MESSAGE_SETTING.COMPONENT_ID,
+                         MESSAGE_SETTING.ALERT_TYPE, MESSAGE_SETTING.SEVERITY, MESSAGE_SETTING.INFO_TYPE,
+                         MESSAGE_SETTING.FORMATION_TYPE, MESSAGE_SETTING.IS_DISABLED,
+                         MESSAGE_SETTING.CAPTION, MESSAGE_SETTING.TEXT)
+                .values(id.intValue(), messageSetting.getName(), messageSetting.getComponent() != null ? messageSetting.getComponent().getId() : null,
+                        messageSetting.getAlertType(), messageSetting.getSeverity(), messageSetting.getInfoType(),
+                        messageSetting.getFormationType(), messageSetting.getDisabled(), messageSetting.getCaption(), messageSetting.getText())
+                .execute();
+    }
+
+    @Override
+    @Transactional
+    public void updateSetting(Integer id, MessageSetting messageSetting) {
+        dsl
+                .update(MESSAGE_SETTING)
+                .set(MESSAGE_SETTING.NAME, messageSetting.getName())
+                .set(MESSAGE_SETTING.COMPONENT_ID, messageSetting.getComponent() != null ? messageSetting.getComponent().getId() : null)
+                .set(MESSAGE_SETTING.ALERT_TYPE, messageSetting.getAlertType())
+                .set(MESSAGE_SETTING.SEVERITY, messageSetting.getSeverity())
+                .set(MESSAGE_SETTING.INFO_TYPE, messageSetting.getInfoType())
+                .set(MESSAGE_SETTING.FORMATION_TYPE, messageSetting.getFormationType())
+                .set(MESSAGE_SETTING.IS_DISABLED, messageSetting.getDisabled())
+                .set(MESSAGE_SETTING.CAPTION, messageSetting.getCaption())
+                .set(MESSAGE_SETTING.TEXT, messageSetting.getText())
+                .where(MESSAGE_SETTING.ID.eq(id))
+                .execute();
+
+    }
+
+    @Override
+    @Transactional
+    public void deleteSetting(Integer id) {
+        dsl
+                .deleteFrom(MESSAGE_SETTING)
+                .where(MESSAGE_SETTING.ID.eq(id))
+                .execute();
     }
 
     @Override
