@@ -109,7 +109,6 @@ public class MessageSettingRestImpl implements MessageSettingRest {
                 .set(MESSAGE_SETTING.TEXT, messageSetting.getText())
                 .where(MESSAGE_SETTING.ID.eq(id))
                 .execute();
-
     }
 
     @Override
