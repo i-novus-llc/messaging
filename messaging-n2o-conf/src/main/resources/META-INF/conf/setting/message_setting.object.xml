@@ -4,7 +4,7 @@
     <operations>
         <operation id="create">
             <invocation>
-                <rest method="POST">settings</rest>
+                <rest method="POST">${messaging.backend.path}/settings</rest>
             </invocation>
             <in-parameters>
                 <param id="name" mapping="name" required="true"/>
@@ -23,7 +23,7 @@
         </operation>
         <operation id="update">
             <invocation>
-                <rest method="PUT">settings/{id}</rest>
+                <rest method="PUT">${messaging.backend.path}/settings/{id}</rest>
             </invocation>
             <in-parameters>
                 <param id="id" mapping="id"/>
@@ -40,7 +40,7 @@
         </operation>
         <operation id="delete" confirm="true">
             <invocation>
-                <rest method="DELETE">setting/{id}</rest>
+                <rest method="DELETE">${messaging.backend.path}/setting/{id}</rest>
             </invocation>
             <in-parameters>
                 <param id="id" mapping="id"/>
