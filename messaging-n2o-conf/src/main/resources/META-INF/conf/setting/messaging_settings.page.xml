@@ -1,6 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-2.0">
+<page xmlns="http://n2oapp.net/framework/config/schema/page-2.0">
 
-    <table ref-id="messaging_msg_setting_list"/>
+    <regions>
+        <tabs place="single">
+            <table id="settings" ref-id="messaging_msg_setting_list"/>
+            <table id="history" ref-id="messaging_message_list"/>
+        </tabs>
+    </regions>
 
-</simple-page>
+</page>
