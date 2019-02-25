@@ -8,10 +8,6 @@ spring.jooq.sql-dialect: Postgres
 
 spring.jackson.serialization.write_dates_as_timestamps: false
 
-security.user:
-  name: admin
-  password: admin
-
 spring.kafka:
   consumer.group-id: novus-messaging
   bootstrap-servers: localhost:9092
