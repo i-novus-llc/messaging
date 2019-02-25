@@ -7,30 +7,11 @@
 # Требования
 Для работы сервиса нужно, чтобы был запущен Apache Kafka или ActiveMQ.
 
-# Запуск сервера
+# Структура проекта
 
-1. Добавить файл `config/application.yaml` или `config/application.properties`.
-2. Переопределить необходимые [свойства](doc/Properties.md).
-3. Выполнить `mvnw install spring-boot:run -pl messaging-server`.
-
-# Использование
-
-Подключаем библиотеку
-```xml
-<dependency>
-    <groupId>ru.inovus.messaging</groupId>
-    <artifactId>messaging-n2o-plugin</artifactId>
-    <version>1.0-SNAPSHOT</version>
-</dependency>
-```
-В свойствах приложения указываем
-```properties
-messaging.system.ws.url=путь к точке доступа по каналу web sockets
-messaging.system.rest.url=путь к точке доступа REST сервиса
-```
-
-# Админка
-[http://localhost:8080/admin.html](http://localhost:8080/admin.html)
+- `messaging-n2o` -- standalone UI приложения для настройки уведомлений
+- `messaging-n2o-conf` -- конфигурационные файлы N2O для встраивания в другие N2O приложения
+- `messaging-rest` -- rest сервис уведомления + websocket сервер
 
 # Документация
 Подробнее см. [документацию](doc/Index.md)
