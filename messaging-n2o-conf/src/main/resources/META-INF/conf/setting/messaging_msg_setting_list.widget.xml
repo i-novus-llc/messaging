@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<table xmlns="http://n2oapp.net/framework/config/schema/n2o-widget-4.0"
+       query-id="messaging_setting" name="Шаблоны уведомлений" id="message_setting_list">
+    <filters>
+        <!--<set>-->
+        <row>
+            <input-select id="component" label="Компонент" query-id="messaging_component"
+                          label-field-id="name" search-field-id="name"/>
+            <input-select id="severity" label="Уровень важности">
+                <options>
+                    <option id="SEVERE" name="Важный"/>
+                    <option id="ERROR" name="Ошибка"/>
+                    <option id="WARNING" name="Предупреждение"/>
+                    <option id="INFO" name="Информация"/>
+                </options>
+            </input-select>
+            <input-select id="alertType" label="Способ отображения">
+                <options>
+                    <option id="BLOCKER" name="Блокирующее сообщение"/>
+                    <option id="POPUP" name="Всплывающее сообщение"/>
+                    <option id="HIDDEN" name="Лента уведомлений"/>
+                </options>
+            </input-select>
+            <input-select id="infoType" label="Информирование">
+                <options>
+                    <option id="ALL" name="Все"/>
+                    <option id="EMAIL" name="Электронная почта"/>
+                    <option id="NOTICE" name="Центр уведомлений"/>
+                </options>
+            </input-select>
+        </row>
+        <row>
+            <input-text id="name" label="Наименование шаблона"/>
+            <input-select id="formationType" label="Тип уведомления">
+                <options>
+                    <option id="AUTO" name="Автоматический"/>
+                    <option id="HAND" name="Ручной"/>
+                </options>
+            </input-select>
+            <radio-group id="enabled" label="Уведомление включено" inline="true">
+                <default-value id="YES" name="Да"/>
+                <options>
+                    <option id="YES" name="Да"/>
+                    <option id="NO" name="Нет"/>
+                </options>
+            </radio-group>
+        </row>
+        <!--</set>-->
+    </filters>
+    <columns>
+        <column text-field-id="component.name" label="Компонент"/>
+        <column text-field-id="name" label="Наименование шаблона"/>
+        <column text-field-id="severity.name" label="Уровень важности"/>
+        <column text-field-id="alertType.name" label="Способ отображения"/>
+        <column text-field-id="infoType.name" label="Информирование"/>
+        <column text-field-id="formationType.name" label="Тип уведомления"/>
+        <column text-field-id="enabled" label="Включено">
+            <checkbox/>
+        </column>
+    </columns>
+    <toolbar>
+        <button label="Добавить" id="create" model="filter" icon="fa fa-plus">
+            <show-modal page-id="messaging_setting" submit-operation-id="create" upload="defaults"/>
+        </button>
+        <button label="Изменить" id="update" model="resolve" icon="fa fa-edit">
+            <show-modal page-id="messaging_setting" submit-operation-id="update" close-after-submit="true"/>
+        </button>
+        <button label="Удалить" id="delete" model="resolve" icon="fa fa-remove">
+            <invoke operation-id="delete"/>
+        </button>
+    </toolbar>
+</table>>
