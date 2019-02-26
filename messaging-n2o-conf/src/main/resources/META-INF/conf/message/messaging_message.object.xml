@@ -1,4 +1,15 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <object xmlns="http://n2oapp.net/framework/config/schema/object-3.0">
 
+    <operations>
+        <operation id="create">
+            <invocation>
+                <rest method="POST">${messaging.backend.path}/messages</rest>
+            </invocation>
+            <in-parameters>
+                <param id="caption" mapping="message.caption" domain="string"/>
+                <param id="text" mapping="message.text" domain="string"/>
+            </in-parameters>
+        </operation>
+    </operations>
 </object>

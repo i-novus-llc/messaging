@@ -5,7 +5,7 @@
         <rest filters-separator="&amp;">${messaging.backend.path}/messages?{filters}</rest>
     </list>
 
-    <unique>
+    <unique filters="id">
         <rest>${messaging.backend.path}/messages/{id}</rest>
     </unique>
 
@@ -13,27 +13,45 @@
         <field id="id" domain="integer" name="Идентификатор"/>
 
         <field id="component.id" domain="integer">
+            <select/>
             <filters>
                 <eq filter-id="component.id">component.id={component.id}</eq>
             </filters>
         </field>
-        <field id="component.name" domain="string"/>
+        <field id="component.name" domain="string">
+            <select/>
+        </field>
 
-        <field id="severity" domain="string">
+        <field id="severity.id" domain="string">
+            <select mapping="['severity']"/>
             <filters>
                 <eq filter-id="severity.id">severity.id={severity.id}</eq>
             </filters>
         </field>
-        <field id="severityName" domain="string"/>
+        <field id="severity.name" domain="string">
+            <select mapping="['severityName']"/>
+        </field>
         
-        <field id="infoType" domain="string">
+        <field id="infoType.id" domain="string">
+            <select mapping="['infoType']"/>
             <filters>
                 <eq filter-id="infoType.id">infoType.id={infoType.id}</eq>
             </filters>
         </field>
-        <field id="infoTypeName" domain="string"/>
+        <field id="infoType.name" domain="string">
+            <select mapping="['infoTypeName']"/>
+        </field>
+
+        <field id="caption" domain="string">
+            <select/>
+        </field>
+
+        <field id="text" domain="string">
+            <select/>
+        </field>
 
         <field id="sentAt">
+            <select/>
             <sorting/>
             <filters>
                 <more filter-id="sentAt.begin" domain="date">sentAt.begin={sentAt.begin}</more>
@@ -42,6 +60,7 @@
         </field>
 
         <field id="systemId">
+            <select/>
             <filters>
                 <eq filter-id="systemId">systemId={systemId}</eq><!--TODO: default-value from context-->
             </filters>
