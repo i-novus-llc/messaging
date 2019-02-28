@@ -70,7 +70,7 @@
                 </radio-group>
             </row>
             </set>
-            <line label="Получатели">
+            <line label="Получатели" depends-on="recipientType" visible="{recipientType.id == 'USER'}">
             <row>
                 <input-select id="users" type="checkboxes" label="Пользователи" required="true"
                               query-id="messaging_user">

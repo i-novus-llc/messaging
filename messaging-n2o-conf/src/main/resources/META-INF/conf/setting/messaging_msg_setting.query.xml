@@ -5,7 +5,7 @@
         <rest filters-separator="&amp;">${messaging.backend.path}/settings?{filters}</rest>
     </list>
 
-    <unique filters="id">
+    <unique>
         <rest>${messaging.backend.path}/settings/{id}</rest>
     </unique>
 
@@ -13,7 +13,7 @@
         <field id="id" domain="integer" name="Идентификатор">
             <select/>
             <filters>
-                <eq filter-id="id">:id</eq>
+                <eq filter-id="id">{id}</eq>
             </filters>
         </field>
 

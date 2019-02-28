@@ -34,5 +34,8 @@
         <button label="Создать уведомление" id="create" model="filter" icon="fa fa-plus">
             <open-page page-id="messaging_message_create" upload="defaults" submit-operation-id="send"/>
         </button>
+        <button label="Просмотр" id="view" model="resolve" icon="fa fa-eye">
+            <open-page page-id="messaging_message_view" detail-field-id="id" upload="query"/>
+        </button>
     </toolbar>
 </table>

@@ -63,7 +63,8 @@
             <show-modal page-id="messaging_msg_setting" submit-operation-id="create" upload="defaults"/>
         </button>
         <button label="Изменить" id="update" model="resolve" icon="fa fa-edit">
-            <show-modal page-id="messaging_msg_setting" submit-operation-id="update" close-after-submit="true"/>
+            <show-modal page-id="messaging_msg_setting" submit-operation-id="update"
+                        close-after-submit="true" detail-field-id="id"/>
         </button>
         <button label="Удалить" id="delete" model="resolve" icon="fa fa-remove">
             <invoke operation-id="delete"/>

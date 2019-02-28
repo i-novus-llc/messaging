@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-2.0">
+    <form id="create" query-id="messaging_message" name="Создание уведомления">
+        <fields>
+            <set>
+                <row>
+                    <input-select id="component" label="Компонент" query-id="messaging_component">
+                    </input-select>
+                    <input-select id="severity" label="Уровень важности" required="true">
+                        <options>
+                            <option id="SEVERE" name="Важный"/>
+                            <option id="ERROR" name="Ошибка"/>
+                            <option id="WARNING" name="Предупреждение"/>
+                            <option id="INFO" name="Информация"/>
+                        </options>
+                    </input-select>
+                </row>
+                <row>
+                    <text-area id="caption" label="Заголовок уведомления" rows="3" required="true">
+                    </text-area>
+                </row>
+                <row>
+                    <text-area id="text" label="Текст уведомления" rows="5" required="true">
+                    </text-area>
+                </row>
+                <row>
+                    <radio-group id="recipientType" label="Тип получателей" inline="true">
+                        <default-value id="USER" name="Пользователи"/>
+                        <options>
+                            <option id="USER" name="Пользователи"/>
+                            <option id="ALL" name="Все"/>
+                        </options>
+                    </radio-group>
+                </row>
+            </set>
+            <line label="Получатели" depends-on="recipientType" visible="{recipientType.id == 'USER'}">
+                <row>
+                    <input-select id="users" type="checkboxes" label="Пользователи" required="true"
+                                  query-id="messaging_user">
+                    </input-select>
+                </row>
+            </line>
+        </fields>
+        <!--<toolbar>-->
+        <!--<button label="Отправить">-->
+        <!--<invoke operation-id="create"/>-->
+        <!--</button>-->
+        <!--</toolbar>-->
+    </form>
+</simple-page>

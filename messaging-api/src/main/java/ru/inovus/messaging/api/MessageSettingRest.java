@@ -20,7 +20,7 @@ public interface MessageSettingRest {
     @Path("/{id}")
     @ApiOperation("Получение шаблона по идентификатору")
     @ApiResponse(code = 200, message = "Шаблон сообщения")
-    MessageSetting getSetting(@PathParam("id") String id);
+    MessageSetting getSetting(@PathParam("id") Integer id);
 
     @POST
     @ApiOperation("Создание шаблона")

@@ -5,12 +5,17 @@
         <rest filters-separator="&amp;">${messaging.backend.path}/messages?{filters}</rest>
     </list>
 
-    <unique filters="id">
+    <unique>
         <rest>${messaging.backend.path}/messages/{id}</rest>
     </unique>
 
     <fields>
-        <field id="id" domain="integer" name="Идентификатор"/>
+        <field id="id" domain="integer" name="Идентификатор">
+            <select/>
+            <filters>
+                <eq filter-id="id">{id}</eq>
+            </filters>
+        </field>
 
         <field id="component.id" domain="integer">
             <select/>
@@ -40,6 +45,13 @@
         </field>
         <field id="infoType.name" domain="string">
             <select mapping="['infoTypeName']"/>
+        </field>
+
+        <field id="recipientType.id">
+            <select mapping="['recipientType']"/>
+        </field>
+        <field id="recipientType.name">
+            <select mapping="['recipientTypeName']"/>
         </field>
 
         <field id="caption" domain="string">

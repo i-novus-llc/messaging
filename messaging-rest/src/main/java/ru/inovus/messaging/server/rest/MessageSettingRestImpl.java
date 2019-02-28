@@ -3,6 +3,8 @@ package ru.inovus.messaging.server.rest;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.RecordMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -27,6 +29,22 @@ public class MessageSettingRestImpl implements MessageSettingRest {
 
     @Autowired
     private DSLContext dsl;
+
+    RecordMapper<Record, MessageSetting> MAPPER = rec -> {
+        MessageSettingRecord r = rec.into(MESSAGE_SETTING);
+        MessageSetting messageSetting = new MessageSetting();
+        messageSetting.setId(r.getId());
+        messageSetting.setName(r.getName());
+        messageSetting.setAlertType(r.getAlertType());
+        messageSetting.setSeverity(r.getSeverity());
+        messageSetting.setInfoType(r.getInfoType());
+        messageSetting.setCaption(r.getCaption());
+        messageSetting.setText(r.getText());
+        messageSetting.setComponent(new Component(r.getComponentId(), rec.into(COMPONENT).getName()));
+        messageSetting.setFormationType(r.getFormationType());
+        messageSetting.setDisabled(r.getIsDisabled());
+        return messageSetting;
+    };
 
     @Override
     public Page<MessageSetting> getSettings(MessageSettingCriteria criteria) {
@@ -54,21 +72,7 @@ public class MessageSettingRestImpl implements MessageSettingRest {
                 .limit(criteria.getPageSize())
                 .offset((int) criteria.getOffset())
                 .fetch()
-                .map(rec -> {
-                    MessageSettingRecord r = rec.into(MESSAGE_SETTING);
-                    MessageSetting messageSetting = new MessageSetting();
-                    messageSetting.setId(r.getId());
-                    messageSetting.setName(r.getName());
-                    messageSetting.setAlertType(r.getAlertType());
-                    messageSetting.setSeverity(r.getSeverity());
-                    messageSetting.setInfoType(r.getInfoType());
-                    messageSetting.setCaption(r.getCaption());
-                    messageSetting.setText(r.getText());
-                    messageSetting.setComponent(new Component(r.getComponentId(), rec.into(COMPONENT).getName()));
-                    messageSetting.setFormationType(r.getFormationType());
-                    messageSetting.setDisabled(r.getIsDisabled());
-                    return messageSetting;
-                });
+                .map(MAPPER);
         Integer count = dsl
                 .selectCount()
                 .from(MESSAGE_SETTING)
@@ -121,7 +125,11 @@ public class MessageSettingRestImpl implements MessageSettingRest {
     }
 
     @Override
-    public MessageSetting getSetting(String id) {
-        return null;
+    public MessageSetting getSetting(Integer id) {
+        return dsl
+                .selectFrom(MESSAGE_SETTING)
+                .where(MESSAGE_SETTING.ID.eq(id))
+                .fetchOne()
+                .map(MAPPER);
     }
 }
