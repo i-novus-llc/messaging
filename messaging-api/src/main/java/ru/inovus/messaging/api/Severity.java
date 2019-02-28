@@ -8,7 +8,7 @@ public enum Severity {
 
     public String getName() {
         switch (this) {
-            case SEVERE: return "Важное";
+            case SEVERE: return "Важный";
             case ERROR: return "Ошибка";
             case WARNING: return "Предупреждение";
             case INFO: return "Информация";
