@@ -30,7 +30,6 @@ public class Indexes {
     // -------------------------------------------------------------------------
 
     public static final Index COMPONENT_PKEY = Indexes0.COMPONENT_PKEY;
-    public static final Index IX_MESSAGE_RECIPIENT = Indexes0.IX_MESSAGE_RECIPIENT;
     public static final Index IX_MESSAGE_SYSTEM_ID = Indexes0.IX_MESSAGE_SYSTEM_ID;
     public static final Index MESSAGE_PKEY = Indexes0.MESSAGE_PKEY;
     public static final Index MESSAGE_SETTING_PKEY = Indexes0.MESSAGE_SETTING_PKEY;
@@ -43,7 +42,6 @@ public class Indexes {
 
     private static class Indexes0 {
         public static Index COMPONENT_PKEY = Internal.createIndex("component_pkey", Component.COMPONENT, new OrderField[] { Component.COMPONENT.ID }, true);
-        public static Index IX_MESSAGE_RECIPIENT = Internal.createIndex("ix_message_recipient", Message.MESSAGE, new OrderField[] { Message.MESSAGE.RECIPIENT }, false);
         public static Index IX_MESSAGE_SYSTEM_ID = Internal.createIndex("ix_message_system_id", Message.MESSAGE, new OrderField[] { Message.MESSAGE.SYSTEM_ID }, false);
         public static Index MESSAGE_PKEY = Internal.createIndex("message_pkey", Message.MESSAGE, new OrderField[] { Message.MESSAGE.ID }, true);
         public static Index MESSAGE_SETTING_PKEY = Internal.createIndex("message_setting_pkey", MessageSetting.MESSAGE_SETTING, new OrderField[] { MessageSetting.MESSAGE_SETTING.ID }, true);

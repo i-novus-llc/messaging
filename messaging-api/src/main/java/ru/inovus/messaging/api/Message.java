@@ -18,6 +18,8 @@ public class Message implements Serializable {
     private InfoType infoType;
     private Component component;
     private FormationType formationType;
+    private RecipientType recipientType;
+    private String systemId;
     private Map<String, String> data;
 
     public Message() {
@@ -107,6 +109,22 @@ public class Message implements Serializable {
         this.formationType = formationType;
     }
 
+    public RecipientType getRecipientType() {
+        return recipientType;
+    }
+
+    public void setRecipientType(RecipientType recipientType) {
+        this.recipientType = recipientType;
+    }
+
+    public String getSystemId() {
+        return systemId;
+    }
+
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
+    }
+
     public Boolean getUnread() {
         return this.readAt == null;
     }
@@ -117,6 +135,22 @@ public class Message implements Serializable {
 
     public void setData(Map<String, String> data) {
         this.data = data;
+    }
+
+    public String getSeverityName() {
+        return this.severity != null ? severity.getName() : null;
+    }
+
+    public String getAlertTypeName() {
+        return alertType != null ? alertType.getName() : null;
+    }
+
+    public String getInfoTypeName() {
+        return infoType != null ? infoType.getName() : null;
+    }
+
+    public String getFormationTypeName() {
+        return formationType != null ? formationType.getName() : null;
     }
 
     @Override

@@ -56,7 +56,7 @@ public class SocketHandlerTest {
         doAnswer(invocation -> {
             markedRead = true;
             return null;
-        }).when(messageService).markRead("default", messageId);
+        }).when(messageService).markRead("1", messageId);
         doAnswer(invocation -> {
             markedReadAll = true;
             return null;
@@ -156,30 +156,38 @@ public class SocketHandlerTest {
     @Test
     public void testCheckRecipientAll() {
         mockPublish("1234", "default");
-        MessageOutbox message = new MessageOutbox();
-        message.setMessage(new Message());
-        message.setRecipients(Collections.singletonList(new Recipient(RecipientType.ALL)));
-        mqProvider.publish(message);
-        assertTrue(messageSent); // message should be sent, because it was addressed to all users
+        MessageOutbox outbox = new MessageOutbox();
+        Message message = new Message();
+        message.setRecipientType(RecipientType.ALL);
+        message.setSystemId("default");
+        outbox.setMessage(message);
+        mqProvider.publish(outbox);
+        assertTrue(messageSent); // outbox should be sent, because it was addressed to all users
     }
 
     @Test
     public void testCheckRecipientWrongUser() {
         mockPublish("1234", "default"); // <- wrong recipient
-        MessageOutbox message = new MessageOutbox();
-        message.setRecipients(Collections.singletonList(
-                new Recipient(RecipientType.USER, "123", "default")));
-        mqProvider.publish(message);                 // ^--- here's different user
-        assertFalse(messageSent); // so message shouldn't be sent
+        MessageOutbox outbox = new MessageOutbox();
+        Message message = new Message();
+        message.setRecipientType(RecipientType.USER);
+        message.setSystemId("default");
+        outbox.setMessage(message);
+        outbox.setRecipients(Collections.singletonList("123"));
+        mqProvider.publish(outbox);                 // ^--- here's different user
+        assertFalse(messageSent); // so outbox shouldn't be sent
     }
 
     @Test
     public void testCheckRecipientWrongSystemId() {
         mockPublish("1234", "foobar"); // <- wrong systemId
-        MessageOutbox message = new MessageOutbox();
-        message.setRecipients(Collections.singletonList(
-                new Recipient(RecipientType.USER, "123", "default")));
-        mqProvider.publish(message);    // here's different systemId -----^
+        MessageOutbox outbox = new MessageOutbox();
+        Message message = new Message();
+        message.setSystemId("default");  // here's different systemId -----^
+        message.setRecipientType(RecipientType.USER);
+        outbox.setMessage(message);
+        outbox.setRecipients(Collections.singletonList("123"));
+        mqProvider.publish(outbox);
         assertFalse(messageSent); // also message shouldn't be sent
     }
 
@@ -194,11 +202,13 @@ public class SocketHandlerTest {
     @Test
     public void testCheckRecipientOK() {
         mockPublish("123", "default"); // it' OK
-        MessageOutbox message = new MessageOutbox();
-        message.setMessage(new Message());
-        message.setRecipients(Collections.singletonList(
-                new Recipient(RecipientType.USER, "123", "default")));
-        mqProvider.publish(message);
+        MessageOutbox outbox = new MessageOutbox();
+        Message message = new Message();
+        message.setSystemId("default");
+        message.setRecipientType(RecipientType.USER);
+        outbox.setMessage(message);
+        outbox.setRecipients(Collections.singletonList("123"));
+        mqProvider.publish(outbox);
         assertTrue(messageSent); // message should be sent
     }
 

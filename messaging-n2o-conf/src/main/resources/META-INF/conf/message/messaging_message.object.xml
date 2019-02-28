@@ -2,13 +2,21 @@
 <object xmlns="http://n2oapp.net/framework/config/schema/object-3.0">
 
     <operations>
-        <operation id="create">
+        <operation id="send">
             <invocation>
                 <rest method="POST">${messaging.backend.path}/messages</rest>
             </invocation>
             <in-parameters>
                 <param id="caption" mapping="message.caption" domain="string"/>
                 <param id="text" mapping="message.text" domain="string"/>
+                <param id="severity.id" mapping="message.severity" domain="string"/>
+                <param id="alertType.id" mapping="message.alertType" domain="string"/>
+                <param id="infoType.id" mapping="message.infoType" domain="string"/>
+                <param id="component.id" mapping="message.component.id" domain="string"/>
+                <param id="formationType.id" mapping="message.formationType" default-value="HAND" domain="string"/>
+                <param id="recipientType.id" mapping="message.recipientType" domain="string"/>
+                <param id="systemId" mapping="message.systemId" domain="string" default-value="default"/><!--TODO default value from context or props-->
+                <param id="users*.username" mapping="recipients" domain="string[]"/>
             </in-parameters>
         </operation>
     </operations>

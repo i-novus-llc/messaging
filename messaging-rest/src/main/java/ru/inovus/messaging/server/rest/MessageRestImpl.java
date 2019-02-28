@@ -6,9 +6,6 @@ import org.springframework.stereotype.Controller;
 import ru.inovus.messaging.api.*;
 import ru.inovus.messaging.impl.MessageService;
 
-import java.time.Clock;
-import java.time.LocalDateTime;
-
 @Controller
 public class MessageRestImpl implements MessageRest {
 
@@ -37,14 +34,15 @@ public class MessageRestImpl implements MessageRest {
     @Override
     public void sendMessage(final MessageOutbox message) {
         if (message.getMessage() != null) {
-            if (message.getMessage().getSentAt() == null)
-                message.getMessage().setSentAt(LocalDateTime.now(Clock.systemUTC()));
+            String[] init = new String[0];
+            String[] recipients = message.getRecipients() != null ? message.getRecipients().toArray(init) : init;
+            Message msg = messageService.createMessage(message.getMessage(), recipients);
+            message.getMessage().setId(msg.getId());
         }
         mqProvider.publish(message);
     }
 
-    @Override
-    public void markRead(String id) {
-        messageService.markRead(id);
+    public void markRead(String recipient, String id) {
+        messageService.markRead(recipient, id);
     }
 }

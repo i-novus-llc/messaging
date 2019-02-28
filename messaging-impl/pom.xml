@@ -108,6 +108,12 @@
                                     <types>.*</types>
                                 </forcedType>
                                 <forcedType>
+                                    <userType>ru.inovus.messaging.api.RecipientType</userType>
+                                    <converter>ru.inovus.messaging.impl.RecipientTypeConverter</converter>
+                                    <expression>.*\.recipient_type.*</expression>
+                                    <types>.*</types>
+                                </forcedType>
+                                <forcedType>
                                     <userType>java.time.LocalDateTime</userType>
                                     <converter>org.jooq.impl.TimestampToLocalDateTimeConverter</converter>
                                     <expression>.*_at</expression>

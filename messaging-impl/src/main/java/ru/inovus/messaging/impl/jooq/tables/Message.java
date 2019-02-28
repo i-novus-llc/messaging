@@ -8,14 +8,8 @@ import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
 import org.jooq.impl.TimestampToLocalDateTimeConverter;
-import ru.inovus.messaging.api.AlertType;
-import ru.inovus.messaging.api.FormationType;
-import ru.inovus.messaging.api.InfoType;
-import ru.inovus.messaging.api.Severity;
-import ru.inovus.messaging.impl.AlertTypeConverter;
-import ru.inovus.messaging.impl.FormationTypeConverter;
-import ru.inovus.messaging.impl.InfoTypeConverter;
-import ru.inovus.messaging.impl.SeverityConverter;
+import ru.inovus.messaging.api.*;
+import ru.inovus.messaging.impl.*;
 import ru.inovus.messaging.impl.jooq.Indexes;
 import ru.inovus.messaging.impl.jooq.Keys;
 import ru.inovus.messaging.impl.jooq.Public;
@@ -40,7 +34,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Message extends TableImpl<MessageRecord> {
 
-    private static final long serialVersionUID = 1028967209;
+    private static final long serialVersionUID = -1447843374;
 
     /**
      * The reference instance of <code>public.message</code>
@@ -86,16 +80,6 @@ public class Message extends TableImpl<MessageRecord> {
     public final TableField<MessageRecord, LocalDateTime> SENT_AT = createField("sent_at", org.jooq.impl.SQLDataType.TIMESTAMP, this, "Отправлено (дата и время)", new TimestampToLocalDateTimeConverter());
 
     /**
-     * The column <code>public.message.read_at</code>. Помечено прочтенным (дата и время)
-     */
-    public final TableField<MessageRecord, LocalDateTime> READ_AT = createField("read_at", org.jooq.impl.SQLDataType.TIMESTAMP, this, "Помечено прочтенным (дата и время)", new TimestampToLocalDateTimeConverter());
-
-    /**
-     * The column <code>public.message.recipient</code>. Получатель
-     */
-    public final TableField<MessageRecord, String> RECIPIENT = createField("recipient", org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Получатель");
-
-    /**
      * The column <code>public.message.system_id</code>. Идентификатор системы
      */
     public final TableField<MessageRecord, String> SYSTEM_ID = createField("system_id", org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Идентификатор системы");
@@ -114,6 +98,11 @@ public class Message extends TableImpl<MessageRecord> {
      * The column <code>public.message.formation_type</code>. Тип формирования уведомления
      */
     public final TableField<MessageRecord, FormationType> FORMATION_TYPE = createField("formation_type", org.jooq.impl.SQLDataType.VARCHAR.nullable(false).defaultValue(org.jooq.impl.DSL.field("'AUTO'::character varying", org.jooq.impl.SQLDataType.VARCHAR)), this, "Тип формирования уведомления", new FormationTypeConverter());
+
+    /**
+     * The column <code>public.message.recipient_type</code>.
+     */
+    public final TableField<MessageRecord, RecipientType> RECIPIENT_TYPE = createField("recipient_type", org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "", new RecipientTypeConverter());
 
     /**
      * Create a <code>public.message</code> table reference
@@ -161,7 +150,7 @@ public class Message extends TableImpl<MessageRecord> {
      */
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.IX_MESSAGE_RECIPIENT, Indexes.IX_MESSAGE_SYSTEM_ID, Indexes.MESSAGE_PKEY);
+        return Arrays.<Index>asList(Indexes.IX_MESSAGE_SYSTEM_ID, Indexes.MESSAGE_PKEY);
     }
 
     /**

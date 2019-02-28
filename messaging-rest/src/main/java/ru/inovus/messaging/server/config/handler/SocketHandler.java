@@ -20,11 +20,8 @@ import ru.inovus.messaging.server.model.SocketEvent;
 import ru.inovus.messaging.server.model.SocketEventType;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.time.Clock;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
 @Component
@@ -105,7 +102,7 @@ public class SocketHandler extends TextWebSocketHandler {
         sendMessage(session, unreadMessages);
         if (SocketEventType.READ.equals(socketEvent.getType())) {
             if (socketEvent.getMessage() != null)
-                messageService.markRead(systemId, socketEvent.getMessage().getId());
+                messageService.markRead(userName, socketEvent.getMessage().getId());
             else
                 messageService.markReadAll(userName, systemId);
         }
@@ -124,12 +121,12 @@ public class SocketHandler extends TextWebSocketHandler {
     }
 
     private boolean checkRecipient(MessageOutbox msg, String recipient, String systemId) {
+        if (msg != null && msg.getMessage() != null && RecipientType.ALL.equals(msg.getMessage().getRecipientType()))
+            return true;
         if (msg == null || msg.getRecipients() == null || msg.getRecipients().isEmpty())
             return false;
-        for (Recipient r : msg.getRecipients()) {
-            if (r.getRecipientType() == RecipientType.ALL)
-                return true;
-            if (r.getUser().equals(recipient) && r.getSystemId().equals(systemId))
+        for (String r : msg.getRecipients()) {
+            if (r.equals(recipient) && msg.getMessage().getSystemId().equals(systemId))
                 return true;
         }
         return false;
@@ -145,14 +142,16 @@ public class SocketHandler extends TextWebSocketHandler {
 
     public void sendTo(WebSocketSession user, MessageOutbox msg, String recipient, String systemId) {
         if (msg.getCommand() != null) {
-            messageService.markRead(systemId, msg.getCommand().getMessageIds().toArray(new String[0]));
+            String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+            messageService.markRead(userName, msg.getCommand().getMessageIds().toArray(new String[0]));
             sendMessage(user, msg.getCommand());
         } else if (checkRecipient(msg, recipient, systemId)) {
             if (msg.getMessage() != null) {
-                Message message = messageService.createMessage(msg.getMessage(), recipient, systemId);
+                Message message = msg.getMessage();
+                messageService.setSentTime(systemId,message.getId());
                 UnreadMessagesInfo unreadMessages = messageService.getUnreadMessages(recipient, systemId);
                 sendMessage(user, unreadMessages);
-                if (isNotExpired(msg.getMessage())) {
+                if (isNotExpired(message)) {
                     sendMessage(user, message);
                 } else if (logger.isDebugEnabled()) {
                     logger.debug("Did not send message with id {} due to expiration {}",

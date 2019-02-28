@@ -28,8 +28,8 @@ public interface MessageRest {
     void sendMessage(MessageOutbox message);
 
     @POST
-    @Path("/{id}/read")
+    @Path("/{recipient}/read/{id}")
     @ApiOperation("Пометить сообщение прочитанным")
     @ApiResponse(code = 200, message = "Сообщение помечено прочитанным")
-    void markRead(@PathParam("id") String id);
+    void markRead(@PathParam("recipient") String recipient, @PathParam("id") String id);
 }

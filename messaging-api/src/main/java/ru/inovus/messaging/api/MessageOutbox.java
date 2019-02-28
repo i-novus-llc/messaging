@@ -9,7 +9,7 @@ public class MessageOutbox implements Serializable {
 
     private Message message;
     private ControlMessage command;
-    private List<Recipient> recipients;
+    private List<String> recipients;
 
     public Message getMessage() {
         return message;
@@ -27,11 +27,11 @@ public class MessageOutbox implements Serializable {
         this.command = command;
     }
 
-    public List<Recipient> getRecipients() {
+    public List<String> getRecipients() {
         return recipients;
     }
 
-    public void setRecipients(List<Recipient> recipients) {
+    public void setRecipients(List<String> recipients) {
         this.recipients = recipients;
     }
 }

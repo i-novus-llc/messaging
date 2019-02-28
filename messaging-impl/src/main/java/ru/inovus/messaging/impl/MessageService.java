@@ -5,11 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.inovus.messaging.api.Component;
-import ru.inovus.messaging.api.Message;
-import ru.inovus.messaging.api.MessageCriteria;
-import ru.inovus.messaging.api.UnreadMessagesInfo;
-import ru.inovus.messaging.impl.jooq.Tables;
+import org.springframework.transaction.annotation.Transactional;
+import ru.inovus.messaging.api.*;
 import ru.inovus.messaging.impl.jooq.tables.records.ComponentRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
 
@@ -21,23 +18,27 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.jooq.impl.DSL.exists;
+import static org.jooq.impl.DSL.notExists;
 import static ru.inovus.messaging.impl.jooq.Sequences.MESSAGE_ID_SEQ;
+import static ru.inovus.messaging.impl.jooq.Sequences.RECIPIENT_ID_SEQ;
+import static ru.inovus.messaging.impl.jooq.Tables.*;
 
 @Service
 public class MessageService {
     private static final RecordMapper<Record, Message> MAPPER = rec -> {
-        MessageRecord record = rec.into(Tables.MESSAGE);
-        ComponentRecord componentRecord = rec.into(Tables.COMPONENT);
+        MessageRecord record = rec.into(MESSAGE);
+        ComponentRecord componentRecord = rec.into(COMPONENT);
         Message message = new Message();
         message.setId(String.valueOf(record.getId()));
         message.setCaption(record.getCaption());
         message.setText(record.getText());
         message.setAlertType(record.getAlertType());
         message.setSeverity(record.getSeverity());
-        message.setReadAt(record.getReadAt());
         message.setSentAt(record.getSentAt());
         message.setInfoType(record.getInfoType());
         message.setFormationType(record.getFormationType());
+        message.setRecipientType(record.getRecipientType());
+        message.setSystemId(record.getSystemId());
         if (componentRecord != null) {
             message.setComponent(new Component(componentRecord.getId(), componentRecord.getName()));
         }
@@ -49,72 +50,139 @@ public class MessageService {
         this.dsl = dsl;
     }
 
-    public Message createMessage(Message message, String recipient, String systemId) {
-        InsertResultStep<MessageRecord> returning = dsl
-                .insertInto(Tables.MESSAGE)
+    @Transactional
+    public Message createMessage(Message message, String... recipient) {
+        String id = dsl
+                .insertInto(MESSAGE)
                 .values(message.getId() != null ? message.getId() : MESSAGE_ID_SEQ.nextval(),
-                        message.getCaption(), message.getText(),
-                        message.getSeverity(), message.getAlertType(), message.getSentAt(),
-                        null, recipient, systemId)
-                .returning();
-        message.setId(String.valueOf(returning.fetch().get(0).getId()));
+                        message.getCaption(),
+                        message.getText(),
+                        message.getSeverity(),
+                        message.getAlertType(),
+                        message.getSentAt(),
+                        message.getSystemId(),
+                        message.getInfoType(),
+                        message.getComponent() != null ? message.getComponent().getId() : null,
+                        message.getFormationType(),
+                        message.getRecipientType())
+                .returning()
+                .fetch().get(0).getId();
+        message.setId(String.valueOf(id));
+        if (recipient != null && RecipientType.USER.equals(message.getRecipientType())) {
+            for (String rec : recipient) {
+                dsl
+                        .insertInto(RECIPIENT)
+                        .values(RECIPIENT_ID_SEQ.nextval(),
+                                rec, id, null)
+                        .execute();
+            }
+        }
         return message;
     }
 
     public UnreadMessagesInfo getUnreadMessages(String recipient, String systemId) {
         Integer count = dsl
                 .selectCount()
-                .from(Tables.MESSAGE)
-                .where(
-                        Tables.MESSAGE.READ_AT.isNull(),
-                        Tables.MESSAGE.RECIPIENT.eq(recipient),
-                        Tables.MESSAGE.SYSTEM_ID.eq(systemId))
+                .from(MESSAGE)
+                .where(notExists(dsl.selectOne()
+                                .from(RECIPIENT)
+                                .where(RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID),
+                                        RECIPIENT.READ_AT.isNotNull())),
+                        MESSAGE.SYSTEM_ID.eq(systemId))
                 .fetchOne().value1();
         return new UnreadMessagesInfo(count);
     }
 
-    public void markRead(String systemId, String... messageId) {
+    @Transactional
+    public void markRead(String recipient, String... messageId) {
+        LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
+        int updated = dsl
+                .update(RECIPIENT)
+                .set(RECIPIENT.READ_AT, now)
+                .where(RECIPIENT.MESSAGE_ID.in(messageId))
+                .execute();
+        if (updated == 0 && messageId != null) {
+            for (String id : messageId) {
+                dsl
+                        .insertInto(RECIPIENT)
+                        .set(RECIPIENT.READ_AT, now)
+                        .set(RECIPIENT.MESSAGE_ID, id)
+                        .set(RECIPIENT.RECIPIENT_, recipient)
+                        .execute();
+            }
+        }
+    }
+
+    private void setSentTime(String systemId, LocalDateTime sentAt, String... messageId) {
         dsl
-                .update(Tables.MESSAGE)
-                .set(Tables.MESSAGE.READ_AT, LocalDateTime.now(Clock.systemUTC()))
-                .where(Tables.MESSAGE.ID.in(messageId),
-                        Tables.MESSAGE.SYSTEM_ID.eq(systemId))
+                .update(MESSAGE)
+                .set(MESSAGE.SENT_AT, sentAt)
+                .where(MESSAGE.ID.in(messageId),
+                        MESSAGE.SYSTEM_ID.eq(systemId))
                 .execute();
     }
 
+    public void setSentTime(String systemId, String... messageId) {
+        setSentTime(systemId, LocalDateTime.now(Clock.systemUTC()), messageId);
+    }
+
+    @Transactional
     public void markReadAll(String recipient, String systemId) {
+        LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
+        // Update 'personal' messages
         dsl
-                .update(Tables.MESSAGE)
-                .set(Tables.MESSAGE.READ_AT, LocalDateTime.now(Clock.systemUTC()))
-                .where(Tables.MESSAGE.RECIPIENT.eq(recipient), Tables.MESSAGE.SYSTEM_ID.eq(systemId))
+                .update(RECIPIENT)
+                .set(RECIPIENT.READ_AT, now)
+                .where(RECIPIENT.RECIPIENT_.eq(recipient),
+                        exists(dsl.selectOne().from(MESSAGE)
+                                .where(MESSAGE.ID.eq(RECIPIENT.MESSAGE_ID),
+                                        MESSAGE.SYSTEM_ID.eq(systemId))))
                 .execute();
+        // Update messages 'for all'
+        List<String> ids = dsl
+                .select(MESSAGE.ID)
+                .from(MESSAGE)
+                .where(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL),
+                        MESSAGE.SYSTEM_ID.eq(systemId),
+                        notExists(dsl.selectOne().from(RECIPIENT)
+                                .where(RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID),
+                                        RECIPIENT.RECIPIENT_.eq(recipient))))
+                .fetch().map(Record1::component1);
+        for (String id : ids) {
+            dsl
+                    .insertInto(RECIPIENT)
+                    .set(RECIPIENT.READ_AT, now)
+                    .set(RECIPIENT.MESSAGE_ID, id)
+                    .set(RECIPIENT.RECIPIENT_, recipient)
+                    .execute();
+        }
     }
 
     public Page<Message> getMessages(MessageCriteria criteria) {
         List<Condition> conditions = new ArrayList<>();
         Optional.ofNullable(criteria.getUser())
-                .ifPresent(user -> conditions.add(exists(dsl.selectOne().from(Tables.RECIPIENT)
-                        .where(Tables.RECIPIENT.MESSAGE_ID.eq(Tables.MESSAGE.ID),
-                                Tables.RECIPIENT.RECIPIENT_.eq(user)))));
+                .ifPresent(user -> conditions.add(exists(dsl.selectOne().from(RECIPIENT)
+                        .where(RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID),
+                                RECIPIENT.RECIPIENT_.eq(user)))));
         //TODO: Recipient type
         Optional.ofNullable(criteria.getSystemId())
-                .ifPresent(systemId -> conditions.add(Tables.MESSAGE.SYSTEM_ID.eq(systemId)));
+                .ifPresent(systemId -> conditions.add(MESSAGE.SYSTEM_ID.eq(systemId)));
         Optional.ofNullable(criteria.getComponentId())
-                .ifPresent(componentId -> conditions.add(Tables.MESSAGE.COMPONENT_ID.eq(componentId)));
+                .ifPresent(componentId -> conditions.add(MESSAGE.COMPONENT_ID.eq(componentId)));
         Optional.ofNullable(criteria.getSeverity())
-                .ifPresent(severity -> conditions.add(Tables.MESSAGE.SEVERITY.eq(severity)));
+                .ifPresent(severity -> conditions.add(MESSAGE.SEVERITY.eq(severity)));
         Optional.ofNullable(criteria.getInfoType())
-                .ifPresent(infoType -> conditions.add(Tables.MESSAGE.INFO_TYPE.eq(infoType)));
+                .ifPresent(infoType -> conditions.add(MESSAGE.INFO_TYPE.eq(infoType)));
         //TODO: UTC?
         Optional.ofNullable(criteria.getSentAtBegin())
-                .ifPresent(start -> conditions.add(Tables.MESSAGE.SENT_AT.greaterOrEqual(start)));
+                .ifPresent(start -> conditions.add(MESSAGE.SENT_AT.greaterOrEqual(start)));
         Optional.ofNullable(criteria.getSentAtEnd())
-                .ifPresent(end -> conditions.add(Tables.MESSAGE.SENT_AT.lessOrEqual(end)));
+                .ifPresent(end -> conditions.add(MESSAGE.SENT_AT.lessOrEqual(end)));
         SelectConditionStep<Record> query = dsl
-                .select(Tables.MESSAGE.fields())
-                .select(Tables.COMPONENT.fields())
-                .from(Tables.MESSAGE)
-                .leftJoin(Tables.COMPONENT).on(Tables.COMPONENT.ID.eq(Tables.MESSAGE.COMPONENT_ID))
+                .select(MESSAGE.fields())
+                .select(COMPONENT.fields())
+                .from(MESSAGE)
+                .leftJoin(COMPONENT).on(COMPONENT.ID.eq(MESSAGE.COMPONENT_ID))
                 .where(conditions);
         int count = dsl.fetchCount(query);
         List<Message> collection = query
@@ -127,11 +195,11 @@ public class MessageService {
 
     public Message getMessage(String messageId) {
         return dsl
-                .select(Tables.MESSAGE.fields())
-                .select(Tables.COMPONENT.fields())
-                .from(Tables.MESSAGE)
-                .leftJoin(Tables.COMPONENT).on(Tables.COMPONENT.ID.eq(Tables.MESSAGE.COMPONENT_ID))
-                .where(Tables.MESSAGE.ID.cast(String.class).eq(messageId))
+                .select(MESSAGE.fields())
+                .select(COMPONENT.fields())
+                .from(MESSAGE)
+                .leftJoin(COMPONENT).on(COMPONENT.ID.eq(MESSAGE.COMPONENT_ID))
+                .where(MESSAGE.ID.cast(String.class).eq(messageId))
                 .fetchOne(MAPPER);
     }
 
@@ -143,7 +211,7 @@ public class MessageService {
         }
 
         for (Sort.Order sorting : sortingList) {
-            Field field = Tables.MESSAGE.field(sorting.getProperty());
+            Field field = MESSAGE.field(sorting.getProperty());
             SortField<?> querySortField = convertFieldToSortField(field, sorting.getDirection());
             querySortFields.add(querySortField);
         }
