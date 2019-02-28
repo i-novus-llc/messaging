@@ -1,7 +1,6 @@
 package ru.inovus.messaging.api;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class MessageOutbox implements Serializable {
 
@@ -9,7 +8,6 @@ public class MessageOutbox implements Serializable {
 
     private Message message;
     private ControlMessage command;
-    private List<String> recipients;
 
     public Message getMessage() {
         return message;
@@ -27,11 +25,4 @@ public class MessageOutbox implements Serializable {
         this.command = command;
     }
 
-    public List<String> getRecipients() {
-        return recipients;
-    }
-
-    public void setRecipients(List<String> recipients) {
-        this.recipients = recipients;
-    }
 }

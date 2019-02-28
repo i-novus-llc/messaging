@@ -123,10 +123,10 @@ public class SocketHandler extends TextWebSocketHandler {
     private boolean checkRecipient(MessageOutbox msg, String recipient, String systemId) {
         if (msg != null && msg.getMessage() != null && RecipientType.ALL.equals(msg.getMessage().getRecipientType()))
             return true;
-        if (msg == null || msg.getRecipients() == null || msg.getRecipients().isEmpty())
+        if (msg == null || msg.getMessage() == null || msg.getMessage().getRecipients() == null || msg.getMessage().getRecipients().isEmpty())
             return false;
-        for (String r : msg.getRecipients()) {
-            if (r.equals(recipient) && msg.getMessage().getSystemId().equals(systemId))
+        for (Recipient r : msg.getMessage().getRecipients()) {
+            if (r.getRecipient().equals(recipient) && msg.getMessage().getSystemId().equals(systemId))
                 return true;
         }
         return false;

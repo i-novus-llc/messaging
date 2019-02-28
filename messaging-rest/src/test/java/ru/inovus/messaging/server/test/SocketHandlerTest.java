@@ -172,8 +172,8 @@ public class SocketHandlerTest {
         Message message = new Message();
         message.setRecipientType(RecipientType.USER);
         message.setSystemId("default");
+        message.setRecipients(Collections.singletonList(new Recipient("123")));
         outbox.setMessage(message);
-        outbox.setRecipients(Collections.singletonList("123"));
         mqProvider.publish(outbox);                 // ^--- here's different user
         assertFalse(messageSent); // so outbox shouldn't be sent
     }
@@ -185,8 +185,8 @@ public class SocketHandlerTest {
         Message message = new Message();
         message.setSystemId("default");  // here's different systemId -----^
         message.setRecipientType(RecipientType.USER);
+        message.setRecipients(Collections.singletonList(new Recipient("123")));
         outbox.setMessage(message);
-        outbox.setRecipients(Collections.singletonList("123"));
         mqProvider.publish(outbox);
         assertFalse(messageSent); // also message shouldn't be sent
     }
@@ -206,8 +206,8 @@ public class SocketHandlerTest {
         Message message = new Message();
         message.setSystemId("default");
         message.setRecipientType(RecipientType.USER);
+        message.setRecipients(Collections.singletonList(new Recipient("123")));
         outbox.setMessage(message);
-        outbox.setRecipients(Collections.singletonList("123"));
         mqProvider.publish(outbox);
         assertTrue(messageSent); // message should be sent
     }

@@ -32,7 +32,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Recipient extends TableImpl<RecipientRecord> {
 
-    private static final long serialVersionUID = 471900849;
+    private static final long serialVersionUID = -1032580691;
 
     /**
      * The reference instance of <code>public.recipient</code>
@@ -66,6 +66,11 @@ public class Recipient extends TableImpl<RecipientRecord> {
      * The column <code>public.recipient.read_at</code>. Помечено прочтенным (дата и время)
      */
     public final TableField<RecipientRecord, LocalDateTime> READ_AT = createField("read_at", org.jooq.impl.SQLDataType.TIMESTAMP, this, "Помечено прочтенным (дата и время)", new TimestampToLocalDateTimeConverter());
+
+    /**
+     * The column <code>public.recipient.user_id</code>.
+     */
+    public final TableField<RecipientRecord, Integer> USER_ID = createField("user_id", org.jooq.impl.SQLDataType.INTEGER, this, "");
 
     /**
      * Create a <code>public.recipient</code> table reference

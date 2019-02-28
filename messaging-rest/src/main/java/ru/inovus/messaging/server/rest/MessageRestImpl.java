@@ -34,8 +34,9 @@ public class MessageRestImpl implements MessageRest {
     @Override
     public void sendMessage(final MessageOutbox message) {
         if (message.getMessage() != null) {
-            String[] init = new String[0];
-            String[] recipients = message.getRecipients() != null ? message.getRecipients().toArray(init) : init;
+            Recipient[] init = new Recipient[0];
+            Recipient[] recipients = message.getMessage().getRecipients() != null ?
+                    message.getMessage().getRecipients().toArray(init) : init;
             Message msg = messageService.createMessage(message.getMessage(), recipients);
             message.getMessage().setId(msg.getId());
         }

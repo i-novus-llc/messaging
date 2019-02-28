@@ -1,50 +1,62 @@
 package ru.inovus.messaging.api;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 public class Recipient implements Serializable {
 
     private static final long serialVersionUID = 4960064989162334509L;
 
-    private RecipientType recipientType;
-    private String user;
-    private String systemId;
+    private Integer id;
+    private String recipient;
+    private LocalDateTime readAt;
+    private String messageId;
+    private Integer userId;
 
     public Recipient() {
     }
 
-    public Recipient(RecipientType recipientType) {
-        assert recipientType == RecipientType.ALL;
-        this.recipientType = recipientType;
+    public Recipient(String recipient) {
+        this.recipient = recipient;
     }
 
-    public Recipient(RecipientType recipientType, String user, String systemId) {
-        this.recipientType = recipientType;
-        this.user = user;
-        this.systemId = systemId;
+    public Integer getId() {
+        return id;
     }
 
-    public RecipientType getRecipientType() {
-        return recipientType;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public void setRecipientType(RecipientType recipientType) {
-        this.recipientType = recipientType;
+    public String getRecipient() {
+        return recipient;
     }
 
-    public String getUser() {
-        return user;
+    public void setRecipient(String recipient) {
+        this.recipient = recipient;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public LocalDateTime getReadAt() {
+        return readAt;
     }
 
-    public String getSystemId() {
-        return systemId;
+    public void setReadAt(LocalDateTime readAt) {
+        this.readAt = readAt;
     }
 
-    public void setSystemId(String systemId) {
-        this.systemId = systemId;
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }

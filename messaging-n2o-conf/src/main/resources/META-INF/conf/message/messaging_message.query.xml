@@ -78,6 +78,10 @@
             </filters>
         </field>
 
+        <field id="users*.id" domain="integer[]">
+            <select mapping="[recipientIds]"/>
+        </field>
+
     </fields>
 
 </query>

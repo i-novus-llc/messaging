@@ -51,7 +51,7 @@ public class MessageService {
     }
 
     @Transactional
-    public Message createMessage(Message message, String... recipient) {
+    public Message createMessage(Message message, Recipient... recipient) {
         String id = dsl
                 .insertInto(MESSAGE)
                 .values(message.getId() != null ? message.getId() : MESSAGE_ID_SEQ.nextval(),
@@ -69,11 +69,11 @@ public class MessageService {
                 .fetch().get(0).getId();
         message.setId(String.valueOf(id));
         if (recipient != null && RecipientType.USER.equals(message.getRecipientType())) {
-            for (String rec : recipient) {
+            for (Recipient rec : recipient) {
                 dsl
                         .insertInto(RECIPIENT)
                         .values(RECIPIENT_ID_SEQ.nextval(),
-                                rec, id, null)
+                                rec.getRecipient(), id, null, rec.getUserId())
                         .execute();
             }
         }
@@ -194,13 +194,27 @@ public class MessageService {
     }
 
     public Message getMessage(String messageId) {
-        return dsl
+        Message message = dsl
                 .select(MESSAGE.fields())
                 .select(COMPONENT.fields())
                 .from(MESSAGE)
                 .leftJoin(COMPONENT).on(COMPONENT.ID.eq(MESSAGE.COMPONENT_ID))
                 .where(MESSAGE.ID.cast(String.class).eq(messageId))
                 .fetchOne(MAPPER);
+        List<Recipient> recipients = dsl
+                .selectFrom(RECIPIENT)
+                .where(RECIPIENT.MESSAGE_ID.eq(messageId))
+                .fetch().map(r -> {
+                    Recipient recipient = new Recipient();
+                    recipient.setId(r.getId());
+                    recipient.setMessageId(r.getMessageId());
+                    recipient.setReadAt(r.getReadAt());
+                    recipient.setRecipient(r.getRecipient());
+                    recipient.setUserId(r.getUserId());
+                    return recipient;
+                });
+        message.setRecipients(recipients);
+        return message;
     }
 
     private Collection<SortField<?>> getSortFields(List<Sort.Order> sortingList) {

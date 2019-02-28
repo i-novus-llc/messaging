@@ -2,7 +2,9 @@ package ru.inovus.messaging.api;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Message implements Serializable {
 
@@ -20,6 +22,7 @@ public class Message implements Serializable {
     private FormationType formationType;
     private RecipientType recipientType;
     private String systemId;
+    private List<Recipient> recipients;
     private Map<String, String> data;
 
     public Message() {
@@ -116,6 +119,27 @@ public class Message implements Serializable {
     public void setRecipientType(RecipientType recipientType) {
         this.recipientType = recipientType;
     }
+
+    public List<Recipient> getRecipients() {
+        return recipients;
+    }
+
+    public void setRecipients(List<Recipient> recipients) {
+        this.recipients = recipients;
+    }
+
+    public List<Integer> getRecipientIds() {
+        if (recipients == null)
+            return null;
+        return recipients.stream().map(Recipient::getUserId)
+                .collect(Collectors.toList());
+    }
+
+//    public String getRecipientString() {
+//        if (recipients == null || recipients.isEmpty())
+//            return "";
+//        return recipients.stream().map(r -> r.)
+//    }
 
     public String getSystemId() {
         return systemId;
