@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-2.0">
+    <table name="Уведомления" id="feed" query-id="messaging_message">
+        <filters>
+            <row>
+                <input-select id="component" label="Компонент" query-id="messaging_component"/>
+                <input-select id="severity" label="Уровень важности">
+                    <options>
+                        <option id="SEVERE" name="Важный"/>
+                        <option id="ERROR" name="Ошибка"/>
+                        <option id="WARNING" name="Предупреждение"/>
+                        <option id="INFO" name="Информация"/>
+                    </options>
+                </input-select>
+                <date-interval id="sentAt" label="Дата отправки"/>
+            </row>
+        </filters>
+        <columns>
+            <column text-field-id="sentAt" label="Дата отправки"/>
+            <column text-field-id="severity.name" label="Важность"/>
+            <column text-field-id="component.name" label="Компонент"/>
+            <column text-field-id="caption" label="Заголовок"/>
+        </columns>
+        <toolbar>
+            <button label="Просмотр" icon="fa fa-eye" model="resolve">
+                <open-page page-id="messaging_message_user_view" detail-field-id="id"/>
+            </button>
+        </toolbar>
+    </table>
+</simple-page>

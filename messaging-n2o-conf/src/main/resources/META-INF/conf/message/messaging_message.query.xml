@@ -82,6 +82,12 @@
             <select mapping="[recipientIds]"/>
         </field>
 
+        <field id="user.id" domain="integer">
+            <filters>
+                <eq filter-id="user.id" default-value="#{user.id}">userId={user.id}</eq>
+            </filters>
+        </field>
+
     </fields>
 
 </query>
