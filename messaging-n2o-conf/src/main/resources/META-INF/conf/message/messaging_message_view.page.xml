@@ -36,7 +36,8 @@
             <line label="Получатели" depends-on="recipientType" visible="{recipientType.id == 'USER'}">
                 <row>
                     <input-select id="users" type="checkboxes" label="Пользователи"
-                                  query-id="messaging_user" enabled="true" >
+                                  query-id="messaging_user" enabled="false"
+                                  label-field-id="name">
                     </input-select>
                 </row>
             </line>
