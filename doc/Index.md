@@ -14,8 +14,8 @@
 - [RESTful API](Rest.md) для управления оповещениями
 - [WebSocket интерфейс](Websocket.md) для взаимодействия с GUI
 
-[Свойства сервиса](Properties.md)
-[Инструкция для DevOps](DevOps.md)
-[Security](Security.md)
-[Frontend](Frontend.md)
-[TODO](Todo.md)
+- [Свойства сервиса](Properties.md)
+- [Инструкция для DevOps](DevOps.md)
+- [Security](Security.md)
+- [Frontend](Frontend.md)
+- [TODO](Todo.md)
