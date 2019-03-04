@@ -14,8 +14,8 @@
         <module>messaging-impl</module>
         <module>messaging-rest</module>
         <module>messaging-client</module>
-        <module>messaging-n2o-conf</module>
         <module>messaging-n2o</module>
+        <module>messaging-frontend</module>
         <module>messaging-support-activemq</module>
         <module>messaging-support-kafka</module>
     </modules>
@@ -81,7 +81,7 @@
             </dependency>
             <dependency>
                 <groupId>ru.i-novus.messaging</groupId>
-                <artifactId>messaging-n2o-conf</artifactId>
+                <artifactId>messaging-n2o</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

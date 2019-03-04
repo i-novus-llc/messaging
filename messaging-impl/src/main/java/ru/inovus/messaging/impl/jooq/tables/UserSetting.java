@@ -34,7 +34,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserSetting extends TableImpl<UserSettingRecord> {
 
-    private static final long serialVersionUID = -1075360624;
+    private static final long serialVersionUID = 225611842;
 
     /**
      * The reference instance of <code>public.user_setting</code>
@@ -137,6 +137,18 @@ public class UserSetting extends TableImpl<UserSettingRecord> {
     @Override
     public List<UniqueKey<UserSettingRecord>> getKeys() {
         return Arrays.<UniqueKey<UserSettingRecord>>asList(Keys.USER_SETTING_PKEY);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<ForeignKey<UserSettingRecord, ?>> getReferences() {
+        return Arrays.<ForeignKey<UserSettingRecord, ?>>asList(Keys.USER_SETTING__FK_USER_SETTING_ID);
+    }
+
+    public MessageSetting messageSetting() {
+        return new MessageSetting(this, Keys.USER_SETTING__FK_USER_SETTING_ID);
     }
 
     /**

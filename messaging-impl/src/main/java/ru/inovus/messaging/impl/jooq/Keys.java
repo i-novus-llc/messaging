@@ -49,6 +49,7 @@ public class Keys {
     public static final ForeignKey<MessageRecord, ComponentRecord> MESSAGE__MESSAGE_COMPONENT_ID_FKEY = ForeignKeys0.MESSAGE__MESSAGE_COMPONENT_ID_FKEY;
     public static final ForeignKey<MessageSettingRecord, ComponentRecord> MESSAGE_SETTING__MESSAGE_SETTING_COMPONENT_ID_FKEY = ForeignKeys0.MESSAGE_SETTING__MESSAGE_SETTING_COMPONENT_ID_FKEY;
     public static final ForeignKey<RecipientRecord, MessageRecord> RECIPIENT__RECIPIENT_MESSAGE_ID_FKEY = ForeignKeys0.RECIPIENT__RECIPIENT_MESSAGE_ID_FKEY;
+    public static final ForeignKey<UserSettingRecord, MessageSettingRecord> USER_SETTING__FK_USER_SETTING_ID = ForeignKeys0.USER_SETTING__FK_USER_SETTING_ID;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
@@ -66,5 +67,6 @@ public class Keys {
         public static final ForeignKey<MessageRecord, ComponentRecord> MESSAGE__MESSAGE_COMPONENT_ID_FKEY = Internal.createForeignKey(ru.inovus.messaging.impl.jooq.Keys.COMPONENT_PKEY, Message.MESSAGE, "message__message_component_id_fkey", Message.MESSAGE.COMPONENT_ID);
         public static final ForeignKey<MessageSettingRecord, ComponentRecord> MESSAGE_SETTING__MESSAGE_SETTING_COMPONENT_ID_FKEY = Internal.createForeignKey(ru.inovus.messaging.impl.jooq.Keys.COMPONENT_PKEY, MessageSetting.MESSAGE_SETTING, "message_setting__message_setting_component_id_fkey", MessageSetting.MESSAGE_SETTING.COMPONENT_ID);
         public static final ForeignKey<RecipientRecord, MessageRecord> RECIPIENT__RECIPIENT_MESSAGE_ID_FKEY = Internal.createForeignKey(ru.inovus.messaging.impl.jooq.Keys.MESSAGE_PKEY, Recipient.RECIPIENT, "recipient__recipient_message_id_fkey", Recipient.RECIPIENT.MESSAGE_ID);
+        public static final ForeignKey<UserSettingRecord, MessageSettingRecord> USER_SETTING__FK_USER_SETTING_ID = Internal.createForeignKey(ru.inovus.messaging.impl.jooq.Keys.MESSAGE_SETTING_PKEY, UserSetting.USER_SETTING, "user_setting__fk_user_setting_id", UserSetting.USER_SETTING.ID);
     }
 }

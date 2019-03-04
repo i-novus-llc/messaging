@@ -4,6 +4,7 @@
     <a label="Войти" href="/login" sec:anonymous="true"/>
     <sub-menu label="#{username}" icon="fa fa-user" sec:authenticated="true">
         <page page-id="profile" route="/profile" label="Профиль"/>
+        <page page-id="messaging_user_setting_list" label="Настройки уведомлений"/>
         <a label="Выход" href="/logout"/>
     </sub-menu>
 </nav>
