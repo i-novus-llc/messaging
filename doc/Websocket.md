@@ -22,7 +22,7 @@ Endpoint: `/ws`
 
 ### Подтверждение прочтения
 ```json
-{ "type" : "READ", "headers" : { "X-System-Id" : "system-id" }}
+{ "type" : "READ", "headers" : { "X-System-Id" : "system-id" }
 , "message" : { "id" : "message-id" }}
 ```
 Если не указать `message.id`, то *все* сообщения для данного пользователя будут
