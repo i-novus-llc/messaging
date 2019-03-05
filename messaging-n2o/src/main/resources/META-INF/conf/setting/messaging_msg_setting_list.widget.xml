@@ -28,8 +28,6 @@
                     <option id="NOTICE" name="Центр уведомлений"/>
                 </options>
             </input-select>
-        </row>
-        <row>
             <input-text id="name" label="Наименование шаблона"/>
             <input-select id="formationType" label="Тип уведомления">
                 <options>
