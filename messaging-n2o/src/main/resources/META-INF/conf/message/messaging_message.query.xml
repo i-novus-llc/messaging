@@ -36,7 +36,7 @@
         <field id="severity.name" domain="string">
             <select mapping="['severityName']"/>
         </field>
-        
+
         <field id="infoType.id" domain="string">
             <select mapping="['infoType']"/>
             <filters>
@@ -62,7 +62,7 @@
             <select/>
         </field>
 
-        <field id="sentAt" domain="localdatetime">
+        <field id="sentAt" domain="date">
             <select/>
             <sorting/>
             <filters>

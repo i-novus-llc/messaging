@@ -36,9 +36,8 @@ Endpoint: `/ws`
 ### Уведомления 
 ```json
 { "message" : { "id" : 123
-              , "subject" : "Тема"
-              , "content" : "Содержимое"
-              , "contentType" : "PLAIN/HTML/MARKDOWN"
+              , "caption" : "Тема"
+              , "text" : "Содержимое"
               , "severity" : "INFO/ERROR/WARNING/SEVERE"
               , "alertType" : "BLOCKER/POPUP/HIDDEN"}
 , "recipients" : [ { "recipientType" : "USER", "user" : "foo"}
