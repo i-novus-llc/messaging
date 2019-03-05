@@ -2,11 +2,11 @@
 <query xmlns="http://n2oapp.net/framework/config/schema/query-4.0" object-id="messaging_user_setting">
 
     <list result-mapping="['content']" count-mapping="['totalElements']">
-        <rest filters-separator="&amp;">${messaging.backend.path}/user/settings?{filters}</rest>
+        <rest filters-separator="&amp;">${messaging.backend.path}/user/{username}/settings?{filters}</rest>
     </list>
 
     <unique>
-        <rest>${messaging.backend.path}/user/settings/{id}</rest>
+        <rest>${messaging.backend.path}/user/{username}/settings/{id}</rest>
     </unique>
 
     <fields>
@@ -37,6 +37,13 @@
             <select mapping="['severityName']"/>
         </field>
 
+        <field id="defaultAlertType.id" domain="string">
+            <select mapping="['defaultAlertType']"/>
+        </field>
+        <field id="defaultAlertType.name" domain="string">
+            <select mapping="['defaultAlertTypeName']"/>
+        </field>
+
         <field id="alertType.id" domain="string">
             <select mapping="['alertType']"/>
             <filters>
@@ -47,6 +54,13 @@
             <select mapping="['alertTypeName']"/>
         </field>
 
+        <field id="defaultInfoType.id" domain="string">
+            <select mapping="['defaultInfoType']"/>
+        </field>
+        <field id="defaultInfoType.name" domain="string">
+            <select mapping="['defaultInfoTypeName']"/>
+        </field>
+
         <field id="infoType.id" domain="string">
             <select mapping="['infoType']"/>
             <filters>
@@ -55,13 +69,6 @@
         </field>
         <field id="infoType.name" domain="string">
             <select mapping="['infoTypeName']"/>
-        </field>
-
-        <field id="formationType.id" domain="string">
-            <select mapping="['formationType']"/>
-        </field>
-        <field id="formationType.name" domain="string">
-            <select mapping="['formationTypeName']"/>
         </field>
 
         <field id="name" domain="string" name="Наименование шаблона">
@@ -92,7 +99,7 @@
 
         <field id="username" domain="string">
             <filters>
-                <eq filter-id="username" default-value="#{username}">username={username}</eq>
+                <eq filter-id="username" default-value="#{username}">{username}</eq>
             </filters>
         </field>
     </fields>

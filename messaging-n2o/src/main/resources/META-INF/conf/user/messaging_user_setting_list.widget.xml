@@ -27,15 +27,7 @@
                     <option id="NOTICE" name="Центр уведомлений"/>
                 </options>
             </input-select>
-        </row>
-        <row>
             <input-text id="name" label="Событие"/>
-            <input-select id="formationType" label="Тип уведомления">
-                <options>
-                    <option id="AUTO" name="Автоматический"/>
-                    <option id="HAND" name="Ручной"/>
-                </options>
-            </input-select>
             <radio-group id="enabled" label="Уведомление включено" inline="true">
                 <default-value id="YES" name="Да"/>
                 <options>
@@ -49,9 +41,10 @@
         <column text-field-id="component.name" label="Компонент"/>
         <column text-field-id="name" label="Событие"/>
         <column text-field-id="severity.name" label="Уровень важности"/>
+        <column text-field-id="defaultAlertType.name" label="Способ отображения по умолчанию"/>
+        <column text-field-id="defaultInfoType.name" label="Информирование по умолчанию"/>
         <column text-field-id="alertType.name" label="Способ отображения"/>
         <column text-field-id="infoType.name" label="Информирование"/>
-        <column text-field-id="formationType.name" label="Тип уведомления"/>
         <column text-field-id="enabled" label="Включено">
             <checkbox/>
         </column>
