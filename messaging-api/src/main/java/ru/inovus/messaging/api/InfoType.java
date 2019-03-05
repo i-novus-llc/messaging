@@ -7,7 +7,7 @@ public enum InfoType {
         switch (this) {
             case ALL: return "Все";
             case NOTICE: return "Центр уведомлений";
-            case EMAIL: return "Электронная почна";
+            case EMAIL: return "Электронная почта";
             default: return null;
         }
     }
