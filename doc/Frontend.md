@@ -9,5 +9,8 @@
    <version>${messaging.version}</version>
 </dependency>
 ```
-2. Добавить spring bean с классом `ru.inovus.messaging.n2o.UserMessageViewPageNameBinder`.
+2. Добавить spring bean класса `ru.inovus.messaging.n2o.UserMessageViewPageNameBinder`.
 Он нужен, чтобы на странице просмотра сообщения можно было динамически строить название страницы.
+
+В качестве примера в проект входит standalone веб админка для уведомлений (`messaging-frontend`),
+которая также включает ленту уведомлений и пользовательские настройки уведомлений.
