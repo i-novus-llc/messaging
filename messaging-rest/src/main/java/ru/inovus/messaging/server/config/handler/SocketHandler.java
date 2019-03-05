@@ -94,7 +94,7 @@ public class SocketHandler extends TextWebSocketHandler {
             SecurityContextHolder.setContext(new SecurityContextImpl(user));
             UnreadMessagesInfo unreadMessages = messageService.getUnreadMessages(user.getName(), systemId);
             sendMessage(session, unreadMessages);
-            mqProvider.subscribe(session.getId(), systemId, authToken, messageOutbox ->
+            mqProvider.subscribe(session.getId(), systemId, user.getName(), messageOutbox ->
                     sendTo(session, messageOutbox, authToken, systemId));
         }
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
