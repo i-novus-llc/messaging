@@ -2,16 +2,18 @@
 <query xmlns="http://n2oapp.net/framework/config/schema/query-4.0" object-id="messaging_user">
 
     <list result-mapping="['content']" count-mapping="['totalElements']">
-        <rest filters-separator="&amp;">${sec.admin.rest.url}/users</rest>
+        <rest filters-separator="&amp;">${sec.admin.rest.url}/users?{filters}</rest>
     </list>
 
     <fields>
-        <field id="id" domain="integer"/>
+        <field id="id" domain="string">
+            <select mapping="[username]"/>
+            <filters>
+                <eq filter-id="id">username={id}</eq>
+            </filters>
+        </field>
         <field id="name" domain="string">
             <select mapping="#this[username]+(#this[fio]!=''||!#this[roles].empty?' ('+#this[fio]+(#this[fio]!=''and !#this[roles].empty?' ':'')+(!#this[roles].empty?#this[roles][0][name]:'')+')':'')"/>
-        </field>
-        <field id="username" domain="string">
-            <select/>
         </field>
     </fields>
 

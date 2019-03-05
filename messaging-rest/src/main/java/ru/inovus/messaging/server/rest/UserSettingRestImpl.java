@@ -5,6 +5,7 @@ import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.RecordMapper;
+import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -37,6 +38,7 @@ public class UserSettingRestImpl implements UserSettingRest {
         setting.setCaption(defaultSetting.getCaption());
         setting.setText(defaultSetting.getText());
         setting.setSeverity(defaultSetting.getSeverity());
+        setting.setName(defaultSetting.getName());
         setting.setComponent(defaultSetting.getComponentId() != null ?
                 new Component(defaultSetting.getComponentId(), record.into(COMPONENT).getName()) : null);
         setting.setDisabled(userSetting.getIsDisabled() != null ?
@@ -63,16 +65,16 @@ public class UserSettingRestImpl implements UserSettingRest {
                 .ifPresent(alertType -> conditions.add(
                         USER_SETTING.ALERT_TYPE.isNotNull()
                                 .and(USER_SETTING.ALERT_TYPE.eq(alertType))
-                                .or(MESSAGE_SETTING.ALERT_TYPE.eq(alertType))));
+                                .or(USER_SETTING.ALERT_TYPE.isNull().and(MESSAGE_SETTING.ALERT_TYPE.eq(alertType)))));
         Optional.ofNullable(criteria.getInfoType())
                 .ifPresent(infoType -> conditions.add(
                         USER_SETTING.INFO_TYPE.isNotNull()
                                 .and(USER_SETTING.INFO_TYPE.eq(infoType))
-                                .or(MESSAGE_SETTING.INFO_TYPE.eq(infoType))));
+                                .or(USER_SETTING.INFO_TYPE.isNull().and(MESSAGE_SETTING.INFO_TYPE.eq(infoType)))));
         Optional.ofNullable(criteria.getEnabled())
                 .ifPresent(enabled -> conditions.add(
-                        MESSAGE_SETTING.IS_DISABLED.notEqual(enabled)
-                                .and(USER_SETTING.IS_DISABLED.isNull()
+                        MESSAGE_SETTING.IS_DISABLED.isFalse() // user shouldn't see settings disabled by admin
+                                .and(USER_SETTING.IS_DISABLED.isNull().and(DSL.value(enabled))
                                         .or(USER_SETTING.IS_DISABLED.notEqual(enabled)))));
         List<UserSetting> list = dsl
                 .select(MESSAGE_SETTING.fields())
@@ -114,8 +116,31 @@ public class UserSettingRestImpl implements UserSettingRest {
 
     @Override
     @Transactional
-    public void updateSetting(String user, Integer id, UserSetting messageSetting) {
-
+    public void updateSetting(String user, Integer id, UserSetting setting) {
+        boolean exists = dsl
+                .selectCount()
+                .from(USER_SETTING)
+                .where(USER_SETTING.ID.eq(id))
+                .fetchOne()
+                .component1() != 0;
+        if (exists) {
+            dsl
+                    .update(USER_SETTING)
+                    .set(USER_SETTING.ALERT_TYPE, setting.getAlertType())
+                    .set(USER_SETTING.INFO_TYPE, setting.getInfoType())
+                    .set(USER_SETTING.IS_DISABLED, setting.getDisabled())
+                    .where(USER_SETTING.ID.eq(id))
+                    .execute();
+        } else {
+            dsl
+                    .insertInto(USER_SETTING)
+                    .set(USER_SETTING.ID, id)
+                    .set(USER_SETTING.USER_ID, user)
+                    .set(USER_SETTING.ALERT_TYPE, setting.getAlertType())
+                    .set(USER_SETTING.INFO_TYPE, setting.getInfoType())
+                    .set(USER_SETTING.IS_DISABLED, setting.getDisabled())
+                    .execute();
+        }
     }
 
 }

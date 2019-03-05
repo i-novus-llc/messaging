@@ -128,10 +128,10 @@ public class Message implements Serializable {
         this.recipients = recipients;
     }
 
-    public List<Integer> getRecipientIds() {
+    public List<String> getRecipientIds() {
         if (recipients == null)
             return null;
-        return recipients.stream().map(Recipient::getUserId)
+        return recipients.stream().map(Recipient::getRecipient)
                 .collect(Collectors.toList());
     }
 
