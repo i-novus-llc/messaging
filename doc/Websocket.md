@@ -4,7 +4,7 @@ Endpoint: `/ws`
 
 ### Соединение
 ```json
-{ "type" : "CONNECT", "headers" : { "X-Auth-Token" : "user-name-or-id" 
+{ "type" : "CONNECT", "headers" : { "X-Auth-Token" : "user-name-or-access-token"
                                   , "X-System-Id" : "system-id" } }
 ```
 
@@ -13,19 +13,16 @@ Endpoint: `/ws`
 и центральный. Все хедеры являются обязательными. Без них сервис не сможет
 идентифицировать клиента.
 
-Для авторизации пока что используется просто имя пользователя, в дальнейшем
-это будет что-то типа JWT.
+Описание `X-Auth-Token` см. в разделе [Security](Security.md).
 
 ### Запрос количества не прочтенных сообещний
 ```json
-{ "type" : "COUNT", "headers" : { "X-Auth-Token" : "user-id"
-                                , "X-System-Id" : "system-id" } }
+{ "type" : "COUNT", "headers" : { "X-System-Id" : "system-id" } }
 ```
 
 ### Подтверждение прочтения
 ```json
-{ "type" : "READ", "headers" : { "X-Auth-Token" : "user-id"
-                               , "X-System-Id" : "system-id" }} 
+{ "type" : "READ", "headers" : { "X-System-Id" : "system-id" }}
 , "message" : { "id" : "message-id" }}
 ```
 Если не указать `message.id`, то *все* сообщения для данного пользователя будут
