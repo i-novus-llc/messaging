@@ -4,6 +4,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import ru.inovus.messaging.api.*;
+import ru.inovus.messaging.api.criteria.MessageCriteria;
+import ru.inovus.messaging.api.model.Message;
+import ru.inovus.messaging.api.model.Recipient;
+import ru.inovus.messaging.api.rest.MessageRest;
 import ru.inovus.messaging.impl.MessageService;
 
 @Controller

@@ -1,5 +1,7 @@
 package ru.inovus.messaging.api;
 
+import ru.inovus.messaging.api.model.*;
+
 import java.io.Serializable;
 
 public class MessageSetting implements Serializable {

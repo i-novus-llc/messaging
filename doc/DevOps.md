@@ -34,3 +34,13 @@ spring.activemq.broker-url: tcp://192.168.1.1:61616
 ```
 5. `java -jar messaging-server-$VERSION.jar`
 6. Файл `application.yaml` должен быть в директории, откуда выполняется команда `java` или в поддиректории `config` 
+
+# Запуск админки уведомлений
+ Необходимо выполнить комнады npm для messaging-frontend/messaging-react
+
+```
+npm i --registry https://npm.i-novus.ru
+npm run build
+```
+
+Затем собрать maven messaging-frontend профиль production 

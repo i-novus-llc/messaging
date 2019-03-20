@@ -2,12 +2,19 @@
 <query xmlns="http://n2oapp.net/framework/config/schema/query-4.0" object-id="messaging_component">
 
     <list result-mapping="['content']" count-mapping="['totalElements']">
-        <rest method="GET">${messaging.backend.path}/components</rest>
+        <rest method="GET">${messaging.backend.path}/components?{filters}</rest>
     </list>
 
     <fields>
-        <field id="id" domain="integer" name="Идентификатор"/>
-        <field id="name" domain="string" name="Наименование"/>
+        <field id="id" domain="integer" name="Идентификатор">
+            <select>id</select>
+        </field>
+        <field id="name" domain="string" name="Наименование">
+            <select>name</select>
+            <filters>
+                <eq filter-id="name">name={name}</eq>
+            </filters>
+        </field>
     </fields>
 
 </query>

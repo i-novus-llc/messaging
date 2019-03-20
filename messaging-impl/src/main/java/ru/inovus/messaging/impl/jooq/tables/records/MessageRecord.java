@@ -9,7 +9,7 @@ import org.jooq.Record1;
 import org.jooq.Record11;
 import org.jooq.Row11;
 import org.jooq.impl.UpdatableRecordImpl;
-import ru.inovus.messaging.api.*;
+import ru.inovus.messaging.api.model.*;
 import ru.inovus.messaging.impl.jooq.tables.Message;
 
 import javax.annotation.Generated;

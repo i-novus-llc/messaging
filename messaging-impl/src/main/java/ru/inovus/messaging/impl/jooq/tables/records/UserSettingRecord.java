@@ -9,8 +9,8 @@ import org.jooq.Record1;
 import org.jooq.Record5;
 import org.jooq.Row5;
 import org.jooq.impl.UpdatableRecordImpl;
-import ru.inovus.messaging.api.AlertType;
-import ru.inovus.messaging.api.InfoType;
+import ru.inovus.messaging.api.model.AlertType;
+import ru.inovus.messaging.api.model.InfoType;
 import ru.inovus.messaging.impl.jooq.tables.UserSetting;
 
 import javax.annotation.Generated;

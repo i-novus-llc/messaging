@@ -1,6 +1,6 @@
 package ru.inovus.messaging.server.model;
 
-import ru.inovus.messaging.api.Message;
+import ru.inovus.messaging.api.model.Message;
 
 import java.util.Map;
 
