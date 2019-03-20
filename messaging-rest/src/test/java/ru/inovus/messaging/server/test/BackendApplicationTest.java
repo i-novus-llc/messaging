@@ -9,18 +9,15 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.socket.*;
 import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
-import ru.inovus.messaging.client.MessagingClient;
+import ru.inovus.messaging.api.UnreadMessagesInfo;
 import ru.inovus.messaging.server.BackendApplication;
 import ru.inovus.messaging.server.model.SocketEvent;
 import ru.inovus.messaging.server.model.SocketEventType;
-import ru.inovus.messaging.server.rest.MessageRestImpl;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -42,11 +39,7 @@ public class BackendApplicationTest {
     @Autowired
     private ObjectMapper mapper;
 
-    @Autowired
-    private MessageRestImpl controller;
-
     private WebSocketClient wsClient = new StandardWebSocketClient();
-    private MessagingClient messagingClient;
 
     @Before
     public void init() {
@@ -63,7 +56,7 @@ public class BackendApplicationTest {
     @Test
     public void testConnect() throws Exception {
         System.out.println("port is : " + port);
-        CompletableFuture<Page> task = new CompletableFuture<>();
+        CompletableFuture<UnreadMessagesInfo> task = new CompletableFuture<>();
 
         ListenableFuture<WebSocketSession> future = wsClient.doHandshake(new WebSocketHandler() {
             @Override
@@ -73,7 +66,7 @@ public class BackendApplicationTest {
 
             @Override
             public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
-                task.complete(mapper.readValue(((TextMessage) message).getPayload(), PageImpl.class));
+                task.complete(mapper.readValue(((TextMessage) message).getPayload(), UnreadMessagesInfo.class));
             }
 
             @Override
@@ -94,8 +87,8 @@ public class BackendApplicationTest {
         WebSocketSession webSocketSession = future.get();
         assertNotNull(webSocketSession);
         assertTrue(webSocketSession.isOpen());
-        Page response = task.get(5, TimeUnit.SECONDS);
-        assertEquals(0, response.getTotalElements());
+        UnreadMessagesInfo response = task.get(5, TimeUnit.SECONDS);
+        assertEquals(response.getCount().equals(0), true);
         webSocketSession.close();
     }
 }

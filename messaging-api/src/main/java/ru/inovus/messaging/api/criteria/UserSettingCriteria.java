@@ -1,11 +1,19 @@
-package ru.inovus.messaging.api;
+package ru.inovus.messaging.api.criteria;
 
 import net.n2oapp.platform.jaxrs.RestCriteria;
+import ru.inovus.messaging.api.model.AlertType;
+import ru.inovus.messaging.api.model.InfoType;
+import ru.inovus.messaging.api.model.Severity;
+import ru.inovus.messaging.api.model.YesNo;
 
+import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 
-public class MessageSettingCriteria extends RestCriteria {
-    private static final long serialVersionUID = 7609048158169451957L;
+public class UserSettingCriteria extends RestCriteria {
+    private static final long serialVersionUID = 7609048158169451958L;
+
+    @PathParam("user")
+    private String user;
 
     @QueryParam("component.id")
     private Integer componentId;
@@ -22,11 +30,16 @@ public class MessageSettingCriteria extends RestCriteria {
     @QueryParam("name")
     private String name;
 
-    @QueryParam("formationType.id")
-    private FormationType formationType;
-
     @QueryParam("enabled.id")
     private YesNo enabled;
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
 
     public Integer getComponentId() {
         return componentId;
@@ -66,14 +79,6 @@ public class MessageSettingCriteria extends RestCriteria {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public FormationType getFormationType() {
-        return formationType;
-    }
-
-    public void setFormationType(FormationType formationType) {
-        this.formationType = formationType;
     }
 
     public Boolean getEnabled() {

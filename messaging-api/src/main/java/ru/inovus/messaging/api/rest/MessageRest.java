@@ -1,8 +1,11 @@
-package ru.inovus.messaging.api;
+package ru.inovus.messaging.api.rest;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import org.springframework.data.domain.Page;
+import ru.inovus.messaging.api.MessageOutbox;
+import ru.inovus.messaging.api.criteria.MessageCriteria;
+import ru.inovus.messaging.api.model.Message;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

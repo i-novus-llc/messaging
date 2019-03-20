@@ -1,7 +1,7 @@
 package ru.inovus.messaging.impl;
 
 import org.jooq.impl.EnumConverter;
-import ru.inovus.messaging.api.AlertType;
+import ru.inovus.messaging.api.model.AlertType;
 
 public class AlertTypeConverter extends EnumConverter<String, AlertType> {
     public AlertTypeConverter() {

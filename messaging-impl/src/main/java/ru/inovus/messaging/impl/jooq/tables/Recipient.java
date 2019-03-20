@@ -6,6 +6,7 @@ package ru.inovus.messaging.impl.jooq.tables;
 
 import org.jooq.*;
 import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 import org.jooq.impl.TimestampToLocalDateTimeConverter;
 import ru.inovus.messaging.impl.jooq.Indexes;
@@ -70,7 +71,7 @@ public class Recipient extends TableImpl<RecipientRecord> {
     /**
      * The column <code>public.recipient.user_id</code>.
      */
-    public final TableField<RecipientRecord, Integer> USER_ID = createField("user_id", org.jooq.impl.SQLDataType.INTEGER, this, "");
+    public final TableField<RecipientRecord, String> USER_ID = createField("user_id", SQLDataType.VARCHAR, this, "");
 
     /**
      * Create a <code>public.recipient</code> table reference

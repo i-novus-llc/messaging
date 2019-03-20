@@ -8,7 +8,7 @@ import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
 import org.jooq.impl.TimestampToLocalDateTimeConverter;
-import ru.inovus.messaging.api.*;
+import ru.inovus.messaging.api.model.*;
 import ru.inovus.messaging.impl.*;
 import ru.inovus.messaging.impl.jooq.Indexes;
 import ru.inovus.messaging.impl.jooq.Keys;

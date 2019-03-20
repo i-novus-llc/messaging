@@ -7,6 +7,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.inovus.messaging.api.*;
+import ru.inovus.messaging.api.criteria.MessageCriteria;
+import ru.inovus.messaging.api.model.Component;
+import ru.inovus.messaging.api.model.Message;
+import ru.inovus.messaging.api.model.Recipient;
+import ru.inovus.messaging.api.model.RecipientType;
 import ru.inovus.messaging.impl.jooq.tables.records.ComponentRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
 

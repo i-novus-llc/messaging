@@ -1,4 +1,4 @@
-package ru.inovus.messaging.api;
+package ru.inovus.messaging.api.model;
 
 public enum AlertType {
     BLOCKER,

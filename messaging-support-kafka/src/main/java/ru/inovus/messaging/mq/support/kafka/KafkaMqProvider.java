@@ -11,7 +11,7 @@ import org.springframework.kafka.listener.MessageListener;
 import org.springframework.kafka.listener.MessageListenerContainer;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.stereotype.Component;
-import ru.inovus.messaging.api.Message;
+import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.MessageOutbox;
 import ru.inovus.messaging.api.MqProvider;
 

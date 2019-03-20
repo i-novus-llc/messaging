@@ -10,10 +10,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import ru.inovus.messaging.api.Component;
+import ru.inovus.messaging.api.model.Component;
 import ru.inovus.messaging.api.MessageSetting;
-import ru.inovus.messaging.api.MessageSettingCriteria;
-import ru.inovus.messaging.api.MessageSettingRest;
+import ru.inovus.messaging.api.criteria.MessageSettingCriteria;
+import ru.inovus.messaging.api.rest.MessageSettingRest;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageSettingRecord;
 
 import java.util.ArrayList;

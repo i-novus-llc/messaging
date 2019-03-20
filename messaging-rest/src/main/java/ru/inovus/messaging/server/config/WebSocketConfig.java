@@ -22,8 +22,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(socketHandler, "/ws")
                 .setAllowedOrigins("*")
-                .addInterceptors(
-                        new HttpSessionHandshakeInterceptor(),
+                .addInterceptors(new HttpSessionHandshakeInterceptor(),
                         new HttpHandshakeInterceptor());
     }
 }
