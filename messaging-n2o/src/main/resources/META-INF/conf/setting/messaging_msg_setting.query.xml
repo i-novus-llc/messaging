@@ -2,7 +2,7 @@
 <query xmlns="http://n2oapp.net/framework/config/schema/query-4.0" object-id="messaging_msg_setting">
 
     <list result-mapping="['content']" count-mapping="['totalElements']">
-        <rest filters-separator="&amp;">${messaging.backend.path}/settings?{filters}</rest>
+        <rest filters-separator="&amp;">${messaging.backend.path}/settings?{filters}&amp;{sorting}&amp;size={limit}&amp;page={page}</rest>
     </list>
 
     <unique>
@@ -11,20 +11,20 @@
 
     <fields>
         <field id="id" domain="integer" name="Идентификатор">
-            <select/>
+            <select>id</select>
             <filters>
                 <eq filter-id="id">{id}</eq>
             </filters>
         </field>
 
         <field id="component.id" domain="integer">
-            <select/>
+            <select>component.id</select>
             <filters>
                 <eq filter-id="component.id">component.id={component.id}</eq>
             </filters>
         </field>
         <field id="component.name" domain="string">
-            <select/>
+            <select>component.name</select>
         </field>
 
         <field id="severity.id" domain="string">
@@ -59,32 +59,35 @@
 
         <field id="formationType.id" domain="string">
             <select mapping="['formationType']"/>
+            <filters>
+                <eq filter-id="formationType.id">formationType.id={formationType.id}</eq>
+            </filters>
         </field>
         <field id="formationType.name" domain="string">
             <select mapping="['formationTypeName']"/>
         </field>
 
         <field id="name" domain="string" name="Наименование шаблона">
-            <select/>
+            <select>name</select>
             <filters>
                 <eq filter-id="name">name={name}</eq>
             </filters>
         </field>
 
         <field id="caption" domain="string">
-            <select/>
+            <select>caption</select>
         </field>
 
         <field id="text" domain="string">
-            <select/>
+            <select>text</select>
         </field>
 
         <field id="disabled" domain="boolean">
-            <select/>
+            <select>disabled</select>
         </field>
 
-        <field id="enabled" domain="boolean">
-            <select mapping="!#this['disabled']"/>
+        <field id="enabled">
+            <select mapping="#this['disabled'] == null ? null : !#this['disabled']"/>
             <filters>
                 <eq filter-id="enabled.id" domain="string">enabled.id={enabled.id}</eq>
             </filters>

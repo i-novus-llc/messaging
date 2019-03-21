@@ -14,11 +14,11 @@
     <artifactId>messaging-frontend</artifactId>
 
     <properties>
-        <backend.default.path>http://localhost:8080/messaging/api</backend.default.path>
+        <backend.default.path>http://localhost:8080/api</backend.default.path>
         <frontend.default.port>8081</frontend.default.port>
         <config.server.enable>false</config.server.enable>
 
-        <n2o.version>7.0.6</n2o.version>
+        <n2o.version>7.1.5</n2o.version>
         <security.admin.version>3.0-SNAPSHOT</security.admin.version>
         <jaxws.version>2.3.2</jaxws.version>
     </properties>
@@ -43,11 +43,6 @@
             <groupId>net.n2oapp.framework.security</groupId>
             <artifactId>security-admin-rest-client</artifactId>
             <version>${security.admin.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.n2oapp.framework</groupId>
-            <artifactId>n2o-header</artifactId>
         </dependency>
 
         <dependency>
@@ -143,7 +138,6 @@
             </plugins>
         </pluginManagement>
     </build>
-
     <profiles>
         <profile>
             <id>production</id>

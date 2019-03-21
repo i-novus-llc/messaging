@@ -8,7 +8,7 @@
             </invocation>
             <in-parameters>
                 <param id="name" mapping="name" required="true"/>
-                <param id="disabled" mapping="disabled"/>
+                <param id="disabled" mapping="disabled" default-value="false"/>
                 <param id="component.id" mapping="component.id"/>
                 <param id="severity.id" mapping="severity" required="true"/>
                 <param id="alertType.id" mapping="alertType" required="true"/>

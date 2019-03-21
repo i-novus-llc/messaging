@@ -44,8 +44,8 @@
             <col size="2">
                 <input-select id="formationType" label="Тип уведомления">
                     <options>
-                        <option id="AUTO" name="Автоматический"/>
-                        <option id="HAND" name="Ручной"/>
+                        <option id="AUTO" name="Автоматическое"/>
+                        <option id="HAND" name="Ручное"/>
                     </options>
                 </input-select>
             </col>
