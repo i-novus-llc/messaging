@@ -35,6 +35,7 @@
         </field>
         <field id="severity.name" domain="string">
             <select mapping="['severityName']"/>
+            <sorting>sort=severity,{severity.nameDirection}</sorting>
         </field>
 
         <field id="alertType.id" domain="string">

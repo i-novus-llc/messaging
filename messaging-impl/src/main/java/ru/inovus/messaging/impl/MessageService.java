@@ -231,19 +231,12 @@ public class MessageService {
 
         for (Sort.Order sorting : sortingList) {
             Field field = MESSAGE.field(sorting.getProperty());
-            SortField<?> querySortField = convertFieldToSortField(field, sorting.getDirection());
+            SortField<?> querySortField = sorting.getDirection().equals(Sort.Direction.ASC) ?
+                    field.asc(): field.desc();
             querySortFields.add(querySortField);
         }
 
         return querySortFields;
-    }
-
-    private SortField<?> convertFieldToSortField(Field field, Sort.Direction sortDirection) {
-        if (sortDirection == Sort.Direction.ASC) {
-            return field.asc();
-        } else {
-            return field.desc();
-        }
     }
 
 }
