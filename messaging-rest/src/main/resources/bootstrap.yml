@@ -4,4 +4,4 @@ spring:
   cloud:
     consul:
       config:
-        enabled: ${config.server.enable}
+        enabled: true

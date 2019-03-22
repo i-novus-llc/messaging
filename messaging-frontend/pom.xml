@@ -137,8 +137,7 @@
         <profile>
             <id>production</id>
             <properties>
-                <backend.default.path>http://backend:8080/messaging/api</backend.default.path>
-                <frontend.default.port>8081</frontend.default.port>
+                <config.server.enable>true</config.server.enable>
             </properties>
             <activation>
                 <activeByDefault>false</activeByDefault>

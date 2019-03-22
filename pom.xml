@@ -113,17 +113,4 @@
         </dependencies>
     </dependencyManagement>
 
-    <profiles>
-        <profile>
-            <id>production</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-                <config.server.enable>true</config.server.enable>
-            </properties>
-        </profile>
-    </profiles>
-
-
 </project>
