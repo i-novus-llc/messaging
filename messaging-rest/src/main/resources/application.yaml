@@ -4,8 +4,6 @@ spring.datasource:
   password: postgres
   driver-class-name: org.postgresql.Driver
 
-logging.level.root: DEBUG
-
 spring.jooq.sql-dialect: Postgres
 
 spring.jackson.serialization.write_dates_as_timestamps: false
@@ -49,8 +47,7 @@ spring.http.encoding.forceResponse: true
 spring.http.encoding.force: true
 
 keycloak.redirect-url: http://localhost:8081
-keycloak.server-url:http://keycloak.i-novus.ru/auth
-keycloak.serverUrl: http://keycloak.i-novus.ru/auth
+keycloak.server-url: https://keycloak.i-novus.ru/auth
 keycloak.realm: security-admin
 
 security:

@@ -29,6 +29,7 @@
     <properties>
         <!--<maven.compiler.target>1.8</maven.compiler.target>-->
         <!--<maven.compiler.source>1.8</maven.compiler.source>-->
+        <config.server.enable>false</config.server.enable>
         <jooq.version>3.11.2</jooq.version>
     </properties>
 

@@ -62,6 +62,11 @@
             <artifactId>n2o-platform-starter-jaxrs-server</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>net.n2oapp.platform</groupId>
+            <artifactId>n2o-platform-starter-ms</artifactId>
+        </dependency>
+
         <!--SECURITY-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
