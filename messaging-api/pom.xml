@@ -14,10 +14,6 @@
     </parent>
 
     <dependencies>
-<!--        <dependency>
-            <groupId>net.n2oapp.platform</groupId>
-            <artifactId>n2o-platform-starter-feign-client</artifactId>
-        </dependency>-->
         <dependency>
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-jaxrs-commons</artifactId>

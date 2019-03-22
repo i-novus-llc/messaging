@@ -77,6 +77,10 @@ public class MessageSettingCriteria extends RestCriteria {
         this.formationType = formationType;
     }
 
+    public void setEnabled(YesNo enabled) {
+        this.enabled = enabled;
+    }
+
     public Boolean getEnabled() {
         return enabled != null ? enabled.getValue() : null;
     }

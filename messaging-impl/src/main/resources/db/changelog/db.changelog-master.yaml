@@ -99,5 +99,15 @@ databaseChangeLog:
             relativeToChangelogFile: true
             splitStatements: true
             stripComments: true
+  - changeSet:
+      id: MICROSERVICES-118-1
+      author: rbarysheva
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/MICROSERVICES-118-1.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
 
 

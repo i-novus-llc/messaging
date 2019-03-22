@@ -1,13 +1,11 @@
 package ru.inovus.messaging.server.rest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jooq.Condition;
-import org.jooq.DSLContext;
-import org.jooq.Record;
-import org.jooq.RecordMapper;
+import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import ru.inovus.messaging.api.model.Component;
@@ -17,12 +15,12 @@ import ru.inovus.messaging.api.rest.MessageSettingRest;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageSettingRecord;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 import static ru.inovus.messaging.impl.jooq.Sequences.MESSAGE_SETTING_ID_SEQ;
-import static ru.inovus.messaging.impl.jooq.Tables.COMPONENT;
-import static ru.inovus.messaging.impl.jooq.Tables.MESSAGE_SETTING;
+import static ru.inovus.messaging.impl.jooq.Tables.*;
 
 @Controller
 public class MessageSettingRestImpl implements MessageSettingRest {
@@ -70,6 +68,7 @@ public class MessageSettingRestImpl implements MessageSettingRest {
                 .from(MESSAGE_SETTING)
                 .leftJoin(COMPONENT).on(MESSAGE_SETTING.COMPONENT_ID.eq(COMPONENT.ID))
                 .where(conditions)
+                .orderBy(getSortFields(criteria.getOrders()))
                 .limit(criteria.getPageSize())
                 .offset((int) criteria.getOffset())
                 .fetch()
@@ -132,5 +131,20 @@ public class MessageSettingRestImpl implements MessageSettingRest {
                 .where(MESSAGE_SETTING.ID.eq(id))
                 .fetchOne()
                 .map(MAPPER);
+    }
+
+    private Collection<SortField<?>> getSortFields(List<Sort.Order> sortingList) {
+        Collection<SortField<?>> querySortFields = new ArrayList<>();
+        if (sortingList == null) {
+            return querySortFields;
+        }
+        for (Sort.Order sorting : sortingList) {
+            Field field = MESSAGE_SETTING.field(sorting.getProperty());
+            SortField<?> querySortField = sorting.getDirection().equals(Sort.Direction.ASC) ?
+                 field.asc(): field.desc();
+            querySortFields.add(querySortField);
+        }
+
+        return querySortFields;
     }
 }

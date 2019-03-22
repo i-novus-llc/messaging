@@ -14,7 +14,7 @@
     </parent>
 
     <properties>
-        <n2o.version>7.0.6</n2o.version>
+        <n2o.version>7.1.5</n2o.version>
     </properties>
 
     <dependencies>

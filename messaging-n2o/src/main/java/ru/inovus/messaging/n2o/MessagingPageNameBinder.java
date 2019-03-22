@@ -9,6 +9,7 @@ import net.n2oapp.framework.api.exception.N2oException;
 import net.n2oapp.framework.api.metadata.Compiled;
 import net.n2oapp.framework.api.metadata.ReduxModel;
 import net.n2oapp.framework.api.metadata.aware.CompiledClassAware;
+import net.n2oapp.framework.api.metadata.compile.BindProcessor;
 import net.n2oapp.framework.api.metadata.compile.CompileProcessor;
 import net.n2oapp.framework.api.metadata.compile.MetadataBinder;
 import net.n2oapp.framework.api.metadata.global.view.page.N2oPage;
@@ -35,7 +36,7 @@ public class MessagingPageNameBinder implements MetadataBinder<Page>, CompiledCl
     }
 
     @Override
-    public Page bind(Page page, CompileProcessor p) {
+    public Page bind(Page page, BindProcessor p) {
         N2oWidget widget = null;
         String widgetId = this.widgetId;
         if (pageId != null) {

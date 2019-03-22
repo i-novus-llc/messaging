@@ -44,8 +44,8 @@
             <col size="2">
                 <input-select id="formationType" label="Тип уведомления">
                     <options>
-                        <option id="AUTO" name="Автоматический"/>
-                        <option id="HAND" name="Ручной"/>
+                        <option id="AUTO" name="Автоматическое"/>
+                        <option id="HAND" name="Ручное"/>
                     </options>
                 </input-select>
             </col>
@@ -64,7 +64,7 @@
     <columns>
         <column text-field-id="component.name" label="Компонент"/>
         <column text-field-id="name" label="Наименование шаблона"/>
-        <column text-field-id="severity.name" label="Уровень важности"/>
+        <column text-field-id="severity.name" label="Уровень важности" sorting-direction="desc"/>
         <column text-field-id="alertType.name" label="Способ отображения"/>
         <column text-field-id="infoType.name" label="Информирование"/>
         <column text-field-id="formationType.name" label="Тип уведомления"/>
