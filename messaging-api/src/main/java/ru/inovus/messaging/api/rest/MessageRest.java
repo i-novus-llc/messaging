@@ -11,7 +11,7 @@ import ru.inovus.messaging.api.model.Message;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
-@Api("Увеломления")
+@Api("Уведомления")
 @Path("/messages")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
