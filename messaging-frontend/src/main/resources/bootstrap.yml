@@ -3,7 +3,7 @@ spring:
     name: messaging-frontend
   cloud:
     consul:
-      host: docker.one
+      host: consul-agent.local
       port: 8500
       config:
         enabled: ${config.server.enable}

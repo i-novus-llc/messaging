@@ -4,6 +4,8 @@ spring.datasource:
   password: postgres
   driver-class-name: org.postgresql.Driver
 
+logging.level.root: DEBUG
+
 spring.jooq.sql-dialect: Postgres
 
 spring.jackson.serialization.write_dates_as_timestamps: false
@@ -37,17 +39,18 @@ spring.main.allow-bean-definition-overriding: true
 cxf.path: /api
 cxf.jaxrs.component-scan: true
 cxf.servlet.init.service-list-path: /info
+jaxrs.swagger.enabled: true
+jaxrs.swagger.title: REST for Messaging
+jaxrs.swagger.version: 1.0
+jaxrs.swagger.resource-package: ru.inovus.messaging.api.rest
 
 security.enabled: false
-security.basic.enabled: false
 spring.http.encoding.forceResponse: true
 spring.http.encoding.force: true
 
 keycloak.redirect-url: http://localhost:8081
-#keycloak.server-url:http://keycloak.i-novus.ru/auth
-keycloak.server-url: http://localhost:8180/auth
-#keycloak.serverUrl: http://keycloak.i-novus.ru/auth
-keycloak.serverUrl: http://localhost:8180/auth
+keycloak.server-url:http://keycloak.i-novus.ru/auth
+keycloak.serverUrl: http://keycloak.i-novus.ru/auth
 keycloak.realm: security-admin
 
 security:
