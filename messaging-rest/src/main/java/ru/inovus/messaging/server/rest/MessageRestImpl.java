@@ -1,6 +1,8 @@
 package ru.inovus.messaging.server.rest;
 
-import lombok.extern.slf4j.Slf4j;
+import net.n2oapp.platform.i18n.UserException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -19,8 +21,9 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 @Controller
-@Slf4j
 public class MessageRestImpl implements MessageRest {
+
+    private static final Logger log = LoggerFactory.getLogger(MessageRestImpl.class);
 
     private final JavaMailSender emailSender;
     private final MessageService messageService;
@@ -60,7 +63,8 @@ public class MessageRestImpl implements MessageRest {
                 try {
                     sendEmail(message);
                 } catch (MessagingException e) {
-                    log.debug(e.getMessage());
+                    log.error(e.getMessage());
+                    throw new UserException("Error sending email");
                 }
             }
         }
