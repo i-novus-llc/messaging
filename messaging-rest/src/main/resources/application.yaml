@@ -1,5 +1,5 @@
 spring.datasource:
-  url: jdbc:postgresql://localhost/messaging
+  url: jdbc:postgresql://localhost:54111/messaging
   username: postgres
   password: postgres
   driver-class-name: org.postgresql.Driver

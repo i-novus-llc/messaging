@@ -85,7 +85,7 @@
                             <forcedTypes>
                                 <forcedType>
                                     <userType>ru.inovus.messaging.api.model.Severity</userType>
-                                    <converter>ru.inovus.messaging.impl.SeverityConverter</converter>
+                                    <converter>ru.inovus.messaging.impl.SeverityConverterForMessage</converter>
                                     <expression>.*\.severity.*</expression>
                                     <types>.*</types>
                                 </forcedType>

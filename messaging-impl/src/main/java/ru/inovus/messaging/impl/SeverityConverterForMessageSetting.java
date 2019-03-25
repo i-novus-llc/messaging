@@ -3,8 +3,8 @@ package ru.inovus.messaging.impl;
 import org.jooq.impl.EnumConverter;
 import ru.inovus.messaging.api.model.Severity;
 
-public class SeverityConverter extends EnumConverter<String, Severity> {
-    public SeverityConverter() {
+public class SeverityConverterForMessageSetting extends EnumConverter<String, Severity> {
+    public SeverityConverterForMessageSetting() {
         super(String.class, Severity.class);
     }
 

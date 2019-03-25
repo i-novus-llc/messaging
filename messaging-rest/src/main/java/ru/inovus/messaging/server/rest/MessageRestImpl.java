@@ -82,6 +82,8 @@ public class MessageRestImpl implements MessageRest {
         helper.setTo(message.getMessage().getRecipients().get(0).getEmail());
         helper.setSubject(message.getMessage().getCaption());
         helper.setText(message.getMessage().getText(), true);
+        //Отправка уведомления о доставке
+//        mail.addHeader("Disposition-Notification-To","azainutdinov@i-novus.ru");
         emailSender.send(mail);
     }
 }
