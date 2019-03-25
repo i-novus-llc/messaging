@@ -108,17 +108,17 @@
 
     <build>
         <resources>
-            <resource>
-                <directory>messaging-react/build</directory>
-                <targetPath>META-INF/resources</targetPath>
-            </resource>
+            <!--<resource>-->
+                <!--<directory>messaging-react/build</directory>-->
+                <!--<targetPath>META-INF/resources</targetPath>-->
+            <!--</resource>-->
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
         </resources>
 
-        <finalName>messaging</finalName>
+        <finalName>messaging-frontend</finalName>
 
         <pluginManagement>
             <plugins>

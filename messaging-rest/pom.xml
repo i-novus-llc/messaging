@@ -97,7 +97,7 @@
     </dependencies>
 
     <build>
-        <finalName>messaging</finalName>
+        <finalName>messaging-rest</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -109,6 +109,9 @@
     <profiles>
         <profile>
             <id>production</id>
+            <properties>
+                <config.server.enable>true</config.server.enable>
+            </properties>
         </profile>
         <profile>
             <id>embedded-broker</id>
