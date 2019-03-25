@@ -1,6 +1,5 @@
 package ru.inovus.messaging.server.rest;
 
-import net.n2oapp.platform.i18n.UserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +18,7 @@ import ru.inovus.messaging.impl.MessageService;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.stream.Collectors;
 
 @Controller
 public class MessageRestImpl implements MessageRest {
@@ -63,12 +63,14 @@ public class MessageRestImpl implements MessageRest {
                 try {
                     sendEmail(message);
                 } catch (MessagingException e) {
-                    log.error(e.getMessage());
-                    throw new UserException("Error sending email");
+                    log.error("Failed send on email message with id=" + msg.getId() + ". ", e.getMessage(), e);
+                    throw new RuntimeException(e);
                 }
             }
         }
-        mqProvider.publish(message);
+        if (message.getMessage() == null || !message.getMessage().getInfoType().equals(InfoType.EMAIL)) {
+            mqProvider.publish(message);
+        }
     }
 
     public void markRead(String recipient, String id) {
@@ -83,11 +85,12 @@ public class MessageRestImpl implements MessageRest {
     public void sendEmail(MessageOutbox message) throws MessagingException {
         MimeMessage mail = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mail, true);
-        helper.setTo(message.getMessage().getRecipients().get(0).getEmail());
+        helper.setTo(message.getMessage().getRecipients().stream().map(Recipient::getEmail).collect(Collectors.toList())
+            .toArray(new String[message.getMessage().getRecipients().size()]));
         helper.setSubject(message.getMessage().getCaption());
         helper.setText(message.getMessage().getText(), true);
         //Отправка уведомления о доставке
-//        mail.addHeader("Disposition-Notification-To","azainutdinov@i-novus.ru");
+//        mail.addHeader("Disposition-Notification-To","http://some_rest_address");
         emailSender.send(mail);
     }
 }
