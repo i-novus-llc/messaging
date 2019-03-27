@@ -20,7 +20,6 @@ public class MessageRestImpl implements MessageRest {
 
     private static final Logger log = LoggerFactory.getLogger(MessageRestImpl.class);
 
-//    private final EmailSender emailSender;
     private final MessageService messageService;
     private final Long timeout;
     private final MqProvider mqProvider;
