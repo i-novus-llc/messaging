@@ -4,8 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import ru.inovus.messaging.api.MessageOutbox;
 import ru.inovus.messaging.api.MqProvider;
@@ -14,18 +12,15 @@ import ru.inovus.messaging.api.model.InfoType;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.rest.MessageRest;
+import ru.inovus.messaging.impl.EmailSender;
 import ru.inovus.messaging.impl.MessageService;
-
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import java.util.stream.Collectors;
 
 @Controller
 public class MessageRestImpl implements MessageRest {
 
     private static final Logger log = LoggerFactory.getLogger(MessageRestImpl.class);
 
-    private final JavaMailSender emailSender;
+//    private final EmailSender emailSender;
     private final MessageService messageService;
     private final Long timeout;
     private final MqProvider mqProvider;
@@ -33,11 +28,11 @@ public class MessageRestImpl implements MessageRest {
     public MessageRestImpl(MessageService messageService,
                            @Value("${novus.messaging.timeout}") Long timeout,
                            MqProvider mqProvider,
-                           JavaMailSender emailSender) {
+                           EmailSender emailSender) {
         this.messageService = messageService;
         this.timeout = timeout;
         this.mqProvider = mqProvider;
-        this.emailSender = emailSender;
+//        this.emailSender = emailSender;
     }
 
     @Override
@@ -60,12 +55,8 @@ public class MessageRestImpl implements MessageRest {
             message.getMessage().setId(msg.getId());
 
             if (!message.getMessage().getInfoType().equals(InfoType.NOTICE)) {
-                try {
-                    sendEmail(message);
-                } catch (MessagingException e) {
-                    log.error("Failed send on email message with id=" + msg.getId() + ". ", e.getMessage(), e);
-                    throw new RuntimeException(e);
-                }
+                message.getMessage().setId(msg.getId());
+                mqProvider.add(message);
             }
         }
         if (message.getMessage() == null || !message.getMessage().getInfoType().equals(InfoType.EMAIL)) {
@@ -75,22 +66,5 @@ public class MessageRestImpl implements MessageRest {
 
     public void markRead(String recipient, String id) {
         messageService.markRead(recipient, id);
-    }
-
-    /**
-     * Отправка сообщений на почту
-     *
-     * @param message сообщение
-     */
-    public void sendEmail(MessageOutbox message) throws MessagingException {
-        MimeMessage mail = emailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(mail, true);
-        helper.setTo(message.getMessage().getRecipients().stream().map(Recipient::getEmail).collect(Collectors.toList())
-            .toArray(new String[message.getMessage().getRecipients().size()]));
-        helper.setSubject(message.getMessage().getCaption());
-        helper.setText(message.getMessage().getText(), true);
-        //Отправка уведомления о доставке
-//        mail.addHeader("Disposition-Notification-To","http://some_rest_address");
-        emailSender.send(mail);
     }
 }

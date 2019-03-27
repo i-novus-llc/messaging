@@ -28,13 +28,16 @@ public class KafkaMqProvider implements MqProvider {
 
     private final KafkaProperties properties;
     private final String topic;
+    private final String emailTopic;
 
     public KafkaMqProvider(KafkaTemplate<String, MessageOutbox> kafkaTemplate,
                            KafkaProperties properties,
+                           @Value("${email.topic}") String emailTopic,
                            @Value("${novus.messaging.topic}") String topic) {
         this.kafkaTemplate = kafkaTemplate;
         this.properties = properties;
         this.topic = topic;
+        this.emailTopic = emailTopic;
     }
 
     @Override
@@ -50,6 +53,11 @@ public class KafkaMqProvider implements MqProvider {
     @Override
     public void publish(MessageOutbox message) {
         kafkaTemplate.send(topic, String.valueOf(System.currentTimeMillis()), message);
+    }
+
+    @Override
+    public void add(MessageOutbox message) {
+        kafkaTemplate.send(emailTopic, message);
     }
 
     @Override

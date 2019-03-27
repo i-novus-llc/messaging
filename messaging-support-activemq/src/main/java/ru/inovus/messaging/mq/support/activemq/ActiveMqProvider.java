@@ -30,6 +30,7 @@ public class ActiveMqProvider implements MqProvider {
     private final ActiveMQConnectionFactory activeMQConnectionFactory;
     private final JmsTemplate jmsTemplate;
     private final String topic;
+    private final String emailTopic;
     private Map<Serializable, DefaultMessageListenerContainer> containers = new ConcurrentHashMap<>();
 
     private final Boolean durable;
@@ -37,14 +38,15 @@ public class ActiveMqProvider implements MqProvider {
     public ActiveMqProvider(ObjectMapper objectMapper,
                             @Value("${spring.activemq.broker-url}") String brokerUrl,
                             @Value("${novus.messaging.topic}") String topic,
+                            @Value("${email.topic}") String emailTopic,
                             @Value("${novus.messaging.durable}") Boolean durable) {
         this.objectMapper = objectMapper;
         this.durable = durable;
         activeMQConnectionFactory = new ActiveMQConnectionFactory();
         activeMQConnectionFactory.setBrokerURL(brokerUrl);
         this.jmsTemplate = new JmsTemplate(new CachingConnectionFactory(activeMQConnectionFactory));
-        ;
         this.topic = topic;
+        this.emailTopic = emailTopic;
     }
 
     @Override
@@ -78,6 +80,15 @@ public class ActiveMqProvider implements MqProvider {
     public void publish(MessageOutbox message) {
         try {
             jmsTemplate.convertAndSend(new ActiveMQTopic(topic), objectMapper.writeValueAsString(message));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void add(MessageOutbox message) {
+        try {
+            jmsTemplate.convertAndSend(emailTopic, objectMapper.writeValueAsString(message));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

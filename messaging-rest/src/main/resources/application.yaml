@@ -19,6 +19,8 @@ spring.kafka:
 spring.activemq:
   broker-url: vm://embedded?broker.persistent=false,useShutdownHook=false
 
+email.topic: novus-messaging-email
+
 novus.messaging:
   timeout: 60
   topic: novus-messaging-notify
