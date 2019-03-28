@@ -8,11 +8,9 @@ import org.springframework.stereotype.Controller;
 import ru.inovus.messaging.api.MessageOutbox;
 import ru.inovus.messaging.api.MqProvider;
 import ru.inovus.messaging.api.criteria.MessageCriteria;
-import ru.inovus.messaging.api.model.InfoType;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.rest.MessageRest;
-import ru.inovus.messaging.impl.EmailSender;
 import ru.inovus.messaging.impl.MessageService;
 
 @Controller
@@ -23,15 +21,19 @@ public class MessageRestImpl implements MessageRest {
     private final MessageService messageService;
     private final Long timeout;
     private final MqProvider mqProvider;
+    private final String topic;
+    private final String emailTopic;
 
     public MessageRestImpl(MessageService messageService,
                            @Value("${novus.messaging.timeout}") Long timeout,
-                           MqProvider mqProvider,
-                           EmailSender emailSender) {
+                           @Value("${novus.messaging.topic}") String topic,
+                           @Value("${email.topic}") String emailTopic,
+                           MqProvider mqProvider) {
         this.messageService = messageService;
         this.timeout = timeout;
         this.mqProvider = mqProvider;
-//        this.emailSender = emailSender;
+        this.topic = topic;
+        this.emailTopic = emailTopic;
     }
 
     @Override
@@ -52,15 +54,9 @@ public class MessageRestImpl implements MessageRest {
                 message.getMessage().getRecipients().toArray(init) : init;
             Message msg = messageService.createMessage(message.getMessage(), recipients);
             message.getMessage().setId(msg.getId());
+        }
+        mqProvider.publish(message);
 
-            if (!message.getMessage().getInfoType().equals(InfoType.NOTICE)) {
-                message.getMessage().setId(msg.getId());
-                mqProvider.add(message);
-            }
-        }
-        if (message.getMessage() == null || !message.getMessage().getInfoType().equals(InfoType.EMAIL)) {
-            mqProvider.publish(message);
-        }
     }
 
     public void markRead(String recipient, String id) {

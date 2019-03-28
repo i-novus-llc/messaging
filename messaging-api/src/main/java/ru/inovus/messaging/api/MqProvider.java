@@ -9,7 +9,5 @@ public interface MqProvider {
 
     void publish(MessageOutbox message);
 
-    void add(MessageOutbox message);
-
     void unsubscribe(Serializable subscriber);
 }

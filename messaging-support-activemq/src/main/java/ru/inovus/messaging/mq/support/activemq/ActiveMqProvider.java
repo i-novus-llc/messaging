@@ -13,6 +13,7 @@ import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.stereotype.Component;
 import ru.inovus.messaging.api.MessageOutbox;
 import ru.inovus.messaging.api.MqProvider;
+import ru.inovus.messaging.api.model.InfoType;
 
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
@@ -78,19 +79,19 @@ public class ActiveMqProvider implements MqProvider {
 
     @Override
     public void publish(MessageOutbox message) {
-        try {
-            jmsTemplate.convertAndSend(new ActiveMQTopic(topic), objectMapper.writeValueAsString(message));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+        if(!InfoType.NOTICE.equals(message.getMessage().getInfoType())) {
+            try {
+                jmsTemplate.convertAndSend(emailTopic, objectMapper.writeValueAsString(message));
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         }
-    }
-
-    @Override
-    public void add(MessageOutbox message) {
-        try {
-            jmsTemplate.convertAndSend(emailTopic, objectMapper.writeValueAsString(message));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+        if(!InfoType.EMAIL.equals(message.getMessage().getInfoType())) {
+            try {
+                jmsTemplate.convertAndSend(new ActiveMQTopic(topic), objectMapper.writeValueAsString(message));
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
