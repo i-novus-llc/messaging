@@ -17,7 +17,7 @@ const config = {
   },
   security: {
     authProvider,
-    externalLoginUrl: 'http://keycloak.i-novus.ru'
+    externalLoginUrl: '/login'
   }
 
 };
