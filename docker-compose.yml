@@ -21,6 +21,7 @@ services:
   backend:
     image: "538721144237.dkr.ecr.eu-west-1.amazonaws.com/messaging/rest:${TAG}"
     environment:
+      SPRING_APPLICATION_NAME: "messaging-backend"
       SPRING_DATASOURCE_URL: jdbc:postgresql://db/postgres
       SPRING_CLOUD_CONSUL_HOST: consul-agent.local
       SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
@@ -39,6 +40,7 @@ services:
   frontend:
     image: "538721144237.dkr.ecr.eu-west-1.amazonaws.com/messaging/frontend:${TAG}"
     environment:
+      SPRING_APPLICATION_NAME: "messaging-frontend"
       SPRING_CLOUD_CONSUL_HOST: consul-agent.local
       SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
       JAVA_OPTS: -Xmx200m
@@ -67,6 +69,7 @@ services:
   security-admin-backend:
     image: "538721144237.dkr.ecr.eu-west-1.amazonaws.com/security-admin/backend:${TAG}"
     environment:
+      SPRING_APPLICATION_NAME: "messaging-security-admin-backend"
       SPRING_DATASOURCE_URL: jdbc:postgresql://db/postgres
       SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
       SPRING_CLOUD_CONSUL_HOST: consul-agent.local
