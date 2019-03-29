@@ -52,6 +52,10 @@ public class Message implements Serializable {
         return formationType != null ? formationType.getName() : null;
     }
 
+    public String getRecipientTypeName() {
+        return recipientType != null ? recipientType.getName() : null;
+    }
+
     @Override
     public String toString() {
         return "Message{" +
