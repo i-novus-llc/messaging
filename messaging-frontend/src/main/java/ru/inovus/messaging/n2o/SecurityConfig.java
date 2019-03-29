@@ -37,8 +37,13 @@ public class SecurityConfig extends OpenIdSecurityConfigurerAdapter {
         ssoFilter.setTokenServices(this.getApplicationContext()
                 .getBean(ResourceServerTokenServices.class));
         ssoFilter.setApplicationEventPublisher(this.getApplicationContext());
+        ssoFilter.setAuthenticationSuccessHandler(new RefererRedirectionAuthenticationSuccessHandler());
         return ssoFilter;
     }
 
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        super.configure(http);
+    }
 }
 

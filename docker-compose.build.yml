@@ -1,0 +1,14 @@
+version: "3.6"
+services:
+  backend:
+    build:
+      context: messaging-rest
+    image: "538721144237.dkr.ecr.eu-west-1.amazonaws.com/messaging/rest:${TAG}"
+  frontend:
+    build:
+      context: messaging-frontend
+    image: "538721144237.dkr.ecr.eu-west-1.amazonaws.com/messaging/frontend:${TAG}"
+  react:
+    build:
+      context: messaging-react
+    image: "538721144237.dkr.ecr.eu-west-1.amazonaws.com/messaging/react:${TAG}"
