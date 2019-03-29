@@ -33,8 +33,8 @@ public class KafkaMqProvider implements MqProvider {
 
     public KafkaMqProvider(KafkaTemplate<String, MessageOutbox> kafkaTemplate,
                            KafkaProperties properties,
-                           @Value("${email.topic}") String emailTopic,
-                           @Value("${novus.messaging.topic}") String topic) {
+                           @Value("${novus.messaging.topic.email}") String emailTopic,
+                           @Value("${novus.messaging.topic.notice}") String topic) {
         this.kafkaTemplate = kafkaTemplate;
         this.properties = properties;
         this.topic = topic;

@@ -26,8 +26,8 @@ public class MessageRestImpl implements MessageRest {
 
     public MessageRestImpl(MessageService messageService,
                            @Value("${novus.messaging.timeout}") Long timeout,
-                           @Value("${novus.messaging.topic}") String topic,
-                           @Value("${email.topic}") String emailTopic,
+                           @Value("${novus.messaging.topic.notice}") String topic,
+                           @Value("${novus.messaging.topic.email}") String emailTopic,
                            MqProvider mqProvider) {
         this.messageService = messageService;
         this.timeout = timeout;

@@ -22,7 +22,7 @@ public class ActiveMqEmailTopicReceiver {
     @Autowired
     private EmailSender emailSender;
 
-    @JmsListener(destination = "${email.topic}")
+    @JmsListener(destination = "${novus.messaging.topic.email}")
     public void receive(String message) {
         try {
             MessageOutbox mo = objectMapper.readValue(message, MessageOutbox.class);

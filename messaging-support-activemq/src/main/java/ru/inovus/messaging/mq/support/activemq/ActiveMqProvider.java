@@ -38,8 +38,8 @@ public class ActiveMqProvider implements MqProvider {
 
     public ActiveMqProvider(ObjectMapper objectMapper,
                             @Value("${spring.activemq.broker-url}") String brokerUrl,
-                            @Value("${novus.messaging.topic}") String topic,
-                            @Value("${email.topic}") String emailTopic,
+                            @Value("${novus.messaging.topic.notice}") String topic,
+                            @Value("${novus.messaging.topic.email}") String emailTopic,
                             @Value("${novus.messaging.durable}") Boolean durable) {
         this.objectMapper = objectMapper;
         this.durable = durable;
@@ -79,20 +79,10 @@ public class ActiveMqProvider implements MqProvider {
 
     @Override
     public void publish(MessageOutbox message) {
-        if(!InfoType.NOTICE.equals(message.getMessage().getInfoType())) {
-            try {
-                jmsTemplate.convertAndSend(emailTopic, objectMapper.writeValueAsString(message));
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        if(!InfoType.EMAIL.equals(message.getMessage().getInfoType())) {
-            try {
-                jmsTemplate.convertAndSend(new ActiveMQTopic(topic), objectMapper.writeValueAsString(message));
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        if (InfoType.EMAIL.equals(message.getMessage().getInfoType()) || InfoType.ALL.equals(message.getMessage().getInfoType()))
+            send(message, emailTopic);
+        if (InfoType.NOTICE.equals(message.getMessage().getInfoType()) || InfoType.ALL.equals(message.getMessage().getInfoType()))
+            send(message, topic);
     }
 
     @Override
@@ -101,6 +91,20 @@ public class ActiveMqProvider implements MqProvider {
         if (container != null) {
             container.stop();
             container.shutdown();
+        }
+    }
+
+    /**
+     * Отправка в очередь нового сообщения
+     *
+     * @param message сообщение
+     * @param topic   топик очереди
+     */
+    private void send(MessageOutbox message, String topic) {
+        try {
+            jmsTemplate.convertAndSend(emailTopic, objectMapper.writeValueAsString(message));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
     }
 }

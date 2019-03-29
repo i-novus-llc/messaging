@@ -22,7 +22,7 @@ public class KafkaEmailTopicReceiver {
     @Autowired
     private EmailSender emailSender;
 
-    @KafkaListener(topics = "${email.topic}")
+    @KafkaListener(topics = "${novus.messaging.topic.email}")
     public void receive(String message) {
         try {
             MessageOutbox mo = objectMapper.readValue(message, MessageOutbox.class);
