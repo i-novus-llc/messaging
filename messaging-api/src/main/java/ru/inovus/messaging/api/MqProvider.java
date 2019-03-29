@@ -1,7 +1,5 @@
 package ru.inovus.messaging.api;
 
-import ru.inovus.messaging.api.MessageOutbox;
-
 import java.io.Serializable;
 import java.util.function.Consumer;
 

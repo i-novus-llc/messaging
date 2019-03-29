@@ -29,6 +29,10 @@
             <artifactId>jackson-databind</artifactId>
             <version>${jackson.version}</version>
         </dependency>
+        <dependency>
+            <groupId>ru.i-novus.messaging</groupId>
+            <artifactId>messaging-impl</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
