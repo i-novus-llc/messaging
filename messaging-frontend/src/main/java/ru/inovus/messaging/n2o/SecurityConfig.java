@@ -40,5 +40,10 @@ public class SecurityConfig extends OpenIdSecurityConfigurerAdapter {
         return ssoFilter;
     }
 
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.openidLogin().successHandler(new RefererRedirectionAuthenticationSuccessHandler());
+        super.configure(http);
+    }
 }
 
