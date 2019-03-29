@@ -7,4 +7,11 @@ module.exports = function(app) {
       changeOrigin: true,
     })
   );
+
+  app.use(
+    proxy('/login', {
+      target: 'http://localhost:8080/',
+      changeOrigin: true,
+    })
+  );
 };
