@@ -1,6 +1,11 @@
 package ru.inovus.messaging.server.test;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.web.socket.CloseStatus;
@@ -65,7 +70,12 @@ public class SocketHandlerTest {
             return null;
         }).when(messageService).markReadAll(any(), any());
         when(messageService.getUnreadMessages(any(), any())).thenReturn(new UnreadMessagesInfo(1));
-        objectMapper = new BackendApplication().objectMapper();
+        objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         mqProvider = mock(MqProvider.class);
         doAnswer(invocation -> {
             subscribed = true;

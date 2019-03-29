@@ -36,6 +36,22 @@ public class Message implements Serializable {
         this.id = id;
     }
 
+    public String getSeverityName() {
+        return this.severity != null ? severity.getName() : null;
+    }
+
+    public String getAlertTypeName() {
+        return alertType != null ? alertType.getName() : null;
+    }
+
+    public String getInfoTypeName() {
+        return infoType != null ? infoType.getName() : null;
+    }
+
+    public String getFormationTypeName() {
+        return formationType != null ? formationType.getName() : null;
+    }
+
     @Override
     public String toString() {
         return "Message{" +
