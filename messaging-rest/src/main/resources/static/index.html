@@ -88,7 +88,7 @@
         var headers = {};
         //headers[csrf.headerName] = csrf.token;
         headers['X-Auth-Token'] = name;
-        headers['X-System-Id'] = 'example';
+        headers['X-System-Id'] = 'default';
         ws.onopen = () => {
             setConnected(true);
             ws.send(JSON.stringify({'headers': headers, 'type': 'CONNECT'}));
