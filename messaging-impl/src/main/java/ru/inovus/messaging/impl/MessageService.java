@@ -15,6 +15,7 @@ import ru.inovus.messaging.api.model.RecipientType;
 import ru.inovus.messaging.impl.jooq.tables.records.ComponentRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
 
+import java.awt.event.ComponentEvent;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class MessageService {
         message.setRecipientType(record.getRecipientType());
         message.setSystemId(record.getSystemId());
         if (componentRecord != null) {
-            message.setComponent(new Component(componentRecord.getId(), componentRecord.getName()));
+            message.setComponent(Component.valueOf(componentRecord.getName()));
         }
         return message;
     };

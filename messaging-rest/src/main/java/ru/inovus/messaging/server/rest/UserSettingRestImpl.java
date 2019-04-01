@@ -40,7 +40,7 @@ public class UserSettingRestImpl implements UserSettingRest {
         setting.setSeverity(defaultSetting.getSeverity());
         setting.setName(defaultSetting.getName());
         setting.setComponent(defaultSetting.getComponentId() != null ?
-                new Component(defaultSetting.getComponentId(), record.into(COMPONENT).getName()) : null);
+                Component.valueOf(record.into(COMPONENT).getName()) : null);
         setting.setDisabled(userSetting.getIsDisabled() != null ?
                 userSetting.getIsDisabled() : defaultSetting.getIsDisabled());
         setting.setAlertType(userSetting.getAlertType() != null ?

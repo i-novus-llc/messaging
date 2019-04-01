@@ -110,4 +110,15 @@ databaseChangeLog:
             splitStatements: true
             stripComments: true
 
+  - changeSet:
+      id: DOMRFLKB-827
+      author: azainutdinov
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/DOMRFLKB-827.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
+
 
