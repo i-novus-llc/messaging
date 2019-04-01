@@ -9,7 +9,7 @@ public class SeverityConverter extends EnumConverter<String, Severity> {
     }
 
     @Override
-    public String to(Severity userObject) {
-        return userObject.getValue();
+    public String to(Severity severity) {
+        return severity.getValue();
     }
 }

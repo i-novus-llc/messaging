@@ -25,7 +25,6 @@
                 </row>
                 <row>
                     <radio-group id="recipientType" label="Тип получателей" inline="true" enabled="false">
-                        <default-value id="USER" name="Пользователи"/>
                         <options>
                             <option id="USER" name="Пользователь"/>
                             <option id="ALL" name="Все"/>

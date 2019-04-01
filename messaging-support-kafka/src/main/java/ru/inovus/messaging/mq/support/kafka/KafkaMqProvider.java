@@ -6,14 +6,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.KafkaMessageListenerContainer;
 import org.springframework.kafka.listener.MessageListener;
 import org.springframework.kafka.listener.MessageListenerContainer;
-import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.stereotype.Component;
-import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.MessageOutbox;
 import ru.inovus.messaging.api.MqProvider;
+import ru.inovus.messaging.api.model.InfoType;
+import ru.inovus.messaging.api.model.Message;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -28,13 +29,16 @@ public class KafkaMqProvider implements MqProvider {
 
     private final KafkaProperties properties;
     private final String topic;
+    private final String emailTopic;
 
     public KafkaMqProvider(KafkaTemplate<String, MessageOutbox> kafkaTemplate,
                            KafkaProperties properties,
-                           @Value("${novus.messaging.topic}") String topic) {
+                           @Value("${novus.messaging.topic.email}") String emailTopic,
+                           @Value("${novus.messaging.topic.notice}") String topic) {
         this.kafkaTemplate = kafkaTemplate;
         this.properties = properties;
         this.topic = topic;
+        this.emailTopic = emailTopic;
     }
 
     @Override
@@ -42,14 +46,18 @@ public class KafkaMqProvider implements MqProvider {
                           Consumer<MessageOutbox> messageHandler) {
         ContainerProperties containerProperties = new ContainerProperties(topic);
         containerProperties.setMessageListener((MessageListener<String, MessageOutbox>)
-                data -> messageHandler.accept(data.value()));
+            data -> messageHandler.accept(data.value()));
         Map<String, Object> consumerConfigs = getConsumerConfigs(authToken, systemId);
         containers.put(subscriber, createContainer(consumerConfigs, containerProperties));
     }
 
     @Override
     public void publish(MessageOutbox message) {
-        kafkaTemplate.send(topic, String.valueOf(System.currentTimeMillis()), message);
+        if (!InfoType.NOTICE.equals(message.getMessage().getInfoType()))
+            kafkaTemplate.send(emailTopic, String.valueOf(System.currentTimeMillis()), message);
+
+        if (!InfoType.EMAIL.equals(message.getMessage().getInfoType()))
+            kafkaTemplate.send(topic, String.valueOf(System.currentTimeMillis()), message);
     }
 
     @Override
@@ -62,9 +70,9 @@ public class KafkaMqProvider implements MqProvider {
     private MessageListenerContainer createContainer(Map<String, Object> consumerConfigs,
                                                      ContainerProperties containerProperties) {
         DefaultKafkaConsumerFactory<String, Message> consumerFactory =
-                new DefaultKafkaConsumerFactory<>(consumerConfigs);
+            new DefaultKafkaConsumerFactory<>(consumerConfigs);
         KafkaMessageListenerContainer<String, Message> container =
-                new KafkaMessageListenerContainer<>(consumerFactory, containerProperties);
+            new KafkaMessageListenerContainer<>(consumerFactory, containerProperties);
         container.start();
         return container;
     }
