@@ -6,7 +6,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.inovus.messaging.api.*;
+import ru.inovus.messaging.api.UnreadMessagesInfo;
 import ru.inovus.messaging.api.criteria.MessageCriteria;
 import ru.inovus.messaging.api.model.Component;
 import ru.inovus.messaging.api.model.Message;
@@ -65,7 +65,7 @@ public class MessageService {
                         message.getText(),
                         message.getSeverity(),
                         message.getAlertType(),
-                        message.getSentAt(),
+                        LocalDateTime.now(),
                         message.getSystemId(),
                         message.getInfoType(),
                         message.getComponent() != null ? message.getComponent().getId() : null,
@@ -169,7 +169,7 @@ public class MessageService {
         Optional.ofNullable(criteria.getUser())
                 .ifPresent(user -> conditions.add(exists(dsl.selectOne().from(RECIPIENT)
                         .where(RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID),
-                                RECIPIENT.RECIPIENT_.eq(user)))));
+                                RECIPIENT.RECIPIENT_.eq(user))).or(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL))));
         //TODO: Recipient type
         Optional.ofNullable(criteria.getSystemId())
                 .ifPresent(systemId -> conditions.add(MESSAGE.SYSTEM_ID.eq(systemId)));

@@ -24,7 +24,7 @@
         </row>
     </filters>
     <columns>
-        <column text-field-id="sentAt" label="Дата отправки"/>
+        <column text-field-id="sentAt" label="Дата отправки" sorting-direction="desc"/>
         <column text-field-id="component.name" label="Компонент"/>
         <column text-field-id="caption" label="Заголовок"/>
         <column text-field-id="severity.name" label="Уровень важности"/>

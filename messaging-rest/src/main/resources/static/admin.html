@@ -90,7 +90,7 @@
                                                , sentAt:     moment.utc().format('YYYY-MM-DDTHH:mm:ss.SSS') }
                                  , recipients: [{ user: user ? user : null
                                                 , recipientType: user ? 'USER' : 'ALL'
-                                                , systemId: 'example' }]}),
+                                                , systemId: 'default' }]}),
             success: (data) => showAlert('Message sent')
             });
     }

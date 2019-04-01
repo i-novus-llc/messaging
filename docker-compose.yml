@@ -85,5 +85,25 @@ services:
       restart_policy:
         max_attempts: 3
 
+  security-admin-frontend:
+    image: "538721144237.dkr.ecr.eu-west-1.amazonaws.com/security-admin/frontend:${TAG}"
+    environment:
+      SPRING_APPLICATION_NAME: "messaging-security-admin-frontend"
+      SPRING_CLOUD_CONSUL_HOST: consul-agent.local
+      SEC_ADMIN_REST_URL: http://security-admin-backend:8080/api
+      KEYCLOAK_REALM: messaging
+      SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
+      JAVA_OPTS: -Xmx200m
+    depends_on:
+    - security-admin-backend
+    ports:
+    - "8080"
+    deploy:
+      resources:
+        limits:
+          memory: 500M
+      restart_policy:
+        max_attempts: 3
+
 volumes:
   messaging-db-data:
