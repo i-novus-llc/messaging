@@ -91,6 +91,7 @@ services:
       SPRING_APPLICATION_NAME: "messaging-security-admin-frontend"
       SPRING_CLOUD_CONSUL_HOST: consul-agent.local
       SEC_ADMIN_REST_URL: http://security-admin-backend:8080/api
+      KEYCLOAK_REALM: messaging
       SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
       JAVA_OPTS: -Xmx200m
     depends_on:
