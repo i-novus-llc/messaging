@@ -67,7 +67,7 @@ public class Message extends TableImpl<MessageRecord> {
     /**
      * The column <code>public.message.severity</code>. Жесткость сообщения
      */
-    public final TableField<MessageRecord, Severity> SEVERITY = createField("severity", org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Жесткость сообщения", new SeverityConverterForMessage());
+    public final TableField<MessageRecord, Severity> SEVERITY = createField("severity", org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Жесткость сообщения", new SeverityConverter());
 
     /**
      * The column <code>public.message.alert_type</code>. Тип предупреждения

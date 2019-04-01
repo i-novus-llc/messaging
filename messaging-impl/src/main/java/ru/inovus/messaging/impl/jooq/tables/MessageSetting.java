@@ -14,7 +14,7 @@ import ru.inovus.messaging.api.model.Severity;
 import ru.inovus.messaging.impl.AlertTypeConverter;
 import ru.inovus.messaging.impl.FormationTypeConverter;
 import ru.inovus.messaging.impl.InfoTypeConverter;
-import ru.inovus.messaging.impl.SeverityConverterForMessageSetting;
+import ru.inovus.messaging.impl.SeverityConverter;
 import ru.inovus.messaging.impl.jooq.Indexes;
 import ru.inovus.messaging.impl.jooq.Keys;
 import ru.inovus.messaging.impl.jooq.Public;
@@ -71,7 +71,7 @@ public class MessageSetting extends TableImpl<MessageSettingRecord> {
     /**
      * The column <code>public.message_setting.severity</code>. Жесткость сообщения
      */
-    public final TableField<MessageSettingRecord, Severity> SEVERITY = createField("severity", org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Жесткость сообщения", new SeverityConverterForMessageSetting());
+    public final TableField<MessageSettingRecord, Severity> SEVERITY = createField("severity", org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Жесткость сообщения", new SeverityConverter());
 
     /**
      * The column <code>public.message_setting.alert_type</code>. Тип предупреждения

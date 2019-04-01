@@ -19,9 +19,9 @@ public class MessageCriteria extends RestCriteria {
     private String user;
     @QueryParam("systemId")
     private String systemId;
-    @QueryParam("sentAt.begin")
+    @QueryParam("sentAtBegin")
     private LocalDateTime sentAtBegin;
-    @QueryParam("sentAt.end")
+    @QueryParam("sentAtEnd")
     private LocalDateTime sentAtEnd;
     @QueryParam("severity.id")
     private Severity severity;
