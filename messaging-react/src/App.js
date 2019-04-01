@@ -17,7 +17,7 @@ const config = {
   },
   security: {
     authProvider,
-    externalLoginUrl: '/'
+    externalLoginUrl: '/login'
   }
 
 };
