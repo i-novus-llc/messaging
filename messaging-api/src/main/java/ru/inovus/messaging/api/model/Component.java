@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum Component {
-    PAYMENT("PAYMENT", 1);
+    PAYMENT("Оплата", 1);
 
     String name;
     Integer id;

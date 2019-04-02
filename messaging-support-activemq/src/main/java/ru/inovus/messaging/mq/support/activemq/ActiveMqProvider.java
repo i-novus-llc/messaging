@@ -102,7 +102,7 @@ public class ActiveMqProvider implements MqProvider {
      */
     private void send(MessageOutbox message, String topic) {
         try {
-            jmsTemplate.convertAndSend(emailTopic, objectMapper.writeValueAsString(message));
+            jmsTemplate.convertAndSend(topic, objectMapper.writeValueAsString(message));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
