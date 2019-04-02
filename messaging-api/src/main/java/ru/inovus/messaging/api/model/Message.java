@@ -32,7 +32,7 @@ public class Message implements Serializable {
     private Map<String, String> data;
     private String notificationType;
     private String objectId;
-    private ObjectType objectType;
+    private String objectType;
 
     public Message() {
     }

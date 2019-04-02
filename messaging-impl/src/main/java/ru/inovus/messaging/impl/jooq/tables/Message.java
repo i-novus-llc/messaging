@@ -117,7 +117,7 @@ public class Message extends TableImpl<MessageRecord> {
     /**
      * The column <code>public.message.object_type</code>. Тип объекта
      */
-    public final TableField<MessageRecord, ObjectType> OBJECT_TYPE = createField("object_type", org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Тип объекта", new ObjectTypeConverter());
+    public final TableField<MessageRecord, String> OBJECT_TYPE = createField("object_type", org.jooq.impl.SQLDataType.VARCHAR.nullable(false).defaultValue(org.jooq.impl.DSL.field("'AUTO'::character varying", org.jooq.impl.SQLDataType.VARCHAR)), this, "Тип объекта");
 
 
     /**
