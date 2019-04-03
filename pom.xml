@@ -30,6 +30,7 @@
         <n2o.version>7.1.9</n2o.version>
         <!--<maven.compiler.target>1.8</maven.compiler.target>-->
         <!--<maven.compiler.source>1.8</maven.compiler.source>-->
+        <security.admin.version>3.0-SNAPSHOT</security.admin.version>
         <config.server.enable>false</config.server.enable>
         <jooq.version>3.11.2</jooq.version>
     </properties>
@@ -50,6 +51,16 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>3.7</version>
+            </dependency>
+            <dependency>
+                <groupId>net.n2oapp.framework.security</groupId>
+                <artifactId>security-admin-rest-api</artifactId>
+                <version>${security.admin.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.n2oapp.framework.security</groupId>
+                <artifactId>security-admin-api</artifactId>
+                <version>${security.admin.version}</version>
             </dependency>
             <dependency>
                 <groupId>ru.i-novus.messaging</groupId>

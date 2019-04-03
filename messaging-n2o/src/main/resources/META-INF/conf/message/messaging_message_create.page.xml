@@ -78,18 +78,10 @@
                         <visibility on="recipientType">
                             recipientType.id == 'USER'
                         </visibility>
-                        <requiring on="recipientType">
-                            recipientType.id == 'User'
-                        </requiring>
                     </dependencies>
                 </input-select>
             </row>
             </line>
         </fields>
-        <!--<toolbar>-->
-            <!--<button label="Отправить">-->
-                <!--<invoke operation-id="create"/>-->
-            <!--</button>-->
-        <!--</toolbar>-->
     </form>
 </simple-page>
