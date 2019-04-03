@@ -1,11 +1,13 @@
 package ru.inovus.messaging.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import ru.inovus.messaging.api.MessageOutbox;
 import ru.inovus.messaging.api.model.Recipient;
+import ru.inovus.messaging.api.queue.MqProvider;
+import ru.inovus.messaging.api.queue.QueueMqConsumer;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -13,9 +15,12 @@ import java.util.stream.Collectors;
 
 @Component
 public class EmailSender {
-
-    @Autowired
     private JavaMailSender emailSender;
+
+    public EmailSender(JavaMailSender emailSender, MqProvider mqProvider, @Value("${novus.messaging.topic.email}") String emailQueueName) {
+        this.emailSender = emailSender;
+        mqProvider.subscribe(new QueueMqConsumer(emailQueueName, this::send, emailQueueName));
+    }
 
     /**
      * Отправка сообщения на почту
@@ -31,8 +36,6 @@ public class EmailSender {
                 .toArray(new String[message.getMessage().getRecipients().size()]));
             helper.setSubject(message.getMessage().getCaption());
             helper.setText(message.getMessage().getText(), true);
-            //Отправка уведомления о доставке
-//        mail.addHeader("Disposition-Notification-To", "http://some_rest_address");
             emailSender.send(mail);
         } catch (MessagingException e) {
             e.printStackTrace();

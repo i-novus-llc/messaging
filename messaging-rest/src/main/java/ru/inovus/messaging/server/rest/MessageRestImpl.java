@@ -6,12 +6,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import ru.inovus.messaging.api.MessageOutbox;
-import ru.inovus.messaging.api.MqProvider;
 import ru.inovus.messaging.api.criteria.MessageCriteria;
+import ru.inovus.messaging.api.model.InfoType;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.Recipient;
+import ru.inovus.messaging.api.queue.MqProvider;
 import ru.inovus.messaging.api.rest.MessageRest;
 import ru.inovus.messaging.impl.MessageService;
+import ru.inovus.messaging.api.queue.DestinationResolver;
+import ru.inovus.messaging.api.queue.DestinationType;
 
 @Controller
 public class MessageRestImpl implements MessageRest {
@@ -21,19 +24,22 @@ public class MessageRestImpl implements MessageRest {
     private final MessageService messageService;
     private final Long timeout;
     private final MqProvider mqProvider;
-    private final String topic;
-    private final String emailTopic;
+    private final String noticeTopicName;
+    private final String emailTopicName;
+    private DestinationResolver destinationResolver;
 
     public MessageRestImpl(MessageService messageService,
                            @Value("${novus.messaging.timeout}") Long timeout,
-                           @Value("${novus.messaging.topic.notice}") String topic,
-                           @Value("${novus.messaging.topic.email}") String emailTopic,
-                           MqProvider mqProvider) {
+                           @Value("${novus.messaging.topic.notice}") String noticeTopicName,
+                           @Value("${novus.messaging.topic.email}") String emailTopicName,
+                           MqProvider mqProvider,
+                           DestinationResolver destinationResolver) {
         this.messageService = messageService;
         this.timeout = timeout;
         this.mqProvider = mqProvider;
-        this.topic = topic;
-        this.emailTopic = emailTopic;
+        this.noticeTopicName = noticeTopicName;
+        this.emailTopicName = emailTopicName;
+        this.destinationResolver = destinationResolver;
     }
 
     @Override
@@ -47,16 +53,43 @@ public class MessageRestImpl implements MessageRest {
     }
 
     @Override
-    public void sendMessage(final MessageOutbox message) {
-        if (message.getMessage() != null) {
-            Recipient[] init = new Recipient[0];
-            Recipient[] recipients = message.getMessage().getRecipients() != null ?
-                message.getMessage().getRecipients().toArray(init) : init;
-            Message msg = messageService.createMessage(message.getMessage(), recipients);
-            message.getMessage().setId(msg.getId());
-        }
-        mqProvider.publish(message);
+    public void sendMessage(final MessageOutbox messageOutbox) {
+        if (messageOutbox.getMessage() != null)
+            save(messageOutbox.getMessage());
 
+        send(messageOutbox);
+    }
+
+    private void save(Message message) {
+        Message savedMessage = messageService.createMessage(message, message.getRecipients().toArray(new Recipient[0]));
+        message.setId(savedMessage.getId());
+    }
+
+    private void send(MessageOutbox messageOutbox) {
+        for (InfoType infoType : messageOutbox.getMessage().getInfoTypes())
+            mqProvider.publish(messageOutbox, destinationResolver.resolve(getDestinationMqName(infoType), getDestinationType(infoType)));
+    }
+
+    private DestinationType getDestinationType(InfoType infoType) {
+        switch (infoType) {
+            case EMAIL:
+                return DestinationType.CONSUMER;
+            case NOTICE:
+                return DestinationType.SUBSCRIBER;
+            default:
+                return null;
+        }
+    }
+
+    private String getDestinationMqName(InfoType infoType) {
+        switch (infoType) {
+            case EMAIL:
+                return emailTopicName;
+            case NOTICE:
+                return noticeTopicName;
+            default:
+                return null;
+        }
     }
 
     public void markRead(String recipient, String id) {
