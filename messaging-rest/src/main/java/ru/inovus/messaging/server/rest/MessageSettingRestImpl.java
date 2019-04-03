@@ -39,7 +39,7 @@ public class MessageSettingRestImpl implements MessageSettingRest {
         messageSetting.setCaption(r.getCaption());
         messageSetting.setText(r.getText());
         messageSetting.setComponent(r.getComponentId() != null ?
-                new Component(r.getComponentId(), rec.into(COMPONENT).getName()) : null);
+            Component.valueOf(rec.into(COMPONENT).getName()) : null);
         messageSetting.setFormationType(r.getFormationType());
         messageSetting.setDisabled(r.getIsDisabled());
         return messageSetting;

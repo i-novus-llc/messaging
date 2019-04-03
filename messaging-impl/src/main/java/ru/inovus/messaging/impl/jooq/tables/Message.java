@@ -105,6 +105,22 @@ public class Message extends TableImpl<MessageRecord> {
     public final TableField<MessageRecord, RecipientType> RECIPIENT_TYPE = createField("recipient_type", org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "", new RecipientTypeConverter());
 
     /**
+     * The column <code>public.message.notification_type</code>. Тип уведомления
+     */
+    public final TableField<MessageRecord, String> NOTIFICATION_TYPE = createField("notification_type", org.jooq.impl.SQLDataType.VARCHAR.nullable(false).defaultValue(org.jooq.impl.DSL.field("'AUTO'::character varying", org.jooq.impl.SQLDataType.VARCHAR)), this, "Тип уведомления");
+
+    /**
+     * The column <code>public.message.object_id</code>. Ид-р объекта
+     */
+    public final TableField<MessageRecord, String> OBJECT_ID = createField("object_id", org.jooq.impl.SQLDataType.VARCHAR.nullable(false).defaultValue(org.jooq.impl.DSL.field("'AUTO'::character varying", org.jooq.impl.SQLDataType.VARCHAR)), this, "Ид-р объекта");
+
+    /**
+     * The column <code>public.message.object_type</code>. Тип объекта
+     */
+    public final TableField<MessageRecord, String> OBJECT_TYPE = createField("object_type", org.jooq.impl.SQLDataType.VARCHAR.nullable(false).defaultValue(org.jooq.impl.DSL.field("'AUTO'::character varying", org.jooq.impl.SQLDataType.VARCHAR)), this, "Тип объекта");
+
+
+    /**
      * Create a <code>public.message</code> table reference
      */
     public Message() {

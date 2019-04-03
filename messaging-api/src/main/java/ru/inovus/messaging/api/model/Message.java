@@ -26,6 +26,9 @@ public class Message implements Serializable {
     private String systemId;
     private List<Recipient> recipients;
     private Map<String, String> data;
+    private String notificationType;
+    private String objectId;
+    private String objectType;
 
     public Message() {
     }

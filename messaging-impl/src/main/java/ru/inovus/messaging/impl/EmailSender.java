@@ -24,9 +24,6 @@ public class EmailSender {
 
     /**
      * Отправка сообщения на почту
-     *
-     * @param message
-     * @throws MessagingException
      */
     public void send(MessageOutbox message) {
         try {
