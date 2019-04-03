@@ -1,5 +1,6 @@
 package ru.inovus.messaging.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +11,7 @@ import java.util.Map;
 
 @Getter
 @Setter
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Message implements Serializable {
 
     private static final long serialVersionUID = 5475383823197483227L;
@@ -28,6 +30,9 @@ public class Message implements Serializable {
     private String systemId;
     private List<Recipient> recipients;
     private Map<String, String> data;
+    private String notificationType;
+    private String objectId;
+    private String objectType;
 
     public Message() {
     }

@@ -19,9 +19,6 @@ public class EmailSender {
 
     /**
      * Отправка сообщения на почту
-     *
-     * @param message
-     * @throws MessagingException
      */
     public void send(MessageOutbox message) {
         try {
@@ -31,8 +28,6 @@ public class EmailSender {
                 .toArray(new String[message.getMessage().getRecipients().size()]));
             helper.setSubject(message.getMessage().getCaption());
             helper.setText(message.getMessage().getText(), true);
-            //Отправка уведомления о доставке
-//        mail.addHeader("Disposition-Notification-To", "http://some_rest_address");
             emailSender.send(mail);
         } catch (MessagingException e) {
             e.printStackTrace();
