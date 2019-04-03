@@ -40,7 +40,7 @@ public class MessageService {
         message.setAlertType(record.getAlertType());
         message.setSeverity(record.getSeverity());
         message.setSentAt(record.getSentAt());
-        message.setInfoType(record.getInfoType());
+//        message.setInfoType(record.getInfoType());
         message.setFormationType(record.getFormationType());
         message.setRecipientType(record.getRecipientType());
         message.setSystemId(record.getSystemId());
@@ -66,7 +66,8 @@ public class MessageService {
                 message.getAlertType(),
                 LocalDateTime.now(),
                 message.getSystemId(),
-                message.getInfoType(),
+                    null,
+//                        message.getInfoType(),
                 message.getComponent() != null ? message.getComponent().getId() : null,
                 message.getFormationType(),
                 message.getRecipientType(),

@@ -18,6 +18,7 @@ spring.kafka:
 
 spring.activemq:
   broker-url: vm://embedded?broker.persistent=false,useShutdownHook=false
+#  broker-url: tcp://localhost:61616
 
 novus.messaging:
   timeout: 60

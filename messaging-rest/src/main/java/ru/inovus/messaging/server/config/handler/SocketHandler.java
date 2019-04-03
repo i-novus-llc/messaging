@@ -17,6 +17,8 @@ import ru.inovus.messaging.api.*;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.RecipientType;
+import ru.inovus.messaging.api.queue.MqProvider;
+import ru.inovus.messaging.api.queue.TopicMqConsumer;
 import ru.inovus.messaging.impl.MessageService;
 import ru.inovus.messaging.server.auth.WebSocketAuthenticator;
 import ru.inovus.messaging.server.model.SocketEvent;
@@ -49,6 +51,9 @@ public class SocketHandler extends TextWebSocketHandler {
     public void setTimeout(Integer timeout) {
         this.timeout = timeout;
     }
+
+    @Value("${novus.messaging.topic.notice}")
+    private String noticeTopicName;
 
     @Autowired
     public void setAuthenticator(WebSocketAuthenticator authenticator) {
@@ -97,8 +102,8 @@ public class SocketHandler extends TextWebSocketHandler {
             SecurityContextHolder.setContext(new SecurityContextImpl(user));
             UnreadMessagesInfo unreadMessages = messageService.getUnreadMessages(user.getName(), systemId);
             sendMessage(session, unreadMessages);
-            mqProvider.subscribe(session.getId(), systemId, user.getName(), messageOutbox ->
-                    sendTo(session, messageOutbox, authToken, systemId));
+            mqProvider.subscribe(new TopicMqConsumer(session.getId(), systemId, user.getName(), noticeTopicName, messageOutbox ->
+                    sendTo(session, messageOutbox, authToken, systemId)));
         }
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         UnreadMessagesInfo unreadMessages = messageService.getUnreadMessages(userName, systemId);

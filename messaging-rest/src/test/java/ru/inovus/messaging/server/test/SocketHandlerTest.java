@@ -15,8 +15,8 @@ import ru.inovus.messaging.api.*;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.RecipientType;
+import ru.inovus.messaging.api.queue.MqProvider;
 import ru.inovus.messaging.impl.MessageService;
-import ru.inovus.messaging.server.BackendApplication;
 import ru.inovus.messaging.server.auth.NoAuthAuthenticator;
 import ru.inovus.messaging.server.config.handler.SocketHandler;
 import ru.inovus.messaging.server.model.SocketEvent;
@@ -80,7 +80,7 @@ public class SocketHandlerTest {
         doAnswer(invocation -> {
             subscribed = true;
             return null;
-        }).when(mqProvider).subscribe(any(), any(), any(), any());
+        }).when(mqProvider).subscribe(any());
         doAnswer(invocation -> {
             unsubscribed = true;
             return null;
@@ -163,7 +163,7 @@ public class SocketHandlerTest {
             MessageOutbox messageOutbox = invocation.getArgument(0);
             socketHandler.sendTo(getWebSocketSession(), messageOutbox, recipient, systemId);
             return null;
-        }).when(mqProvider).publish(any());
+        }).when(mqProvider).publish(any(), any());
     }
 
     @Test
@@ -174,7 +174,7 @@ public class SocketHandlerTest {
         message.setRecipientType(RecipientType.ALL);
         message.setSystemId("default");
         outbox.setMessage(message);
-        mqProvider.publish(outbox);
+        mqProvider.publish(outbox, "test-mq-name");
         assertTrue(messageSent); // outbox should be sent, because it was addressed to all users
     }
 
@@ -187,7 +187,7 @@ public class SocketHandlerTest {
         message.setSystemId("default");
         message.setRecipients(Collections.singletonList(new Recipient("123")));
         outbox.setMessage(message);
-        mqProvider.publish(outbox);                 // ^--- here's different user
+        mqProvider.publish(outbox, "test-mq-name");                 // ^--- here's different user
         assertFalse(messageSent); // so outbox shouldn't be sent
     }
 
@@ -200,7 +200,7 @@ public class SocketHandlerTest {
         message.setRecipientType(RecipientType.USER);
         message.setRecipients(Collections.singletonList(new Recipient("123")));
         outbox.setMessage(message);
-        mqProvider.publish(outbox);
+        mqProvider.publish(outbox, "test-mq-name");
         assertFalse(messageSent); // also message shouldn't be sent
     }
 
@@ -208,7 +208,7 @@ public class SocketHandlerTest {
     public void testCheckRecipientNoRecipients() {
         mockPublish("1234", "foobar");
         MessageOutbox message = new MessageOutbox();
-        mqProvider.publish(message);
+        mqProvider.publish(message, "test-mq-name");
         assertFalse(messageSent); // no recipients
     }
 
@@ -221,7 +221,7 @@ public class SocketHandlerTest {
         message.setRecipientType(RecipientType.USER);
         message.setRecipients(Collections.singletonList(new Recipient("123")));
         outbox.setMessage(message);
-        mqProvider.publish(outbox);
+        mqProvider.publish(outbox, "test-mq-name");
         assertTrue(messageSent); // message should be sent
     }
 

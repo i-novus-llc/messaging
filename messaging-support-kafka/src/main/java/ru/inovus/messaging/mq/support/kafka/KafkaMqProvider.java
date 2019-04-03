@@ -2,7 +2,6 @@ package ru.inovus.messaging.mq.support.kafka;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -12,14 +11,15 @@ import org.springframework.kafka.listener.MessageListener;
 import org.springframework.kafka.listener.MessageListenerContainer;
 import org.springframework.stereotype.Component;
 import ru.inovus.messaging.api.MessageOutbox;
-import ru.inovus.messaging.api.MqProvider;
-import ru.inovus.messaging.api.model.InfoType;
 import ru.inovus.messaging.api.model.Message;
+import ru.inovus.messaging.api.queue.MqConsumer;
+import ru.inovus.messaging.api.queue.MqProvider;
+import ru.inovus.messaging.api.queue.TopicMqConsumer;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
 
 @Component
 public class KafkaMqProvider implements MqProvider {
@@ -28,36 +28,30 @@ public class KafkaMqProvider implements MqProvider {
     private final KafkaTemplate<String, MessageOutbox> kafkaTemplate;
 
     private final KafkaProperties properties;
-    private final String topic;
-    private final String emailTopic;
 
     public KafkaMqProvider(KafkaTemplate<String, MessageOutbox> kafkaTemplate,
-                           KafkaProperties properties,
-                           @Value("${novus.messaging.topic.email}") String emailTopic,
-                           @Value("${novus.messaging.topic.notice}") String topic) {
+                           KafkaProperties properties) {
         this.kafkaTemplate = kafkaTemplate;
         this.properties = properties;
-        this.topic = topic;
-        this.emailTopic = emailTopic;
     }
 
     @Override
-    public void subscribe(Serializable subscriber, String systemId, String authToken,
-                          Consumer<MessageOutbox> messageHandler) {
-        ContainerProperties containerProperties = new ContainerProperties(topic);
+    public void subscribe(MqConsumer mqConsumer) {
+        ContainerProperties containerProperties = new ContainerProperties(mqConsumer.mqName());
         containerProperties.setMessageListener((MessageListener<String, MessageOutbox>)
-            data -> messageHandler.accept(data.value()));
-        Map<String, Object> consumerConfigs = getConsumerConfigs(authToken, systemId);
-        containers.put(subscriber, createContainer(consumerConfigs, containerProperties));
+            data -> mqConsumer.messageHandler().accept(data.value()));
+
+        Map<String, Object> consumerConfigs = new HashMap<>();
+        if (mqConsumer instanceof TopicMqConsumer) {
+            consumerConfigs = getConsumerConfigs((TopicMqConsumer) mqConsumer);
+        }
+
+        containers.put(mqConsumer.subscriber(), createContainer(consumerConfigs, containerProperties));
     }
 
     @Override
-    public void publish(MessageOutbox message) {
-        if (!InfoType.NOTICE.equals(message.getMessage().getInfoType()))
-            kafkaTemplate.send(emailTopic, String.valueOf(System.currentTimeMillis()), message);
-
-        if (!InfoType.EMAIL.equals(message.getMessage().getInfoType()))
-            kafkaTemplate.send(topic, String.valueOf(System.currentTimeMillis()), message);
+    public void publish(MessageOutbox message, String mqDestinationName) {
+        kafkaTemplate.send(mqDestinationName, String.valueOf(System.currentTimeMillis()), message);
     }
 
     @Override
@@ -77,9 +71,9 @@ public class KafkaMqProvider implements MqProvider {
         return container;
     }
 
-    private Map<String, Object> getConsumerConfigs(String authToken, String systemId) {
+    private Map<String, Object> getConsumerConfigs(TopicMqConsumer topicMqConsumer) {
         Map<String, Object> consumerConfigs = properties.buildConsumerProperties();
-        consumerConfigs.put(ConsumerConfig.GROUP_ID_CONFIG, topic + "." + systemId + "." + authToken);
+        consumerConfigs.put(ConsumerConfig.GROUP_ID_CONFIG, topicMqConsumer.mqName() + "." + topicMqConsumer.systemId + "." + topicMqConsumer.authToken);
         consumerConfigs.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         consumerConfigs.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ObjectSerializer.class);
         consumerConfigs.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
