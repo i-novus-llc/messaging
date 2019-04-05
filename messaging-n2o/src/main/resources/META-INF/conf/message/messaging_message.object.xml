@@ -11,7 +11,7 @@
                 <param id="text" mapping="message.text" domain="string"/>
                 <param id="severity.id" mapping="message.severity" domain="string"/>
                 <param id="alertType.id" mapping="message.alertType" domain="string"/>
-                <param id="infoType*.id" mapping="message.infoTypes"/>
+                <param id="infoType" mapping="message.infoTypes"/>
                 <param id="component.id" mapping="message.component.id" domain="string"/>
                 <param id="formationType.id" mapping="message.formationType" default-value="HAND" domain="string"/>
                 <param id="recipientType.id" mapping="message.recipientType" domain="string"/>
