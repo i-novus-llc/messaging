@@ -16,7 +16,7 @@ public class Recipient implements Serializable {
     private String recipient;
     private LocalDateTime readAt;
     private String messageId;
-    private String userId;
+    private String name;
     private String email;
 
     public Recipient() {

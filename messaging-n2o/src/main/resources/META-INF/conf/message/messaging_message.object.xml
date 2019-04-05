@@ -16,7 +16,7 @@
                 <param id="formationType.id" mapping="message.formationType" default-value="HAND" domain="string"/>
                 <param id="recipientType.id" mapping="message.recipientType" domain="string"/>
                 <param id="systemId" mapping="message.systemId" domain="string" default-value="default"/><!--TODO default value from context or props-->
-                <param id="users*.id" mapping="message.recipients*.recipient" domain="string[]"/>
+                <param id="users" mapping="message.recipients" domain="object[]"/>
                 <!--<param id="users*.id" mapping="message.recipients*.userId" domain="integer[]"/>-->
             </in-parameters>
         </operation>

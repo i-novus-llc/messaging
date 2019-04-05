@@ -72,7 +72,7 @@
             <line label="Получатели" depends-on="recipientType" visible="{recipientType.id == 'USER'}">
             <row>
                 <input-select id="users" type="checkboxes" label="Пользователи" required="true"
-                              query-id="messaging_user">
+                              query-id="messaging_user" label-field-id="name">
                     <dependencies>
                         <visibility on="recipientType">
                             recipientType.id == 'USER'
