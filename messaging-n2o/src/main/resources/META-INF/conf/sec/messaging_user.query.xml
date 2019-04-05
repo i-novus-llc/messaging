@@ -6,7 +6,7 @@
     </list>
 
     <fields>
-        <field id="id" domain="string">
+        <field id="recipient" domain="string">
             <select mapping="[username]"/>
             <filters>
                 <eq filter-id="id">username={id}</eq>
@@ -15,6 +15,10 @@
         <field id="name" domain="string">
             <select mapping="#this[username]+(#this[fio]!=''||!#this[roles].empty?' ('+#this[fio]+(#this[fio]!=''and !#this[roles].empty?' ':'')+(!#this[roles].empty?#this[roles][0][name]:'')+')':'')"/>
         </field>
+        <field id="email">
+            <select>email</select>
+        </field>
+
     </fields>
 
 </query>
