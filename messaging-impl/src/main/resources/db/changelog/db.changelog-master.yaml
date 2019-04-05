@@ -140,5 +140,43 @@ databaseChangeLog:
             relativeToChangelogFile: true
             splitStatements: true
             stripComments: true
-
-
+  - changeSet:
+      id: MICROSERVICES-124
+      author: rbarysheva
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/MICROSERVICES-124.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
+  - changeSet:
+      id: MICROSERVICES-124-1
+      author: rbarysheva
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/MICROSERVICES-124-1.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
+  - changeSet:
+      id: MICROSERVICES-124-2
+      author: rbarysheva
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/MICROSERVICES-124-2.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
+  - changeSet:
+      id: MICROSERVICES-124-3
+      author: rbarysheva
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/MICROSERVICES-124-3.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true

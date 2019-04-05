@@ -48,16 +48,12 @@
             <select mapping="['alertTypeName']"/>
         </field>
 
-        <field id="infoType.id" domain="string">
+        <field id="infoType" domain="object[]">
             <select mapping="['infoType']"/>
             <filters>
-                <eq filter-id="infoType.id">infoType.id={infoType.id}</eq>
+                <eq filter-id="infoType.id" domain="string">infoType.id={infoType.id}</eq>
             </filters>
         </field>
-        <field id="infoType.name" domain="string">
-            <select mapping="['infoTypeName']"/>
-        </field>
-
         <field id="formationType.id" domain="string">
             <select mapping="['formationType']"/>
             <filters>

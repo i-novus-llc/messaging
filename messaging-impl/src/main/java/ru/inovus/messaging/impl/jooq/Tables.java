@@ -4,9 +4,13 @@
 package ru.inovus.messaging.impl.jooq;
 
 
-import ru.inovus.messaging.impl.jooq.tables.*;
-
 import javax.annotation.Generated;
+
+import ru.inovus.messaging.impl.jooq.tables.Component;
+import ru.inovus.messaging.impl.jooq.tables.Message;
+import ru.inovus.messaging.impl.jooq.tables.MessageSetting;
+import ru.inovus.messaging.impl.jooq.tables.Recipient;
+import ru.inovus.messaging.impl.jooq.tables.UserSetting;
 
 
 /**

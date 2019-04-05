@@ -4,21 +4,37 @@
 package ru.inovus.messaging.impl.jooq.tables;
 
 
-import org.jooq.*;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.annotation.Generated;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Index;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
 import org.jooq.impl.TimestampToLocalDateTimeConverter;
-import ru.inovus.messaging.api.model.*;
-import ru.inovus.messaging.impl.*;
+
+import ru.inovus.messaging.api.model.AlertType;
+import ru.inovus.messaging.api.model.FormationType;
+import ru.inovus.messaging.api.model.RecipientType;
+import ru.inovus.messaging.api.model.Severity;
+import ru.inovus.messaging.impl.AlertTypeConverter;
+import ru.inovus.messaging.impl.FormationTypeConverter;
+import ru.inovus.messaging.impl.RecipientTypeConverter;
+import ru.inovus.messaging.impl.SeverityConverter;
 import ru.inovus.messaging.impl.jooq.Indexes;
 import ru.inovus.messaging.impl.jooq.Keys;
 import ru.inovus.messaging.impl.jooq.Public;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
-
-import javax.annotation.Generated;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
 
 
 /**
@@ -34,7 +50,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Message extends TableImpl<MessageRecord> {
 
-    private static final long serialVersionUID = -1447843374;
+    private static final long serialVersionUID = -435450934;
 
     /**
      * The reference instance of <code>public.message</code>
@@ -85,11 +101,6 @@ public class Message extends TableImpl<MessageRecord> {
     public final TableField<MessageRecord, String> SYSTEM_ID = createField("system_id", org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Идентификатор системы");
 
     /**
-     * The column <code>public.message.info_type</code>. Вид информирования по событию (почта, центр уведомления)
-     */
-    public final TableField<MessageRecord, InfoType> INFO_TYPE = createField("info_type", org.jooq.impl.SQLDataType.VARCHAR.nullable(false).defaultValue(org.jooq.impl.DSL.field("'NOTICE'::character varying", org.jooq.impl.SQLDataType.VARCHAR)), this, "Вид информирования по событию (почта, центр уведомления)", new InfoTypeConverter());
-
-    /**
      * The column <code>public.message.component_id</code>. Компонент Системы, к которому относится уведомление
      */
     public final TableField<MessageRecord, Integer> COMPONENT_ID = createField("component_id", org.jooq.impl.SQLDataType.INTEGER, this, "Компонент Системы, к которому относится уведомление");
@@ -105,20 +116,29 @@ public class Message extends TableImpl<MessageRecord> {
     public final TableField<MessageRecord, RecipientType> RECIPIENT_TYPE = createField("recipient_type", org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "", new RecipientTypeConverter());
 
     /**
-     * The column <code>public.message.notification_type</code>. Тип уведомления
+     * The column <code>public.message.notification_type</code>.
      */
-    public final TableField<MessageRecord, String> NOTIFICATION_TYPE = createField("notification_type", org.jooq.impl.SQLDataType.VARCHAR.nullable(false).defaultValue(org.jooq.impl.DSL.field("'AUTO'::character varying", org.jooq.impl.SQLDataType.VARCHAR)), this, "Тип уведомления");
+    public final TableField<MessageRecord, String> NOTIFICATION_TYPE = createField("notification_type", org.jooq.impl.SQLDataType.VARCHAR, this, "");
 
     /**
-     * The column <code>public.message.object_id</code>. Ид-р объекта
+     * The column <code>public.message.object_id</code>.
      */
-    public final TableField<MessageRecord, String> OBJECT_ID = createField("object_id", org.jooq.impl.SQLDataType.VARCHAR.nullable(false).defaultValue(org.jooq.impl.DSL.field("'AUTO'::character varying", org.jooq.impl.SQLDataType.VARCHAR)), this, "Ид-р объекта");
+    public final TableField<MessageRecord, String> OBJECT_ID = createField("object_id", org.jooq.impl.SQLDataType.VARCHAR, this, "");
 
     /**
-     * The column <code>public.message.object_type</code>. Тип объекта
+     * The column <code>public.message.object_type</code>.
      */
-    public final TableField<MessageRecord, String> OBJECT_TYPE = createField("object_type", org.jooq.impl.SQLDataType.VARCHAR.nullable(false).defaultValue(org.jooq.impl.DSL.field("'AUTO'::character varying", org.jooq.impl.SQLDataType.VARCHAR)), this, "Тип объекта");
+    public final TableField<MessageRecord, String> OBJECT_TYPE = createField("object_type", org.jooq.impl.SQLDataType.VARCHAR, this, "");
 
+    /**
+     * The column <code>public.message.send_notice</code>.
+     */
+    public final TableField<MessageRecord, Boolean> SEND_NOTICE = createField("send_notice", org.jooq.impl.SQLDataType.BOOLEAN, this, "");
+
+    /**
+     * The column <code>public.message.send_email</code>.
+     */
+    public final TableField<MessageRecord, Boolean> SEND_EMAIL = createField("send_email", org.jooq.impl.SQLDataType.BOOLEAN, this, "");
 
     /**
      * Create a <code>public.message</code> table reference
