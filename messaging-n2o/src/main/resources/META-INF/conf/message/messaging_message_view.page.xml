@@ -25,7 +25,7 @@
                             </text-area>
                         </row>
                         <row>
-                            <radio-group id="recipientType" label="Тип получателей" inline="true">
+                            <radio-group id="recipientType" label="Тип получателей" inline="true" enabled="false">
                                 <options>
                                     <option id="USER" name="Пользователь"/>
                                     <option id="ALL" name="Все"/>
@@ -40,7 +40,7 @@
             <table query-id="recipient" depends-on="view" detail-field-id="messageId" visible="{recipientType.id == 'USER'}">
                 <columns>
                     <column text-field-id="readAt"/>
-                    <column text-field-id="name"/>
+                    <column text-field-id="recipient"/>
                 </columns>
             </table>
         </region>

@@ -40,7 +40,7 @@
         <field id="infoType" domain="object[]">
             <select mapping="['infoTypes']"/>
             <filters>
-                <eq filter-id="infoType.id">infoType.id={infoType.id}</eq>
+                <eq filter-id="infoType.id" domain="string">infoType.id={infoType.id}</eq>
             </filters>
         </field>
 
