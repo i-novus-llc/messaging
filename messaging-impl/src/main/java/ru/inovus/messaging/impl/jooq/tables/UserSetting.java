@@ -4,21 +4,29 @@
 package ru.inovus.messaging.impl.jooq.tables;
 
 
-import org.jooq.*;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.annotation.Generated;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Index;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
+
 import ru.inovus.messaging.api.model.AlertType;
-import ru.inovus.messaging.api.model.InfoType;
 import ru.inovus.messaging.impl.AlertTypeConverter;
-import ru.inovus.messaging.impl.InfoTypeConverter;
 import ru.inovus.messaging.impl.jooq.Indexes;
 import ru.inovus.messaging.impl.jooq.Keys;
 import ru.inovus.messaging.impl.jooq.Public;
 import ru.inovus.messaging.impl.jooq.tables.records.UserSettingRecord;
-
-import javax.annotation.Generated;
-import java.util.Arrays;
-import java.util.List;
 
 
 /**
@@ -34,7 +42,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserSetting extends TableImpl<UserSettingRecord> {
 
-    private static final long serialVersionUID = 225611842;
+    private static final long serialVersionUID = 656920315;
 
     /**
      * The reference instance of <code>public.user_setting</code>
@@ -60,11 +68,6 @@ public class UserSetting extends TableImpl<UserSettingRecord> {
     public final TableField<UserSettingRecord, AlertType> ALERT_TYPE = createField("alert_type", org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Тип предупреждения", new AlertTypeConverter());
 
     /**
-     * The column <code>public.user_setting.info_type</code>. Вид информирования по событию (почта, центр уведомления)
-     */
-    public final TableField<UserSettingRecord, InfoType> INFO_TYPE = createField("info_type", org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Вид информирования по событию (почта, центр уведомления)", new InfoTypeConverter());
-
-    /**
      * The column <code>public.user_setting.is_disabled</code>. Признак выключения уведомления
      */
     public final TableField<UserSettingRecord, Boolean> IS_DISABLED = createField("is_disabled", org.jooq.impl.SQLDataType.BOOLEAN.defaultValue(org.jooq.impl.DSL.field("false", org.jooq.impl.SQLDataType.BOOLEAN)), this, "Признак выключения уведомления");
@@ -73,6 +76,16 @@ public class UserSetting extends TableImpl<UserSettingRecord> {
      * The column <code>public.user_setting.user_id</code>. Идентификатор пользователя
      */
     public final TableField<UserSettingRecord, String> USER_ID = createField("user_id", org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Идентификатор пользователя");
+
+    /**
+     * The column <code>public.user_setting.send_notice</code>.
+     */
+    public final TableField<UserSettingRecord, Boolean> SEND_NOTICE = createField("send_notice", org.jooq.impl.SQLDataType.BOOLEAN, this, "");
+
+    /**
+     * The column <code>public.user_setting.send_email</code>.
+     */
+    public final TableField<UserSettingRecord, Boolean> SEND_EMAIL = createField("send_email", org.jooq.impl.SQLDataType.BOOLEAN, this, "");
 
     /**
      * Create a <code>public.user_setting</code> table reference

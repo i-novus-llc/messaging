@@ -3,6 +3,7 @@ package ru.inovus.messaging.api;
 import ru.inovus.messaging.api.model.*;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class MessageSetting implements Serializable {
 
@@ -13,7 +14,7 @@ public class MessageSetting implements Serializable {
     private String text;
     private Severity severity;
     private AlertType alertType;
-    private InfoType infoType;
+    private List<InfoType> infoType;
     private FormationType formationType;
     private Component component;
     private String name;
@@ -66,11 +67,11 @@ public class MessageSetting implements Serializable {
         this.alertType = alertType;
     }
 
-    public InfoType getInfoType() {
+    public List<InfoType> getInfoType() {
         return infoType;
     }
 
-    public void setInfoType(InfoType infoType) {
+    public void setInfoType(List<InfoType> infoType) {
         this.infoType = infoType;
     }
 
@@ -112,10 +113,6 @@ public class MessageSetting implements Serializable {
 
     public String getAlertTypeName() {
         return alertType != null ? alertType.getName() : null;
-    }
-
-    public String getInfoTypeName() {
-        return infoType != null ? infoType.getName() : null;
     }
 
     public String getFormationTypeName() {

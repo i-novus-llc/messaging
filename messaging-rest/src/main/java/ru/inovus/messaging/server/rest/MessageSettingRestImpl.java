@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.inovus.messaging.api.model.Component;
 import ru.inovus.messaging.api.MessageSetting;
 import ru.inovus.messaging.api.criteria.MessageSettingCriteria;
+import ru.inovus.messaging.api.model.InfoType;
 import ru.inovus.messaging.api.rest.MessageSettingRest;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageSettingRecord;
 
@@ -35,11 +36,18 @@ public class MessageSettingRestImpl implements MessageSettingRest {
         messageSetting.setName(r.getName());
         messageSetting.setAlertType(r.getAlertType());
         messageSetting.setSeverity(r.getSeverity());
-        messageSetting.setInfoType(r.getInfoType());
+        List<InfoType> infoTypes = new ArrayList<>();;
+        if (r.getSendNotice() != null && r.getSendNotice()) {
+            infoTypes.add(InfoType.NOTICE);
+        }
+        if (r.getSendEmail() != null && r.getSendEmail()) {
+            infoTypes.add(InfoType.EMAIL);
+        }
+        messageSetting.setInfoType(infoTypes);
         messageSetting.setCaption(r.getCaption());
         messageSetting.setText(r.getText());
         messageSetting.setComponent(r.getComponentId() != null ?
-            Component.valueOf(rec.into(COMPONENT).getName()) : null);
+                new Component(r.getComponentId(), rec.into(COMPONENT).getName()) : null);
         messageSetting.setFormationType(r.getFormationType());
         messageSetting.setDisabled(r.getIsDisabled());
         return messageSetting;
@@ -54,8 +62,14 @@ public class MessageSettingRestImpl implements MessageSettingRest {
                 .ifPresent(severity -> conditions.add(MESSAGE_SETTING.SEVERITY.eq(severity)));
         Optional.ofNullable(criteria.getAlertType())
                 .ifPresent(alertType -> conditions.add(MESSAGE_SETTING.ALERT_TYPE.eq(alertType)));
-        Optional.ofNullable(criteria.getInfoType())
-                .ifPresent(infoType -> conditions.add(MESSAGE_SETTING.INFO_TYPE.eq(infoType)));
+        if (InfoType.EMAIL.equals(criteria.getInfoType())) {
+            Optional.ofNullable(criteria.getInfoType())
+                    .ifPresent(infoType -> conditions.add(MESSAGE_SETTING.SEND_EMAIL.isTrue()));
+        }
+        if (InfoType.NOTICE.equals(criteria.getInfoType())) {
+            Optional.ofNullable(criteria.getInfoType())
+                    .ifPresent(infoType -> conditions.add(MESSAGE_SETTING.SEND_NOTICE.isTrue()));
+        }
         Optional.ofNullable(criteria.getName()).filter(StringUtils::isNotBlank)
                 .ifPresent(name -> conditions.add(MESSAGE_SETTING.NAME.containsIgnoreCase(name)));
         Optional.ofNullable(criteria.getFormationType())
@@ -88,11 +102,13 @@ public class MessageSettingRestImpl implements MessageSettingRest {
         dsl
                 .insertInto(MESSAGE_SETTING)
                 .columns(MESSAGE_SETTING.ID, MESSAGE_SETTING.NAME, MESSAGE_SETTING.COMPONENT_ID,
-                         MESSAGE_SETTING.ALERT_TYPE, MESSAGE_SETTING.SEVERITY, MESSAGE_SETTING.INFO_TYPE,
+                         MESSAGE_SETTING.ALERT_TYPE, MESSAGE_SETTING.SEVERITY, MESSAGE_SETTING.SEND_EMAIL, MESSAGE_SETTING.SEND_NOTICE,
                          MESSAGE_SETTING.FORMATION_TYPE, MESSAGE_SETTING.IS_DISABLED,
                          MESSAGE_SETTING.CAPTION, MESSAGE_SETTING.TEXT)
                 .values(id.intValue(), messageSetting.getName(), messageSetting.getComponent() != null ? messageSetting.getComponent().getId() : null,
-                        messageSetting.getAlertType(), messageSetting.getSeverity(), messageSetting.getInfoType(),
+                        messageSetting.getAlertType(), messageSetting.getSeverity(),
+                        messageSetting.getInfoType() != null && messageSetting.getInfoType().contains(InfoType.EMAIL),
+                        messageSetting.getInfoType() != null && messageSetting.getInfoType().contains(InfoType.NOTICE),
                         messageSetting.getFormationType(), messageSetting.getDisabled(), messageSetting.getCaption(), messageSetting.getText())
                 .execute();
     }
@@ -106,7 +122,8 @@ public class MessageSettingRestImpl implements MessageSettingRest {
                 .set(MESSAGE_SETTING.COMPONENT_ID, messageSetting.getComponent() != null ? messageSetting.getComponent().getId() : null)
                 .set(MESSAGE_SETTING.ALERT_TYPE, messageSetting.getAlertType())
                 .set(MESSAGE_SETTING.SEVERITY, messageSetting.getSeverity())
-                .set(MESSAGE_SETTING.INFO_TYPE, messageSetting.getInfoType())
+                .set(MESSAGE_SETTING.SEND_EMAIL, messageSetting.getInfoType() != null && messageSetting.getInfoType().contains(InfoType.EMAIL))
+                .set(MESSAGE_SETTING.SEND_NOTICE, messageSetting.getInfoType() != null && messageSetting.getInfoType().contains(InfoType.NOTICE))
                 .set(MESSAGE_SETTING.FORMATION_TYPE, messageSetting.getFormationType())
                 .set(MESSAGE_SETTING.IS_DISABLED, messageSetting.getDisabled())
                 .set(MESSAGE_SETTING.CAPTION, messageSetting.getCaption())

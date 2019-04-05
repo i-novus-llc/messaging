@@ -4,15 +4,17 @@
 package ru.inovus.messaging.impl.jooq.tables.records;
 
 
+import java.time.LocalDateTime;
+
+import javax.annotation.Generated;
+
 import org.jooq.Field;
 import org.jooq.Record1;
 import org.jooq.Record5;
 import org.jooq.Row5;
 import org.jooq.impl.UpdatableRecordImpl;
-import ru.inovus.messaging.impl.jooq.tables.Recipient;
 
-import javax.annotation.Generated;
-import java.time.LocalDateTime;
+import ru.inovus.messaging.impl.jooq.tables.Recipient;
 
 
 /**
@@ -28,7 +30,7 @@ import java.time.LocalDateTime;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class RecipientRecord extends UpdatableRecordImpl<RecipientRecord> implements Record5<Integer, String, String, LocalDateTime, String> {
 
-    private static final long serialVersionUID = -1180076892;
+    private static final long serialVersionUID = -1711119569;
 
     /**
      * Setter for <code>public.recipient.id</code>. Уникальный идентификатор
@@ -87,16 +89,16 @@ public class RecipientRecord extends UpdatableRecordImpl<RecipientRecord> implem
     }
 
     /**
-     * Setter for <code>public.recipient.user_id</code>.
+     * Setter for <code>public.recipient.email</code>.
      */
-    public void setUserId(String value) {
+    public void setEmail(String value) {
         set(4, value);
     }
 
     /**
-     * Getter for <code>public.recipient.user_id</code>.
+     * Getter for <code>public.recipient.email</code>.
      */
-    public String getUserId() {
+    public String getEmail() {
         return (String) get(4);
     }
 
@@ -169,7 +171,7 @@ public class RecipientRecord extends UpdatableRecordImpl<RecipientRecord> implem
      */
     @Override
     public Field<String> field5() {
-        return Recipient.RECIPIENT.USER_ID;
+        return Recipient.RECIPIENT.EMAIL;
     }
 
     /**
@@ -209,7 +211,7 @@ public class RecipientRecord extends UpdatableRecordImpl<RecipientRecord> implem
      */
     @Override
     public String component5() {
-        return getUserId();
+        return getEmail();
     }
 
     /**
@@ -249,7 +251,7 @@ public class RecipientRecord extends UpdatableRecordImpl<RecipientRecord> implem
      */
     @Override
     public String value5() {
-        return getUserId();
+        return getEmail();
     }
 
     /**
@@ -293,7 +295,7 @@ public class RecipientRecord extends UpdatableRecordImpl<RecipientRecord> implem
      */
     @Override
     public RecipientRecord value5(String value) {
-        setUserId(value);
+        setEmail(value);
         return this;
     }
 
@@ -324,13 +326,13 @@ public class RecipientRecord extends UpdatableRecordImpl<RecipientRecord> implem
     /**
      * Create a detached, initialised RecipientRecord
      */
-    public RecipientRecord(Integer id, String recipient, String messageId, LocalDateTime readAt, Integer userId) {
+    public RecipientRecord(Integer id, String recipient, String messageId, LocalDateTime readAt, String email) {
         super(Recipient.RECIPIENT);
 
         set(0, id);
         set(1, recipient);
         set(2, messageId);
         set(3, readAt);
-        set(4, userId);
+        set(4, email);
     }
 }

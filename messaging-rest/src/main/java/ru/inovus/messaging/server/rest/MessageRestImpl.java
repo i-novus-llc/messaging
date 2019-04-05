@@ -61,7 +61,7 @@ public class MessageRestImpl implements MessageRest {
     }
 
     private void save(Message message) {
-        Message savedMessage = messageService.createMessage(message, message.getRecipients().toArray(new Recipient[0]));
+        Message savedMessage = messageService.createMessage(message, message.getRecipients() == null ? null : message.getRecipients().toArray(new Recipient[0]));
         message.setId(savedMessage.getId());
     }
 

@@ -4,13 +4,22 @@
 package ru.inovus.messaging.impl.jooq;
 
 
+import javax.annotation.Generated;
+
 import org.jooq.ForeignKey;
 import org.jooq.UniqueKey;
 import org.jooq.impl.Internal;
-import ru.inovus.messaging.impl.jooq.tables.*;
-import ru.inovus.messaging.impl.jooq.tables.records.*;
 
-import javax.annotation.Generated;
+import ru.inovus.messaging.impl.jooq.tables.Component;
+import ru.inovus.messaging.impl.jooq.tables.Message;
+import ru.inovus.messaging.impl.jooq.tables.MessageSetting;
+import ru.inovus.messaging.impl.jooq.tables.Recipient;
+import ru.inovus.messaging.impl.jooq.tables.UserSetting;
+import ru.inovus.messaging.impl.jooq.tables.records.ComponentRecord;
+import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
+import ru.inovus.messaging.impl.jooq.tables.records.MessageSettingRecord;
+import ru.inovus.messaging.impl.jooq.tables.records.RecipientRecord;
+import ru.inovus.messaging.impl.jooq.tables.records.UserSettingRecord;
 
 
 /**

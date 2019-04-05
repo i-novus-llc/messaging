@@ -4,20 +4,29 @@
 package ru.inovus.messaging.impl.jooq.tables;
 
 
-import org.jooq.*;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.annotation.Generated;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Index;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 import org.jooq.impl.TimestampToLocalDateTimeConverter;
+
 import ru.inovus.messaging.impl.jooq.Indexes;
 import ru.inovus.messaging.impl.jooq.Keys;
 import ru.inovus.messaging.impl.jooq.Public;
 import ru.inovus.messaging.impl.jooq.tables.records.RecipientRecord;
-
-import javax.annotation.Generated;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
 
 
 /**
@@ -33,7 +42,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Recipient extends TableImpl<RecipientRecord> {
 
-    private static final long serialVersionUID = -1032580691;
+    private static final long serialVersionUID = 10112680;
 
     /**
      * The reference instance of <code>public.recipient</code>
@@ -69,9 +78,9 @@ public class Recipient extends TableImpl<RecipientRecord> {
     public final TableField<RecipientRecord, LocalDateTime> READ_AT = createField("read_at", org.jooq.impl.SQLDataType.TIMESTAMP, this, "Помечено прочтенным (дата и время)", new TimestampToLocalDateTimeConverter());
 
     /**
-     * The column <code>public.recipient.user_id</code>.
+     * The column <code>public.recipient.email</code>.
      */
-    public final TableField<RecipientRecord, String> USER_ID = createField("user_id", SQLDataType.VARCHAR, this, "");
+    public final TableField<RecipientRecord, String> EMAIL = createField("email", org.jooq.impl.SQLDataType.VARCHAR, this, "");
 
     /**
      * Create a <code>public.recipient</code> table reference

@@ -1,50 +1,49 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-2.0">
-    <form id="view" query-id="messaging_message" name="Просмотр уведомления">
-        <fields>
-            <set>
-                <row>
-                    <input-select id="component" label="Компонент" query-id="messaging_component" enabled="false">
-                    </input-select>
-                    <input-select id="severity" label="Уровень важности" enabled="false">
-                        <options>
-                            <option id="SEVERE" name="Важный"/>
-                            <option id="ERROR" name="Ошибка"/>
-                            <option id="WARNING" name="Предупреждение"/>
-                            <option id="INFO" name="Информация"/>
-                        </options>
-                    </input-select>
-                </row>
-                <row>
-                    <text-area id="caption" label="Заголовок уведомления" rows="3" enabled="false">
-                    </text-area>
-                </row>
-                <row>
-                    <text-area id="text" label="Текст уведомления" rows="5" enabled="false">
-                    </text-area>
-                </row>
-                <row>
-                    <radio-group id="recipientType" label="Тип получателей" inline="true" enabled="false">
-                        <options>
-                            <option id="USER" name="Пользователь"/>
-                            <option id="ALL" name="Все"/>
-                        </options>
-                    </radio-group>
-                </row>
-            </set>
-            <line label="Получатели" depends-on="recipientType" visible="{recipientType.id == 'USER'}">
-                <row>
-                    <input-select id="users" type="checkboxes" label="Пользователи"
-                                  query-id="messaging_user" enabled="false"
-                                  label-field-id="name">
-                    </input-select>
-                </row>
-            </line>
-        </fields>
-        <!--<toolbar>-->
-        <!--<button label="Отправить">-->
-        <!--<invoke operation-id="create"/>-->
-        <!--</button>-->
-        <!--</toolbar>-->
-    </form>
-</simple-page>
+<page xmlns="http://n2oapp.net/framework/config/schema/page-2.0" layout="TopBottomLayout">
+    <regions>
+        <region place="top">
+            <form id="view" query-id="messaging_message" name="Просмотр уведомления">
+                <fields>
+                    <set>
+                        <row>
+                            <input-select id="component" label="Компонент" query-id="messaging_component" enabled="false">
+                            </input-select>
+                            <input-select id="severity" label="Уровень важности" enabled="false">
+                                <options>
+                                    <option id="SEVERE" name="Важный"/>
+                                    <option id="ERROR" name="Ошибка"/>
+                                    <option id="WARNING" name="Предупреждение"/>
+                                    <option id="INFO" name="Информация"/>
+                                </options>
+                            </input-select>
+                        </row>
+                        <row>
+                            <input-text id="caption" label="Заголовок уведомления" enabled="false"/>
+                        </row>
+                        <row>
+                            <text-area id="text" label="Текст уведомления" rows="5" enabled="false">
+                            </text-area>
+                        </row>
+                        <row>
+                            <radio-group id="recipientType" label="Тип получателей" inline="true">
+                                <options>
+                                    <option id="USER" name="Пользователь"/>
+                                    <option id="ALL" name="Все"/>
+                                </options>
+                            </radio-group>
+                        </row>
+                    </set>
+                </fields>
+            </form>
+        </region>
+        <region place="bottom">
+            <table query-id="recipient" depends-on="view" detail-field-id="messageId" visible="{recipientType.id == 'USER'}">
+                <columns>
+                    <column text-field-id="readAt"/>
+                    <column text-field-id="name"/>
+                </columns>
+            </table>
+        </region>
+    </regions>
+
+</page>

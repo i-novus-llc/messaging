@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Setter
 @Getter
@@ -17,8 +18,8 @@ public class UserSetting implements Serializable {
     private Severity severity;
     private AlertType defaultAlertType;
     private AlertType alertType;
-    private InfoType defaultInfoType;
-    private InfoType infoType;
+    private List<InfoType> defaultInfoType;
+    private List<InfoType> infoTypes;
     private Component component;
     private String name;
     private Boolean disabled;
@@ -40,14 +41,6 @@ public class UserSetting implements Serializable {
 
     public String getDefaultAlertTypeName() {
         return defaultAlertType != null ? defaultAlertType.getName() : null;
-    }
-
-    public String getInfoTypeName() {
-        return infoType != null ? infoType.getName() : null;
-    }
-
-    public String getDefaultInfoTypeName() {
-        return defaultInfoType != null ? defaultInfoType.getName() : null;
     }
 
 }

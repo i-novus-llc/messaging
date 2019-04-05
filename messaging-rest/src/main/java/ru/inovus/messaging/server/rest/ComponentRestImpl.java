@@ -22,7 +22,7 @@ public class ComponentRestImpl implements ComponentRest {
 
     private static final RecordMapper<Record, Component> MAPPER = rec -> {
         ComponentRecord record = rec.into(COMPONENT);
-        return Component.valueOf(record.getName());
+        return new Component(record.getId(), record.getName());
     };
 
     @Autowired

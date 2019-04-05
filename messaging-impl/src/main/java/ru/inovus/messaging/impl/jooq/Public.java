@@ -4,16 +4,22 @@
 package ru.inovus.messaging.impl.jooq;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.annotation.Generated;
+
 import org.jooq.Catalog;
 import org.jooq.Sequence;
 import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
-import ru.inovus.messaging.impl.jooq.tables.*;
 
-import javax.annotation.Generated;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import ru.inovus.messaging.impl.jooq.tables.Component;
+import ru.inovus.messaging.impl.jooq.tables.Message;
+import ru.inovus.messaging.impl.jooq.tables.MessageSetting;
+import ru.inovus.messaging.impl.jooq.tables.Recipient;
+import ru.inovus.messaging.impl.jooq.tables.UserSetting;
 
 
 /**

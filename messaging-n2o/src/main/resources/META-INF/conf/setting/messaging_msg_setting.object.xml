@@ -12,7 +12,7 @@
                 <param id="component.id" mapping="component.id"/>
                 <param id="severity.id" mapping="severity" required="true"/>
                 <param id="alertType.id" mapping="alertType" required="true"/>
-                <param id="infoType.id" mapping="infoType" required="true"/>
+                <param id="infoType*.id" mapping="infoType"/>
                 <param id="formationType.id" mapping="formationType" required="true"/>
                 <param id="caption" mapping="caption" required="true"/>
                 <param id="text" mapping="text" required="true"/>
@@ -32,7 +32,7 @@
                 <param id="component.id" mapping="component.id"/>
                 <param id="severity.id" mapping="severity" required="true"/>
                 <param id="alertType.id" mapping="alertType" required="true"/>
-                <param id="infoType.id" mapping="infoType" required="true"/>
+                <param id="infoType*.id" mapping="infoType"/>
                 <param id="formationType.id" mapping="formationType" required="true"/>
                 <param id="caption" mapping="caption" required="true"/>
                 <param id="text" mapping="text" required="true"/>
@@ -40,7 +40,7 @@
         </operation>
         <operation id="delete" confirm="true">
             <invocation>
-                <rest method="DELETE">${messaging.backend.path}/setting/{id}</rest>
+                <rest method="DELETE">${messaging.backend.path}/settings/{id}</rest>
             </invocation>
             <in-parameters>
                 <param id="id" mapping="id"/>

@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import ru.inovus.messaging.api.model.Component;
+import ru.inovus.messaging.api.model.InfoType;
 import ru.inovus.messaging.api.model.UserSetting;
 import ru.inovus.messaging.api.criteria.UserSettingCriteria;
 import ru.inovus.messaging.api.rest.UserSettingRest;
@@ -40,17 +41,29 @@ public class UserSettingRestImpl implements UserSettingRest {
         setting.setSeverity(defaultSetting.getSeverity());
         setting.setName(defaultSetting.getName());
         setting.setComponent(defaultSetting.getComponentId() != null ?
-                Component.valueOf(record.into(COMPONENT).getName()) : null);
+                new Component(defaultSetting.getComponentId(), record.into(COMPONENT).getName()) : null);
         setting.setDisabled(userSetting.getIsDisabled() != null ?
                 userSetting.getIsDisabled() : defaultSetting.getIsDisabled());
         setting.setAlertType(userSetting.getAlertType() != null ?
                 userSetting.getAlertType() : defaultSetting.getAlertType());
-        setting.setInfoType(userSetting.getInfoType() != null ?
-                userSetting.getInfoType() : defaultSetting.getInfoType());
+        List<InfoType> infoTypes = getInfoTypes(userSetting.getSendNotice(), userSetting.getSendEmail());
+        setting.setInfoTypes(infoTypes);
         setting.setDefaultAlertType(defaultSetting.getAlertType());
-        setting.setDefaultInfoType(defaultSetting.getInfoType());
+        List<InfoType> defInfoTypes = getInfoTypes(defaultSetting.getSendNotice(), defaultSetting.getSendEmail());
+        setting.setDefaultInfoType(defInfoTypes);
         return setting;
     };
+
+    private List<InfoType> getInfoTypes(Boolean sendNotice, Boolean sendEmail) {
+        List<InfoType> infoTypes = new ArrayList<>();
+        if (sendNotice != null) {
+            infoTypes.add(InfoType.NOTICE);
+        }
+        if (sendEmail != null) {
+            infoTypes.add(InfoType.EMAIL);
+        }
+        return infoTypes;
+    }
 
     @Override
     public Page<UserSetting> getSettings(UserSettingCriteria criteria) {
@@ -66,11 +79,14 @@ public class UserSettingRestImpl implements UserSettingRest {
                         USER_SETTING.ALERT_TYPE.isNotNull()
                                 .and(USER_SETTING.ALERT_TYPE.eq(alertType))
                                 .or(USER_SETTING.ALERT_TYPE.isNull().and(MESSAGE_SETTING.ALERT_TYPE.eq(alertType)))));
-        Optional.ofNullable(criteria.getInfoType())
-                .ifPresent(infoType -> conditions.add(
-                        USER_SETTING.INFO_TYPE.isNotNull()
-                                .and(USER_SETTING.INFO_TYPE.eq(infoType))
-                                .or(USER_SETTING.INFO_TYPE.isNull().and(MESSAGE_SETTING.INFO_TYPE.eq(infoType)))));
+        if (InfoType.EMAIL.equals(criteria.getInfoType())) {
+            Optional.ofNullable(criteria.getInfoType())
+                    .ifPresent(infoType -> conditions.add(USER_SETTING.SEND_EMAIL.isTrue()));
+        }
+        if (InfoType.NOTICE.equals(criteria.getInfoType())) {
+            Optional.ofNullable(criteria.getInfoType())
+                    .ifPresent(infoType -> conditions.add(USER_SETTING.SEND_NOTICE.isTrue()));
+        }
         Optional.ofNullable(criteria.getEnabled())
                 .ifPresent(enabled -> conditions.add(
                         MESSAGE_SETTING.IS_DISABLED.isFalse() // user shouldn't see settings disabled by admin
@@ -127,7 +143,8 @@ public class UserSettingRestImpl implements UserSettingRest {
             dsl
                     .update(USER_SETTING)
                     .set(USER_SETTING.ALERT_TYPE, setting.getAlertType())
-                    .set(USER_SETTING.INFO_TYPE, setting.getInfoType())
+                    .set(USER_SETTING.SEND_NOTICE, setting.getInfoTypes() != null && setting.getInfoTypes().contains(InfoType.NOTICE))
+                    .set(USER_SETTING.SEND_EMAIL, setting.getInfoTypes() != null && setting.getInfoTypes().contains(InfoType.EMAIL))
                     .set(USER_SETTING.IS_DISABLED, setting.getDisabled())
                     .where(USER_SETTING.ID.eq(id))
                     .execute();
@@ -137,7 +154,8 @@ public class UserSettingRestImpl implements UserSettingRest {
                     .set(USER_SETTING.ID, id)
                     .set(USER_SETTING.USER_ID, user)
                     .set(USER_SETTING.ALERT_TYPE, setting.getAlertType())
-                    .set(USER_SETTING.INFO_TYPE, setting.getInfoType())
+                    .set(USER_SETTING.SEND_NOTICE, setting.getInfoTypes() != null && setting.getInfoTypes().contains(InfoType.NOTICE))
+                    .set(USER_SETTING.SEND_EMAIL, setting.getInfoTypes() != null && setting.getInfoTypes().contains(InfoType.EMAIL))
                     .set(USER_SETTING.IS_DISABLED, setting.getDisabled())
                     .execute();
         }

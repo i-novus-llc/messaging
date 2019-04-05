@@ -25,9 +25,8 @@
                 </input-select>
             </row>
             <row>
-                <input-select id="infoType" label="Информирование" required="true">
+                <input-select id="infoType" label="Информирование" required="true" type="multi">
                     <options>
-                        <option id="ALL" name="Все"/>
                         <option id="EMAIL" name="Электронная почта"/>
                         <option id="NOTICE" name="Центр уведомлений"/>
                     </options>

@@ -1,15 +1,21 @@
 package ru.inovus.messaging.api.model;
 
 import lombok.Getter;
+import lombok.Setter;
+
+import java.io.Serializable;
 
 @Getter
-public enum Component {
-    PAYMENT("Оплата", 1);
-
-    String name;
+@Setter
+public class Component implements Serializable {
     Integer id;
+    String name;
 
-    Component(String name, Integer id) {
+    public Component() {
+    }
+
+    public Component(Integer id, String name) {
+        this.name = name;
         this.id = id;
     }
 }
