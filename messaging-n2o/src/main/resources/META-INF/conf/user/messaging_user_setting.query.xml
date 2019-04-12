@@ -66,22 +66,22 @@
         </field>
 
         <field id="name" domain="string" name="Наименование шаблона">
-            <select/>
+            <select mapping="['name']"/>
             <filters>
                 <eq filter-id="name">name={name}</eq>
             </filters>
         </field>
 
         <field id="caption" domain="string">
-            <select/>
+            <select mapping="['caption']"/>
         </field>
 
         <field id="text" domain="string">
-            <select/>
+            <select mapping="['text']"/>
         </field>
 
         <field id="disabled" domain="boolean">
-            <select/>
+            <select mapping="['disabled']"/>
         </field>
 
         <field id="enabled" domain="boolean">

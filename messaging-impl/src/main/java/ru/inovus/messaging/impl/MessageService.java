@@ -208,8 +208,9 @@ public class MessageService {
                 .leftJoin(COMPONENT).on(COMPONENT.ID.eq(MESSAGE.COMPONENT_ID))
                 .where(conditions);
         int count = dsl.fetchCount(query);
+        Field fieldSentAt = MESSAGE.field("sent_at");
         List<Message> collection = query
-                .orderBy(getSortFields(criteria.getOrders()))
+                .orderBy(fieldSentAt.desc())
                 .limit(criteria.getPageSize())
                 .offset((int) criteria.getOffset())
                 .fetch(MAPPER);
@@ -238,23 +239,6 @@ public class MessageService {
                 });
         message.setRecipients(recipients);
         return message;
-    }
-
-    private Collection<SortField<?>> getSortFields(List<Sort.Order> sortingList) {
-        Collection<SortField<?>> querySortFields = new ArrayList<>();
-
-        if (sortingList == null) {
-            return querySortFields;
-        }
-
-        for (Sort.Order sorting : sortingList) {
-            Field field = MESSAGE.field(sorting.getProperty());
-            SortField<?> querySortField = sorting.getDirection().equals(Sort.Direction.ASC) ?
-                    field.asc() : field.desc();
-            querySortFields.add(querySortField);
-        }
-
-        return querySortFields;
     }
 
 }
