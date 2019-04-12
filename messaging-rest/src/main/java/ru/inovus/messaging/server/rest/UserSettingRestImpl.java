@@ -46,20 +46,23 @@ public class UserSettingRestImpl implements UserSettingRest {
                 userSetting.getIsDisabled() : defaultSetting.getIsDisabled());
         setting.setAlertType(userSetting.getAlertType() != null ?
                 userSetting.getAlertType() : defaultSetting.getAlertType());
-        List<InfoType> infoTypes = getInfoTypes(userSetting.getSendNotice(), userSetting.getSendEmail());
-        setting.setInfoTypes(infoTypes);
         setting.setDefaultAlertType(defaultSetting.getAlertType());
         List<InfoType> defInfoTypes = getInfoTypes(defaultSetting.getSendNotice(), defaultSetting.getSendEmail());
         setting.setDefaultInfoType(defInfoTypes);
+        if (userSetting.getSendNotice() == null && userSetting.getSendEmail() == null) {
+            setting.setInfoTypes(defInfoTypes);
+        } else {
+            setting.setInfoTypes(getInfoTypes(userSetting.getSendNotice(), userSetting.getSendEmail()));
+        }
         return setting;
     };
 
     private List<InfoType> getInfoTypes(Boolean sendNotice, Boolean sendEmail) {
         List<InfoType> infoTypes = new ArrayList<>();
-        if (sendNotice != null) {
+        if (sendNotice != null && sendNotice) {
             infoTypes.add(InfoType.NOTICE);
         }
-        if (sendEmail != null) {
+        if (sendEmail != null && sendEmail) {
             infoTypes.add(InfoType.EMAIL);
         }
         return infoTypes;
@@ -81,12 +84,20 @@ public class UserSettingRestImpl implements UserSettingRest {
                                 .or(USER_SETTING.ALERT_TYPE.isNull().and(MESSAGE_SETTING.ALERT_TYPE.eq(alertType)))));
         if (InfoType.EMAIL.equals(criteria.getInfoType())) {
             Optional.ofNullable(criteria.getInfoType())
-                    .ifPresent(infoType -> conditions.add(USER_SETTING.SEND_EMAIL.isTrue()));
+                    .ifPresent(infoType -> conditions.add(
+                            USER_SETTING.SEND_EMAIL.isNotNull().and(USER_SETTING.SEND_EMAIL.isTrue())
+                    .or(USER_SETTING.SEND_EMAIL.isNull().and(MESSAGE_SETTING.SEND_EMAIL.isTrue()))));
         }
         if (InfoType.NOTICE.equals(criteria.getInfoType())) {
             Optional.ofNullable(criteria.getInfoType())
-                    .ifPresent(infoType -> conditions.add(USER_SETTING.SEND_NOTICE.isTrue()));
+                    .ifPresent(infoType -> conditions.add(
+                            USER_SETTING.SEND_NOTICE.isNotNull().and(USER_SETTING.SEND_NOTICE.isTrue())
+                    .or(USER_SETTING.SEND_NOTICE.isNull().and(MESSAGE_SETTING.SEND_NOTICE.isTrue()))));
         }
+        conditions.add(MESSAGE_SETTING.IS_DISABLED.isFalse());
+        Optional.ofNullable(criteria.getEnabled())
+                .ifPresent(enabled -> conditions.add(USER_SETTING.IS_DISABLED.isNull().and(DSL.value(enabled))
+                                        .or(USER_SETTING.IS_DISABLED.notEqual(enabled))));
         Optional.ofNullable(criteria.getEnabled())
                 .ifPresent(enabled -> conditions.add(
                         MESSAGE_SETTING.IS_DISABLED.isFalse() // user shouldn't see settings disabled by admin
@@ -95,6 +106,7 @@ public class UserSettingRestImpl implements UserSettingRest {
         List<UserSetting> list = dsl
                 .select(MESSAGE_SETTING.fields())
                 .select(USER_SETTING.fields())
+                .select(COMPONENT.fields())
                 .from(MESSAGE_SETTING)
                 .leftJoin(USER_SETTING).on(USER_SETTING.ID.eq(MESSAGE_SETTING.ID),
                         USER_SETTING.USER_ID.eq(criteria.getUser())) // in fact it's username
@@ -121,6 +133,7 @@ public class UserSettingRestImpl implements UserSettingRest {
         return dsl
                 .select(MESSAGE_SETTING.fields())
                 .select(USER_SETTING.fields())
+                .select(COMPONENT.fields())
                 .from(MESSAGE_SETTING)
                 .leftJoin(USER_SETTING).on(USER_SETTING.ID.eq(MESSAGE_SETTING.ID),
                         USER_SETTING.USER_ID.eq(user))
