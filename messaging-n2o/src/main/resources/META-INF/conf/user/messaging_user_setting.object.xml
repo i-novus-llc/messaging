@@ -11,7 +11,7 @@
                 <param id="name" mapping="name" required="true"/>
                 <param id="disabled" mapping="disabled"/>
                 <param id="alertType.id" mapping="alertType" required="true"/>
-                <param id="infoType.id" mapping="infoType" required="true"/>
+                <param id="infoType" mapping="infoTypes"/>
                 <param id="username" mapping="username" default-value="#{username!}"/>
             </in-parameters>
         </operation>

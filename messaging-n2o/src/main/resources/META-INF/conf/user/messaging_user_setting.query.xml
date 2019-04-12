@@ -11,14 +11,14 @@
 
     <fields>
         <field id="id" domain="integer" name="Идентификатор">
-            <select/>
+            <select mapping="['id']"/>
             <filters>
                 <eq filter-id="id">{id}</eq>
             </filters>
         </field>
 
         <field id="component.id" domain="integer">
-            <select/>
+            <select mapping="['component.id']"/>
             <filters>
                 <eq filter-id="component.id">component.id={component.id}</eq>
             </filters>
@@ -54,21 +54,15 @@
             <select mapping="['alertTypeName']"/>
         </field>
 
-        <field id="defaultInfoType.id" domain="string">
+        <field id="defaultInfoType" domain="object[]">
             <select mapping="['defaultInfoType']"/>
         </field>
-        <field id="defaultInfoType.name" domain="string">
-            <select mapping="['defaultInfoTypeName']"/>
-        </field>
 
-        <field id="infoType.id" domain="string">
-            <select mapping="['infoType']"/>
+        <field id="infoType" domain="object[]">
+            <select mapping="['infoTypes']"/>
             <filters>
-                <eq filter-id="infoType.id">infoType.id={infoType.id}</eq>
+                <eq filter-id="infoType.id" domain="string">infoType.id={infoType.id}</eq>
             </filters>
-        </field>
-        <field id="infoType.name" domain="string">
-            <select mapping="['infoTypeName']"/>
         </field>
 
         <field id="name" domain="string" name="Наименование шаблона">
