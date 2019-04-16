@@ -67,6 +67,10 @@
             </filters>
         </field>
 
+        <field id="sentAtFormatted" domain="date">
+            <select normalize="new java.text.SimpleDateFormat('dd.MM.yyyy HH:mm:ss').format(#this)" mapping="['sentAt']"/>
+        </field>
+
         <field id="systemId">
             <select>systemId</select>
             <filters>
