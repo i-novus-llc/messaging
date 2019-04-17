@@ -51,6 +51,14 @@
             <select mapping="['recipientTypeName']"/>
         </field>
 
+        <field id="alertType.id">
+            <select mapping="['alertType']"/>
+        </field>
+        <field id="alertType.name">
+            <select mapping="['alertTypeName']"/>
+        </field>
+
+
         <field id="caption" domain="string">
             <select>caption</select>
         </field>
@@ -84,7 +92,7 @@
 
         <field id="username" domain="string">
             <filters>
-                <eq filter-id="username" default-value="#{username}">user={username}</eq>
+                <eq filter-id="username">user={username}</eq>
             </filters>
         </field>
     </fields>
