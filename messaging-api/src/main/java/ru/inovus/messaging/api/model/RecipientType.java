@@ -1,7 +1,7 @@
 package ru.inovus.messaging.api.model;
 
 public enum RecipientType {
-    USER("Пользователь"),
+    USER("Пользователи"),
     ALL("Все");
 
     private String name;
