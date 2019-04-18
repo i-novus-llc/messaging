@@ -80,3 +80,6 @@ security:
 #      scope: senduser,sendgroup,sendall
 #      access-token-uri: ${security.oauth2.auth-server-uri}/token
 #      grant-type: client_credentials
+
+server:
+  port: 8081
