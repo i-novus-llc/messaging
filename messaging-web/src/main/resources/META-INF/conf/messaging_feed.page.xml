@@ -28,8 +28,5 @@
                 <open-page page-id="messaging_message_user_view" detail-field-id="id"/>
             </button>
         </toolbar>
-        <pre-filters>
-            <eq field-id="username" value="#{username}"/>
-        </pre-filters>
     </table>
 </simple-page>
