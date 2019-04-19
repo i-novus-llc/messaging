@@ -16,6 +16,7 @@ import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.RecipientType;
 import ru.inovus.messaging.api.queue.MqProvider;
+import ru.inovus.messaging.impl.FeedService;
 import ru.inovus.messaging.impl.MessageService;
 import ru.inovus.messaging.server.auth.NoAuthAuthenticator;
 import ru.inovus.messaging.server.config.handler.SocketHandler;
@@ -38,7 +39,7 @@ import static ru.inovus.messaging.server.config.handler.SocketHandler.isNotExpir
 //@RunWith(SpringRunner.class)
 public class SocketHandlerTest {
 
-    private MessageService messageService;
+    private FeedService feedService;
     private Boolean markedRead = false;
     private Boolean markedReadAll = false;
     private Boolean messageSent = false;
@@ -58,18 +59,18 @@ public class SocketHandlerTest {
 
     @Before
     public void init() {
-        messageService = mock(MessageService.class);
+        feedService = mock(FeedService.class);
         Message message = new Message();
         message.setId(messageId);
         doAnswer(invocation -> {
             markedRead = true;
             return null;
-        }).when(messageService).markRead("1", messageId);
+        }).when(feedService).markRead("1", messageId);
         doAnswer(invocation -> {
             markedReadAll = true;
             return null;
-        }).when(messageService).markReadAll(any(), any());
-        when(messageService.getUnreadMessages(any(), any())).thenReturn(new UnreadMessagesInfo(1));
+        }).when(feedService).markReadAll(any(), any());
+        when(feedService.getFeedCount(any(), any())).thenReturn(new UnreadMessagesInfo(1));
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
@@ -88,7 +89,7 @@ public class SocketHandlerTest {
         socketHandler = new SocketHandler();
         socketHandler.setAuthenticator(new NoAuthAuthenticator());
         socketHandler.setMapper(objectMapper);
-        socketHandler.setMessageService(messageService);
+        socketHandler.setFeedService(feedService);
         socketHandler.setMqProvider(mqProvider);
         socketHandler.setTimeout(60);
     }

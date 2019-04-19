@@ -20,6 +20,7 @@ import org.jooq.Table;
 import org.jooq.TableField;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 import org.jooq.impl.TimestampToLocalDateTimeConverter;
 
@@ -60,7 +61,7 @@ public class Recipient extends TableImpl<RecipientRecord> {
     /**
      * The column <code>public.recipient.id</code>. Уникальный идентификатор
      */
-    public final TableField<RecipientRecord, Integer> ID = createField("id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "Уникальный идентификатор");
+    public final TableField<RecipientRecord, Long> ID = createField("id", SQLDataType.BIGINT.nullable(false), this, "Уникальный идентификатор");
 
     /**
      * The column <code>public.recipient.recipient</code>. Получатель
