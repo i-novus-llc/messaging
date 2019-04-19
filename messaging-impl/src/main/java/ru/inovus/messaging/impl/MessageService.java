@@ -3,7 +3,6 @@ package ru.inovus.messaging.impl;
 import org.jooq.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.inovus.messaging.api.UnreadMessagesInfo;
@@ -15,7 +14,6 @@ import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
