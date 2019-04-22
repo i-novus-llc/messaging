@@ -1,6 +1,6 @@
 spring:
   application:
-    name: messaging-frontend
+    name: messaging-admin-frontend
   cloud:
     consul:
       host: consul-agent.local
