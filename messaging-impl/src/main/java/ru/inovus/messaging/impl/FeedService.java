@@ -15,7 +15,6 @@ import ru.inovus.messaging.impl.jooq.tables.records.ComponentRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.RecipientRecord;
 
-import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,30 +27,7 @@ import static ru.inovus.messaging.impl.jooq.Tables.*;
 
 @Service
 public class FeedService {
-    private static final RecordMapper<Record, Feed> MAPPER = rec -> {
-        MessageRecord record = rec.into(MESSAGE);
-        ComponentRecord componentRecord = rec.into(COMPONENT);
-        RecipientRecord recipientRecord = rec.into(RECIPIENT);
-        Feed message = new Feed();
-        message.setId(String.valueOf(record.getId()));
-        message.setCaption(record.getCaption());
-        message.setText(record.getText());
-        message.setSeverity(record.getSeverity());
-        message.setSentAt(record.getSentAt());
-        List<InfoType> infoTypes = new ArrayList<>();
-        if (record.getSendNotice() != null && record.getSendNotice()) {
-            infoTypes.add(InfoType.NOTICE);
-        }
-        if (record.getSendEmail() != null && record.getSendEmail()) {
-            infoTypes.add(InfoType.EMAIL);
-        }
-        message.setSystemId(record.getSystemId());
-        if (componentRecord != null) {
-            message.setComponent(new Component(componentRecord.getId(), componentRecord.getName()));
-        }
-        message.setReadAt(recipientRecord.getReadAt());
-        return message;
-    };
+    private static final RecordMapper<Record, Feed> MAPPER = FeedService::mapFeed;
     private final DSLContext dsl;
 
     public FeedService(DSLContext dsl) {
@@ -167,13 +143,37 @@ public class FeedService {
         Integer count = dsl
                 .selectCount()
                 .from(MESSAGE)
-                .where(notExists(dsl.selectOne()
-                                .from(RECIPIENT)
-                                .where(RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID),
-                                        RECIPIENT.READ_AT.isNotNull())),
+                .leftJoin(RECIPIENT).on(RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(RECIPIENT.RECIPIENT_.eq(recipient)))
+                .where(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL).and(RECIPIENT.ID.isNull())
+                                .or(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.USER).and(RECIPIENT.READ_AT.isNull())),
                         MESSAGE.SYSTEM_ID.eq(systemId))
                 .fetchOne().value1();
         return new UnreadMessagesInfo(count);
+    }
+
+    private static Feed mapFeed(Record rec) {
+        MessageRecord record = rec.into(MESSAGE);
+        ComponentRecord componentRecord = rec.into(COMPONENT);
+        RecipientRecord recipientRecord = rec.into(RECIPIENT);
+        Feed message = new Feed();
+        message.setId(String.valueOf(record.getId()));
+        message.setCaption(record.getCaption());
+        message.setText(record.getText());
+        message.setSeverity(record.getSeverity());
+        message.setSentAt(record.getSentAt());
+        List<InfoType> infoTypes = new ArrayList<>();
+        if (record.getSendNotice() != null && record.getSendNotice()) {
+            infoTypes.add(InfoType.NOTICE);
+        }
+        if (record.getSendEmail() != null && record.getSendEmail()) {
+            infoTypes.add(InfoType.EMAIL);
+        }
+        message.setSystemId(record.getSystemId());
+        if (componentRecord != null) {
+            message.setComponent(new Component(componentRecord.getId(), componentRecord.getName()));
+        }
+        message.setReadAt(recipientRecord.getReadAt());
+        return message;
     }
 
 }
