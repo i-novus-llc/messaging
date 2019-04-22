@@ -101,8 +101,4 @@ public class MessageRestImpl implements MessageRest {
                 return null;
         }
     }
-
-    public void markRead(String recipient, String id) {
-        messageService.markRead(recipient, id);
-    }
 }

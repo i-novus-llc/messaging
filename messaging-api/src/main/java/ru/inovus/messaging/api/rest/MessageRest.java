@@ -39,10 +39,4 @@ public interface MessageRest {
     @ApiOperation("Отправка сообщения")
     @ApiResponse(code = 200, message = "Сообщение поставлено в очередь")
     void sendMessage(MessageOutbox message);
-
-    @POST
-    @Path("/{recipient}/read/{id}")
-    @ApiOperation("Пометить сообщение прочитанным")
-    @ApiResponse(code = 200, message = "Сообщение помечено прочитанным")
-    void markRead(@PathParam("recipient") String recipient, @PathParam("id") String id);
 }

@@ -82,7 +82,7 @@
         <field id="systemId">
             <select>systemId</select>
             <filters>
-                <eq filter-id="systemId" default-value="default">systemId={systemId}</eq><!--TODO: default-value from context-->
+                <eq filter-id="systemId" default-value="${default.system.id}">systemId={systemId}</eq><!--TODO: default-value from context-->
             </filters>
         </field>
 

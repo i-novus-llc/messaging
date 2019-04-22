@@ -19,6 +19,7 @@ import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.RecipientType;
 import ru.inovus.messaging.api.queue.MqProvider;
 import ru.inovus.messaging.api.queue.TopicMqConsumer;
+import ru.inovus.messaging.impl.FeedService;
 import ru.inovus.messaging.impl.MessageService;
 import ru.inovus.messaging.server.auth.WebSocketAuthenticator;
 import ru.inovus.messaging.server.model.SocketEvent;
@@ -45,7 +46,7 @@ public class SocketHandler extends TextWebSocketHandler {
 
     private MqProvider mqProvider;
 
-    private MessageService messageService;
+    private FeedService feedService;
 
     @Value("${novus.messaging.timeout}")
     public void setTimeout(Integer timeout) {
@@ -71,8 +72,8 @@ public class SocketHandler extends TextWebSocketHandler {
     }
 
     @Autowired
-    public void setMessageService(MessageService messageService) {
-        this.messageService = messageService;
+    public void setFeedService(FeedService feedService) {
+        this.feedService = feedService;
     }
 
     @Override
@@ -100,19 +101,19 @@ public class SocketHandler extends TextWebSocketHandler {
                 return;
             }
             SecurityContextHolder.setContext(new SecurityContextImpl(user));
-            UnreadMessagesInfo unreadMessages = messageService.getUnreadMessages(user.getName(), systemId);
+            UnreadMessagesInfo unreadMessages = feedService.getFeedCount(user.getName(), systemId);
             sendMessage(session, unreadMessages);
             mqProvider.subscribe(new TopicMqConsumer(session.getId(), systemId, user.getName(), noticeTopicName, messageOutbox ->
                     sendTo(session, messageOutbox, authToken, systemId)));
         }
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        UnreadMessagesInfo unreadMessages = messageService.getUnreadMessages(userName, systemId);
+        UnreadMessagesInfo unreadMessages = feedService.getFeedCount(userName, systemId);
         sendMessage(session, unreadMessages);
         if (SocketEventType.READ.equals(socketEvent.getType())) {
             if (socketEvent.getMessage() != null)
-                messageService.markRead(userName, socketEvent.getMessage().getId());
+                feedService.markRead(userName, socketEvent.getMessage().getId());
             else
-                messageService.markReadAll(userName, systemId);
+                feedService.markReadAll(userName, systemId);
         }
 
     }
@@ -151,13 +152,12 @@ public class SocketHandler extends TextWebSocketHandler {
     public void sendTo(WebSocketSession user, MessageOutbox msg, String recipient, String systemId) {
         if (msg.getCommand() != null) {
             String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-            messageService.markRead(userName, msg.getCommand().getMessageIds().toArray(new String[0]));
+            feedService.markRead(userName, msg.getCommand().getMessageIds().toArray(new String[0]));
             sendMessage(user, msg.getCommand());
         } else if (checkRecipient(msg, recipient, systemId)) {
             if (msg.getMessage() != null) {
                 Message message = msg.getMessage();
-                messageService.setSentTime(systemId,message.getId());
-                UnreadMessagesInfo unreadMessages = messageService.getUnreadMessages(recipient, systemId);
+                UnreadMessagesInfo unreadMessages = feedService.getFeedCount(recipient, systemId);
                 sendMessage(user, unreadMessages);
                 if (isNotExpired(message)) {
                     sendMessage(user, message);
