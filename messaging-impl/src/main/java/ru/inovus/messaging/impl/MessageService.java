@@ -3,7 +3,6 @@ package ru.inovus.messaging.impl;
 import org.jooq.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.inovus.messaging.api.UnreadMessagesInfo;
@@ -15,7 +14,6 @@ import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -97,91 +95,9 @@ public class MessageService {
         return message;
     }
 
-    public UnreadMessagesInfo getUnreadMessages(String recipient, String systemId) {
-        Integer count = dsl
-                .selectCount()
-                .from(MESSAGE)
-                .where(notExists(dsl.selectOne()
-                                .from(RECIPIENT)
-                                .where(RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID),
-                                        RECIPIENT.READ_AT.isNotNull())),
-                        MESSAGE.SYSTEM_ID.eq(systemId))
-                .fetchOne().value1();
-        return new UnreadMessagesInfo(count);
-    }
-
-    @Transactional
-    public void markRead(String recipient, String... messageId) {
-        LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
-        int updated = dsl
-                .update(RECIPIENT)
-                .set(RECIPIENT.READ_AT, now)
-                .where(RECIPIENT.MESSAGE_ID.in(messageId))
-                .execute();
-        if (updated == 0 && messageId != null) {
-            for (String id : messageId) {
-                dsl
-                        .insertInto(RECIPIENT)
-                        .set(RECIPIENT.READ_AT, now)
-                        .set(RECIPIENT.MESSAGE_ID, id)
-                        .set(RECIPIENT.RECIPIENT_, recipient)
-                        .execute();
-            }
-        }
-    }
-
-    private void setSentTime(String systemId, LocalDateTime sentAt, String... messageId) {
-        dsl
-                .update(MESSAGE)
-                .set(MESSAGE.SENT_AT, sentAt)
-                .where(MESSAGE.ID.in(messageId),
-                        MESSAGE.SYSTEM_ID.eq(systemId))
-                .execute();
-    }
-
-    public void setSentTime(String systemId, String... messageId) {
-        setSentTime(systemId, LocalDateTime.now(Clock.systemUTC()), messageId);
-    }
-
-    @Transactional
-    public void markReadAll(String recipient, String systemId) {
-        LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
-        // Update 'personal' messages
-        dsl
-                .update(RECIPIENT)
-                .set(RECIPIENT.READ_AT, now)
-                .where(RECIPIENT.RECIPIENT_.eq(recipient),
-                        exists(dsl.selectOne().from(MESSAGE)
-                                .where(MESSAGE.ID.eq(RECIPIENT.MESSAGE_ID),
-                                        MESSAGE.SYSTEM_ID.eq(systemId))))
-                .execute();
-        // Update messages 'for all'
-        List<String> ids = dsl
-                .select(MESSAGE.ID)
-                .from(MESSAGE)
-                .where(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL),
-                        MESSAGE.SYSTEM_ID.eq(systemId),
-                        notExists(dsl.selectOne().from(RECIPIENT)
-                                .where(RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID),
-                                        RECIPIENT.RECIPIENT_.eq(recipient))))
-                .fetch().map(Record1::component1);
-        for (String id : ids) {
-            dsl
-                    .insertInto(RECIPIENT)
-                    .set(RECIPIENT.READ_AT, now)
-                    .set(RECIPIENT.MESSAGE_ID, id)
-                    .set(RECIPIENT.RECIPIENT_, recipient)
-                    .execute();
-        }
-    }
 
     public Page<Message> getMessages(MessageCriteria criteria) {
         List<Condition> conditions = new ArrayList<>();
-        Optional.ofNullable(criteria.getUser())
-                .ifPresent(user -> conditions.add(exists(dsl.selectOne().from(RECIPIENT)
-                        .where(RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID),
-                                RECIPIENT.RECIPIENT_.eq(user))).or(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL))));
-        //TODO: Recipient type
         Optional.ofNullable(criteria.getSystemId())
                 .ifPresent(systemId -> conditions.add(MESSAGE.SYSTEM_ID.eq(systemId)));
         Optional.ofNullable(criteria.getComponentId())

@@ -6,7 +6,9 @@ import io.swagger.annotations.ApiResponse;
 import org.springframework.data.domain.Page;
 import ru.inovus.messaging.api.MessageOutbox;
 import ru.inovus.messaging.api.criteria.MessageCriteria;
+import ru.inovus.messaging.api.criteria.RecipientCriteria;
 import ru.inovus.messaging.api.model.Message;
+import ru.inovus.messaging.api.model.Recipient;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -27,14 +29,14 @@ public interface MessageRest {
     @ApiResponse(code = 200, message = "Сообщение")
     Message getMessage(@PathParam("id") String id);
 
+    @GET
+    @Path("/recipients")
+    @ApiOperation("Получение получателей")
+    @ApiResponse(code = 200, message = "Список получателей")
+    Page<Recipient> getRecipients(@BeanParam RecipientCriteria criteria);
+
     @POST
     @ApiOperation("Отправка сообщения")
     @ApiResponse(code = 200, message = "Сообщение поставлено в очередь")
     void sendMessage(MessageOutbox message);
-
-    @POST
-    @Path("/{recipient}/read/{id}")
-    @ApiOperation("Пометить сообщение прочитанным")
-    @ApiResponse(code = 200, message = "Сообщение помечено прочитанным")
-    void markRead(@PathParam("recipient") String recipient, @PathParam("id") String id);
 }

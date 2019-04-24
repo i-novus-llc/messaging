@@ -12,7 +12,7 @@ public class Recipient implements Serializable {
 
     private static final long serialVersionUID = 4960064989162334509L;
 
-    private Integer id;
+    private Long id;
     private String recipient;
     private LocalDateTime readAt;
     private String messageId;
