@@ -1,5 +1,6 @@
 package ru.inovus.messaging.server.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -12,6 +13,15 @@ import org.springframework.web.socket.config.annotation.*;
 @EnableWebSocketMessageBroker
 public class WebSocketConfig extends AbstractSecurityWebSocketMessageBrokerConfigurer {
 
+    @Value("${message.app_prefix}")
+    private String appPrefix = "/app";
+    @Value("${message.end_point}")
+    private String endPoint = "/ws";
+
+    @Value("${message.public_dest_prefix}")
+    private String publicDestPrefix = "/topic";
+    @Value("${message.private_dest_prefix}")
+    private String privateDestPrefix = "/exchange";
 
     @Override
     protected boolean sameOriginDisabled() {
@@ -29,12 +39,12 @@ public class WebSocketConfig extends AbstractSecurityWebSocketMessageBrokerConfi
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.setApplicationDestinationPrefixes("/app");
-        registry.enableSimpleBroker("/topic/", "/queue/", "/exchange/").setTaskScheduler(stompHeartbeatThreadBool());
+        registry.setApplicationDestinationPrefixes(appPrefix);
+        registry.enableSimpleBroker(publicDestPrefix, privateDestPrefix).setTaskScheduler(stompHeartbeatThreadBool());
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws").setAllowedOrigins("*").withSockJS();
+        registry.addEndpoint(endPoint).setAllowedOrigins("*").withSockJS();
     }
 }
