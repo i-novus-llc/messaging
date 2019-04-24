@@ -1,57 +1,83 @@
 package ru.inovus.messaging.server.config;
 
+import org.apache.cxf.rt.security.crypto.CryptoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.jwt.crypto.sign.RsaVerifier;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetailsSource;
+import org.springframework.security.oauth2.provider.token.*;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
+import java.security.interfaces.RSAPublicKey;
+import java.util.*;
 
 @Configuration
 @EnableWebSecurity
 @EnableResourceServer
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
-@ConditionalOnProperty(prefix = "security", value = "enabled", havingValue = "true")
 public class SecurityConfig extends ResourceServerConfigurerAdapter {
 
-    private final ResourceServerProperties resourceServerProperties;
+    //можно взять https://keycloak.i-novus.ru/auth/realms/DOMRF/protocol/openid-connect/certs
+    @Value("${keycloak.modulus}")
+    private String modulus;
+    @Value("${keycloak.exponent}")
+    private String exponent;
 
-    public SecurityConfig(ResourceServerProperties resourceServerProperties) {
-        this.resourceServerProperties = resourceServerProperties;
+    @Autowired
+    private ResourceServerTokenServices tokenServices;
+
+    @Bean
+    @Primary
+    public ResourceServerTokenServices tokenServices() {
+        DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
+        defaultTokenServices.setTokenStore(tokenStore());
+        defaultTokenServices.setSupportRefreshToken(true);
+        return defaultTokenServices;
     }
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-        resources.resourceId(resourceServerProperties.getResourceId());
+        resources.tokenServices(tokenServices);
+        resources.resourceId("lkb-app");
+        resources.authenticationDetailsSource(new OAuth2AuthenticationDetailsSource());
     }
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/admin.html", "/actuator/**")
-                .authenticated()
+        http.requestMatchers()
+                .antMatchers("/ws/**")
                 .antMatchers("/api/**")
-                .authenticated()
-                .anyRequest().permitAll();
-//        http.logout()
-//                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-//                .logoutSuccessUrl("/login");
-//        http.formLogin();
-        http.headers().frameOptions().disable();
-        http.csrf().disable();
-        http.cors().configurationSource(corsConfigurationSource());
+                .and()
+                .authorizeRequests()
+                .antMatchers("/ws/**").hasRole("ALLBANKS")
+                .antMatchers("/api/**").hasRole("ALLBANKS")
+                .anyRequest().denyAll();
+
+        http.sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .csrf()
+                .csrfTokenRepository(
+                        CookieCsrfTokenRepository.withHttpOnlyFalse());
     }
 
     @Bean
@@ -65,23 +91,36 @@ public class SecurityConfig extends ResourceServerConfigurerAdapter {
         return source;
     }
 
-    @Autowired
-    private JwtAccessTokenConverter accessTokenConverter;
-
-    @Bean
-    public TokenStore tokenStore() {
-        return new JwtTokenStore(accessTokenConverter);
+    private TokenStore tokenStore(){
+        return new JwtTokenStore(accessTokenConverter());
     }
 
-//    @Bean
-//    public JwtAccessTokenConverter accessTokenConverter() {
-//        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-//        converter.setSigningKey("MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAi54+TgAUWz3rUrAqdjBcmw6lueJdDcDh5ymU3uuNJsBOTz4mI3lFle505/xta6mpaMZynoS9Nbs6HJswWScCNilc97GFpFpn1KMYV0Ct8Mk0R2gEBk3ky+ASjhMXdd0UIhFywHivU0eaVQVXLfFFg68b/MK4NyJTR33pgUy7VZTtup+h8UFWzVuKu1tfrI6rVe6o2biKM+z258uWXxbEI08DyBTyvAL+GKb0HY1G59BQ/6rziYCVDSO3EQgb+rL4ZNmlVb13W0ePfyWUKnBPcmk9TRejaYmYSZiwQjDgx9+1yBCEeDPPt/LyVAac2Bd5Vq2VVJfz7bUf2TTwT9hBdQIDAQAB");
-//        return converter;
-//    }
+    private JwtAccessTokenConverter accessTokenConverter() {
+        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
 
-//    @Bean
-//    public JwtAccessTokenCustomizer jwtAccessTokenCustomizer(ObjectMapper mapper) {
-//        return new JwtAccessTokenCustomizer(mapper);
-//    }
+        ((DefaultAccessTokenConverter) converter.getAccessTokenConverter())
+                .setUserTokenConverter(userAuthenticationConverter());
+
+        RSAPublicKey publicKey = CryptoUtils.getRSAPublicKey(modulus, exponent);
+        converter.setVerifier(new RsaVerifier(publicKey));
+        return converter;
+    }
+
+    private UserAuthenticationConverter userAuthenticationConverter() {
+        return new DefaultUserAuthenticationConverter() {
+            @Override
+            public Authentication extractAuthentication(Map<String, ?> map) {
+                Collection<GrantedAuthority> authorities = new ArrayList<>();
+                Object obRole = map.get("roles");
+                if (obRole instanceof List) {
+                    for (Object roleCode : (List) obRole) {
+                        authorities.add(new SimpleGrantedAuthority("ROLE_" + roleCode));
+                    }
+                }
+                UserDetails principal = new User("" + map.get("preferred_username"), "N/A", authorities);
+                return new UsernamePasswordAuthenticationToken(principal, "N/A", authorities);
+            }
+        };
+    }
+
 }

@@ -1,28 +1,40 @@
 package ru.inovus.messaging.server.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.socket.config.annotation.EnableWebSocket;
-import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
-import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
-import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
-import ru.inovus.messaging.server.config.handler.HttpHandshakeInterceptor;
-import ru.inovus.messaging.server.config.handler.SocketHandler;
+import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.security.config.annotation.web.socket.AbstractSecurityWebSocketMessageBrokerConfigurer;
+import org.springframework.web.socket.config.annotation.*;
 
 @Configuration
-@EnableWebSocket
-public class WebSocketConfig implements WebSocketConfigurer {
+@EnableWebSocketMessageBroker
+public class WebSocketConfig extends AbstractSecurityWebSocketMessageBrokerConfigurer {
 
-    private final SocketHandler socketHandler;
 
-    public WebSocketConfig(SocketHandler socketHandler) {
-        this.socketHandler = socketHandler;
+    @Override
+    protected boolean sameOriginDisabled() {
+        return true;
+    }
+
+    @Bean //ping-pong
+    public TaskScheduler stompHeartbeatThreadBool() {
+        ThreadPoolTaskScheduler p = new ThreadPoolTaskScheduler();
+        p.setPoolSize(1);
+        p.setThreadNamePrefix("stomp-heartbeat-thread-");
+        p.initialize();
+        return p;
     }
 
     @Override
-    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(socketHandler, "/ws")
-                .setAllowedOrigins("*")
-                .addInterceptors(new HttpSessionHandshakeInterceptor(),
-                        new HttpHandshakeInterceptor());
+    public void configureMessageBroker(MessageBrokerRegistry registry) {
+        registry.setApplicationDestinationPrefixes("/app");
+        registry.enableSimpleBroker("/topic/", "/queue/", "/exchange/").setTaskScheduler(stompHeartbeatThreadBool());
+    }
+
+    @Override
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        registry.addEndpoint("/ws").setAllowedOrigins("*").withSockJS();
     }
 }

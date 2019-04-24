@@ -5,34 +5,47 @@
     <title>I-Novus Messaging</title>
     <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/app.css">
+
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="stomp-example.js"></script>
+
 </head>
 <body>
 <div id="main-content" class="container">
 
     <div class="row">
-        <div class="col-md-6">
-            <form class="form-inline" action="">
-                <div class="form-group">
-                    <label for="connect">WebSocket connection:</label>
-                    <button id="connect" class="btn btn-default" type="button">
-                        Connect
-                    </button>
-                    <button id="disconnect" class="btn btn-default" type="button" disabled>
-                        Disconnect
-                    </button>
-                </div>
-            </form>
-        </div>
-        <div class="col-md-6">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="name">What is your name?</label>
-                    <input onkeyup="nameChange(this)" type="text" id="name" autocomplete="off"
-                           class="form-control" placeholder="Your name here..." value="foo">
-                </div>
-            </form>
+        <div class="col-md-12">
+            <label for="token">Place token here:</label>
+            <textarea id="token" style="width: 100%" rows="10">
+                eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJYUm5ONU01Y0pFMTlWNERtMnFuQ05KYWpwM0lsRGVYZl9QTk9fOWtKQXJvIn0.eyJqdGkiOiIzNDNiZWE3YS0zZGRhLTRmY2EtYWQ3MC05ZDU0ZDU5NmQwNGIiLCJleHAiOjE1NTYxMjE0NDUsIm5iZiI6MCwiaWF0IjoxNTU2MDkxNDQ1LCJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjg4ODgvYXV0aC9yZWFsbXMvRE9NUkYiLCJhdWQiOiJsa2ItYXBwIiwic3ViIjoiMjJlY2RjZTMtNzllNS00NzFjLThiNjctZjUzNzJlNGY1NWQ1IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoibGtiLWFwcCIsImF1dGhfdGltZSI6MTU1NjA5MTQ0NSwic2Vzc2lvbl9zdGF0ZSI6IjQyZjZlMjgyLWE3M2QtNDQ2Ny05MGFhLTAyZDMxMzhmNjg1NSIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiaHR0cDovL2RvY2tlci5vbmU6ODgwOC8qIiwiaHR0cDovL2xvY2FsaG9zdDo4MDgwLyoiLCJodHRwOi8vZG9ja2VyLm9uZTo4ODA1LyoiLCJodHRwOi8vZG9ja2VyLm9uZTo4ODAzLyoiLCJodHRwOi8vZG9ja2VyLm9uZTo4ODA0LyoiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIkRPTVJGX0RFVl9TUlYiLCIxMiIsIkFMTEJBTktTIiwiUk9MRV9ERVZFTE9QRVIiLCJ0ZXN0MTExMSIsIlJPTEVfRE9NUkYiLCJyZG0uYWRtaW4iLCJET01SRl9DVFJMX1NSViIsImFkbWluIiwidGVzdFJvbGUiLCJzZWMuYWRtaW4iLCJCQU5LQUNDIiwiRE9NX1JPTEUiLCJyb2xlLmFjY3JlZGl0YXRpb24iLCJ0ZXN0MyIsIjUiLCJET01SRl9GUk9OVEVORF9TUlYiLCJBRE1JTiIsInVtYV9hdXRob3JpemF0aW9uIiwiYWNjciIsImhhbmRtYWRlLm1vbml0b3JpbmcuYmFuayIsIlJPTEVfQkFOSyJdfSwicmVzb3VyY2VfYWNjZXNzIjp7InJlYWxtLW1hbmFnZW1lbnQiOnsicm9sZXMiOlsidmlldy1pZGVudGl0eS1wcm92aWRlcnMiLCJ2aWV3LXJlYWxtIiwibWFuYWdlLWlkZW50aXR5LXByb3ZpZGVycyIsImltcGVyc29uYXRpb24iLCJyZWFsbS1hZG1pbiIsImNyZWF0ZS1jbGllbnQiLCJtYW5hZ2UtdXNlcnMiLCJxdWVyeS1yZWFsbXMiLCJ2aWV3LWF1dGhvcml6YXRpb24iLCJxdWVyeS1jbGllbnRzIiwicXVlcnktdXNlcnMiLCJtYW5hZ2UtZXZlbnRzIiwibWFuYWdlLXJlYWxtIiwidmlldy1ldmVudHMiLCJ2aWV3LXVzZXJzIiwidmlldy1jbGllbnRzIiwibWFuYWdlLWF1dGhvcml6YXRpb24iLCJtYW5hZ2UtY2xpZW50cyIsInF1ZXJ5LWdyb3VwcyJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwicm9sZXMiOlsicmRtLmFkbWluIiwib2ZmbGluZV9hY2Nlc3MiLCJBTExCQU5LUyIsIkRPTVJGX0NUUkxfU1JWIiwiQkFOS0FDQyIsIkRPTVJGX0RFVl9TUlYiLCJST0xFX0JBTksiLCJ0ZXN0Um9sZSIsInNlYy5hZG1pbiIsIkRPTV9ST0xFIiwiRE9NUkZfRlJPTlRFTkRfU1JWIiwiUk9MRV9ET01SRiIsIkFETUlOIiwidW1hX2F1dGhvcml6YXRpb24iLCJhY2NyIiwiaGFuZG1hZGUubW9uaXRvcmluZy5iYW5rIiwiYWRtaW4iLCJyb2xlLmFjY3JlZGl0YXRpb24iLCJST0xFX0RFVkVMT1BFUiIsInRlc3QxMTExIiwidGVzdDMiLCIxMiIsIjUiXSwicHJlZmVycmVkX3VzZXJuYW1lIjoiZWdvcnN0In0.FAkNBJeEILGn56of65jpzAshMfwVcbqpu5zVOlLMz56-4kuLTwfGx1Uy8e9THRQm_Eeo1jAvS4n4tUKs450vJjWHz6lvI6vPkvYHHWIdQOu4czI8Lxnvsv9HcxNzJ46RmByMPmKF7zjNCzlt9gLiYmD2HPeq25ZaseKLv3ei8FQZ-9E_CiBhx6PrJ-Jp7aXWkE3QZEpKgkN5830I9L1LJVP0LWGhUr8LbJ0ih_oYAgNAFdGSnv3ftS7hjHeQImsOUBIzATdSE1I5uC-7H9fNXelD52XQ7qZpI0zz6XXTdbi0qCskQFDiT0GNKpx2TB6EYK37NsB6p1muFBPvCBmLTA
+            </textarea>
+            <button id="connect" class="btn btn-default" type="button" onclick="connectWS()">
+                Connect
+            </button>
+            <button id="disconnect" class="btn btn-default" type="button" onclick="disconnectWS()" disabled>
+                Disconnect
+            </button>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <label for="message">Message</label>
+            <input style="width: 70%" type="text" id="message" value="message">
+            <button onclick="sendPub()">Send to all</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <label for="name">User name:</label>
+            <input type="text" id="name" autocomplete="off" value="foo">
+            <button onclick="sendPriv()">Send to user</button>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-12">
             <table id="conversation" class="table table-striped">
@@ -50,79 +63,6 @@
 </div>
 
 </div>
-<script src="/webjars/jquery/jquery.min.js"></script>
-<script>
-    var ws = null;
 
-    var btnConn      = document.getElementById('connect')
-      , btnDisconn   = document.getElementById('disconnect')
-      , inpName      = document.getElementById('name')
-      , connected    = false;
-
-    function setConnected(val) {
-        connected = val;
-        if (connected) {
-            btnConn.setAttribute('disabled', '');
-            btnDisconn.removeAttribute('disabled');
-        } else {
-            btnDisconn.setAttribute('disabled', '');
-            if (inpName.value) {
-                btnConn.removeAttribute('disabled');
-            }
-        }
-    }
-
-    function nameChange(el) {
-        if (el.value && !connected) {
-            btnConn.removeAttribute('disabled');
-        }
-        if (!el.value && !connected) {
-            btnConn.setAttribute('disabled', '');
-        }
-    }
-
-    function connect() {
-        ws = new WebSocket((location.protocol == 'http:' ? 'ws://' : 'wss://')
-                + location.host + '/ws');
-        var name = document.getElementById('name').value
-        var headers = {};
-        //headers[csrf.headerName] = csrf.token;
-        headers['X-Auth-Token'] = name;
-        headers['X-System-Id'] = 'default';
-        ws.onopen = () => {
-            setConnected(true);
-            ws.send(JSON.stringify({'headers': headers, 'type': 'CONNECT'}));
-        }
-        ws.onmessage = (message) => {
-            var data = JSON.parse(message.data);
-            if (data.text)
-                showMessage(data);
-        }
-    }
-
-    function disconnect() {
-        if (ws !== null) {
-            ws.close();
-        }
-        setConnected(false);
-        console.log("Disconnected");
-    }
-
-    function showMessage(message) {
-        //alert('Got message: ' + message);
-        var tb = document.getElementById('messages');
-        var tr = document.createElement('tr');
-        var text = document.createElement('tr');
-        var caption = document.createElement('td');
-        caption.textContent = message.caption;
-        text.textContent = message.text;
-        tr.append(caption);
-        tr.append(text);
-        tb.append(tr);
-    }
-
-    btnConn.onclick = connect;
-    btnDisconn.onclick = disconnect;
-</script>
 </body>
 </html>
