@@ -37,6 +37,11 @@ public class WebSocketConfig extends AbstractSecurityWebSocketMessageBrokerConfi
         return p;
     }
 
+    @Bean
+    public MessagingEventListener messagingEventListener() {
+        return new MessagingEventListener();
+    }
+
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.setApplicationDestinationPrefixes(appPrefix);
