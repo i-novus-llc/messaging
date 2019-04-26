@@ -18,7 +18,7 @@
         <frontend.default.port>8080</frontend.default.port>
         <config.server.enable>false</config.server.enable>
         <n2o.version>7.1.11</n2o.version>
-        <security.admin.version>3.0-SNAPSHOT</security.admin.version>
+        <security.admin.version>3.0</security.admin.version>
         <jaxws.version>2.3.2</jaxws.version>
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
