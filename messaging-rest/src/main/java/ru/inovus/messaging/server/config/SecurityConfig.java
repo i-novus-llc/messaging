@@ -11,14 +11,18 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.jwt.crypto.sign.RsaVerifier;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetailsSource;
 import org.springframework.security.oauth2.provider.token.*;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
@@ -42,14 +46,37 @@ public class SecurityConfig extends ResourceServerConfigurerAdapter {
     @Value("${keycloak.exponent}")
     private String exponent;
 
+    @Value("${spring.security.enabled}")
+    private Boolean securityEnabled;
+
     @Autowired
     private ResourceServerTokenServices tokenServices;
 
     @Bean
     @Primary
     public ResourceServerTokenServices tokenServices() {
-        DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
-        defaultTokenServices.setTokenStore(tokenStore());
+        final TokenStore tokenStore = tokenStore();
+        DefaultTokenServices defaultTokenServices;
+        if (Boolean.FALSE.equals(securityEnabled)) {
+            //Отключена проверка accessToken.isExpired
+            defaultTokenServices = new DefaultTokenServices() {
+                @Override
+                public OAuth2Authentication loadAuthentication(String accessTokenValue) throws AuthenticationException, InvalidTokenException {
+                    OAuth2AccessToken accessToken = tokenStore.readAccessToken(accessTokenValue);
+                    if (accessToken == null) {
+                        throw new InvalidTokenException("Invalid access token: " + accessTokenValue);
+                    }
+                    OAuth2Authentication result = tokenStore.readAuthentication(accessToken);
+                    if (result == null) {
+                        throw new InvalidTokenException("Invalid access token: " + accessTokenValue);
+                    }
+                    return result;
+                }
+            };
+        } else {
+            defaultTokenServices = new DefaultTokenServices();
+        }
+        defaultTokenServices.setTokenStore(tokenStore);
         defaultTokenServices.setSupportRefreshToken(true);
         return defaultTokenServices;
     }
@@ -68,8 +95,8 @@ public class SecurityConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/api/**")
                 .and()
                 .authorizeRequests()
-                .antMatchers("/ws/**").hasRole("ALLBANKS")
-                .antMatchers("/api/**").hasRole("ALLBANKS")
+                .antMatchers("/ws/**").authenticated()
+                .antMatchers("/api/**").authenticated()
                 .anyRequest().denyAll();
 
         http.sessionManagement()

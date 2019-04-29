@@ -51,7 +51,7 @@ jaxrs.swagger.title: REST for Messaging
 jaxrs.swagger.version: 1.0
 jaxrs.swagger.resource-package: ru.inovus.messaging.api.rest
 
-security.enabled: true
+spring.security.enabled: true
 sec:
   admin:
     rest:
