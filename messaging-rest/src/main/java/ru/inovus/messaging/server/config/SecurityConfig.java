@@ -45,9 +45,11 @@ public class SecurityConfig extends ResourceServerConfigurerAdapter {
     private String modulus;
     @Value("${keycloak.exponent}")
     private String exponent;
+    @Value("${keycloak.resourceId}")
+    private String resourceId;
 
-    @Value("${spring.security.enabled}")
-    private Boolean securityEnabled;
+    @Value("${security.check_token_expired}")
+    private Boolean checkTokenExpired;
 
     @Autowired
     private ResourceServerTokenServices tokenServices;
@@ -57,8 +59,7 @@ public class SecurityConfig extends ResourceServerConfigurerAdapter {
     public ResourceServerTokenServices tokenServices() {
         final TokenStore tokenStore = tokenStore();
         DefaultTokenServices defaultTokenServices;
-        if (Boolean.FALSE.equals(securityEnabled)) {
-            //Отключена проверка accessToken.isExpired
+        if (Boolean.FALSE.equals(checkTokenExpired)) { //Отключена проверка accessToken.isExpired
             defaultTokenServices = new DefaultTokenServices() {
                 @Override
                 public OAuth2Authentication loadAuthentication(String accessTokenValue) throws AuthenticationException, InvalidTokenException {
@@ -84,7 +85,7 @@ public class SecurityConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
         resources.tokenServices(tokenServices);
-        resources.resourceId("lkb-app");
+        resources.resourceId(resourceId);
         resources.authenticationDetailsSource(new OAuth2AuthenticationDetailsSource());
     }
 

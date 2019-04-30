@@ -27,6 +27,8 @@ import java.time.temporal.ChronoUnit;
 
 public class MessagingEventListener {
 
+    private static final Logger logger = LoggerFactory.getLogger(MessagingEventListener.class);
+
     @Value("${novus.messaging.topic.notice}")
     private String noticeTopicName;
 
@@ -39,10 +41,9 @@ public class MessagingEventListener {
     @Autowired
     private MqProvider mqProvider;
 
-    private static final Logger logger = LoggerFactory.getLogger(MessagingEventListener.class);
 
     @EventListener
-    private void handleSessionSubscribe(SessionSubscribeEvent event) {
+    public void handleSessionSubscribe(SessionSubscribeEvent event) {
         SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
         String dest = headers.getDestination();
         if (dest.endsWith("/message.count")) {
@@ -55,7 +56,7 @@ public class MessagingEventListener {
     }
 
     @EventListener
-    private void handleSessionDisconnect(SessionDisconnectEvent event) {
+    public void handleSessionDisconnect(SessionDisconnectEvent event) {
         mqProvider.unsubscribe(event.getSessionId());
     }
 
@@ -78,12 +79,12 @@ public class MessagingEventListener {
 
                 if (isNotExpired(message)) {
                     messageController.sendPrivateMessage(message, recipient, systemId);
-                } else if (logger.isDebugEnabled()) {
+                } else {
                     logger.debug("Did not send message with id {} due to expiration {}",
                             message.getId(), message.getSentAt());
                 }
             }
-        } else if (logger.isDebugEnabled()) {
+        } else {
             logger.debug("No recipients for message");
         }
     }
@@ -104,7 +105,7 @@ public class MessagingEventListener {
         return isNotExpired(msg.getSentAt(), LocalDateTime.now(Clock.systemUTC()), timeout);
     }
 
-    public static boolean isNotExpired(LocalDateTime start, LocalDateTime end, Integer timeout) {
+    private static boolean isNotExpired(LocalDateTime start, LocalDateTime end, Integer timeout) {
         return start == null || end == null || end.minus(timeout, ChronoUnit.SECONDS).isBefore(start);
     }
 
