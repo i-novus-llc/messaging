@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.*;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import ru.inovus.messaging.api.ControlMessage;
 import ru.inovus.messaging.api.UnreadMessagesInfo;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.impl.FeedService;
@@ -37,12 +36,6 @@ public class MessageController {
     public void sendPrivateMessage(@Payload Message message,
                                    @DestinationVariable("username") String username,
                                    @DestinationVariable("systemId") String systemId) {
-        simpMessagingTemplate.convertAndSend("/user/" + username + "/exchange/" + systemId + "/message", message);
-    }
-
-    public void sendPrivateCommand(@Payload ControlMessage message,
-                                   @DestinationVariable("username") String username,
-                                   String systemId) {
         simpMessagingTemplate.convertAndSend("/user/" + username + "/exchange/" + systemId + "/message", message);
     }
 

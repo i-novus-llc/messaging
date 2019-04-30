@@ -13,14 +13,14 @@ import org.springframework.web.socket.config.annotation.*;
 @EnableWebSocketMessageBroker
 public class WebSocketConfig extends AbstractSecurityWebSocketMessageBrokerConfigurer {
 
-    @Value("${message.app_prefix}")
+    @Value("${novus.messaging.app_prefix}")
     private String appPrefix = "/app";
-    @Value("${message.end_point}")
+    @Value("${novus.messaging.end_point}")
     private String endPoint = "/ws";
 
-    @Value("${message.public_dest_prefix}")
+    @Value("${novus.messaging.public_dest_prefix}")
     private String publicDestPrefix = "/topic";
-    @Value("${message.private_dest_prefix}")
+    @Value("${novus.messaging.private_dest_prefix}")
     private String privateDestPrefix = "/exchange";
 
     @Override

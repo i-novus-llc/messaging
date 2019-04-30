@@ -41,14 +41,14 @@ import java.util.*;
 public class SecurityConfig extends ResourceServerConfigurerAdapter {
 
     //можно взять https://keycloak.i-novus.ru/auth/realms/DOMRF/protocol/openid-connect/certs
-    @Value("${keycloak.modulus}")
+    @Value("${novus.messaging.keycloak.modulus}")
     private String modulus;
-    @Value("${keycloak.exponent}")
+    @Value("${novus.messaging.keycloak.exponent}")
     private String exponent;
-    @Value("${keycloak.resourceId}")
+    @Value("${novus.messaging.keycloak.resourceId}")
     private String resourceId;
 
-    @Value("${security.check_token_expired}")
+    @Value("${novus.messaging.check_token_expired}")
     private Boolean checkTokenExpired;
 
     @Autowired

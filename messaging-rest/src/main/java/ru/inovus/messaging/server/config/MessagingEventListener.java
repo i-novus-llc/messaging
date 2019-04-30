@@ -68,11 +68,7 @@ public class MessagingEventListener {
     private void sendTo(MessageOutbox msg, SimpMessageHeaderAccessor headers) {
         String systemId = getSystemId(headers.getDestination());
         String recipient = headers.getUser().getName();
-        if (msg.getCommand() != null) {
-            String userName = headers.getUser().getName();
-            messageController.receiveMarkRead(msg.getCommand().getMessageIds(), systemId, headers.getUser());
-            messageController.sendPrivateCommand(msg.getCommand(), userName, systemId);
-        } else if (checkRecipient(msg, recipient, systemId)) {
+        if (checkRecipient(msg, recipient, systemId)) {
             if (msg.getMessage() != null) {
                 messageController.sendFeedCount(systemId, headers.getUser());
                 Message message = msg.getMessage();

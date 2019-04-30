@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -60,6 +61,13 @@ public class MessageControllerTest {
             "YjFoYLXpquNuV5L4rVrYMP3EIlfEDTOU_Puk8sZRX11uovKLWeHa71M-NaLzLY3-xlmux5V2l6XFBQqbUGkvOSEUO38mss26NZ3QTgXkY9Z9rZjW4NIGN8071Wdhr1NJ_uJ9RhlqjfrO" +
             "L0oJetlnRBfgEC_p6pgz1oWwntemTVtAX5SdLtNzQYleHXkixnU4FA0SOW2WNZ9MMQUwBsmMkQ";
 
+    @Value("${novus.messaging.app_prefix}")
+    private String appPrefix;
+    @Value("${novus.messaging.end_point}")
+    private String endPoint;
+    @Value("${novus.messaging.private_dest_prefix}")
+    private String privateDestPrefix;
+
     @LocalServerPort
     private Integer port;
 
@@ -74,7 +82,7 @@ public class MessageControllerTest {
 
     @Before
     public void init() {
-        URL = "ws://localhost:" + port + "/ws?access_token="+ TOKEN;
+        URL = "ws://localhost:" + port + endPoint+"?access_token="+ TOKEN;
         completableFuture = new CompletableFuture<>();
 
         stompClient = new WebSocketStompClient(new SockJsClient(createTransportClient()));
@@ -90,8 +98,8 @@ public class MessageControllerTest {
 
         assertNotNull(stompSession);
 
-        stompSession.subscribe("/user/exchange/" + SYSTEM_ID + "/message.count", new TestUnreadMessagesHandler());
-        stompSession.send("/app/" + SYSTEM_ID + "/message.count", null);
+        stompSession.subscribe("/user"+privateDestPrefix+"/" + SYSTEM_ID + "/message.count", new TestUnreadMessagesHandler());
+        stompSession.send(appPrefix+"/" + SYSTEM_ID + "/message.count", null);
 
         Object result = completableFuture.get(10, SECONDS);
         stompSession.disconnect();
@@ -108,7 +116,7 @@ public class MessageControllerTest {
         }).get(1, SECONDS);
 
         assertNotNull(stompSession);
-        stompSession.send("/app/" + SYSTEM_ID + "/message.markreadall", null);
+        stompSession.send(appPrefix+"/" + SYSTEM_ID + "/message.markreadall", null);
         stompSession.disconnect();
 
         Thread.sleep(500); //Сообщение должно дойти
@@ -122,7 +130,7 @@ public class MessageControllerTest {
         }).get(1, SECONDS);
 
         assertNotNull(stompSession);
-        stompSession.send("/app/" + SYSTEM_ID + "/message.markread", Arrays.asList("1","a2","Z"));
+        stompSession.send(appPrefix+"/" + SYSTEM_ID + "/message.markread", Arrays.asList("1","a2","Z"));
         stompSession.disconnect();
 
         Thread.sleep(500); //Сообщение должно дойти
@@ -139,8 +147,8 @@ public class MessageControllerTest {
 
         Message message = new Message("Test321");
 
-        stompSession.subscribe("/user/exchange/" + SYSTEM_ID + "/message", new TestReceivedMessagesHandler());
-        stompSession.send("/app/" + SYSTEM_ID + "/message.private.lkb", message);
+        stompSession.subscribe("/user"+privateDestPrefix+"/" + SYSTEM_ID + "/message", new TestReceivedMessagesHandler());
+        stompSession.send(appPrefix+"/" + SYSTEM_ID + "/message.private.lkb", message);
 
         Object result = completableFuture.get(10, SECONDS);
         stompSession.disconnect();
