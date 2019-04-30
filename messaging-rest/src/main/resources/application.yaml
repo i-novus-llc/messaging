@@ -27,6 +27,14 @@ novus.messaging:
     email: novus-messaging-email
   durable: true
   auth-header-name: X-Auth-Token
+  keycloak.modulus: rnOzE3m3ohRrASPvNUT2sDEaOf-E1qlttRbr4inxUGe2e_SdS-IGqjOzME2H-IByHPEqH5ptZ1GjhHaMo81conYBoA6Dgwz8wo4oARSKRgFXOgqybcBQu_ruUGrbsRD7UvEDNYin84gUkeHSQUJJjBb4f71yUjcWNpD-sC5vpSaPJNgVP1q5kKTjGd6eRmGF2bD0MQHPh_leGWKCxbcOqSxHmQiLV7qGqouJ6YuHCQG3plzuUGmk2fnWzCZ9l1qEoIh-JE0Z3kquroqG9jVzQd5u9Ct6JX2OeXjn4bXzSND_Um6Zztw41XJs1QFPXHA2HVoCeJ1CCm1UtVTUCB0uHw
+  keycloak.exponent: AQAB
+  keycloak.resourceId: lkb-app
+  app_prefix: /app
+  end_point: /ws
+  public_dest_prefix: /topic
+  private_dest_prefix: /exchange
+  check_token_expired: true
 
 management:
   context-path: /actuator
@@ -51,7 +59,6 @@ jaxrs.swagger.title: REST for Messaging
 jaxrs.swagger.version: 1.0
 jaxrs.swagger.resource-package: ru.inovus.messaging.api.rest
 
-security.enabled: false
 sec:
   admin:
     rest:
