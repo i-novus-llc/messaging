@@ -93,11 +93,10 @@ public class SecurityConfig extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.requestMatchers()
                 .antMatchers("/ws/**")
-                .antMatchers("/api/**")
                 .and()
                 .authorizeRequests()
                 .antMatchers("/ws/**").authenticated()
-                .antMatchers("/api/**").authenticated()
+                .antMatchers("/api/**").permitAll()
                 .anyRequest().denyAll();
 
         http.sessionManagement()
