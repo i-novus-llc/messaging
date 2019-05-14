@@ -51,7 +51,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 500M
+          memory: 600M
       restart_policy:
         max_attempts: 3
 
