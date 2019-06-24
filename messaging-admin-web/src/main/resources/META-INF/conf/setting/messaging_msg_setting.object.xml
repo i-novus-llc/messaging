@@ -7,18 +7,18 @@
                 <rest method="POST">${messaging.backend.path}/settings</rest>
             </invocation>
             <in-parameters>
-                <param id="name" mapping="name" required="true"/>
-                <param id="disabled" mapping="disabled" default-value="false"/>
-                <param id="component.id" mapping="component.id"/>
-                <param id="severity.id" mapping="severity" required="true"/>
-                <param id="alertType.id" mapping="alertType" required="true"/>
-                <param id="infoType" mapping="infoType"/>
-                <param id="formationType.id" mapping="formationType" required="true"/>
-                <param id="caption" mapping="caption" required="true"/>
-                <param id="text" mapping="text" required="true"/>
+                <param id="name" mapping="['name']" required="true"/>
+                <param id="disabled" mapping="['disabled']" default-value="false"/>
+                <param id="component.id" mapping="['component.id']"/>
+                <param id="severity.id" mapping="['severity']" required="true"/>
+                <param id="alertType.id" mapping="['alertType']" required="true"/>
+                <param id="infoType" mapping="['infoType']"/>
+                <param id="formationType.id" mapping="['formationType']" required="true"/>
+                <param id="caption" mapping="['caption']" required="true"/>
+                <param id="text" mapping="['text']" required="true"/>
             </in-parameters>
             <out-parameters>
-                <param id="id" mapping="id"/>
+                <param id="id" mapping="['id']"/>
             </out-parameters>
         </operation>
         <operation id="update">
@@ -26,16 +26,16 @@
                 <rest method="PUT">${messaging.backend.path}/settings/{id}</rest>
             </invocation>
             <in-parameters>
-                <param id="id" mapping="id"/>
-                <param id="name" mapping="name" required="true"/>
-                <param id="disabled" mapping="disabled"/>
-                <param id="component.id" mapping="component.id"/>
-                <param id="severity.id" mapping="severity" required="true"/>
-                <param id="alertType.id" mapping="alertType" required="true"/>
-                <param id="infoType" mapping="infoType"/>
-                <param id="formationType.id" mapping="formationType" required="true"/>
-                <param id="caption" mapping="caption" required="true"/>
-                <param id="text" mapping="text" required="true"/>
+                <param id="id" mapping="['id']"/>
+                <param id="name" mapping="['name']" required="true"/>
+                <param id="disabled" mapping="['disabled']"/>
+                <param id="component.id" mapping="['component.id']"/>
+                <param id="severity.id" mapping="['severity']" required="true"/>
+                <param id="alertType.id" mapping="['alertType']" required="true"/>
+                <param id="infoType" mapping="['infoType']"/>
+                <param id="formationType.id" mapping="['formationType']" required="true"/>
+                <param id="caption" mapping="['caption']" required="true"/>
+                <param id="text" mapping="['text']" required="true"/>
             </in-parameters>
         </operation>
         <operation id="delete" confirm="true">
@@ -43,7 +43,7 @@
                 <rest method="DELETE">${messaging.backend.path}/settings/{id}</rest>
             </invocation>
             <in-parameters>
-                <param id="id" mapping="id"/>
+                <param id="id" mapping="['id']"/>
             </in-parameters>
         </operation>
     </operations>

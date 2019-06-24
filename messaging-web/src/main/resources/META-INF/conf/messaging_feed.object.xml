@@ -7,8 +7,8 @@
                 <rest method="POST">${messaging.backend.path}/feed/{recipient}/readall/{systemId}</rest>
             </invocation>
             <in-parameters>
-                <param id="recipient" mapping="recipient" default-value="#{username!}"/>
-                <param id="systemId" mapping="systemId" default-value="${default.system.id}"/>
+                <param id="recipient" default-value="#{username!}"/>
+                <param id="systemId" default-value="${default.system.id}"/>
             </in-parameters>
         </operation>
     </operations>
