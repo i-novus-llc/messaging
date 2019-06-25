@@ -37,14 +37,14 @@
                 </fields>
             </form>
         </region>
-        <region place="bottom">
-            <table query-id="recipient" depends-on="view" detail-field-id="messageId" visible="{recipientType.id == 'USER'}">
+        <line place="bottom">
+            <table query-id="recipient" depends-on="view" detail-field-id="messageId" visible="{recipientType.id == 'USER'}" name="Получатели">
                 <columns>
                     <column text-field-id="readAt"/>
                     <column text-field-id="recipient"/>
                 </columns>
             </table>
-        </region>
+        </line>
     </regions>
 
 </page>
