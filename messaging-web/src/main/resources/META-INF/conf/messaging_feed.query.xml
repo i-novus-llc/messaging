@@ -11,20 +11,20 @@
 
     <fields>
         <field id="id" domain="integer" name="Идентификатор">
-            <select>id</select>
+            <select/>
             <filters>
                 <eq filter-id="id">{id}</eq>
             </filters>
         </field>
 
         <field id="component.id" domain="integer">
-            <select>component.id</select>
+            <select/>
             <filters>
                 <eq filter-id="component.id">component.id={component.id}</eq>
             </filters>
         </field>
         <field id="component.name" domain="string">
-            <select>component.name</select>
+            <select/>
         </field>
 
         <field id="severity.id" domain="string">
@@ -38,15 +38,15 @@
         </field>
 
         <field id="caption" domain="string">
-            <select>caption</select>
+            <select/>
         </field>
 
         <field id="text" domain="string">
-            <select>text</select>
+            <select/>
         </field>
 
         <field id="sentAt" domain="date">
-            <select>sentAt</select>
+            <select/>
             <filters>
                 <more filter-id="sentAt.begin"  domain="localdatetime">sentAtBegin={sentAt.begin}</more>
                 <less filter-id="sentAt.end"  domain="localdatetime">sentAtEnd={sentAt.end}</less>
@@ -58,7 +58,7 @@
         </field>
 
         <field id="readAt" domain="date">
-            <select>readAt</select>
+            <select/>
         </field>
 
         <field id="isRead" domain="boolean">
@@ -66,7 +66,7 @@
         </field>
 
         <field id="systemId">
-            <select>systemId</select>
+            <select/>
             <filters>
                 <eq filter-id="systemId" default-value="${default.system.id}">systemId={systemId}</eq><!--TODO: default-value from context-->
             </filters>

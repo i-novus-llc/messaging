@@ -7,10 +7,10 @@
 
     <fields>
         <field id="id" domain="integer" name="Идентификатор">
-            <select>id</select>
+            <select/>
         </field>
         <field id="name" domain="string" name="Наименование">
-            <select>name</select>
+            <select/>
             <filters>
                 <eq filter-id="name">name={name}</eq>
             </filters>
