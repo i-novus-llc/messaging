@@ -22,8 +22,7 @@ public class UserRestImpl implements UserRest {
     public Page<User> getUsers(UserCriteria criteria) {
         RestUserCriteria restUserCriteria = new RestUserCriteria();
         restUserCriteria.setUsername(criteria.getUsername());
-        // потому что в messaging page с нуля начинается, а в админке пользователей с 1
-        restUserCriteria.setPage(criteria.getPageNumber() + 1);
+        restUserCriteria.setPage(criteria.getPageNumber());
         restUserCriteria.setSize(criteria.getPageSize());
         return client.findAll(restUserCriteria);
     }
