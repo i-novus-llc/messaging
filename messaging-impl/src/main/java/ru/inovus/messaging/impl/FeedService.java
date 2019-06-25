@@ -143,7 +143,7 @@ public class FeedService {
         Integer count = dsl
                 .selectCount()
                 .from(MESSAGE)
-                .leftJoin(RECIPIENT).on(RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(RECIPIENT.RECIPIENT_.eq(recipient)))
+                .join(RECIPIENT).on(RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(RECIPIENT.RECIPIENT_.eq(recipient)))
                 .where(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL).and(RECIPIENT.ID.isNull())
                                 .or(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.USER).and(RECIPIENT.READ_AT.isNull())),
                         MESSAGE.SYSTEM_ID.eq(systemId))
