@@ -9,6 +9,15 @@
     <packaging>pom</packaging>
     <version>3.0-SNAPSHOT</version>
 
+    <url>https://messaging.i-novus.ru</url>
+
+    <scm>
+        <connection>scm:git:https://git.i-novus.ru/util/messaging.git</connection>
+        <url>https://git.i-novus.ru/util/messaging</url>
+        <developerConnection>scm:git:https://git.i-novus.ru/util/messaging.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
     <modules>
         <module>messaging-api</module>
         <module>messaging-impl</module>
