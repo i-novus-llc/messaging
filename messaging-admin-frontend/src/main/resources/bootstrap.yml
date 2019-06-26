@@ -6,5 +6,5 @@ spring:
       host: consul-agent.local
       port: 8500
       config:
-        enabled: ${config.server.enable:false}
+        enabled: ${config.server.enable}
         fail-fast: false
