@@ -29,13 +29,38 @@
 
     <properties>
         <n2o.version>7.3.7</n2o.version>
-        <security.admin.version>3.18</security.admin.version>
+        <security.admin.version>3.1</security.admin.version>
         <jooq.version>3.11.2</jooq.version>
         <config.server.enable>false</config.server.enable>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>net.n2oapp.framework</groupId>
+                <artifactId>n2o-api</artifactId>
+                <version>${n2o.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.n2oapp.framework</groupId>
+                <artifactId>n2o-config</artifactId>
+                <version>${n2o.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.n2oapp.framework</groupId>
+                <artifactId>n2o-engine</artifactId>
+                <version>${n2o.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.n2oapp.framework</groupId>
+                <artifactId>n2o-config-ehcache</artifactId>
+                <version>${n2o.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.n2oapp.framework</groupId>
+                <artifactId>n2o-spring-boot-starter</artifactId>
+                <version>${n2o.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.jooq</groupId>
                 <artifactId>jooq</artifactId>
@@ -59,6 +84,16 @@
             <dependency>
                 <groupId>net.n2oapp.framework.security</groupId>
                 <artifactId>security-admin-api</artifactId>
+                <version>${security.admin.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.n2oapp.framework.security</groupId>
+                <artifactId>security-auth-oauth2</artifactId>
+                <version>${security.admin.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.n2oapp.framework.security</groupId>
+                <artifactId>security-admin-rest-client</artifactId>
                 <version>${security.admin.version}</version>
             </dependency>
             <dependency>
