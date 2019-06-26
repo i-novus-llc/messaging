@@ -4,10 +4,6 @@ spring.datasource:
   password: postgres
   driver-class-name: org.postgresql.Driver
 
-spring:
-  sleuth:
-    enabled: false #todo NNOP-49 Failed to start bean 'simpleBrokerMessageHandler'; nested exception is org.springframework.cglib.core.CodeGenerationException: java.lang.LinkageError-->loader
-
 spring.jooq.sql-dialect: Postgres
 
 spring.jackson.serialization.write_dates_as_timestamps: false
