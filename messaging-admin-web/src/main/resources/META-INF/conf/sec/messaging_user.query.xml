@@ -17,6 +17,9 @@
         </field>
         <field id="name" domain="string">
             <select mapping="#this[username]+(#this[fio]!=''||!#this[roles].empty?' ('+#this[fio]+(#this[fio]!=''and !#this[roles].empty?' ':'')+(!#this[roles].empty?#this[roles][0][name]:'')+')':'')"/>
+            <filters>
+                <like filter-id="name">username={name}</like>
+            </filters>
         </field>
         <field id="email">
             <select>email</select>
