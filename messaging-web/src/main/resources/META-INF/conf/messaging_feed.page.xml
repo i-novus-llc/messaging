@@ -26,14 +26,16 @@
         <rows>
             <switch value-field-id="isRead">
                 <case value="false">font-weight-bold</case>
-                <default></default>
             </switch>
+            <click>
+                <open-page page-id="messaging_message_user_view"
+                           route="/view"
+                           detail-field-id="id"/>
+            </click>
         </rows>
         <toolbar>
-            <button label="Просмотр" icon="fa fa-eye" model="resolve">
-                <open-page page-id="messaging_message_user_view" detail-field-id="id"/>
-            </button>
-            <button label="Пометить все прочитанными" icon="fa fa-check-square-o" model="filter">
+            <button label="Пометить все прочитанными" icon="fa fa-check-square-o"
+                    model="filter">
                 <invoke operation-id="readAll"/>
             </button>
         </toolbar>
