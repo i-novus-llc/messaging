@@ -17,7 +17,9 @@ import net.n2oapp.framework.api.metadata.global.view.widget.N2oWidget;
 import net.n2oapp.framework.api.metadata.meta.ModelLink;
 import net.n2oapp.framework.api.metadata.meta.Page;
 import net.n2oapp.framework.config.metadata.compile.context.QueryContext;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MessagingPageNameBinder implements MetadataBinder<Page>, CompiledClassAware {
 
     private final QueryProcessor queryProcessor;
