@@ -15,6 +15,8 @@ import ru.inovus.messaging.impl.jooq.tables.records.ComponentRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.RecipientRecord;
 
+import java.text.SimpleDateFormat;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +89,7 @@ public class FeedService {
 
     @Transactional
     public void markReadAll(String recipient, String systemId) {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
         // Update 'personal' messages
         dsl
                 .update(RECIPIENT)
@@ -120,7 +122,7 @@ public class FeedService {
 
     @Transactional
     public void markRead(String recipient, String... messageId) {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
         int updated = dsl
                 .update(RECIPIENT)
                 .set(RECIPIENT.READ_AT, now)

@@ -70,7 +70,7 @@ public class MessageService {
                         message.getText(),
                         message.getSeverity(),
                         message.getAlertType(),
-                        LocalDateTime.now(),
+                        LocalDateTime.now(Clock.systemUTC()),
                         message.getSystemId(),
                         message.getComponent() != null ? message.getComponent().getId() : null,
                         message.getFormationType(),
