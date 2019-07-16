@@ -15,7 +15,6 @@ import ru.inovus.messaging.impl.jooq.tables.records.ComponentRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.RecipientRecord;
 
-import java.text.SimpleDateFormat;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -77,14 +76,18 @@ public class FeedService {
                 .from(MESSAGE)
                 .leftJoin(COMPONENT).on(COMPONENT.ID.eq(MESSAGE.COMPONENT_ID))
                 .leftJoin(RECIPIENT).on(RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(RECIPIENT.RECIPIENT_.eq(recipient)))
-                .where(MESSAGE.ID.cast(String.class).eq(messageId))
+                .where(MESSAGE.ID.cast(String.class).eq(messageId), MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL)
+                        .or(RECIPIENT.RECIPIENT_.eq(recipient)))
                 .fetchOne(MAPPER);
     }
 
     @Transactional
     public Feed getMessageAndRead(String messageId, String recipient) {
-        markRead(recipient, messageId);
-        return getMessage(messageId, recipient);
+        Feed result = getMessage(messageId, recipient);
+        if (result != null) {
+            markRead(recipient, messageId);
+        }
+        return result;
     }
 
     @Transactional
@@ -154,6 +157,7 @@ public class FeedService {
     }
 
     private static Feed mapFeed(Record rec) {
+        if (rec == null) return null;
         MessageRecord record = rec.into(MESSAGE);
         ComponentRecord componentRecord = rec.into(COMPONENT);
         RecipientRecord recipientRecord = rec.into(RECIPIENT);
