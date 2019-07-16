@@ -145,9 +145,10 @@ public class FeedService {
         Integer count = dsl
                 .selectCount()
                 .from(MESSAGE)
-                .join(RECIPIENT).on(RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(RECIPIENT.RECIPIENT_.eq(recipient)))
+                .leftJoin(RECIPIENT).on(RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(RECIPIENT.RECIPIENT_.like(recipient)))
                 .where(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL).and(RECIPIENT.ID.isNull())
-                                .or(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.USER).and(RECIPIENT.READ_AT.isNull())),
+                                .or(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.USER).and(RECIPIENT.READ_AT.isNull())
+                                        .and(RECIPIENT.ID.isNull())),
                         MESSAGE.SYSTEM_ID.eq(systemId))
                 .fetchOne().value1();
         return new UnreadMessagesInfo(count);
