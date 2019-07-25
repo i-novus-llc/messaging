@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
+import ru.inovus.messaging.api.UnreadMessagesInfo;
 import ru.inovus.messaging.api.criteria.FeedCriteria;
 import ru.inovus.messaging.api.model.Feed;
 import ru.inovus.messaging.api.rest.FeedRest;
@@ -23,6 +24,11 @@ public class FeedRestImpl implements FeedRest {
     @Override
     public Page<Feed> getMessageFeed(String recipient, FeedCriteria criteria) {
         return feedService.getMessageFeed(recipient, criteria);
+    }
+
+    @Override
+    public UnreadMessagesInfo getFeedCount(String recipient, String systemId) {
+        return feedService.getFeedCount(recipient, systemId);
     }
 
     @Override
