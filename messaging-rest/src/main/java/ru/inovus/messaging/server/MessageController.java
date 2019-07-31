@@ -28,8 +28,12 @@ public class MessageController {
     @MessageMapping("/{systemId}/message.count")
     public void sendFeedCount(@DestinationVariable("systemId") String systemId,
                               Principal principal) {
-        UnreadMessagesInfo unreadMessages = feedService.getFeedCount(principal.getName(), systemId);
-        simpMessagingTemplate.convertAndSend("/user/" + principal.getName() + "/exchange/" + systemId + "/message.count", unreadMessages);
+        sendFeedCount(systemId, principal.getName());
+    }
+
+    public void sendFeedCount(String systemId, String recipient) {
+        UnreadMessagesInfo unreadMessages = feedService.getFeedCount(recipient, systemId);
+        simpMessagingTemplate.convertAndSend("/user/" + recipient + "/exchange/" + systemId + "/message.count", unreadMessages);
     }
 
     @MessageMapping("/{systemId}/message.private.{username}")
