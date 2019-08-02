@@ -125,21 +125,23 @@ public class FeedService {
 
     @Transactional
     public void markRead(String recipient, String... messageId) {
-        LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
-        int updated = dsl
-                .update(RECIPIENT)
-                .set(RECIPIENT.READ_AT, now)
-                .where(RECIPIENT.MESSAGE_ID.in(messageId))
-                .execute();
-        if (updated == 0 && messageId != null) {
+        if (messageId != null) {
+            LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
             for (String id : messageId) {
-                dsl
-                        .insertInto(RECIPIENT)
-                        .set(RECIPIENT.ID, RECIPIENT_ID_SEQ.nextval())
+                int updated = dsl
+                        .update(RECIPIENT)
                         .set(RECIPIENT.READ_AT, now)
-                        .set(RECIPIENT.MESSAGE_ID, id)
-                        .set(RECIPIENT.RECIPIENT_, recipient)
+                        .where(RECIPIENT.MESSAGE_ID.eq(id)).and(RECIPIENT.RECIPIENT_.eq(recipient))
                         .execute();
+                if (updated == 0) {
+                    dsl
+                            .insertInto(RECIPIENT)
+                            .set(RECIPIENT.ID, RECIPIENT_ID_SEQ.nextval())
+                            .set(RECIPIENT.READ_AT, now)
+                            .set(RECIPIENT.MESSAGE_ID, id)
+                            .set(RECIPIENT.RECIPIENT_, recipient)
+                            .execute();
+                }
             }
         }
     }
