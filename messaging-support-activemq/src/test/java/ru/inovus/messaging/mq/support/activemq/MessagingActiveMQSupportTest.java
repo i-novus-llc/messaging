@@ -69,12 +69,12 @@ public class MessagingActiveMQSupportTest {
         mqProvider.publish(createNotice(), TOPIC_NAME);
         Thread.sleep(100);
 
+        mqProvider.unsubscribe(WS_SESSION_ID_1);
+        mqProvider.unsubscribe(WS_SESSION_ID_2);
+
         /// assert that all of the consumers reads the message from the queue
         assert receivedMessage2 != null;
         assert receivedMessage3 != null;
-
-        mqProvider.unsubscribe(WS_SESSION_ID_1);
-        mqProvider.unsubscribe(WS_SESSION_ID_2);
     }
 
     private MessageOutbox receivedMessage4;
