@@ -1,14 +1,16 @@
 version: "3.6"
+
 services:
   backend:
     build:
-      context: messaging-rest
-    image: "538721144237.dkr.ecr.eu-west-1.amazonaws.com/messaging/rest:${TAG}"
+      context: .
+      args:
+        JAR_FILE: messaging-rest/target/messaging-rest.jar
   frontend:
     build:
-      context: messaging-admin-frontend
-    image: "538721144237.dkr.ecr.eu-west-1.amazonaws.com/messaging/frontend:${TAG}"
+      context: .
+      args:
+        JAR_FILE: messaging-admin-frontend/target/messaging-admin-frontend.jar
   react:
     build:
       context: messaging-react
-    image: "538721144237.dkr.ecr.eu-west-1.amazonaws.com/messaging/react:${TAG}"
