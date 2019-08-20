@@ -115,11 +115,11 @@ public class MessagingActiveMQSupportTest {
         mqProvider.publish(createEmailNotice(), QUEUE_DESTINATION_NAME);
         Thread.sleep(100);
 
-        /// assert that only one of the consumers reads the message from the queue
-        assert (receivedMessage5 != null && receivedMessage6 == null) || (receivedMessage5 == null && receivedMessage6 != null);
-
         mqProvider.unsubscribe(QUEUE_CONSUMER_NAME_1);
         mqProvider.unsubscribe(QUEUE_CONSUMER_NAME_2);
+
+        /// assert that only one of the consumers reads the message from the queue
+        assert (receivedMessage5 != null && receivedMessage6 == null) || (receivedMessage5 == null && receivedMessage6 != null);
     }
 
     private MessageOutbox createNotice() {

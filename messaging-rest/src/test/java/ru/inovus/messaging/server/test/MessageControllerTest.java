@@ -39,7 +39,7 @@ import static org.mockito.Mockito.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = BackendApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = "spring.main.allow-bean-definition-overriding=true")
+        properties = {"spring.main.allow-bean-definition-overriding=true","spring.cloud.consul.config.enabled=false"})
 @EnableEmbeddedPg
 public class MessageControllerTest {
 
