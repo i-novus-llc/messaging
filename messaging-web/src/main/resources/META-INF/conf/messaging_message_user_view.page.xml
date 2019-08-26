@@ -14,10 +14,10 @@
                 </input-select>
             </row>
             <row>
-                <html id="caption" label="Заголовок уведомления" enabled="false"/>
+                <html id="caption" label="Заголовок уведомления"/>
             </row>
             <row>
-                <html id="text" label="Текст уведомления" enabled="false"/>
+                <html id="text" label="Текст уведомления"/>
             </row>
         </fields>
     </form>
