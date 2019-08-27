@@ -71,6 +71,13 @@
             </filters>
         </field>
 
+        <field id="code" domain="string" name="Код шаблона">
+            <select>code</select>
+            <filters>
+                <eq filter-id="code">code={code}</eq>
+            </filters>
+        </field>
+
         <field id="caption" domain="string">
             <select>caption</select>
         </field>

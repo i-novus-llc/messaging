@@ -12,6 +12,10 @@ public class MessageOutbox implements Serializable {
 
     private Message message;
 
+    public MessageOutbox(Message message) {
+        this.message = message;
+    }
+
     public Message getMessage() {
         return message;
     }

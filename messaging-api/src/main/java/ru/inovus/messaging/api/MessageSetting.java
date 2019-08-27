@@ -19,6 +19,7 @@ public class MessageSetting implements Serializable {
     private Component component;
     private String name;
     private Boolean disabled;
+    private String code;
 
     public MessageSetting() {
     }
@@ -117,5 +118,13 @@ public class MessageSetting implements Serializable {
 
     public String getFormationTypeName() {
         return formationType != null ? formationType.getName() : null;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }

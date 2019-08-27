@@ -37,8 +37,11 @@
             </col>
         </row>
         <row>
-            <col size="4">
+            <col size="3">
                 <input-text id="name" label="Наименование шаблона"/>
+            </col>
+            <col size="3">
+                <input-text id="code" label="Код шаблона"/>
             </col>
             <col size="2">
                 <input-select id="formationType" label="Тип уведомления">
@@ -63,6 +66,7 @@
     <columns>
         <column text-field-id="component.name" label="Компонент"/>
         <column text-field-id="name" label="Наименование шаблона"/>
+        <column text-field-id="code" label="Код шаблона"/>
         <column text-field-id="severity.name" label="Уровень важности" sorting-direction="desc"/>
         <column text-field-id="alertType.name" label="Способ отображения"/>
         <column text-field-id="infoType" label="Информирование">

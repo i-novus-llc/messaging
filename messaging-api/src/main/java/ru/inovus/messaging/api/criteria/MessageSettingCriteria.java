@@ -29,6 +29,9 @@ public class MessageSettingCriteria extends RestCriteria {
     @QueryParam("enabled.id")
     private YesNo enabled;
 
+    @QueryParam("code")
+    private String code;
+
     public Integer getComponentId() {
         return componentId;
     }
@@ -83,5 +86,13 @@ public class MessageSettingCriteria extends RestCriteria {
 
     public Boolean getEnabled() {
         return enabled != null ? enabled.getValue() : null;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }

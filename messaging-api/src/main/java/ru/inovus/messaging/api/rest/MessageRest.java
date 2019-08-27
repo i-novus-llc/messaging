@@ -9,6 +9,7 @@ import ru.inovus.messaging.api.criteria.MessageCriteria;
 import ru.inovus.messaging.api.criteria.RecipientCriteria;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.Recipient;
+import ru.inovus.messaging.api.param.MessageParam;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -39,4 +40,10 @@ public interface MessageRest {
     @ApiOperation("Отправка сообщения")
     @ApiResponse(code = 200, message = "Сообщение поставлено в очередь")
     void sendMessage(MessageOutbox message);
+
+    @POST
+    @Path("/buildAndSend")
+    @ApiOperation("Построение и отправка сообщения по параметрам")
+    @ApiResponse(code = 200, message = "Сообщение поставлено в очередь")
+    void buildAndSendMessage(MessageParam params);
 }
