@@ -12,14 +12,17 @@ public class MessageParam implements Serializable {
 
     String templateCode;
     LocalDateTime sendAt;
-    List<UUID> domrfEmployeeId;
-    List<UUID> bankEmployeeId;
-    Map<String, Object> placeHolders;
+    List<UUID> domrfEmployeeIdList;
+    List<UUID> bankEmployeeIdList;
+    List<String> permissions;
+    Map<String, Object> placeholders;
+    String systemId;
+    String objectId;
+    String objectType;
 
     public MessageParam() {
         //
     }
-
 
     public String getTemplateCode() {
         return templateCode;
@@ -37,27 +40,59 @@ public class MessageParam implements Serializable {
         this.sendAt = sendAt;
     }
 
-    public List<UUID> getDomrfEmployeeId() {
-        return domrfEmployeeId;
+    public List<UUID> getDomrfEmployeeIdList() {
+        return domrfEmployeeIdList;
     }
 
-    public void setDomrfEmployeeId(List<UUID> domrfEmployeeId) {
-        this.domrfEmployeeId = domrfEmployeeId;
+    public void setDomrfEmployeeIdList(List<UUID> domrfEmployeeIdList) {
+        this.domrfEmployeeIdList = domrfEmployeeIdList;
     }
 
-    public List<UUID> getBankEmployeeId() {
-        return bankEmployeeId;
+    public List<UUID> getBankEmployeeIdList() {
+        return bankEmployeeIdList;
     }
 
-    public void setBankEmployeeId(List<UUID> bankEmployeeId) {
-        this.bankEmployeeId = bankEmployeeId;
+    public void setBankEmployeeIdList(List<UUID> bankEmployeeIdList) {
+        this.bankEmployeeIdList = bankEmployeeIdList;
     }
 
-    public Map<String, Object> getPlaceHolders() {
-        return placeHolders;
+    public List<String> getPermissions() {
+        return permissions;
     }
 
-    public void setPlaceHolders(Map<String, Object> placeHolders) {
-        this.placeHolders = placeHolders;
+    public void setPermissions(List<String> permissions) {
+        this.permissions = permissions;
+    }
+
+    public Map<String, Object> getPlaceholders() {
+        return placeholders;
+    }
+
+    public void setPlaceholders(Map<String, Object> placeholders) {
+        this.placeholders = placeholders;
+    }
+
+    public String getSystemId() {
+        return systemId;
+    }
+
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
+    }
+
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
+    }
+
+    public String getObjectType() {
+        return objectType;
+    }
+
+    public void setObjectType(String objectType) {
+        this.objectType = objectType;
     }
 }

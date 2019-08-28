@@ -63,6 +63,8 @@ sec:
   admin:
     rest:
       url: http://docker.one:31888/api
+access.rest: http://docker:one:8806/api
+
 spring.http.encoding.forceResponse: true
 spring.http.encoding.force: true
 
