@@ -4,20 +4,19 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class MessageParam implements Serializable {
 
     private static final long serialVersionUID = 5475383823197483227L;
 
-    String templateCode;
-    LocalDateTime sendAt;
-    List<Integer> userIdList;
-    List<String> permissions;
-    Map<String, Object> placeholders;
-    String systemId;
-    String objectId;
-    String objectType;
+    private String templateCode;
+    private LocalDateTime sendAt;
+    private List<Integer> userIdList;
+    private List<String> permissions;
+    private Map<String, Object> placeholders;
+    private String systemId;
+    private String objectId;
+    private String objectType;
 
     public MessageParam() {
         //
