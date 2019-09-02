@@ -2,7 +2,9 @@
 FROM node:7.10 as build-deps
 WORKDIR /usr/src/app
 COPY package.json public src ./
-RUN npm install --registry https://npm.i-novus.ru
+
+ARG NPM_REGISTRY
+RUN npm install --registry ${NPM_REGISTRY}
 COPY . ./
 RUN npm run build
 
