@@ -157,7 +157,7 @@ public class MessageRestImpl implements MessageRest {
                 recipients.add(recipient);
             }
 
-        //ToDo реалитзовать метод поиска пользователей в админке по привелегиям
+        //ToDo реализовать метод поиска пользователей в админке по привелегиям
 //        if (!CollectionUtils.isEmpty(permissions))
 //            for (String permission : permissions) {
 //                List<User> userList = userRestService.findAllByPermission(permission);
