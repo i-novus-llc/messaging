@@ -151,7 +151,7 @@ public class MessageRestImpl implements MessageRest {
                 User user = userRestService.getById(userId);
 
                 Recipient recipient = new Recipient();
-                recipient.setName(user.getFio());
+                recipient.setRecipient(user.getFio());
                 recipient.setEmail(user.getEmail());
 
                 recipients.add(recipient);

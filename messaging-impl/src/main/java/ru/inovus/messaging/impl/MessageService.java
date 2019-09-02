@@ -22,6 +22,7 @@ import static ru.inovus.messaging.impl.jooq.Tables.*;
 
 @Service
 public class MessageService {
+
     private static final RecordMapper<Record, Message> MAPPER = rec -> {
         MessageRecord record = rec.into(MESSAGE);
         ComponentRecord componentRecord = rec.into(COMPONENT);
