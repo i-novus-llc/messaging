@@ -1,5 +1,7 @@
 package ru.inovus.messaging.server.rest;
 
+import net.n2oapp.security.admin.api.model.User;
+import net.n2oapp.security.admin.rest.api.UserRestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -7,10 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
-import ru.i_novus.domrf.lkb.access.api.EmployeeBankService;
-import ru.i_novus.domrf.lkb.access.api.EmployeeDomrfService;
-import ru.i_novus.domrf.lkb.access.api.model.EmployeeBank;
-import ru.i_novus.domrf.lkb.access.api.model.EmployeeDomrf;
 import ru.inovus.messaging.api.MessageOutbox;
 import ru.inovus.messaging.api.MessageSetting;
 import ru.inovus.messaging.api.criteria.MessageCriteria;
@@ -31,7 +29,6 @@ import ru.inovus.messaging.impl.RecipientService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Controller
 public class MessageRestImpl implements MessageRest {
@@ -40,34 +37,31 @@ public class MessageRestImpl implements MessageRest {
 
     private final MessageService messageService;
     private final MessageSettingService messageSettingService;
-    private final EmployeeBankService employeeBankService;
-    private final EmployeeDomrfService employeeDomrfService;
     private final RecipientService recipientService;
     private final Long timeout;
     private final MqProvider mqProvider;
     private final String noticeTopicName;
     private final String emailTopicName;
+    private final UserRestService userRestService;
     private DestinationResolver destinationResolver;
 
     public MessageRestImpl(MessageService messageService,
                            MessageSettingService messageSettingService,
-                           @Qualifier("employeeBankServiceJaxRsProxyClient") EmployeeBankService employeeBankService,
-                           @Qualifier("employeeDomrfServiceJaxRsProxyClient") EmployeeDomrfService employeeDomrfService,
                            RecipientService recipientService,
                            @Value("${novus.messaging.timeout}") Long timeout,
                            @Value("${novus.messaging.topic.notice}") String noticeTopicName,
                            @Value("${novus.messaging.topic.email}") String emailTopicName,
                            MqProvider mqProvider,
+                           @Qualifier("userRestServiceJaxRsProxyClient") UserRestService userRestService,
                            DestinationResolver destinationResolver) {
         this.messageService = messageService;
         this.messageSettingService = messageSettingService;
-        this.employeeBankService = employeeBankService;
-        this.employeeDomrfService = employeeDomrfService;
         this.recipientService = recipientService;
         this.timeout = timeout;
         this.mqProvider = mqProvider;
         this.noticeTopicName = noticeTopicName;
         this.emailTopicName = emailTopicName;
+        this.userRestService = userRestService;
         this.destinationResolver = destinationResolver;
     }
 
@@ -132,7 +126,7 @@ public class MessageRestImpl implements MessageRest {
         message.setFormationType(messageSetting.getFormationType());
         message.setRecipientType(RecipientType.USER);
         message.setSystemId(params.getSystemId());
-        message.setRecipients(findRecipients(params.getBankEmployeeIdList(), params.getDomrfEmployeeIdList(), params.getPermissions()));
+        message.setRecipients(findRecipients(params.getUserIdList(), params.getPermissions()));
         message.setData(null);
         message.setNotificationType(params.getTemplateCode());
         message.setObjectId(params.getObjectId());
@@ -149,48 +143,29 @@ public class MessageRestImpl implements MessageRest {
     }
 
     //Получение адресатов по ид-р сотрудников и указанным привелегиям
-    private List<Recipient> findRecipients(List<UUID> bankEmployeeIdList, List<UUID> domrfEmployeeIdList, List<String> permissions) {
+    private List<Recipient> findRecipients(List<Integer> userIdList, List<String> permissions) {
         List<Recipient> recipients = new ArrayList<>();
 
-        if (!CollectionUtils.isEmpty(bankEmployeeIdList))
-            for (UUID bankEmployeeId : bankEmployeeIdList) {
-                EmployeeBank employeeBank = employeeBankService.get(bankEmployeeId);
+        if (!CollectionUtils.isEmpty(userIdList))
+            for (Integer userId : userIdList) {
+                User user = userRestService.getById(userId);
 
                 Recipient recipient = new Recipient();
-                recipient.setName(employeeBank.getUser().getFio());
-                recipient.setEmail(employeeBank.getUser().getEmail());
+                recipient.setName(user.getFio());
+                recipient.setEmail(user.getEmail());
 
                 recipients.add(recipient);
             }
 
-        if (!CollectionUtils.isEmpty(domrfEmployeeIdList))
-            for (UUID domrfEmployeeId : domrfEmployeeIdList) {
-                EmployeeDomrf employeeDomrf = employeeDomrfService.get(domrfEmployeeId);
-
-                Recipient recipient = new Recipient();
-                recipient.setName(employeeDomrf.getUser().getFio());
-                recipient.setEmail(employeeDomrf.getUser().getEmail());
-
-                recipients.add(recipient);
-            }
-
-        //ToDo реалитзовать метод поиска сотрудников банка/домрф в админке по привелегиям
+        //ToDo реалитзовать метод поиска пользователей в админке по привелегиям
 //        if (!CollectionUtils.isEmpty(permissions))
 //            for (String permission : permissions) {
-//                List<EmployeeBank> employeeBankList = employeeBankService.findAllByPermission(permission);
-//                List<EmployeeDomrf> employeeDomrfList = employeeDomrfService.findAllByPermission(permission);
+//                List<User> userList = userRestService.findAllByPermission(permission);
 //
-//                for(EmployeeBank employeeBank : employeeBankList){
+//                for(User user : userList){
 //                    Recipient recipient = new Recipient();
-//                    recipient.setName(employeeBank.getUser().getFio());
-//                    recipient.setEmail(employeeBank.getUser().getEmail());
-//
-//                    recipients.add(recipient);
-//                }
-//                for(EmployeeDomrf employeDomrf : employeeDomrfList){
-//                    Recipient recipient = new Recipient();
-//                    recipient.setName(employeDomrf.getUser().getFio());
-//                    recipient.setEmail(employeDomrf.getUser().getEmail());
+//                    recipient.setName(user.getFio());
+//                    recipient.setEmail(user.getEmail());
 //
 //                    recipients.add(recipient);
 //                }

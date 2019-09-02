@@ -85,7 +85,6 @@ public class MessageService {
         return message;
     }
 
-
     public Page<Message> getMessages(MessageCriteria criteria) {
         List<Condition> conditions = new ArrayList<>();
         Optional.ofNullable(criteria.getSystemId())

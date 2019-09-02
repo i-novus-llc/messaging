@@ -78,7 +78,7 @@ public class MessageSettingService {
         Optional.ofNullable(criteria.getEnabled())
             .ifPresent(enabled -> conditions.add(MESSAGE_SETTING.IS_DISABLED.notEqual(enabled)));
         Optional.ofNullable(criteria.getCode()).filter(StringUtils::isNotBlank)
-            .ifPresent(code -> conditions.add(MESSAGE_SETTING.CODE.containsIgnoreCase(code)));
+            .ifPresent(code -> conditions.add(MESSAGE_SETTING.CODE.contains(code)));
 
         List<MessageSetting> list = dsl
             .select(MESSAGE_SETTING.fields())

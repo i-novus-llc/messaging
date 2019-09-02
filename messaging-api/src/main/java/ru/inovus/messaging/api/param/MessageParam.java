@@ -12,8 +12,7 @@ public class MessageParam implements Serializable {
 
     String templateCode;
     LocalDateTime sendAt;
-    List<UUID> domrfEmployeeIdList;
-    List<UUID> bankEmployeeIdList;
+    List<Integer> userIdList;
     List<String> permissions;
     Map<String, Object> placeholders;
     String systemId;
@@ -40,20 +39,12 @@ public class MessageParam implements Serializable {
         this.sendAt = sendAt;
     }
 
-    public List<UUID> getDomrfEmployeeIdList() {
-        return domrfEmployeeIdList;
+    public List<Integer> getUserIdList() {
+        return userIdList;
     }
 
-    public void setDomrfEmployeeIdList(List<UUID> domrfEmployeeIdList) {
-        this.domrfEmployeeIdList = domrfEmployeeIdList;
-    }
-
-    public List<UUID> getBankEmployeeIdList() {
-        return bankEmployeeIdList;
-    }
-
-    public void setBankEmployeeIdList(List<UUID> bankEmployeeIdList) {
-        this.bankEmployeeIdList = bankEmployeeIdList;
+    public void setUserIdList(List<Integer> userIdList) {
+        this.userIdList = userIdList;
     }
 
     public List<String> getPermissions() {
