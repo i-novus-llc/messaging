@@ -1,11 +1,14 @@
-package ru.inovus.messaging.api.param;
+package ru.inovus.messaging.api.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-public class MessageParam implements Serializable {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class TemplateMessageOutbox implements Serializable {
 
     private static final long serialVersionUID = 5475383823197483227L;
 
@@ -18,7 +21,7 @@ public class MessageParam implements Serializable {
     private String objectId;
     private String objectType;
 
-    public MessageParam() {
+    public TemplateMessageOutbox() {
         //
     }
 

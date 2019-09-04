@@ -13,11 +13,7 @@ import ru.inovus.messaging.api.MessageOutbox;
 import ru.inovus.messaging.api.MessageSetting;
 import ru.inovus.messaging.api.criteria.MessageCriteria;
 import ru.inovus.messaging.api.criteria.RecipientCriteria;
-import ru.inovus.messaging.api.model.InfoType;
-import ru.inovus.messaging.api.model.Message;
-import ru.inovus.messaging.api.model.Recipient;
-import ru.inovus.messaging.api.model.RecipientType;
-import ru.inovus.messaging.api.param.MessageParam;
+import ru.inovus.messaging.api.model.*;
 import ru.inovus.messaging.api.queue.DestinationResolver;
 import ru.inovus.messaging.api.queue.DestinationType;
 import ru.inovus.messaging.api.queue.MqProvider;
@@ -42,6 +38,7 @@ public class MessageRestImpl implements MessageRest {
     private final MqProvider mqProvider;
     private final String noticeTopicName;
     private final String emailTopicName;
+    private final boolean securityAdminRestEnable;
     private final UserRestService userRestService;
     private DestinationResolver destinationResolver;
 
@@ -51,6 +48,7 @@ public class MessageRestImpl implements MessageRest {
                            @Value("${novus.messaging.timeout}") Long timeout,
                            @Value("${novus.messaging.topic.notice}") String noticeTopicName,
                            @Value("${novus.messaging.topic.email}") String emailTopicName,
+                           @Value("${sec.admin.rest.enable}") boolean securityAdminRestEnable,
                            MqProvider mqProvider,
                            @Qualifier("userRestServiceJaxRsProxyClient") UserRestService userRestService,
                            DestinationResolver destinationResolver) {
@@ -61,6 +59,7 @@ public class MessageRestImpl implements MessageRest {
         this.mqProvider = mqProvider;
         this.noticeTopicName = noticeTopicName;
         this.emailTopicName = emailTopicName;
+        this.securityAdminRestEnable = securityAdminRestEnable;
         this.userRestService = userRestService;
         this.destinationResolver = destinationResolver;
     }
@@ -85,14 +84,14 @@ public class MessageRestImpl implements MessageRest {
         if (messageOutbox.getMessage() != null) {
             save(messageOutbox.getMessage());
             send(messageOutbox.getMessage());
-        }
+        } else if (messageOutbox.getTemplateMessageOutbox() != null)
+            buildAndSendMessage(messageOutbox.getTemplateMessageOutbox());
     }
 
-    @Override
-    public void buildAndSendMessage(MessageParam params) {
-        MessageSetting ms = getMessageSetting(params.getTemplateCode());
+    private void buildAndSendMessage(TemplateMessageOutbox templateMessageOutbox) {
+        MessageSetting ms = getMessageSetting(templateMessageOutbox.getTemplateCode());
         if (!ms.getDisabled()) {
-            Message message = buildMessage(ms, params);
+            Message message = buildMessage(ms, templateMessageOutbox);
             save(message);
             send(message);
         }
@@ -114,7 +113,7 @@ public class MessageRestImpl implements MessageRest {
     }
 
     //Построение уведомления по шаблону уведомления и доп. параметрам
-    private Message buildMessage(MessageSetting messageSetting, MessageParam params) {
+    private Message buildMessage(MessageSetting messageSetting, TemplateMessageOutbox params) {
         Message message = new Message();
         message.setCaption(buildText(messageSetting.getCaption(), params));
         message.setText(buildText(messageSetting.getText(), params));
@@ -136,7 +135,7 @@ public class MessageRestImpl implements MessageRest {
     }
 
     //Построение текста уведомления по плейсхолдерам
-    private String buildText(String text, MessageParam params) {
+    private String buildText(String text, TemplateMessageOutbox params) {
         for (Map.Entry<String, Object> placeHolder : params.getPlaceholders().entrySet())
             text = text.replace(placeHolder.getKey(), placeHolder.getValue().toString());
         return text;
@@ -148,11 +147,13 @@ public class MessageRestImpl implements MessageRest {
 
         if (!CollectionUtils.isEmpty(userIdList))
             for (Integer userId : userIdList) {
-                User user = userRestService.getById(userId);
-
                 Recipient recipient = new Recipient();
-                recipient.setRecipient(user.getFio());
-                recipient.setEmail(user.getEmail());
+
+                if (securityAdminRestEnable) {
+                    User user = userRestService.getById(userId);
+                    recipient.setEmail(user.getEmail());
+                }
+                recipient.setRecipient(userId.toString());
 
                 recipients.add(recipient);
             }
@@ -160,14 +161,16 @@ public class MessageRestImpl implements MessageRest {
         //ToDo реализовать метод поиска пользователей в админке по привелегиям
 //        if (!CollectionUtils.isEmpty(permissions))
 //            for (String permission : permissions) {
-//                List<User> userList = userRestService.findAllByPermission(permission);
+//                if (securityAdminRestEnable) {
+//                    List<User> userList = userRestService.findAllByPermission(permission);
 //
-//                for(User user : userList){
-//                    Recipient recipient = new Recipient();
-//                    recipient.setName(user.getFio());
-//                    recipient.setEmail(user.getEmail());
+//                    for (User user : userList) {
+//                        Recipient recipient = new Recipient();
+//                        recipient.setName(user.getFio());
+//                        recipient.setEmail(user.getEmail());
 //
-//                    recipients.add(recipient);
+//                        recipients.add(recipient);
+//                    }
 //                }
 //            }
 

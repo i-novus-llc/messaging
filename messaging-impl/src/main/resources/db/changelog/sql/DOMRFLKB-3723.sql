@@ -9,7 +9,7 @@ insert into messaging.public.message_setting (id, caption,
                                               severity, alert_type, component_id, name,
                                               formation_type, send_notice, send_email, code) select
 nextval('message_setting_id_seq'), 'Зарегистрирован договор № %CONTRACT_NUMBER%',
-'В личном кабинете банка Единой информационной системы жилищного строительства зарегистрирован новый договор поручительства № %CONTRACT_NUMBER% от %CONTRACT_DATE%", застройщик %DEVELOPER_FULL_NAME%.<br><br><a href=''%URL%''>Перейти к карточке договора</a>',
+'В личном кабинете банка Единой информационной системы жилищного строительства зарегистрирован новый договор поручительства № %CONTRACT_NUMBER% от %CONTRACT_DATE%, застройщик %DEVELOPER_FULL_NAME%.<br><br><a href=''%URL%''>Перейти к карточке договора</a>',
 '10', 'HIDDEN', 1, 'Уведомление УЛ банка о создании нового договора',
 'AUTO', true, true,'LKB-PAYMENT-NTF-1';
 insert into messaging.public.message_setting (id, caption,
