@@ -6,11 +6,13 @@ services:
       context: .
       args:
         JAR_FILE: messaging-rest/target/messaging-rest.jar
+
   frontend:
     build:
       context: .
       args:
         JAR_FILE: messaging-admin-frontend/target/messaging-admin-frontend.jar
+
   react:
     build:
       context: messaging-react

@@ -19,7 +19,6 @@ services:
         - node.labels.type == db
 
   backend:
-    image: "538721144237.dkr.ecr.eu-west-1.amazonaws.com/messaging/rest:${TAG}"
     environment:
       SPRING_APPLICATION_NAME: "messaging-backend"
       SPRING_DATASOURCE_URL: jdbc:postgresql://db/postgres
@@ -38,7 +37,6 @@ services:
         max_attempts: 3
 
   frontend:
-    image: "538721144237.dkr.ecr.eu-west-1.amazonaws.com/messaging/frontend:${TAG}"
     environment:
       SPRING_APPLICATION_NAME: "messaging-admin-frontend"
       SPRING_CLOUD_CONSUL_HOST: consul-agent.local
@@ -56,7 +54,6 @@ services:
         max_attempts: 3
 
   react:
-    image: "538721144237.dkr.ecr.eu-west-1.amazonaws.com/messaging/react:${TAG}"
     ports:
     - "80"
     deploy:
@@ -67,7 +64,7 @@ services:
         max_attempts: 3
 
   security-admin-backend:
-    image: "538721144237.dkr.ecr.eu-west-1.amazonaws.com/security-admin/backend:${TAG}"
+    image: ${DOCKER_REGISTRY}/security-admin/backend:${TAG}
     environment:
       SPRING_APPLICATION_NAME: "messaging-security-admin-backend"
       SPRING_DATASOURCE_URL: jdbc:postgresql://db/postgres
@@ -86,7 +83,7 @@ services:
         max_attempts: 3
 
   security-admin-frontend:
-    image: "538721144237.dkr.ecr.eu-west-1.amazonaws.com/security-admin/frontend:${TAG}"
+    image: ${DOCKER_REGISTRY}/security-admin/frontend:${TAG}
     environment:
       SPRING_APPLICATION_NAME: "messaging-security-admin-frontend"
       SPRING_CLOUD_CONSUL_HOST: consul-agent.local
