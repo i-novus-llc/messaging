@@ -97,6 +97,11 @@ public class MessageSetting extends TableImpl<MessageSettingRecord> {
     public final TableField<MessageSettingRecord, String> NAME = createField("name", org.jooq.impl.SQLDataType.VARCHAR, this, "Название шаблона (события)");
 
     /**
+     * The column <code>public.message_setting.code</code>. Код шаблона (события)
+     */
+    public final TableField<MessageSettingRecord, String> CODE = createField("code", org.jooq.impl.SQLDataType.VARCHAR, this, "Код шаблона (события)");
+
+    /**
      * The column <code>public.message_setting.is_disabled</code>. Признак выключения уведомления
      */
     public final TableField<MessageSettingRecord, Boolean> IS_DISABLED = createField("is_disabled", org.jooq.impl.SQLDataType.BOOLEAN.defaultValue(org.jooq.impl.DSL.field("false", org.jooq.impl.SQLDataType.BOOLEAN)), this, "Признак выключения уведомления");

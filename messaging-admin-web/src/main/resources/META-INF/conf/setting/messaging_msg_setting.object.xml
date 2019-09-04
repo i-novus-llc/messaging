@@ -16,10 +16,8 @@
                 <param id="formationType.id" mapping="['formationType']" required="true"/>
                 <param id="caption" mapping="['caption']" required="true"/>
                 <param id="text" mapping="['text']" required="true"/>
+                <param id="code" mapping="['code']" required="true"/>
             </in-parameters>
-            <out-parameters>
-                <param id="id" mapping="['id']"/>
-            </out-parameters>
         </operation>
         <operation id="update">
             <invocation>
@@ -36,6 +34,7 @@
                 <param id="formationType.id" mapping="['formationType']" required="true"/>
                 <param id="caption" mapping="['caption']" required="true"/>
                 <param id="text" mapping="['text']" required="true"/>
+                <param id="code" mapping="['code']" required="true"/>
             </in-parameters>
         </operation>
         <operation id="delete" confirm="true">

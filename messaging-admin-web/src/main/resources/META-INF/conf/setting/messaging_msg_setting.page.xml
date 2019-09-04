@@ -5,6 +5,7 @@
         <fields>
             <row>
                 <input-text id="name" label="Наименование шаблона" required="true"/>
+                <input-text id="code" label="Код шаблона" required="true"/>
                 <checkbox id="disabled" label="Отключить"/>
             </row>
             <row>

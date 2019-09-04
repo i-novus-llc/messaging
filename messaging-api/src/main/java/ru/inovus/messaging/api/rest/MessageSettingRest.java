@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public interface MessageSettingRest {
+
     @GET
     @ApiOperation("Получение страницы шаблонов сообщений по критериям поиска")
     @ApiResponse(code = 200, message = "Страница шаблонов сообщений")
