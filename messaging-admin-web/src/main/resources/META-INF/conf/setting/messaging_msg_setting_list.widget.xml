@@ -4,11 +4,11 @@
     <filters>
         <!--<set>-->
         <row>
-            <col size="2">
+            <col>
                 <input-select id="component" label="Компонент" query-id="messaging_component"
                               label-field-id="name" search-field-id="name"/>
             </col>
-            <col size="2">
+            <col>
                 <input-select id="severity" label="Уровень важности">
                     <options>
                         <option id="SEVERE" name="Важный"/>
@@ -18,7 +18,7 @@
                     </options>
                 </input-select>
             </col>
-            <col size="2">
+            <col>
                 <input-select id="alertType" label="Способ отображения">
                     <options>
                         <option id="BLOCKER" name="Блокирующее сообщение"/>
@@ -27,7 +27,7 @@
                     </options>
                 </input-select>
             </col>
-            <col size="2">
+            <col>
                 <input-select id="infoType" label="Информирование">
                     <options>
                         <option id="EMAIL" name="Электронная почта"/>
@@ -37,13 +37,13 @@
             </col>
         </row>
         <row>
-            <col size="3">
+            <col>
                 <input-text id="name" label="Наименование шаблона"/>
             </col>
-            <col size="3">
+            <col>
                 <input-text id="code" label="Код шаблона"/>
             </col>
-            <col size="2">
+            <col>
                 <input-select id="formationType" label="Тип уведомления">
                     <options>
                         <option id="AUTO" name="Автоматическое"/>
@@ -51,7 +51,7 @@
                     </options>
                 </input-select>
             </col>
-            <col size="2">
+            <col>
                 <radio-group id="enabled" label="Уведомление включено" inline="true">
                     <default-value id="YES" name="Да"/>
                     <options>
