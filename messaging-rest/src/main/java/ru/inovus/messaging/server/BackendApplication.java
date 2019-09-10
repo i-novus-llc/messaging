@@ -1,6 +1,7 @@
 package ru.inovus.messaging.server;
 
 import net.n2oapp.platform.jaxrs.autoconfigure.EnableJaxRsProxyClient;
+import net.n2oapp.security.admin.rest.api.RoleRestService;
 import net.n2oapp.security.admin.rest.api.UserRestService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,7 +15,7 @@ import ru.inovus.messaging.server.config.DateMapperConfigurer;
 @EnableTransactionManagement
 @ComponentScan({"ru.inovus.messaging"})
 @EnableJaxRsProxyClient(
-        classes = {UserRestService.class},
+        classes = {UserRestService.class, RoleRestService.class},
         address = "${sec.admin.rest.url}")
 public class BackendApplication {
     public static void main(String[] args) {
