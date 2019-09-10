@@ -35,16 +35,20 @@ Endpoint: `/ws`
 
 ### Уведомления 
 ```json
-{ "message" : { "id" : 123
-              , "caption" : "Тема"
-              , "text" : "Содержимое"
-              , "severity" : "INFO/ERROR/WARNING/SEVERE"
-              , "alertType" : "BLOCKER/POPUP/HIDDEN"}
-, "recipients" : [ { "recipientType" : "USER", "user" : "foo"}
-                 , { "recipientType" : "ALL" } ]
+{ "id" : 2,
+"text" : "текст сообщения",
+"icon": "иконка",
+"image": "адрес картинки",
+"title": "заголовок сообщения",
+"date": дата,
+"close": true,  - можно ли закрывать
+"delay":  300 - сколько времени висит
 }
 ```
 ### Количество не прочтенных уведомлений
 ```json
-{ "count" : 3 }
+{
+"id" : 2, - идентификатор счетчика
+"count" : 3 }
+
 ```
