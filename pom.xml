@@ -36,7 +36,7 @@
 
     <properties>
         <n2o.version>7.3.23</n2o.version>
-        <security.admin.version>3.30</security.admin.version>
+        <security.admin.version>3.6</security.admin.version>
         <jooq.version>3.11.2</jooq.version>
         <spring.cloud.version>Greenwich.SR2</spring.cloud.version>
         <config.server.enable>false</config.server.enable>
@@ -85,22 +85,22 @@
                 <version>3.7</version>
             </dependency>
             <dependency>
-                <groupId>net.n2oapp.framework.security.lkb</groupId>
+                <groupId>net.n2oapp.framework.security</groupId>
                 <artifactId>security-admin-rest-api</artifactId>
                 <version>${security.admin.version}</version>
             </dependency>
             <dependency>
-                <groupId>net.n2oapp.framework.security.lkb</groupId>
+                <groupId>net.n2oapp.framework.security</groupId>
                 <artifactId>security-admin-api</artifactId>
                 <version>${security.admin.version}</version>
             </dependency>
             <dependency>
-                <groupId>net.n2oapp.framework.security.lkb</groupId>
+                <groupId>net.n2oapp.framework.security</groupId>
                 <artifactId>security-auth-oauth2</artifactId>
                 <version>${security.admin.version}</version>
             </dependency>
             <dependency>
-                <groupId>net.n2oapp.framework.security.lkb</groupId>
+                <groupId>net.n2oapp.framework.security</groupId>
                 <artifactId>security-admin-rest-client</artifactId>
                 <version>${security.admin.version}</version>
             </dependency>

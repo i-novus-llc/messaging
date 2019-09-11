@@ -22,8 +22,8 @@ public class UserRestImpl implements UserRest {
     public Page<User> getUsers(UserCriteria criteria) {
         RestUserCriteria restUserCriteria = new RestUserCriteria();
         restUserCriteria.setUsername(criteria.getUsername());
-        restUserCriteria.setPageNumber(criteria.getPageNumber());
-        restUserCriteria.setPageSize(criteria.getPageSize());
+        restUserCriteria.setPage(criteria.getPageNumber());
+        restUserCriteria.setSize(criteria.getPageSize());
         return client.findAll(restUserCriteria);
     }
 }
