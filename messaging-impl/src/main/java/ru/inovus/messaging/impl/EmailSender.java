@@ -1,5 +1,8 @@
 package ru.inovus.messaging.impl;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -15,6 +18,8 @@ import java.util.stream.Collectors;
 
 @Component
 public class EmailSender {
+    private static final Logger logger = LoggerFactory.getLogger(EmailSender.class);
+
     private JavaMailSender emailSender;
 
     public EmailSender(JavaMailSender emailSender, MqProvider mqProvider, @Value("${novus.messaging.topic.email}") String emailQueueName) {
@@ -26,6 +31,10 @@ public class EmailSender {
      * Отправка сообщения на почту
      */
     public void send(MessageOutbox message) {
+        if (StringUtils.isEmpty(message.getMessage().getRecipients().get(0).getEmail())) {
+            logger.error("Message recipient haven't email address");
+            return;
+        }
         try {
             MimeMessage mail = emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mail, true);
