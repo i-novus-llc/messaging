@@ -103,8 +103,11 @@ public class MessageRestImpl implements MessageRest {
     }
 
     private void send(Message message) {
-        for (InfoType infoType : message.getInfoTypes())
-            mqProvider.publish(new MessageOutbox(message), destinationResolver.resolve(getDestinationMqName(infoType), getDestinationType(infoType)));
+        for (InfoType infoType : message.getInfoTypes()) {
+            if (infoType == InfoType.NOTICE || (infoType == InfoType.EMAIL && securityAdminRestEnable)) {
+                mqProvider.publish(new MessageOutbox(message), destinationResolver.resolve(getDestinationMqName(infoType), getDestinationType(infoType)));
+            }
+        }
     }
 
     //Получение шаблона уведомления по коду
