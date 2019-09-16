@@ -1,6 +1,6 @@
 {
   "user": {
-    "userId" : "userId",
+    "userId" : "#{userId}",
     "username": "#{username}",
     "roles": "#{roles}",
     "permissions": "#{permissions}"
