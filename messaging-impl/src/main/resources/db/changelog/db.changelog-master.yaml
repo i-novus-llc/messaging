@@ -181,15 +181,26 @@ databaseChangeLog:
             splitStatements: true
             stripComments: true
   - changeSet:
-      id: DOMRFLKB-3723
+      id: DOMRFLKB-3723-1
       author: azainutdinov
       changes:
         - sqlFile:
             encoding: utf8
-            path: sql/DOMRFLKB-3723.sql
+            path: sql/DOMRFLKB-3723-1.sql
             relativeToChangelogFile: true
             splitStatements: true
             stripComments: true
+
+  - changeSet:
+  id: DOMRFLKB-3723-2
+  author: azainutdinov
+  changes:
+    - sqlFile:
+        encoding: utf8
+        path: sql/DOMRFLKB-3723-2.sql
+        relativeToChangelogFile: true
+        splitStatements: true
+        stripComments: true
 
   - changeSet:
       id: DOMRFLKB-4045
