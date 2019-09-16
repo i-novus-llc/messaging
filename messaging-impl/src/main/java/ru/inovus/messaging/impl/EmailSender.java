@@ -34,8 +34,9 @@ public class EmailSender {
      */
     public void send(MessageOutbox message) {
         for (Recipient recipient : message.getMessage().getRecipients()) {
-            if (StringUtils.isEmpty(recipient.getEmail()))
-                logger.error("Recipient with id = " + recipient.getRecipient() + " hasn't email address");
+            if (StringUtils.isEmpty(recipient.getEmail())) {
+                logger.error("Message with id={} will not be sent to recipient with id={} due to an empty email address", message.getMessage().getId(), recipient.getRecipient());
+            }
         }
         List<String> recipientsEmailList = message.getMessage().getRecipients().stream()
             .filter(x -> StringUtils.isNotEmpty(x.getEmail()))
@@ -50,7 +51,8 @@ public class EmailSender {
                 helper.setText(message.getMessage().getText(), true);
                 emailSender.send(mail);
             } catch (MessagingException e) {
-                e.printStackTrace();
+                logger.error("MimeMessage create and send email failed!" + e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
     }
