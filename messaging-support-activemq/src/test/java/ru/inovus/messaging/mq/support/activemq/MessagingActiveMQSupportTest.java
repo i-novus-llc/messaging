@@ -2,6 +2,7 @@ package ru.inovus.messaging.mq.support.activemq;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.n2oapp.platform.jaxrs.RestObjectMapper;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import java.util.List;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {ActiveMqProvider.class, MessagingActiveMQSupportTest.TestConfiguration.class})
+@Ignore
 public class MessagingActiveMQSupportTest {
 
     private static final String DEFAULT_SYSTEM_ID = "default";
