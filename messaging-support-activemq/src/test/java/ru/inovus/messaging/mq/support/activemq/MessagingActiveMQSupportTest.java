@@ -43,13 +43,13 @@ public class MessagingActiveMQSupportTest {
         mqProvider.subscribe(new TopicMqConsumer(WS_SESSION_ID, DEFAULT_SYSTEM_ID, "unique-user-id", TOPIC_NAME, messageOutbox -> receivedMessage = messageOutbox));
 
         mqProvider.publish(createNotice(), TOPIC_NAME);
-        Thread.sleep(100);
+        Thread.sleep(300);
         assert receivedMessage != null;
         receivedMessage = null;
 
         mqProvider.unsubscribe(WS_SESSION_ID);
         mqProvider.publish(createNotice(), TOPIC_NAME);
-        Thread.sleep(100);
+        Thread.sleep(300);
         assert receivedMessage == null;
     }
 
@@ -88,13 +88,13 @@ public class MessagingActiveMQSupportTest {
         mqProvider.subscribe(new QueueMqConsumer(QUEUE_NAME, messageOutbox -> receivedMessage4 = messageOutbox, QUEUE_CONSUMER_NAME));
 
         mqProvider.publish(createEmailNotice(), QUEUE_DESTINATION_NAME);
-        Thread.sleep(100);
+        Thread.sleep(300);
         assert receivedMessage4 != null;
         receivedMessage4 = null;
 
         mqProvider.unsubscribe(QUEUE_CONSUMER_NAME);
         mqProvider.publish(createEmailNotice(), QUEUE_DESTINATION_NAME);
-        Thread.sleep(100);
+        Thread.sleep(300);
         assert receivedMessage4 == null;
     }
 
@@ -113,7 +113,7 @@ public class MessagingActiveMQSupportTest {
         mqProvider.subscribe(new QueueMqConsumer(QUEUE_NAME, messageOutbox -> receivedMessage6 = messageOutbox, QUEUE_CONSUMER_NAME_2));
 
         mqProvider.publish(createEmailNotice(), QUEUE_DESTINATION_NAME);
-        Thread.sleep(100);
+        Thread.sleep(300);
 
         mqProvider.unsubscribe(QUEUE_CONSUMER_NAME_1);
         mqProvider.unsubscribe(QUEUE_CONSUMER_NAME_2);
