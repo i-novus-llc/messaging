@@ -2,6 +2,7 @@ package ru.inovus.messaging.mq.support.activemq;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.n2oapp.platform.jaxrs.RestObjectMapper;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,7 @@ public class MessagingActiveMQSupportTest {
     private MessageOutbox receivedMessage2;
     private MessageOutbox receivedMessage3;
     @Test
+    @Ignore
     public void testPassMessageTroughSecondPubsubMQ() throws InterruptedException {
         final String WS_SESSION_ID_1 = "ws-session-id-1";
         final String WS_SESSION_ID_2 = "ws-session-id-2";
