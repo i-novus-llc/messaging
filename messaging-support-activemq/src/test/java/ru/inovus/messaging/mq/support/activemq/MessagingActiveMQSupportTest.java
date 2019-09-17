@@ -27,6 +27,7 @@ import java.util.List;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {ActiveMqProvider.class, MessagingActiveMQSupportTest.TestConfiguration.class})
+@Ignore
 public class MessagingActiveMQSupportTest {
 
     private static final String DEFAULT_SYSTEM_ID = "default";
