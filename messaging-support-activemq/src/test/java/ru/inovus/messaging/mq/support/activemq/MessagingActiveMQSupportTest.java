@@ -67,7 +67,7 @@ public class MessagingActiveMQSupportTest {
         mqProvider.subscribe(new TopicMqConsumer(WS_SESSION_ID_2, DEFAULT_SYSTEM_ID, "unique-user-id-2", TOPIC_NAME, messageOutbox -> {receivedMessage3 = messageOutbox; System.out.println("receivedMessage3");}));
 
         mqProvider.publish(createNotice(), TOPIC_NAME);
-        Thread.sleep(100);
+        Thread.sleep(300);
 
         mqProvider.unsubscribe(WS_SESSION_ID_1);
         mqProvider.unsubscribe(WS_SESSION_ID_2);
