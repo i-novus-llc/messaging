@@ -1,7 +1,11 @@
 package ru.inovus.messaging.server.rest;
 
+import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
+import net.n2oapp.security.admin.rest.api.RoleRestService;
 import net.n2oapp.security.admin.rest.api.UserRestService;
+import net.n2oapp.security.admin.rest.api.criteria.RestRoleCriteria;
+import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,9 +26,8 @@ import ru.inovus.messaging.impl.MessageService;
 import ru.inovus.messaging.impl.MessageSettingService;
 import ru.inovus.messaging.impl.RecipientService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class MessageRestImpl implements MessageRest {
@@ -40,6 +43,7 @@ public class MessageRestImpl implements MessageRest {
     private final String emailTopicName;
     private final boolean securityAdminRestEnable;
     private final UserRestService userRestService;
+    private final RoleRestService roleRestService;
     private DestinationResolver destinationResolver;
 
     public MessageRestImpl(MessageService messageService,
@@ -51,6 +55,7 @@ public class MessageRestImpl implements MessageRest {
                            @Value("${sec.admin.rest.enable}") boolean securityAdminRestEnable,
                            MqProvider mqProvider,
                            @Qualifier("userRestServiceJaxRsProxyClient") UserRestService userRestService,
+                           @Qualifier("roleRestServiceJaxRsProxyClient") RoleRestService roleRestService,
                            DestinationResolver destinationResolver) {
         this.messageService = messageService;
         this.messageSettingService = messageSettingService;
@@ -61,6 +66,7 @@ public class MessageRestImpl implements MessageRest {
         this.emailTopicName = emailTopicName;
         this.securityAdminRestEnable = securityAdminRestEnable;
         this.userRestService = userRestService;
+        this.roleRestService = roleRestService;
         this.destinationResolver = destinationResolver;
     }
 
@@ -146,7 +152,7 @@ public class MessageRestImpl implements MessageRest {
 
     //Получение адресатов по ид-р сотрудников и указанным привелегиям
     private List<Recipient> findRecipients(List<Integer> userIdList, List<String> permissions) {
-        List<Recipient> recipients = new ArrayList<>();
+        Set<Recipient> recipients = new HashSet<>();
 
         if (!CollectionUtils.isEmpty(userIdList))
             for (Integer userId : userIdList) {
@@ -161,23 +167,29 @@ public class MessageRestImpl implements MessageRest {
                 recipients.add(recipient);
             }
 
-        //ToDo реализовать метод поиска пользователей в админке по привелегиям
-//        if (!CollectionUtils.isEmpty(permissions))
-//            for (String permission : permissions) {
-//                if (securityAdminRestEnable) {
-//                    List<User> userList = userRestService.findAllByPermission(permission);
-//
-//                    for (User user : userList) {
-//                        Recipient recipient = new Recipient();
-//                        recipient.setName(user.getFio());
-//                        recipient.setEmail(user.getEmail());
-//
-//                        recipients.add(recipient);
-//                    }
-//                }
-//            }
+        if (securityAdminRestEnable && !CollectionUtils.isEmpty(permissions)) {
+            RestRoleCriteria roleCriteria = new RestRoleCriteria();
+            roleCriteria.setPermissionCodes(permissions);
 
-        return recipients;
+            List<Role> roles = roleRestService.findAll(roleCriteria).getContent();
+
+            if (!CollectionUtils.isEmpty(roles)) {
+                RestUserCriteria userCriteria = new RestUserCriteria();
+                userCriteria.setRoleIds(roles.stream().map(Role::getId).collect(Collectors.toList()));
+
+                List<User> users = userRestService.findAll(userCriteria).getContent();
+
+                for (User user : users) {
+                    Recipient recipient = new Recipient();
+                    recipient.setEmail(user.getEmail());
+                    recipient.setRecipient(user.getId().toString());
+
+                    recipients.add(recipient);
+                }
+            }
+        }
+
+        return new ArrayList<>(recipients);
     }
 
     private DestinationType getDestinationType(InfoType infoType) {
