@@ -20,6 +20,10 @@
             </filters>
         </field>
 
+        <field id="name" domain="string" name="Получатель">
+            <select>name</select>
+        </field>
+
         <field id="messageId" domain="integer">
             <select>messageId</select>
             <filters>

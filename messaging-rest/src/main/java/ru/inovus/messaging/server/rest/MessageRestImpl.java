@@ -82,7 +82,16 @@ public class MessageRestImpl implements MessageRest {
 
     @Override
     public Page<Recipient> getRecipients(RecipientCriteria criteria) {
-        return recipientService.getRecipients(criteria);
+        Page<Recipient> page = recipientService.getRecipients(criteria);
+
+        Map<String, User> userMap = new HashMap<>();
+        page.getContent().forEach(recipient -> userMap.put(recipient.getRecipient(), null));
+        userMap.forEach((key, value) -> userMap.replace(key, value, userRestService.getById(Integer.parseInt(key))));
+
+        page.getContent().forEach(recipient -> recipient.setName(userMap.get(recipient.getRecipient()).getFio() +
+            "(" + getRolesNames(userMap.get(recipient.getRecipient()).getRoles()) + ")"));
+
+        return page;
     }
 
     @Override
@@ -100,6 +109,24 @@ public class MessageRestImpl implements MessageRest {
             Message message = buildMessage(ms, templateMessageOutbox);
             save(message);
             send(message);
+        }
+    }
+
+    private String getRolesNames(List<Role> roles) {
+        if (CollectionUtils.isEmpty(roles))
+            return "";
+
+        if (roles.size() == 1) {
+            return roles.get(0).getName();
+        } else {
+            String str = roles.get(0).getName();
+            roles.remove(roles.get(0));
+
+            for (Role role : roles) {
+                str += ", " + role.getName();
+            }
+
+            return str;
         }
     }
 
