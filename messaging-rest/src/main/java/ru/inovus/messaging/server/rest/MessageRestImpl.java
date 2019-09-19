@@ -6,6 +6,8 @@ import net.n2oapp.security.admin.rest.api.RoleRestService;
 import net.n2oapp.security.admin.rest.api.UserRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestRoleCriteria;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -82,16 +84,28 @@ public class MessageRestImpl implements MessageRest {
 
     @Override
     public Page<Recipient> getRecipients(RecipientCriteria criteria) {
-        Page<Recipient> page = recipientService.getRecipients(criteria);
+        Page<Recipient> recipientPage = recipientService.getRecipients(criteria);
 
-        Map<String, User> userMap = new HashMap<>();
-        page.getContent().forEach(recipient -> userMap.put(recipient.getRecipient(), null));
-        userMap.forEach((key, value) -> userMap.replace(key, value, userRestService.getById(Integer.parseInt(key))));
+        Map<String, String> userMap = new HashMap<>();
 
-        page.getContent().forEach(recipient -> recipient.setName(userMap.get(recipient.getRecipient()).getFio() +
-            "(" + getRolesNames(userMap.get(recipient.getRecipient()).getRoles()) + ")"));
+        for (Recipient recipient : recipientPage.getContent()) {
+            String name = userMap.get(recipient.getRecipient());
+            if (name != null) {
+                recipient.setRecipient(name);
+            } else {
+                String userId = recipient.getRecipient();
+                if (NumberUtils.isDigits(userId)) {
+                    User user = userRestService.getById(Integer.parseInt(userId));
+                    name = user.getFio() + user.getRoles().stream().map(Role::getName).collect(Collectors.joining(", ", "(", ")"));
+                    recipient.setName(name);
+                    userMap.put(userId, name);
+                } else {
+                    recipient.setName(recipient.getRecipient());
+                }
+            }
+        }
 
-        return page;
+        return recipientPage;
     }
 
     @Override
@@ -109,24 +123,6 @@ public class MessageRestImpl implements MessageRest {
             Message message = buildMessage(ms, templateMessageOutbox);
             save(message);
             send(message);
-        }
-    }
-
-    private String getRolesNames(List<Role> roles) {
-        if (CollectionUtils.isEmpty(roles))
-            return "";
-
-        if (roles.size() == 1) {
-            return roles.get(0).getName();
-        } else {
-            String str = roles.get(0).getName();
-            roles.remove(roles.get(0));
-
-            for (Role role : roles) {
-                str += ", " + role.getName();
-            }
-
-            return str;
         }
     }
 
