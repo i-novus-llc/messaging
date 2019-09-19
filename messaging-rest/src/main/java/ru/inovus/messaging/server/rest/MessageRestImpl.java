@@ -6,7 +6,6 @@ import net.n2oapp.security.admin.rest.api.RoleRestService;
 import net.n2oapp.security.admin.rest.api.UserRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestRoleCriteria;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,7 +78,14 @@ public class MessageRestImpl implements MessageRest {
 
     @Override
     public Message getMessage(String id) {
-        return messageService.getMessage(id);
+        Message message = messageService.getMessage(id);
+        message.getRecipients().forEach(recipient -> {
+            User user = userRestService.getById(Integer.parseInt(recipient.getRecipient()));
+            recipient.setName(user.getFio() + " (" + user.getUsername() + ")");
+            recipient.setId(user.getId().longValue());
+        });
+
+        return message;
     }
 
     @Override
@@ -96,7 +102,7 @@ public class MessageRestImpl implements MessageRest {
                 String userId = recipient.getRecipient();
                 if (NumberUtils.isDigits(userId)) {
                     User user = userRestService.getById(Integer.parseInt(userId));
-                    name = user.getFio() + user.getRoles().stream().map(Role::getName).collect(Collectors.joining(", ", "(", ")"));
+                    name = user.getFio() + " (" + user.getUsername() + ")";
                     recipient.setName(name);
                     userMap.put(userId, name);
                 } else {

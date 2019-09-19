@@ -86,8 +86,8 @@
             </filters>
         </field>
 
-        <field id="users*.id" domain="integer[]">
-            <select mapping="[recipientIds]"/>
+        <field id="users" domain="object">
+            <select mapping="['recipients']"/>
         </field>
 
         <field id="username" domain="string">
