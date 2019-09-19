@@ -1,0 +1,1 @@
+update public.message_setting set text = replace(text, '%CONTRACT_NUMBER$', '%CONTRACT_NUMBER%');
