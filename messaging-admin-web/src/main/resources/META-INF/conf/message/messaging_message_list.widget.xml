@@ -38,7 +38,7 @@
         <button label="Просмотр" id="view" model="resolve" icon="fa fa-eye">
             <open-page page-id="messaging_message_view" detail-field-id="id" upload="query" page-name="Просмотр уведомления от {sentAtFormatted}"/>
         </button>
-        <button label="Повторить уведомление" id="repeat" model="resolve"  icon="fa fa-repeat">
+        <button label="Повторить уведомление" id="repeat" model="resolve" icon="fa fa-repeat">
             <open-page page-id="messaging_message_create" submit-operation-id="send" detail-field-id="id"/>
         </button>
     </toolbar>

@@ -7,7 +7,7 @@
 
     <fields>
         <field id="id">
-            <select mapping="[username]"/>
+            <select mapping="[id]"/>
         </field>
         <field id="recipient" domain="string">
             <select mapping="[id]"/>
@@ -16,7 +16,7 @@
             </filters>
         </field>
         <field id="name" domain="string">
-            <select mapping="#this[username]+(#this[fio]!=''||!#this[roles].empty?' ('+#this[fio]+(#this[fio]!=''and !#this[roles].empty?' ':'')+(!#this[roles].empty?#this[roles][0][name]:'')+')':'')"/>
+            <select mapping="#this[fio]+ ' (' + #this[username] + ')'"/>
             <filters>
                 <like filter-id="name">name={name}</like>
             </filters>
