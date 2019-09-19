@@ -78,40 +78,44 @@ public class MessageRestImpl implements MessageRest {
     @Override
     public Message getMessage(String id) {
         Message message = messageService.getMessage(id);
-        message.getRecipients().forEach(recipient -> {
-            User user = userRestService.getById(Integer.parseInt(recipient.getRecipient()));
-            recipient.setName(user.getFio() + " (" + user.getUsername() + ")");
-            recipient.setId(user.getId().longValue());
-        });
-
+        enrichRecipientName(message.getRecipients());
         return message;
     }
 
     @Override
     public Page<Recipient> getRecipients(RecipientCriteria criteria) {
         Page<Recipient> recipientPage = recipientService.getRecipients(criteria);
+        enrichRecipientName(recipientPage.getContent());
+        return recipientPage;
+    }
+
+    private void enrichRecipientName(List<Recipient> recipients) {
+
+        if (recipients == null || recipients.size() == 0) {
+            return;
+        }
 
         Map<String, String> userMap = new HashMap<>();
 
-        for (Recipient recipient : recipientPage.getContent()) {
-            String name = userMap.get(recipient.getRecipient());
-            if (name != null) {
-                recipient.setRecipient(name);
+        for (Recipient recipient : recipients) {
+            String userName = recipient.getRecipient();
+            String recipientName = userMap.get(userName);
+            if (recipientName != null) {
+                recipient.setRecipient(recipientName);
             } else {
-                String userName = recipient.getRecipient();
                 RestUserCriteria userCriteria = new RestUserCriteria();
                 userCriteria.setSize(1);
                 userCriteria.setPage(0);
-                userCriteria.setUsername(userName);
+                userCriteria.setUsername(recipient.getRecipient());
 
-                User user = userRestService.findAll(userCriteria).getContent().get(0);
-                name = user.getFio() + " (" + user.getUsername() + ")";
-                recipient.setName(name);
-                userMap.put(userName, name);
+                Page<User> userPage = userRestService.findAll(userCriteria);
+                if (userPage.getContent() != null && userPage.getContent().size() != 0) {
+                    User user = userPage.getContent().get(0);
+                    recipientName = user.getFio() + " (" + user.getUsername() + ")";
+                    userMap.put(userName, recipientName);
+                }
             }
         }
-
-        return recipientPage;
     }
 
     @Override
@@ -190,6 +194,8 @@ public class MessageRestImpl implements MessageRest {
                 if (securityAdminRestEnable) {
                     RestUserCriteria restUserCriteria = new RestUserCriteria();
                     restUserCriteria.setUsername(userName);
+                    restUserCriteria.setPage(0);
+                    restUserCriteria.setSize(1);
 
                     User user = userRestService.findAll(restUserCriteria).getContent().get(0);
                     recipient.setEmail(user.getEmail());
