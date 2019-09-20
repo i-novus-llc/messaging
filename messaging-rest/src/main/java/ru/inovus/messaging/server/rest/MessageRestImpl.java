@@ -213,9 +213,15 @@ public class MessageRestImpl implements MessageRest {
             roleCriteria.setPage(0);
 
             Page<Role> rolePage = roleRestService.findAll(roleCriteria);
-            List<Role> roles = new ArrayList<>(rolePage.getContent());
-            if (!CollectionUtils.isEmpty(rolePage.getContent()) && rolePage.getTotalPages() > 1) {
-                for (int i = 1; i < rolePage.getTotalPages(); i++) {
+            Set<Role> roles = new HashSet<>(rolePage.getContent());
+
+            if (!CollectionUtils.isEmpty(rolePage.getContent()) && rolePage.getTotalElements() > roles.size()) {
+                int pageCount = (int) (rolePage.getTotalElements() / roleCriteria.getSize());
+                if (rolePage.getTotalElements() % roleCriteria.getSize() != 0) {
+                    pageCount++;
+                }
+
+                for (int i = 1; i < pageCount; i++) {
                     roleCriteria.setPage(i);
                     rolePage = roleRestService.findAll(roleCriteria);
                     roles.addAll(rolePage.getContent());
@@ -228,9 +234,16 @@ public class MessageRestImpl implements MessageRest {
                 userCriteria.setPage(0);
 
                 Page<User> userPage = userRestService.findAll(userCriteria);
-                List<User> users = new ArrayList<>(userPage.getContent());
-                if (!CollectionUtils.isEmpty(userPage.getContent()) && userPage.getTotalPages() > 1) {
-                    for (int i = 1; i < userPage.getTotalPages(); i++) {
+                Set<User> users = new HashSet<>(userPage.getContent());
+
+                if (!CollectionUtils.isEmpty(userPage.getContent()) && userPage.getTotalElements() > users.size()) {
+
+                    int pageCount = (int) (userPage.getTotalElements() / userCriteria.getSize());
+                    if (userPage.getTotalElements() % userCriteria.getSize() != 0) {
+                        pageCount++;
+                    }
+
+                    for (int i = 1; i < pageCount; i++) {
                         userCriteria.setPage(i);
                         userPage = userRestService.findAll(userCriteria);
                         users.addAll(userPage.getContent());
