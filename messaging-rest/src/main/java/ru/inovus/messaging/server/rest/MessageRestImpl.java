@@ -123,7 +123,7 @@ public class MessageRestImpl implements MessageRest {
                     recipientName = user.getFio() + " (" + user.getUsername() + ")";
                     userMap.put(userName, recipientName);
                     recipient.setName(recipientName);
-                    recipient.setId((long)user.getId());
+                    recipient.setId((long) user.getId());
                 }
             }
         }
@@ -210,14 +210,32 @@ public class MessageRestImpl implements MessageRest {
         if (securityAdminRestEnable && !CollectionUtils.isEmpty(permissions)) {
             RestRoleCriteria roleCriteria = new RestRoleCriteria();
             roleCriteria.setPermissionCodes(permissions);
+            roleCriteria.setPage(0);
 
-            List<Role> roles = roleRestService.findAll(roleCriteria).getContent();
+            Page<Role> rolePage = roleRestService.findAll(roleCriteria);
+            List<Role> roles = new ArrayList<>(rolePage.getContent());
+            if (!CollectionUtils.isEmpty(rolePage.getContent()) && rolePage.getTotalPages() > 1) {
+                for (int i = 1; i < rolePage.getTotalPages(); i++) {
+                    roleCriteria.setPage(i);
+                    rolePage = roleRestService.findAll(roleCriteria);
+                    roles.addAll(rolePage.getContent());
+                }
+            }
 
             if (!CollectionUtils.isEmpty(roles)) {
                 RestUserCriteria userCriteria = new RestUserCriteria();
                 userCriteria.setRoleIds(roles.stream().map(Role::getId).collect(Collectors.toList()));
+                userCriteria.setPage(0);
 
-                List<User> users = userRestService.findAll(userCriteria).getContent();
+                Page<User> userPage = userRestService.findAll(userCriteria);
+                List<User> users = new ArrayList<>(userPage.getContent());
+                if (!CollectionUtils.isEmpty(userPage.getContent()) && userPage.getTotalPages() > 1) {
+                    for (int i = 1; i < userPage.getTotalPages(); i++) {
+                        userCriteria.setPage(i);
+                        userPage = userRestService.findAll(userCriteria);
+                        users.addAll(userPage.getContent());
+                    }
+                }
 
                 for (User user : users) {
                     Recipient recipient = new Recipient();
