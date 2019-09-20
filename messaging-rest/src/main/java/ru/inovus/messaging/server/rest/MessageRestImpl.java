@@ -89,6 +89,15 @@ public class MessageRestImpl implements MessageRest {
         return recipientPage;
     }
 
+    @Override
+    public void sendMessage(final MessageOutbox messageOutbox) {
+        if (messageOutbox.getMessage() != null) {
+            save(messageOutbox.getMessage());
+            send(messageOutbox.getMessage());
+        } else if (messageOutbox.getTemplateMessageOutbox() != null)
+            buildAndSendMessage(messageOutbox.getTemplateMessageOutbox());
+    }
+
     private void enrichRecipientName(List<Recipient> recipients) {
 
         if (recipients == null || recipients.size() == 0) {
@@ -113,18 +122,11 @@ public class MessageRestImpl implements MessageRest {
                     User user = userPage.getContent().get(0);
                     recipientName = user.getFio() + " (" + user.getUsername() + ")";
                     userMap.put(userName, recipientName);
+                    recipient.setName(recipientName);
+                    recipient.setId((long)user.getId());
                 }
             }
         }
-    }
-
-    @Override
-    public void sendMessage(final MessageOutbox messageOutbox) {
-        if (messageOutbox.getMessage() != null) {
-            save(messageOutbox.getMessage());
-            send(messageOutbox.getMessage());
-        } else if (messageOutbox.getTemplateMessageOutbox() != null)
-            buildAndSendMessage(messageOutbox.getTemplateMessageOutbox());
     }
 
     private void buildAndSendMessage(TemplateMessageOutbox templateMessageOutbox) {
