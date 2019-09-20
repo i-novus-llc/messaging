@@ -6,7 +6,6 @@ import net.n2oapp.security.admin.rest.api.RoleRestService;
 import net.n2oapp.security.admin.rest.api.UserRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestRoleCriteria;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -79,38 +78,14 @@ public class MessageRestImpl implements MessageRest {
     @Override
     public Message getMessage(String id) {
         Message message = messageService.getMessage(id);
-        message.getRecipients().forEach(recipient -> {
-            User user = userRestService.getById(Integer.parseInt(recipient.getRecipient()));
-            recipient.setName(user.getFio() + " (" + user.getUsername() + ")");
-            recipient.setId(user.getId().longValue());
-        });
-
+        enrichRecipientName(message.getRecipients());
         return message;
     }
 
     @Override
     public Page<Recipient> getRecipients(RecipientCriteria criteria) {
         Page<Recipient> recipientPage = recipientService.getRecipients(criteria);
-
-        Map<String, String> userMap = new HashMap<>();
-
-        for (Recipient recipient : recipientPage.getContent()) {
-            String name = userMap.get(recipient.getRecipient());
-            if (name != null) {
-                recipient.setRecipient(name);
-            } else {
-                String userId = recipient.getRecipient();
-                if (NumberUtils.isDigits(userId)) {
-                    User user = userRestService.getById(Integer.parseInt(userId));
-                    name = user.getFio() + " (" + user.getUsername() + ")";
-                    recipient.setName(name);
-                    userMap.put(userId, name);
-                } else {
-                    recipient.setName(recipient.getRecipient());
-                }
-            }
-        }
-
+        enrichRecipientName(recipientPage.getContent());
         return recipientPage;
     }
 
@@ -121,6 +96,37 @@ public class MessageRestImpl implements MessageRest {
             send(messageOutbox.getMessage());
         } else if (messageOutbox.getTemplateMessageOutbox() != null)
             buildAndSendMessage(messageOutbox.getTemplateMessageOutbox());
+    }
+
+    private void enrichRecipientName(List<Recipient> recipients) {
+
+        if (recipients == null || recipients.size() == 0) {
+            return;
+        }
+
+        Map<String, String> userMap = new HashMap<>();
+
+        for (Recipient recipient : recipients) {
+            String userName = recipient.getRecipient();
+            String recipientName = userMap.get(userName);
+            if (recipientName != null) {
+                recipient.setRecipient(recipientName);
+            } else {
+                RestUserCriteria userCriteria = new RestUserCriteria();
+                userCriteria.setSize(1);
+                userCriteria.setPage(0);
+                userCriteria.setUsername(recipient.getRecipient());
+
+                Page<User> userPage = userRestService.findAll(userCriteria);
+                if (userPage.getContent() != null && userPage.getContent().size() != 0) {
+                    User user = userPage.getContent().get(0);
+                    recipientName = user.getFio() + " (" + user.getUsername() + ")";
+                    userMap.put(userName, recipientName);
+                    recipient.setName(recipientName);
+                    recipient.setId((long)user.getId());
+                }
+            }
+        }
     }
 
     private void buildAndSendMessage(TemplateMessageOutbox templateMessageOutbox) {
@@ -163,7 +169,7 @@ public class MessageRestImpl implements MessageRest {
         message.setFormationType(messageSetting.getFormationType());
         message.setRecipientType(RecipientType.USER);
         message.setSystemId(params.getSystemId());
-        message.setRecipients(findRecipients(params.getUserIdList(), params.getPermissions()));
+        message.setRecipients(findRecipients(params.getUserNameList(), params.getPermissions()));
         message.setData(null);
         message.setNotificationType(params.getTemplateCode());
         message.setObjectId(params.getObjectId());
@@ -180,18 +186,23 @@ public class MessageRestImpl implements MessageRest {
     }
 
     //Получение адресатов по ид-р сотрудников и указанным привелегиям
-    private List<Recipient> findRecipients(List<Integer> userIdList, List<String> permissions) {
+    private List<Recipient> findRecipients(List<String> userNameList, List<String> permissions) {
         Set<Recipient> recipients = new HashSet<>();
 
-        if (!CollectionUtils.isEmpty(userIdList))
-            for (Integer userId : userIdList) {
+        if (!CollectionUtils.isEmpty(userNameList))
+            for (String userName : userNameList) {
                 Recipient recipient = new Recipient();
 
                 if (securityAdminRestEnable) {
-                    User user = userRestService.getById(userId);
+                    RestUserCriteria restUserCriteria = new RestUserCriteria();
+                    restUserCriteria.setUsername(userName);
+                    restUserCriteria.setPage(0);
+                    restUserCriteria.setSize(1);
+
+                    User user = userRestService.findAll(restUserCriteria).getContent().get(0);
                     recipient.setEmail(user.getEmail());
                 }
-                recipient.setRecipient(userId.toString());
+                recipient.setRecipient(userName);
 
                 recipients.add(recipient);
             }
@@ -211,7 +222,7 @@ public class MessageRestImpl implements MessageRest {
                 for (User user : users) {
                     Recipient recipient = new Recipient();
                     recipient.setEmail(user.getEmail());
-                    recipient.setRecipient(user.getId().toString());
+                    recipient.setRecipient(user.getUsername());
 
                     recipients.add(recipient);
                 }

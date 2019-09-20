@@ -10,9 +10,9 @@
             <select mapping="[id]"/>
         </field>
         <field id="recipient" domain="string">
-            <select mapping="[id]"/>
+            <select mapping="[username]"/>
             <filters>
-                <eq filter-id="id">username={id}</eq>
+                <eq filter-id="id">username={username}</eq>
             </filters>
         </field>
         <field id="name" domain="string">
