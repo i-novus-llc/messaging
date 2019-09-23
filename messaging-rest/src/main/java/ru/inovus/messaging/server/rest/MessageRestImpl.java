@@ -221,7 +221,7 @@ public class MessageRestImpl implements MessageRest {
         return users;
     }
 
-    //Получение Ролей по кодам Привидегий
+    //Получение Ролей по кодам Привилегий
     private Set<Role> getRolesByPermissionCodes(List<String> permissions) {
         RestRoleCriteria roleCriteria = new RestRoleCriteria();
         roleCriteria.setPermissionCodes(permissions);
@@ -266,7 +266,7 @@ public class MessageRestImpl implements MessageRest {
             }
     }
 
-    //Добавление Получателей уведомлений по колам Привилегий
+    //Добавление Получателей уведомлений по кодам Привилегий
     private void addRecipientsByPermissionCodes(List<String> permissions, Set<Recipient> recipients) {
         if (securityAdminRestEnable && !CollectionUtils.isEmpty(permissions)) {
             Set<Role> roles = getRolesByPermissionCodes(permissions);
