@@ -20,7 +20,7 @@ public class MessageOutbox implements Serializable {
 
     public MessageOutbox(Message message, TemplateMessageOutbox messageOutbox){
         this.message = message;
-        this.templateMessageOutbox = getTemplateMessageOutbox();
+        this.templateMessageOutbox = messageOutbox;
     }
 
     public MessageOutbox(Message message) {
