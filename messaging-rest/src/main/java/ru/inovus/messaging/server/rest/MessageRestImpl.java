@@ -100,7 +100,7 @@ public class MessageRestImpl implements MessageRest {
 
     private void enrichRecipientName(List<Recipient> recipients) {
 
-        if (recipients == null || CollectionUtils.isEmpty(recipients)) {
+        if (CollectionUtils.isEmpty(recipients)) {
             return;
         }
 
@@ -118,9 +118,9 @@ public class MessageRestImpl implements MessageRest {
                 userCriteria.setUsername(recipient.getRecipient());
 
                 Page<User> userPage = userRestService.findAll(userCriteria);
-                userPage.getContent();
-                if (!CollectionUtils.isEmpty(userPage.getContent())) {
-                    User user = userPage.getContent().get(0);
+                List<User> userList = userPage.getContent();
+                if (!CollectionUtils.isEmpty(userList)) {
+                    User user = userList.get(0);
                     recipientName = user.getFio() + " (" + user.getUsername() + ")";
                     userMap.put(userName, recipientName);
                     recipient.setName(recipientName);
@@ -205,7 +205,7 @@ public class MessageRestImpl implements MessageRest {
         Page<User> userPage = userRestService.findAll(userCriteria);
         Set<User> users = new HashSet<>(userPage.getContent());
 
-        if (!CollectionUtils.isEmpty(userPage.getContent()) && userPage.getTotalElements() > users.size()) {
+        if (!CollectionUtils.isEmpty(users) && userPage.getTotalElements() > users.size()) {
 
             int pageCount = (int) (userPage.getTotalElements() / userCriteria.getSize());
             if (userPage.getTotalElements() % userCriteria.getSize() != 0) {
@@ -230,7 +230,7 @@ public class MessageRestImpl implements MessageRest {
         Page<Role> rolePage = roleRestService.findAll(roleCriteria);
         Set<Role> roles = new HashSet<>(rolePage.getContent());
 
-        if (!CollectionUtils.isEmpty(rolePage.getContent()) && rolePage.getTotalElements() > roles.size()) {
+        if (!CollectionUtils.isEmpty(roles) && rolePage.getTotalElements() > roles.size()) {
             int pageCount = (int) (rolePage.getTotalElements() / roleCriteria.getSize());
             if (rolePage.getTotalElements() % roleCriteria.getSize() != 0) {
                 pageCount++;
