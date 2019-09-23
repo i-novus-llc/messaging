@@ -32,7 +32,7 @@
         </field>
 
         <field id="readAt" domain="date" name="Дата прочтения">
-            <select>readAt</select>
+            <select normalize="T(ru.inovus.messaging.n2o.utils.LocalDateTimeUtils).parseDateToMsk(#this)" mapping="['readAt']"/>
         </field>
 
         <field id="email" domain="date">

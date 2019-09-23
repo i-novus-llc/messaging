@@ -13,7 +13,7 @@ public class TemplateMessageOutbox implements Serializable {
     private static final long serialVersionUID = 5475383823197483227L;
 
     private String templateCode;
-    private LocalDateTime sendAt;
+    private LocalDateTime sentAt;
     private List<String> userNameList;
     private List<String> permissions;
     private Map<String, Object> placeholders;
@@ -33,12 +33,12 @@ public class TemplateMessageOutbox implements Serializable {
         this.templateCode = templateCode;
     }
 
-    public LocalDateTime getSendAt() {
-        return sendAt;
+    public LocalDateTime getSentAt() {
+        return sentAt;
     }
 
-    public void setSendAt(LocalDateTime sendAt) {
-        this.sendAt = sendAt;
+    public void setSentAt(LocalDateTime sentAt) {
+        this.sentAt = sentAt;
     }
 
     public List<String> getUserNameList() {

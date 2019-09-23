@@ -164,7 +164,7 @@ public class MessageRestImpl implements MessageRest {
         message.setText(buildText(messageSetting.getText(), params));
         message.setSeverity(messageSetting.getSeverity());
         message.setAlertType(messageSetting.getAlertType());
-        message.setSentAt(params.getSendAt());
+        message.setSentAt(params.getSentAt());
         message.setInfoTypes(messageSetting.getInfoType());
         message.setComponent(messageSetting.getComponent());
         message.setFormationType(messageSetting.getFormationType());
