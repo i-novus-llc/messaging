@@ -100,7 +100,7 @@ public class MessageRestImpl implements MessageRest {
 
     private void enrichRecipientName(List<Recipient> recipients) {
 
-        if (recipients == null || recipients.size() == 0) {
+        if (recipients == null || CollectionUtils.isEmpty(recipients)) {
             return;
         }
 
@@ -118,7 +118,8 @@ public class MessageRestImpl implements MessageRest {
                 userCriteria.setUsername(recipient.getRecipient());
 
                 Page<User> userPage = userRestService.findAll(userCriteria);
-                if (userPage.getContent() != null && userPage.getContent().size() != 0) {
+                userPage.getContent();
+                if (!CollectionUtils.isEmpty(userPage.getContent())) {
                     User user = userPage.getContent().get(0);
                     recipientName = user.getFio() + " (" + user.getUsername() + ")";
                     userMap.put(userName, recipientName);
@@ -189,6 +190,63 @@ public class MessageRestImpl implements MessageRest {
     private List<Recipient> findRecipients(List<String> userNameList, List<String> permissions) {
         Set<Recipient> recipients = new HashSet<>();
 
+        addRecipientsByUserName(userNameList, recipients);
+        addRecipientsByPermissionCodes(permissions, recipients);
+
+        return new ArrayList<>(recipients);
+    }
+
+    //Полуение Пользователей по Ролям
+    private Set<User> getUsersByRoles(Set<Role> roles) {
+        RestUserCriteria userCriteria = new RestUserCriteria();
+        userCriteria.setRoleIds(roles.stream().map(Role::getId).collect(Collectors.toList()));
+        userCriteria.setPage(0);
+
+        Page<User> userPage = userRestService.findAll(userCriteria);
+        Set<User> users = new HashSet<>(userPage.getContent());
+
+        if (!CollectionUtils.isEmpty(userPage.getContent()) && userPage.getTotalElements() > users.size()) {
+
+            int pageCount = (int) (userPage.getTotalElements() / userCriteria.getSize());
+            if (userPage.getTotalElements() % userCriteria.getSize() != 0) {
+                pageCount++;
+            }
+
+            for (int i = 1; i < pageCount; i++) {
+                userCriteria.setPage(i);
+                userPage = userRestService.findAll(userCriteria);
+                users.addAll(userPage.getContent());
+            }
+        }
+        return users;
+    }
+
+    //Получение Ролей по кодам Привидегий
+    private Set<Role> getRolesByPermissionCodes(List<String> permissions) {
+        RestRoleCriteria roleCriteria = new RestRoleCriteria();
+        roleCriteria.setPermissionCodes(permissions);
+        roleCriteria.setPage(0);
+
+        Page<Role> rolePage = roleRestService.findAll(roleCriteria);
+        Set<Role> roles = new HashSet<>(rolePage.getContent());
+
+        if (!CollectionUtils.isEmpty(rolePage.getContent()) && rolePage.getTotalElements() > roles.size()) {
+            int pageCount = (int) (rolePage.getTotalElements() / roleCriteria.getSize());
+            if (rolePage.getTotalElements() % roleCriteria.getSize() != 0) {
+                pageCount++;
+            }
+
+            for (int i = 1; i < pageCount; i++) {
+                roleCriteria.setPage(i);
+                rolePage = roleRestService.findAll(roleCriteria);
+                roles.addAll(rolePage.getContent());
+            }
+        }
+        return roles;
+    }
+
+    //Добавление Получателей уведомлений по userName Пользователей
+    private void addRecipientsByUserName(List<String> userNameList, Set<Recipient> recipients) {
         if (!CollectionUtils.isEmpty(userNameList))
             for (String userName : userNameList) {
                 Recipient recipient = new Recipient();
@@ -206,49 +264,15 @@ public class MessageRestImpl implements MessageRest {
 
                 recipients.add(recipient);
             }
+    }
 
+    //Добавление Получателей уведомлений по колам Привилегий
+    private void addRecipientsByPermissionCodes(List<String> permissions, Set<Recipient> recipients) {
         if (securityAdminRestEnable && !CollectionUtils.isEmpty(permissions)) {
-            RestRoleCriteria roleCriteria = new RestRoleCriteria();
-            roleCriteria.setPermissionCodes(permissions);
-            roleCriteria.setPage(0);
-
-            Page<Role> rolePage = roleRestService.findAll(roleCriteria);
-            Set<Role> roles = new HashSet<>(rolePage.getContent());
-
-            if (!CollectionUtils.isEmpty(rolePage.getContent()) && rolePage.getTotalElements() > roles.size()) {
-                int pageCount = (int) (rolePage.getTotalElements() / roleCriteria.getSize());
-                if (rolePage.getTotalElements() % roleCriteria.getSize() != 0) {
-                    pageCount++;
-                }
-
-                for (int i = 1; i < pageCount; i++) {
-                    roleCriteria.setPage(i);
-                    rolePage = roleRestService.findAll(roleCriteria);
-                    roles.addAll(rolePage.getContent());
-                }
-            }
+            Set<Role> roles = getRolesByPermissionCodes(permissions);
 
             if (!CollectionUtils.isEmpty(roles)) {
-                RestUserCriteria userCriteria = new RestUserCriteria();
-                userCriteria.setRoleIds(roles.stream().map(Role::getId).collect(Collectors.toList()));
-                userCriteria.setPage(0);
-
-                Page<User> userPage = userRestService.findAll(userCriteria);
-                Set<User> users = new HashSet<>(userPage.getContent());
-
-                if (!CollectionUtils.isEmpty(userPage.getContent()) && userPage.getTotalElements() > users.size()) {
-
-                    int pageCount = (int) (userPage.getTotalElements() / userCriteria.getSize());
-                    if (userPage.getTotalElements() % userCriteria.getSize() != 0) {
-                        pageCount++;
-                    }
-
-                    for (int i = 1; i < pageCount; i++) {
-                        userCriteria.setPage(i);
-                        userPage = userRestService.findAll(userCriteria);
-                        users.addAll(userPage.getContent());
-                    }
-                }
+                Set<User> users = getUsersByRoles(roles);
 
                 for (User user : users) {
                     Recipient recipient = new Recipient();
@@ -259,8 +283,6 @@ public class MessageRestImpl implements MessageRest {
                 }
             }
         }
-
-        return new ArrayList<>(recipients);
     }
 
     private DestinationType getDestinationType(InfoType infoType) {
