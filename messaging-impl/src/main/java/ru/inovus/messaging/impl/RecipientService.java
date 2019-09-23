@@ -38,17 +38,17 @@ public class RecipientService {
     public Page<Recipient> getRecipients(RecipientCriteria criteria) {
         List<Condition> conditions = new ArrayList<>();
         Optional.ofNullable(criteria.getMessageId())
-                .ifPresent(messageId -> conditions.add(RECIPIENT.MESSAGE_ID.eq(messageId)));
+            .ifPresent(messageId -> conditions.add(RECIPIENT.MESSAGE_ID.eq(messageId)));
         SelectConditionStep<Record> query = dsl
-                .select(RECIPIENT.fields())
-                .from(RECIPIENT)
-                .where(conditions);
+            .select(RECIPIENT.fields())
+            .from(RECIPIENT)
+            .where(conditions);
         int count = dsl.fetchCount(query);
         List<Recipient> collection = query
-                .orderBy(getSortFields(criteria.getOrders()))
-                .limit(criteria.getPageSize())
-                .offset((int) criteria.getOffset())
-                .fetch(MAPPER);
+            .orderBy(getSortFields(criteria.getOrders()))
+            .limit(criteria.getPageSize())
+            .offset((int) criteria.getOffset())
+            .fetch(MAPPER);
         return new PageImpl<>(collection, criteria, count);
     }
 
@@ -60,7 +60,7 @@ public class RecipientService {
         for (Sort.Order sorting : sortingList) {
             Field field = RECIPIENT.field(sorting.getProperty());
             SortField<?> querySortField = sorting.getDirection().equals(Sort.Direction.ASC) ?
-                    field.asc(): field.desc();
+                field.asc() : field.desc();
             querySortFields.add(querySortField);
         }
         return querySortFields;

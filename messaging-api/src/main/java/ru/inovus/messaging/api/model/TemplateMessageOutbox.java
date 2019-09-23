@@ -14,7 +14,7 @@ public class TemplateMessageOutbox implements Serializable {
 
     private String templateCode;
     private LocalDateTime sendAt;
-    private List<Integer> userIdList;
+    private List<String> userNameList;
     private List<String> permissions;
     private Map<String, Object> placeholders;
     private String systemId;
@@ -41,12 +41,12 @@ public class TemplateMessageOutbox implements Serializable {
         this.sendAt = sendAt;
     }
 
-    public List<Integer> getUserIdList() {
-        return userIdList;
+    public List<String> getUserNameList() {
+        return userNameList;
     }
 
-    public void setUserIdList(List<Integer> userIdList) {
-        this.userIdList = userIdList;
+    public void setUserNameList(List<String> userNameList) {
+        this.userNameList = userNameList;
     }
 
     public List<String> getPermissions() {
