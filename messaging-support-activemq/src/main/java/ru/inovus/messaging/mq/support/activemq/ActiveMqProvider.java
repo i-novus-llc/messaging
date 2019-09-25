@@ -70,13 +70,13 @@ public class ActiveMqProvider implements MqProvider {
             }
         });
         container.setConnectionFactory(activeMQConnectionFactory);
-
         if (mqConsumer instanceof QueueMqConsumer) {
             container.setDestination(new ActiveMQQueue(mqConsumer.mqName()));
         } else
         if (mqConsumer instanceof TopicMqConsumer) {
             TopicMqConsumer topicMqHandler = (TopicMqConsumer) mqConsumer;
             container.setDestination(new ActiveMQTopic(topicMqHandler.mqName()));
+            container.setPubSubDomain(true);
             if (Boolean.TRUE.equals(durable)) {
                 container.setSubscriptionDurable(true);
                 container.setClientId(topicMqHandler.systemId + "." + topicMqHandler.authToken + "." + System.currentTimeMillis());
