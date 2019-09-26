@@ -67,7 +67,7 @@ public class MessagingActiveMQSupportTest {
         mqProvider.subscribe(new TopicMqConsumer(WS_SESSION_ID_2, DEFAULT_SYSTEM_ID, "unique-user-id-2", TOPIC_NAME, messageOutbox -> {receivedMessage3 = messageOutbox; System.out.println("receivedMessage3");}));
 
         mqProvider.publish(createNotice(), TOPIC_NAME);
-        Thread.sleep(3000);
+        Thread.sleep(5000);
 
         mqProvider.unsubscribe(WS_SESSION_ID_1);
         mqProvider.unsubscribe(WS_SESSION_ID_2);
@@ -108,7 +108,7 @@ public class MessagingActiveMQSupportTest {
         final String QUEUE_CONSUMER_NAME_2 = "emailConsumer-1-2";
         receivedMessage5 = null;
         receivedMessage6 = null;
-        
+
         mqProvider.subscribe(new QueueMqConsumer(QUEUE_NAME, messageOutbox -> receivedMessage5 = messageOutbox, QUEUE_CONSUMER_NAME_1));
         mqProvider.subscribe(new QueueMqConsumer(QUEUE_NAME, messageOutbox -> receivedMessage6 = messageOutbox, QUEUE_CONSUMER_NAME_2));
 
