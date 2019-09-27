@@ -58,6 +58,9 @@ public class MessageService {
     @Transactional
     public Message createMessage(Message message, Recipient... recipient) {
         Long id = dsl.nextval(MESSAGE_ID_SEQ);
+        if (message.getSentAt() == null) {
+            message.setSentAt(LocalDateTime.now(Clock.systemUTC()));
+        }
         dsl
             .insertInto(MESSAGE)
             .columns(MESSAGE.ID, MESSAGE.CAPTION, MESSAGE.TEXT, MESSAGE.SEVERITY, MESSAGE.ALERT_TYPE,
@@ -66,7 +69,7 @@ public class MessageService {
                 MESSAGE.OBJECT_TYPE, MESSAGE.SEND_NOTICE,
                 MESSAGE.SEND_EMAIL)
             .values(id.toString(), message.getCaption(), message.getText(), message.getSeverity(), message.getAlertType(),
-                LocalDateTime.now(Clock.systemUTC()), message.getSystemId(), message.getComponent() != null ?
+                message.getSentAt(), message.getSystemId(), message.getComponent() != null ?
                     message.getComponent().getId() : null,
                 message.getFormationType(), message.getRecipientType(), message.getNotificationType(), message.getObjectId(),
                 message.getObjectType(), message.getInfoTypes() != null && message.getInfoTypes().contains(InfoType.NOTICE),

@@ -1,7 +1,11 @@
 package ru.inovus.messaging.server.rest;
 
+import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
+import net.n2oapp.security.admin.rest.api.RoleRestService;
 import net.n2oapp.security.admin.rest.api.UserRestService;
+import net.n2oapp.security.admin.rest.api.criteria.RestRoleCriteria;
+import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,9 +26,8 @@ import ru.inovus.messaging.impl.MessageService;
 import ru.inovus.messaging.impl.MessageSettingService;
 import ru.inovus.messaging.impl.RecipientService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class MessageRestImpl implements MessageRest {
@@ -40,6 +43,7 @@ public class MessageRestImpl implements MessageRest {
     private final String emailTopicName;
     private final boolean securityAdminRestEnable;
     private final UserRestService userRestService;
+    private final RoleRestService roleRestService;
     private DestinationResolver destinationResolver;
 
     public MessageRestImpl(MessageService messageService,
@@ -51,6 +55,7 @@ public class MessageRestImpl implements MessageRest {
                            @Value("${sec.admin.rest.enable}") boolean securityAdminRestEnable,
                            MqProvider mqProvider,
                            @Qualifier("userRestServiceJaxRsProxyClient") UserRestService userRestService,
+                           @Qualifier("roleRestServiceJaxRsProxyClient") RoleRestService roleRestService,
                            DestinationResolver destinationResolver) {
         this.messageService = messageService;
         this.messageSettingService = messageSettingService;
@@ -61,6 +66,7 @@ public class MessageRestImpl implements MessageRest {
         this.emailTopicName = emailTopicName;
         this.securityAdminRestEnable = securityAdminRestEnable;
         this.userRestService = userRestService;
+        this.roleRestService = roleRestService;
         this.destinationResolver = destinationResolver;
     }
 
@@ -71,12 +77,16 @@ public class MessageRestImpl implements MessageRest {
 
     @Override
     public Message getMessage(String id) {
-        return messageService.getMessage(id);
+        Message message = messageService.getMessage(id);
+        enrichRecipientName(message.getRecipients());
+        return message;
     }
 
     @Override
     public Page<Recipient> getRecipients(RecipientCriteria criteria) {
-        return recipientService.getRecipients(criteria);
+        Page<Recipient> recipientPage = recipientService.getRecipients(criteria);
+        enrichRecipientName(recipientPage.getContent());
+        return recipientPage;
     }
 
     @Override
@@ -86,6 +96,38 @@ public class MessageRestImpl implements MessageRest {
             send(messageOutbox.getMessage());
         } else if (messageOutbox.getTemplateMessageOutbox() != null)
             buildAndSendMessage(messageOutbox.getTemplateMessageOutbox());
+    }
+
+    private void enrichRecipientName(List<Recipient> recipients) {
+
+        if (CollectionUtils.isEmpty(recipients)) {
+            return;
+        }
+
+        Map<String, String> userMap = new HashMap<>();
+
+        for (Recipient recipient : recipients) {
+            String userName = recipient.getRecipient();
+            String recipientName = userMap.get(userName);
+            if (recipientName != null) {
+                recipient.setRecipient(recipientName);
+            } else {
+                RestUserCriteria userCriteria = new RestUserCriteria();
+                userCriteria.setSize(1);
+                userCriteria.setPage(0);
+                userCriteria.setUsername(recipient.getRecipient());
+
+                Page<User> userPage = userRestService.findAll(userCriteria);
+                List<User> userList = userPage.getContent();
+                if (!CollectionUtils.isEmpty(userList)) {
+                    User user = userList.get(0);
+                    recipientName = user.getFio() + " (" + user.getUsername() + ")";
+                    userMap.put(userName, recipientName);
+                    recipient.setName(recipientName);
+                    recipient.setId((long) user.getId());
+                }
+            }
+        }
     }
 
     private void buildAndSendMessage(TemplateMessageOutbox templateMessageOutbox) {
@@ -103,8 +145,11 @@ public class MessageRestImpl implements MessageRest {
     }
 
     private void send(Message message) {
-        for (InfoType infoType : message.getInfoTypes())
-            mqProvider.publish(new MessageOutbox(message), destinationResolver.resolve(getDestinationMqName(infoType), getDestinationType(infoType)));
+        for (InfoType infoType : message.getInfoTypes()) {
+            if (infoType == InfoType.NOTICE || (infoType == InfoType.EMAIL && securityAdminRestEnable)) {
+                mqProvider.publish(new MessageOutbox(message), destinationResolver.resolve(getDestinationMqName(infoType), getDestinationType(infoType)));
+            }
+        }
     }
 
     //Получение шаблона уведомления по коду
@@ -119,13 +164,13 @@ public class MessageRestImpl implements MessageRest {
         message.setText(buildText(messageSetting.getText(), params));
         message.setSeverity(messageSetting.getSeverity());
         message.setAlertType(messageSetting.getAlertType());
-        message.setSentAt(params.getSendAt());
+        message.setSentAt(params.getSentAt());
         message.setInfoTypes(messageSetting.getInfoType());
         message.setComponent(messageSetting.getComponent());
         message.setFormationType(messageSetting.getFormationType());
         message.setRecipientType(RecipientType.USER);
         message.setSystemId(params.getSystemId());
-        message.setRecipients(findRecipients(params.getUserIdList(), params.getPermissions()));
+        message.setRecipients(findRecipients(params.getUserNameList(), params.getPermissions()));
         message.setData(null);
         message.setNotificationType(params.getTemplateCode());
         message.setObjectId(params.getObjectId());
@@ -142,39 +187,102 @@ public class MessageRestImpl implements MessageRest {
     }
 
     //Получение адресатов по ид-р сотрудников и указанным привелегиям
-    private List<Recipient> findRecipients(List<Integer> userIdList, List<String> permissions) {
-        List<Recipient> recipients = new ArrayList<>();
+    private List<Recipient> findRecipients(List<String> userNameList, List<String> permissions) {
+        Set<Recipient> recipients = new HashSet<>();
 
-        if (!CollectionUtils.isEmpty(userIdList))
-            for (Integer userId : userIdList) {
+        addRecipientsByUserName(userNameList, recipients);
+        addRecipientsByPermissionCodes(permissions, recipients);
+
+        return new ArrayList<>(recipients);
+    }
+
+    //Полуение Пользователей по Ролям
+    private Set<User> getUsersByRoles(Set<Role> roles) {
+        RestUserCriteria userCriteria = new RestUserCriteria();
+        userCriteria.setRoleIds(roles.stream().map(Role::getId).collect(Collectors.toList()));
+        userCriteria.setPage(0);
+
+        Page<User> userPage = userRestService.findAll(userCriteria);
+        Set<User> users = new HashSet<>(userPage.getContent());
+
+        if (!CollectionUtils.isEmpty(users) && userPage.getTotalElements() > users.size()) {
+
+            int pageCount = (int) (userPage.getTotalElements() / userCriteria.getSize());
+            if (userPage.getTotalElements() % userCriteria.getSize() != 0) {
+                pageCount++;
+            }
+
+            for (int i = 1; i < pageCount; i++) {
+                userCriteria.setPage(i);
+                userPage = userRestService.findAll(userCriteria);
+                users.addAll(userPage.getContent());
+            }
+        }
+        return users;
+    }
+
+    //Получение Ролей по кодам Привилегий
+    private Set<Role> getRolesByPermissionCodes(List<String> permissions) {
+        RestRoleCriteria roleCriteria = new RestRoleCriteria();
+        roleCriteria.setPermissionCodes(permissions);
+        roleCriteria.setPage(0);
+
+        Page<Role> rolePage = roleRestService.findAll(roleCriteria);
+        Set<Role> roles = new HashSet<>(rolePage.getContent());
+
+        if (!CollectionUtils.isEmpty(roles) && rolePage.getTotalElements() > roles.size()) {
+            int pageCount = (int) (rolePage.getTotalElements() / roleCriteria.getSize());
+            if (rolePage.getTotalElements() % roleCriteria.getSize() != 0) {
+                pageCount++;
+            }
+
+            for (int i = 1; i < pageCount; i++) {
+                roleCriteria.setPage(i);
+                rolePage = roleRestService.findAll(roleCriteria);
+                roles.addAll(rolePage.getContent());
+            }
+        }
+        return roles;
+    }
+
+    //Добавление Получателей уведомлений по userName Пользователей
+    private void addRecipientsByUserName(List<String> userNameList, Set<Recipient> recipients) {
+        if (!CollectionUtils.isEmpty(userNameList))
+            for (String userName : userNameList) {
                 Recipient recipient = new Recipient();
 
                 if (securityAdminRestEnable) {
-                    User user = userRestService.getById(userId);
+                    RestUserCriteria restUserCriteria = new RestUserCriteria();
+                    restUserCriteria.setUsername(userName);
+                    restUserCriteria.setPage(0);
+                    restUserCriteria.setSize(1);
+
+                    User user = userRestService.findAll(restUserCriteria).getContent().get(0);
                     recipient.setEmail(user.getEmail());
                 }
-                recipient.setRecipient(userId.toString());
+                recipient.setRecipient(userName);
 
                 recipients.add(recipient);
             }
+    }
 
-        //ToDo реализовать метод поиска пользователей в админке по привелегиям
-//        if (!CollectionUtils.isEmpty(permissions))
-//            for (String permission : permissions) {
-//                if (securityAdminRestEnable) {
-//                    List<User> userList = userRestService.findAllByPermission(permission);
-//
-//                    for (User user : userList) {
-//                        Recipient recipient = new Recipient();
-//                        recipient.setName(user.getFio());
-//                        recipient.setEmail(user.getEmail());
-//
-//                        recipients.add(recipient);
-//                    }
-//                }
-//            }
+    //Добавление Получателей уведомлений по кодам Привилегий
+    private void addRecipientsByPermissionCodes(List<String> permissions, Set<Recipient> recipients) {
+        if (securityAdminRestEnable && !CollectionUtils.isEmpty(permissions)) {
+            Set<Role> roles = getRolesByPermissionCodes(permissions);
 
-        return recipients;
+            if (!CollectionUtils.isEmpty(roles)) {
+                Set<User> users = getUsersByRoles(roles);
+
+                for (User user : users) {
+                    Recipient recipient = new Recipient();
+                    recipient.setEmail(user.getEmail());
+                    recipient.setRecipient(user.getUsername());
+
+                    recipients.add(recipient);
+                }
+            }
+        }
     }
 
     private DestinationType getDestinationType(InfoType infoType) {

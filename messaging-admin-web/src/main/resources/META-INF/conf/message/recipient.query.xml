@@ -20,6 +20,10 @@
             </filters>
         </field>
 
+        <field id="name" domain="string" name="Получатель">
+            <select>name</select>
+        </field>
+
         <field id="messageId" domain="integer">
             <select>messageId</select>
             <filters>
@@ -28,7 +32,7 @@
         </field>
 
         <field id="readAt" domain="date" name="Дата прочтения">
-            <select>readAt</select>
+            <select normalize="T(ru.inovus.messaging.n2o.utils.LocalDateTimeUtils).parseDateToMsk(#this)" mapping="['readAt']"/>
         </field>
 
         <field id="email" domain="date">

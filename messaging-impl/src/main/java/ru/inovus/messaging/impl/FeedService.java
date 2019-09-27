@@ -39,46 +39,47 @@ public class FeedService {
     public Page<Feed> getMessageFeed(String recipient, FeedCriteria criteria) {
         List<Condition> conditions = new ArrayList<>();
         conditions.add(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL).or(RECIPIENT.ID.isNotNull()));
+        conditions.add(MESSAGE.SEND_NOTICE.isTrue());
         Optional.ofNullable(criteria.getSystemId())
-                .ifPresent(systemId -> conditions.add(MESSAGE.SYSTEM_ID.eq(systemId)));
+            .ifPresent(systemId -> conditions.add(MESSAGE.SYSTEM_ID.eq(systemId)));
         Optional.ofNullable(criteria.getComponentId())
-                .ifPresent(componentId -> conditions.add(MESSAGE.COMPONENT_ID.eq(componentId)));
+            .ifPresent(componentId -> conditions.add(MESSAGE.COMPONENT_ID.eq(componentId)));
         Optional.ofNullable(criteria.getSeverity())
-                .ifPresent(severity -> conditions.add(MESSAGE.SEVERITY.eq(severity)));
+            .ifPresent(severity -> conditions.add(MESSAGE.SEVERITY.eq(severity)));
         Optional.ofNullable(criteria.getSentAtBegin())
-                .ifPresent(start -> conditions.add(MESSAGE.SENT_AT.greaterOrEqual(start)));
+            .ifPresent(start -> conditions.add(MESSAGE.SENT_AT.greaterOrEqual(start)));
         Optional.ofNullable(criteria.getSentAtEnd())
-                .ifPresent(end -> conditions.add(MESSAGE.SENT_AT.lessOrEqual(end)));
+            .ifPresent(end -> conditions.add(MESSAGE.SENT_AT.lessOrEqual(end)));
 
         SelectConditionStep<Record> query = dsl
-                .select(MESSAGE.fields())
-                .select(COMPONENT.fields())
-                .select(RECIPIENT.fields())
-                .from(MESSAGE)
-                .leftJoin(COMPONENT).on(COMPONENT.ID.eq(MESSAGE.COMPONENT_ID))
-                .leftJoin(RECIPIENT).on(RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(RECIPIENT.RECIPIENT_.eq(recipient)))
-                .where(conditions);
+            .select(MESSAGE.fields())
+            .select(COMPONENT.fields())
+            .select(RECIPIENT.fields())
+            .from(MESSAGE)
+            .leftJoin(COMPONENT).on(COMPONENT.ID.eq(MESSAGE.COMPONENT_ID))
+            .leftJoin(RECIPIENT).on(RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(RECIPIENT.RECIPIENT_.eq(recipient)))
+            .where(conditions);
         int count = dsl.fetchCount(query);
         Field fieldSentAt = MESSAGE.field("sent_at");
         List<Feed> collection = query
-                .orderBy(fieldSentAt.desc())
-                .limit(criteria.getPageSize())
-                .offset((int) criteria.getOffset())
-                .fetch(MAPPER);
+            .orderBy(fieldSentAt.desc())
+            .limit(criteria.getPageSize())
+            .offset((int) criteria.getOffset())
+            .fetch(MAPPER);
         return new PageImpl<>(collection, criteria, count);
     }
 
     public Feed getMessage(String messageId, String recipient) {
         return dsl
-                .select(MESSAGE.fields())
-                .select(COMPONENT.fields())
-                .select(RECIPIENT.fields())
-                .from(MESSAGE)
-                .leftJoin(COMPONENT).on(COMPONENT.ID.eq(MESSAGE.COMPONENT_ID))
-                .leftJoin(RECIPIENT).on(RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(RECIPIENT.RECIPIENT_.eq(recipient)))
-                .where(MESSAGE.ID.cast(String.class).eq(messageId), MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL)
-                        .or(RECIPIENT.RECIPIENT_.eq(recipient)))
-                .fetchOne(MAPPER);
+            .select(MESSAGE.fields())
+            .select(COMPONENT.fields())
+            .select(RECIPIENT.fields())
+            .from(MESSAGE)
+            .leftJoin(COMPONENT).on(COMPONENT.ID.eq(MESSAGE.COMPONENT_ID))
+            .leftJoin(RECIPIENT).on(RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(RECIPIENT.RECIPIENT_.eq(recipient)))
+            .where(MESSAGE.ID.cast(String.class).eq(messageId), MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL)
+                .or(RECIPIENT.RECIPIENT_.eq(recipient)))
+            .fetchOne(MAPPER);
     }
 
     @Transactional
@@ -95,31 +96,31 @@ public class FeedService {
         LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
         // Update 'personal' messages
         dsl
-                .update(RECIPIENT)
-                .set(RECIPIENT.READ_AT, now)
-                .where(RECIPIENT.RECIPIENT_.eq(recipient).and(RECIPIENT.READ_AT.isNull()),
-                        exists(dsl.selectOne().from(MESSAGE)
-                                .where(MESSAGE.ID.eq(RECIPIENT.MESSAGE_ID),
-                                        MESSAGE.SYSTEM_ID.eq(systemId))))
-                .execute();
+            .update(RECIPIENT)
+            .set(RECIPIENT.READ_AT, now)
+            .where(RECIPIENT.RECIPIENT_.eq(recipient).and(RECIPIENT.READ_AT.isNull()),
+                exists(dsl.selectOne().from(MESSAGE)
+                    .where(MESSAGE.ID.eq(RECIPIENT.MESSAGE_ID),
+                        MESSAGE.SYSTEM_ID.eq(systemId))))
+            .execute();
         // Update messages 'for all'
         List<String> ids = dsl
-                .select(MESSAGE.ID)
-                .from(MESSAGE)
-                .where(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL),
-                        MESSAGE.SYSTEM_ID.eq(systemId),
-                        notExists(dsl.selectOne().from(RECIPIENT)
-                                .where(RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID),
-                                        RECIPIENT.RECIPIENT_.eq(recipient))))
-                .fetch().map(Record1::component1);
+            .select(MESSAGE.ID)
+            .from(MESSAGE)
+            .where(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL),
+                MESSAGE.SYSTEM_ID.eq(systemId),
+                notExists(dsl.selectOne().from(RECIPIENT)
+                    .where(RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID),
+                        RECIPIENT.RECIPIENT_.eq(recipient))))
+            .fetch().map(Record1::component1);
         for (String id : ids) {
             dsl
-                    .insertInto(RECIPIENT)
-                    .set(RECIPIENT.ID, RECIPIENT_ID_SEQ.nextval())
-                    .set(RECIPIENT.READ_AT, now)
-                    .set(RECIPIENT.MESSAGE_ID, id)
-                    .set(RECIPIENT.RECIPIENT_, recipient)
-                    .execute();
+                .insertInto(RECIPIENT)
+                .set(RECIPIENT.ID, RECIPIENT_ID_SEQ.nextval())
+                .set(RECIPIENT.READ_AT, now)
+                .set(RECIPIENT.MESSAGE_ID, id)
+                .set(RECIPIENT.RECIPIENT_, recipient)
+                .execute();
         }
     }
 
@@ -129,18 +130,18 @@ public class FeedService {
             LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
             for (String id : messageId) {
                 int updated = dsl
-                        .update(RECIPIENT)
-                        .set(RECIPIENT.READ_AT, now)
-                        .where(RECIPIENT.MESSAGE_ID.eq(id)).and(RECIPIENT.RECIPIENT_.eq(recipient))
-                        .execute();
+                    .update(RECIPIENT)
+                    .set(RECIPIENT.READ_AT, now)
+                    .where(RECIPIENT.MESSAGE_ID.eq(id)).and(RECIPIENT.RECIPIENT_.eq(recipient))
+                    .execute();
                 if (updated == 0) {
                     dsl
-                            .insertInto(RECIPIENT)
-                            .set(RECIPIENT.ID, RECIPIENT_ID_SEQ.nextval())
-                            .set(RECIPIENT.READ_AT, now)
-                            .set(RECIPIENT.MESSAGE_ID, id)
-                            .set(RECIPIENT.RECIPIENT_, recipient)
-                            .execute();
+                        .insertInto(RECIPIENT)
+                        .set(RECIPIENT.ID, RECIPIENT_ID_SEQ.nextval())
+                        .set(RECIPIENT.READ_AT, now)
+                        .set(RECIPIENT.MESSAGE_ID, id)
+                        .set(RECIPIENT.RECIPIENT_, recipient)
+                        .execute();
                 }
             }
         }
@@ -148,14 +149,16 @@ public class FeedService {
 
     public UnreadMessagesInfo getFeedCount(String recipient, String systemId) {
         Integer count = dsl
-                .selectCount()
-                .from(MESSAGE)
-                .leftJoin(RECIPIENT).on(RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(RECIPIENT.RECIPIENT_.eq(recipient)))
-                .where(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL).and(RECIPIENT.ID.isNull())
-                                .or(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.USER).and(RECIPIENT.READ_AT.isNull())
-                                        .and(RECIPIENT.RECIPIENT_.eq(recipient))),
-                        MESSAGE.SYSTEM_ID.eq(systemId))
-                .fetchOne().value1();
+            .selectCount()
+            .from(MESSAGE)
+            .leftJoin(RECIPIENT).on(RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(RECIPIENT.RECIPIENT_.eq(recipient)))
+            .where(
+                MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL).and(RECIPIENT.ID.isNull())
+                    .or(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.USER).and(RECIPIENT.READ_AT.isNull())
+                        .and(RECIPIENT.RECIPIENT_.eq(recipient))),
+                MESSAGE.SYSTEM_ID.eq(systemId),
+                MESSAGE.SEND_NOTICE.isTrue())
+            .fetchOne().value1();
         return new UnreadMessagesInfo(count);
     }
 

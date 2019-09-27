@@ -12,4 +12,7 @@ public class UserCriteria extends RestCriteria {
 
     @QueryParam("username")
     private String username;
+
+    @QueryParam("name")
+    private String name;
 }

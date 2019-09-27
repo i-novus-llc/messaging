@@ -6,6 +6,9 @@ import java.util.Date;
 //todo удалить этот костыль
 public class LocalDateTimeUtils {
     public static String parseDateToMsk(Date date) {
+        if (date == null) {
+            return null;
+        }
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         cal.add(Calendar.HOUR_OF_DAY, 3);

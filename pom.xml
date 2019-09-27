@@ -5,7 +5,7 @@
     <groupId>ru.i-novus.messaging</groupId>
     <artifactId>messaging-pom</artifactId>
     <packaging>pom</packaging>
-    <version>3.10-SNAPSHOT</version>
+    <version>3.19-SNAPSHOT</version>
 
     <url>https://messaging.i-novus.ru</url>
 
@@ -36,7 +36,7 @@
 
     <properties>
         <n2o.version>7.3.23</n2o.version>
-        <security.admin.version>3.5</security.admin.version>
+        <security.admin.version>3.6</security.admin.version>
         <jooq.version>3.11.2</jooq.version>
         <spring.cloud.version>Greenwich.SR2</spring.cloud.version>
         <config.server.enable>false</config.server.enable>

@@ -4,15 +4,17 @@
         <fields>
             <set>
             <row>
-                <input-select id="template" label="Шаблон" query-id="messaging_msg_setting"/>
+                <input-select id="template" label="Шаблон" query-id="messaging_msg_setting" search-field-id="name"
+                              label-field-id="name"/>
             </row>
             <row>
-                <input-select id="component" label="Компонент" query-id="messaging_component">
+                <input-select id="component" label="Компонент" query-id="messaging_component" search-field-id="name"
+                              label-field-id="name">
                     <dependencies>
                         <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return template.component;</set-value>
                     </dependencies>
                 </input-select>
-                <input-select id="severity" label="Уровень важности" required="true">
+                <select id="severity" label="Уровень важности" required="true">
                     <options>
                         <option id="SEVERE" name="Важный"/>
                         <option id="ERROR" name="Ошибка"/>
@@ -22,7 +24,7 @@
                     <dependencies>
                         <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return template.severity;</set-value>
                     </dependencies>
-                </input-select>
+                </select>
             </row>
             <row>
                 <input-select id="infoType" label="Информирование" required="true" type="multi">
@@ -34,7 +36,7 @@
                         <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return template.infoType;</set-value>
                     </dependencies>
                 </input-select>
-                <input-select id="alertType" label="Способ отображения" required="true">
+                <select id="alertType" label="Способ отображения" required="true">
                     <options>
                         <option id="BLOCKER" name="Блокирующее сообщение"/>
                         <option id="POPUP" name="Всплывающее сообщение"/>
@@ -43,7 +45,7 @@
                     <dependencies>
                         <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return template.alertType;</set-value>
                     </dependencies>
-                </input-select>
+                </select>
             </row>
             <row>
                 <text-area id="caption" label="Заголовок уведомления" rows="3" required="true">
@@ -70,16 +72,16 @@
             </row>
             </set>
             <line label="Получатели" depends-on="recipientType" visible="{recipientType.id == 'USER'}">
-            <row>
-                <input-select id="users" type="checkboxes" label="Пользователи" required="true"
-                              query-id="messaging_user" label-field-id="name">
-                    <dependencies>
-                        <visibility on="recipientType">
-                            recipientType.id == 'USER'
-                        </visibility>
-                    </dependencies>
-                </input-select>
-            </row>
+                <row>
+                    <input-select id="users" type="checkboxes" label="Пользователи" required="true"
+                                  query-id="messaging_user" label-field-id="name" search-field-id="name">
+                        <dependencies>
+                            <visibility on="recipientType">
+                                recipientType.id == 'USER'
+                            </visibility>
+                        </dependencies>
+                    </input-select>
+                </row>
             </line>
         </fields>
     </form>
