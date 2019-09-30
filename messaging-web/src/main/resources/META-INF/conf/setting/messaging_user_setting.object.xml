@@ -4,14 +4,14 @@
     <operations>
         <operation id="update">
             <invocation>
-                <rest method="PUT">${messaging.backend.path}/user/{user}/settings/{id}</rest>
+                <rest method="PUT">${messaging.backend.path}/user/{username}/settings/{id}</rest>
             </invocation>
             <in-parameters>
                 <param id="id" mapping="['id']"/>
                 <param id="alertType.id" mapping="['alertType']"/>
                 <param id="infoType" mapping="['infoTypes']"/>
                 <param id="disabled" mapping="['disabled']"/>
-                <param id="user" default-value="#{username!}"/>
+                <param id="username" default-value="#{username!}"/>
             </in-parameters>
         </operation>
     </operations>
