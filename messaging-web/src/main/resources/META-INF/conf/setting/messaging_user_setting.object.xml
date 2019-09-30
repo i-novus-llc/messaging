@@ -7,11 +7,10 @@
                 <rest method="PUT">${messaging.backend.path}/user/{username}/settings/{id}</rest>
             </invocation>
             <in-parameters>
-                <param id="id"/>
-                <param id="name" required="true"/>
-                <param id="disabled"/>
-                <param id="alertType.id" mapping="['alertType']" required="true"/>
-                <param id="infoType"/>
+                <param id="id" mapping="['id']"/>
+                <param id="alertType.id" mapping="['alertType']"/>
+                <param id="infoType" mapping="['infoTypes']"/>
+                <param id="disabled" mapping="['disabled']"/>
                 <param id="username" default-value="#{username!}"/>
             </in-parameters>
         </operation>

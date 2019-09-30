@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <simple-page xmlns="http://n2oapp.net/framework/config/schema/page-2.0" name="Пользовательские настройки уведомлений">
     <table query-id="messaging_user_setting" name="Пользовательские настройки уведомлений" id="message_setting_list">
-        <filters>
+        <filters search-buttons="false">
             <row>
                 <input-select id="component" label="Компонент" query-id="messaging_component"
                               label-field-id="name" search-field-id="name"/>
@@ -13,19 +13,21 @@
                         <option id="INFO" name="Информация"/>
                     </options>
                 </input-select>
-                <input-select id="alertType" label="Способ отображения">
+                <input-select id="alertType" label="Способ отображения для пользователя">
                     <options>
                         <option id="BLOCKER" name="Блокирующее сообщение"/>
                         <option id="POPUP" name="Всплывающее сообщение"/>
                         <option id="HIDDEN" name="Лента уведомлений"/>
                     </options>
                 </input-select>
-                <input-select id="infoType" label="Информирование">
+                <input-select id="infoType" label="Информирование для пользователя">
                     <options>
                         <option id="EMAIL" name="Электронная почта"/>
                         <option id="NOTICE" name="Центр уведомлений"/>
                     </options>
                 </input-select>
+            </row>
+            <row>
                 <input-text id="name" label="Событие"/>
                 <radio-group id="enabled" label="Уведомление включено" inline="true">
                     <default-value id="YES" name="Да"/>
@@ -34,6 +36,7 @@
                         <option id="NO" name="Нет"/>
                     </options>
                 </radio-group>
+                <search-buttons id="search"/>
             </row>
         </filters>
         <columns>
@@ -44,8 +47,8 @@
             <column text-field-id="defaultInfoType" label="Информирование по умолчанию">
                 <list label-field-id="name"/>
             </column>
-            <column text-field-id="alertType.name" label="Способ отображения"/>
-            <column text-field-id="infoType" label="Информирование">
+            <column text-field-id="alertType.name" label="Способ отображения для пользователя"/>
+            <column text-field-id="infoType" label="Информирование для пользователя">
                 <list label-field-id="name"/>
             </column>
             <column text-field-id="enabled" label="Включено">
@@ -55,7 +58,7 @@
         <toolbar>
             <button label="Изменить" id="update" model="resolve" icon="fa fa-edit">
                 <show-modal page-id="messaging_user_setting" submit-operation-id="update"
-                            close-after-submit="true" detail-field-id="id"/>
+                            close-after-submit="true" detail-field-id="id" object-id="messaging_user_setting"/>
             </button>
         </toolbar>
     </table>
