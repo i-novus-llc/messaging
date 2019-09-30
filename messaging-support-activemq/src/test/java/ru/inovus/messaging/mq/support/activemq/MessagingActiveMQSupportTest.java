@@ -2,7 +2,6 @@ package ru.inovus.messaging.mq.support.activemq;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.n2oapp.platform.jaxrs.RestObjectMapper;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,6 @@ import java.util.List;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {ActiveMqProvider.class, MessagingActiveMQSupportTest.TestConfiguration.class})
-@Ignore
 public class MessagingActiveMQSupportTest {
 
     private static final String DEFAULT_SYSTEM_ID = "default";
@@ -45,20 +43,19 @@ public class MessagingActiveMQSupportTest {
         mqProvider.subscribe(new TopicMqConsumer(WS_SESSION_ID, DEFAULT_SYSTEM_ID, "unique-user-id", TOPIC_NAME, messageOutbox -> receivedMessage = messageOutbox));
 
         mqProvider.publish(createNotice(), TOPIC_NAME);
-        Thread.sleep(300);
+        Thread.sleep(3000);
         assert receivedMessage != null;
         receivedMessage = null;
 
         mqProvider.unsubscribe(WS_SESSION_ID);
         mqProvider.publish(createNotice(), TOPIC_NAME);
-        Thread.sleep(300);
+        Thread.sleep(3000);
         assert receivedMessage == null;
     }
 
     private MessageOutbox receivedMessage2;
     private MessageOutbox receivedMessage3;
     @Test
-    @Ignore
     public void testPassMessageTroughSecondPubsubMQ() throws InterruptedException {
         final String WS_SESSION_ID_1 = "ws-session-id-1";
         final String WS_SESSION_ID_2 = "ws-session-id-2";
@@ -70,7 +67,7 @@ public class MessagingActiveMQSupportTest {
         mqProvider.subscribe(new TopicMqConsumer(WS_SESSION_ID_2, DEFAULT_SYSTEM_ID, "unique-user-id-2", TOPIC_NAME, messageOutbox -> {receivedMessage3 = messageOutbox; System.out.println("receivedMessage3");}));
 
         mqProvider.publish(createNotice(), TOPIC_NAME);
-        Thread.sleep(300);
+        Thread.sleep(5000);
 
         mqProvider.unsubscribe(WS_SESSION_ID_1);
         mqProvider.unsubscribe(WS_SESSION_ID_2);
@@ -91,13 +88,13 @@ public class MessagingActiveMQSupportTest {
         mqProvider.subscribe(new QueueMqConsumer(QUEUE_NAME, messageOutbox -> receivedMessage4 = messageOutbox, QUEUE_CONSUMER_NAME));
 
         mqProvider.publish(createEmailNotice(), QUEUE_DESTINATION_NAME);
-        Thread.sleep(300);
+        Thread.sleep(3000);
         assert receivedMessage4 != null;
         receivedMessage4 = null;
 
         mqProvider.unsubscribe(QUEUE_CONSUMER_NAME);
         mqProvider.publish(createEmailNotice(), QUEUE_DESTINATION_NAME);
-        Thread.sleep(300);
+        Thread.sleep(3000);
         assert receivedMessage4 == null;
     }
 
@@ -116,7 +113,7 @@ public class MessagingActiveMQSupportTest {
         mqProvider.subscribe(new QueueMqConsumer(QUEUE_NAME, messageOutbox -> receivedMessage6 = messageOutbox, QUEUE_CONSUMER_NAME_2));
 
         mqProvider.publish(createEmailNotice(), QUEUE_DESTINATION_NAME);
-        Thread.sleep(300);
+        Thread.sleep(3000);
 
         mqProvider.unsubscribe(QUEUE_CONSUMER_NAME_1);
         mqProvider.unsubscribe(QUEUE_CONSUMER_NAME_2);

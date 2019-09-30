@@ -13,7 +13,7 @@ import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.stereotype.Component;
-import ru.inovus.messaging.api.*;
+import ru.inovus.messaging.api.MessageOutbox;
 import ru.inovus.messaging.api.queue.MqConsumer;
 import ru.inovus.messaging.api.queue.MqProvider;
 import ru.inovus.messaging.api.queue.QueueMqConsumer;
@@ -70,16 +70,16 @@ public class ActiveMqProvider implements MqProvider {
             }
         });
         container.setConnectionFactory(activeMQConnectionFactory);
-
         if (mqConsumer instanceof QueueMqConsumer) {
             container.setDestination(new ActiveMQQueue(mqConsumer.mqName()));
         } else
         if (mqConsumer instanceof TopicMqConsumer) {
             TopicMqConsumer topicMqHandler = (TopicMqConsumer) mqConsumer;
             container.setDestination(new ActiveMQTopic(topicMqHandler.mqName()));
+            container.setPubSubDomain(true);
             if (Boolean.TRUE.equals(durable)) {
                 container.setSubscriptionDurable(true);
-                container.setClientId(topicMqHandler.systemId + "." + topicMqHandler.authToken);
+                container.setClientId(topicMqHandler.systemId + "." + topicMqHandler.authToken + "." + System.currentTimeMillis());
                 container.setDurableSubscriptionName(topicMqHandler.mqName() + "." + topicMqHandler.systemId + "." + topicMqHandler.authToken);
             }
         }
