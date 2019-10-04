@@ -201,12 +201,12 @@ databaseChangeLog:
             splitStatements: true
             stripComments: true
   - changeSet:
-      id: MESSAGING-38
-      author: azainutdinov
+      id: MESSAGING-39
+      author: agolodnaya
       changes:
         - sqlFile:
             encoding: utf8
-            path: sql/MESSAGING-38.sql
+            path: sql/MESSAGING-39.sql
             relativeToChangelogFile: true
             splitStatements: true
             stripComments: true

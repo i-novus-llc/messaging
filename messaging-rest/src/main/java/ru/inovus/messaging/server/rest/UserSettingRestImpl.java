@@ -68,6 +68,8 @@ public class UserSettingRestImpl implements UserSettingRest {
         return infoTypes;
     }
 
+    //Берутся все записи из таболицы MESSAGE_SETTING, кроме тех, в которых IS_DISABLED = true
+    // + записи из таблицы USER_SETTING, из нее также берутся записи, в которых также IS_DISABLED = true
     @Override
     public Page<UserSetting> getSettings(UserSettingCriteria criteria) {
         List<Condition> conditions = new ArrayList<>();
@@ -103,12 +105,15 @@ public class UserSettingRestImpl implements UserSettingRest {
                         MESSAGE_SETTING.IS_DISABLED.isFalse() // user shouldn't see settings disabled by admin
                                 .and(USER_SETTING.IS_DISABLED.isNull().and(DSL.value(enabled))
                                         .or(USER_SETTING.IS_DISABLED.notEqual(enabled)))));
+
+        //Изменила USER_SETTING.ID -> USER_SETTING.MSG_SETTING_ID
+        //.leftJoin(COMPONENT).on(MESSAGE_SETTING.COMPONENT_ID.eq(COMPONENT.ID)) - Не совсем понимаю вот эту строку! зачем она
         List<UserSetting> list = dsl
                 .select(MESSAGE_SETTING.fields())
                 .select(USER_SETTING.fields())
                 .select(COMPONENT.fields())
                 .from(MESSAGE_SETTING)
-                .leftJoin(USER_SETTING).on(USER_SETTING.ID.eq(MESSAGE_SETTING.ID),
+                .leftJoin(USER_SETTING).on(USER_SETTING.MSG_SETTING_ID.eq(MESSAGE_SETTING.ID),
                         USER_SETTING.USER_ID.eq(criteria.getUser())) // in fact it's username
                 .leftJoin(COMPONENT).on(MESSAGE_SETTING.COMPONENT_ID.eq(COMPONENT.ID))
                 .where(conditions)
@@ -119,7 +124,7 @@ public class UserSettingRestImpl implements UserSettingRest {
         Integer count = dsl
                 .selectCount()
                 .from(MESSAGE_SETTING)
-                .leftJoin(USER_SETTING).on(USER_SETTING.ID.eq(MESSAGE_SETTING.ID),
+                .leftJoin(USER_SETTING).on(USER_SETTING.MSG_SETTING_ID.eq(MESSAGE_SETTING.ID),
                         USER_SETTING.USER_ID.eq(criteria.getUser()))
 //                .leftJoin(COMPONENT).on(MESSAGE_SETTING.COMPONENT_ID.eq(COMPONENT.ID))//maybe drop this join? not in where clause anyway
                 .where(conditions)
