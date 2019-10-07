@@ -106,7 +106,7 @@ public class UserSettingRestImpl implements UserSettingRest {
                                 .and(USER_SETTING.IS_DISABLED.isNull().and(DSL.value(enabled))
                                         .or(USER_SETTING.IS_DISABLED.notEqual(enabled)))));
 
-        //Изменила USER_SETTING.ID -> USER_SETTING.MSG_SETTING_ID
+        //Изменила USER_SETTING.ID -> USER_SETTING.MSG_SETTING_ID в связи с тем что были изменения в БД
         //.leftJoin(COMPONENT).on(MESSAGE_SETTING.COMPONENT_ID.eq(COMPONENT.ID)) - Не совсем понимаю вот эту строку! зачем она
         List<UserSetting> list = dsl
                 .select(MESSAGE_SETTING.fields())
@@ -133,6 +133,7 @@ public class UserSettingRestImpl implements UserSettingRest {
         return new PageImpl<>(list, criteria, (long) count);
     }
 
+    //Изменила USER_SETTING.ID -> USER_SETTING.MSG_SETTING_ID в связи с тем что были изменения в БД
     @Override
     public UserSetting getSetting(String user, Integer id) {
         return dsl
@@ -140,7 +141,7 @@ public class UserSettingRestImpl implements UserSettingRest {
                 .select(USER_SETTING.fields())
                 .select(COMPONENT.fields())
                 .from(MESSAGE_SETTING)
-                .leftJoin(USER_SETTING).on(USER_SETTING.ID.eq(MESSAGE_SETTING.ID),
+                .leftJoin(USER_SETTING).on(USER_SETTING.MSG_SETTING_ID.eq(MESSAGE_SETTING.ID),
                         USER_SETTING.USER_ID.eq(user))
                 .leftJoin(COMPONENT).on(MESSAGE_SETTING.COMPONENT_ID.eq(COMPONENT.ID))
                 .where(MESSAGE_SETTING.ID.eq(id))
@@ -148,6 +149,7 @@ public class UserSettingRestImpl implements UserSettingRest {
                 .map(MAPPER);
     }
 
+    // TODO: 07.10.2019 Нужно проверить и изменить вот этот метод!!! 
     @Override
     @Transactional
     public void updateSetting(String user, Integer id, UserSetting setting) {
