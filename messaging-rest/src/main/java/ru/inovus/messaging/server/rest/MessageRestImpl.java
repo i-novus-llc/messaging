@@ -17,15 +17,18 @@ import ru.inovus.messaging.api.MessageOutbox;
 import ru.inovus.messaging.api.MessageSetting;
 import ru.inovus.messaging.api.criteria.MessageCriteria;
 import ru.inovus.messaging.api.criteria.RecipientCriteria;
+import ru.inovus.messaging.api.criteria.UserSettingCriteria;
 import ru.inovus.messaging.api.model.*;
 import ru.inovus.messaging.api.queue.DestinationResolver;
 import ru.inovus.messaging.api.queue.DestinationType;
 import ru.inovus.messaging.api.queue.MqProvider;
 import ru.inovus.messaging.api.rest.MessageRest;
+import ru.inovus.messaging.api.rest.UserSettingRest;
 import ru.inovus.messaging.impl.MessageService;
 import ru.inovus.messaging.impl.MessageSettingService;
 import ru.inovus.messaging.impl.RecipientService;
 
+import javax.validation.constraints.Max;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,6 +48,7 @@ public class MessageRestImpl implements MessageRest {
     private final UserRestService userRestService;
     private final RoleRestService roleRestService;
     private DestinationResolver destinationResolver;
+    private final UserSettingRest userSettingRest;
 
     public MessageRestImpl(MessageService messageService,
                            MessageSettingService messageSettingService,
@@ -56,7 +60,8 @@ public class MessageRestImpl implements MessageRest {
                            MqProvider mqProvider,
                            @Qualifier("userRestServiceJaxRsProxyClient") UserRestService userRestService,
                            @Qualifier("roleRestServiceJaxRsProxyClient") RoleRestService roleRestService,
-                           DestinationResolver destinationResolver) {
+                           DestinationResolver destinationResolver,
+                           UserSettingRest userSettingRest) {
         this.messageService = messageService;
         this.messageSettingService = messageSettingService;
         this.recipientService = recipientService;
@@ -68,6 +73,7 @@ public class MessageRestImpl implements MessageRest {
         this.userRestService = userRestService;
         this.roleRestService = roleRestService;
         this.destinationResolver = destinationResolver;
+        this.userSettingRest = userSettingRest;
     }
 
     @Override
@@ -132,10 +138,46 @@ public class MessageRestImpl implements MessageRest {
 
     private void buildAndSendMessage(TemplateMessageOutbox templateMessageOutbox) {
         MessageSetting ms = getMessageSetting(templateMessageOutbox.getTemplateCode());
+
+        List<String> userNameList = new ArrayList<>();
+        List<UserSetting> userSettings = new ArrayList<>();
+
+
+
+        userNameList = templateMessageOutbox.getUserNameList();
+
+        if (!CollectionUtils.isEmpty(userNameList)) {
+            if (userNameList.size() == 1) {
+                UserSettingCriteria criteria = new UserSettingCriteria();
+                criteria.setUser(templateMessageOutbox.getUserNameList().get(0));
+                criteria.setTemplateCode(templateMessageOutbox.getTemplateCode());
+                userSettings = Collections.singletonList(userSettingRest.getSettings(criteria).getContent().get(0));
+            } else {
+                for (String userName : userNameList) {
+                    UserSettingCriteria criteria = new UserSettingCriteria();
+                    criteria.setUser(userName);
+                    criteria.setTemplateCode(templateMessageOutbox.getTemplateCode());
+                    userSettings.add(userSettingRest.getSettings(criteria).getContent().get(0));
+                }
+            }
+        }
+
         if (!ms.getDisabled()) {
-            Message message = buildMessage(ms, templateMessageOutbox);
-            save(message);
-            send(message);
+            if (!CollectionUtils.isEmpty(userSettings)) {
+                if (userSettings.size() == 1) {
+                    if (!userSettings.get(0).getDisabled()) {
+                        Message message = buildMessage(ms, userSettings.get(0), templateMessageOutbox);
+                        save(message);
+                        send(message);
+                    }
+                } else {
+                    for (UserSetting userSetting : userSettings) {
+                        Message message = buildMessage(ms, userSetting, templateMessageOutbox);
+                        save(message);
+                        send(message);
+                    }
+                }
+            }
         }
     }
 
@@ -158,14 +200,14 @@ public class MessageRestImpl implements MessageRest {
     }
 
     //Построение уведомления по шаблону уведомления и доп. параметрам
-    private Message buildMessage(MessageSetting messageSetting, TemplateMessageOutbox params) {
+    private Message buildMessage(MessageSetting messageSetting, UserSetting userSetting, TemplateMessageOutbox params) {
         Message message = new Message();
         message.setCaption(buildText(messageSetting.getCaption(), params));
         message.setText(buildText(messageSetting.getText(), params));
         message.setSeverity(messageSetting.getSeverity());
-        message.setAlertType(messageSetting.getAlertType());
+        message.setAlertType(userSetting.getAlertType());
         message.setSentAt(params.getSentAt());
-        message.setInfoTypes(messageSetting.getInfoType());
+        message.setInfoTypes(userSetting.getInfoTypes());
         message.setComponent(messageSetting.getComponent());
         message.setFormationType(messageSetting.getFormationType());
         message.setRecipientType(RecipientType.USER);

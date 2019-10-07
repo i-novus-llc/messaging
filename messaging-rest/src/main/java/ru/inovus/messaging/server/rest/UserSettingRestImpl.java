@@ -103,6 +103,8 @@ public class UserSettingRestImpl implements UserSettingRest {
                         MESSAGE_SETTING.IS_DISABLED.isFalse() // user shouldn't see settings disabled by admin
                                 .and(USER_SETTING.IS_DISABLED.isNull().and(DSL.value(enabled))
                                         .or(USER_SETTING.IS_DISABLED.notEqual(enabled)))));
+        Optional.ofNullable(criteria.getTemplateCode()).filter(StringUtils::isNotBlank)
+            .ifPresent(templateCode -> conditions.add(MESSAGE_SETTING.CODE.containsIgnoreCase(templateCode)));
         List<UserSetting> list = dsl
                 .select(MESSAGE_SETTING.fields())
                 .select(USER_SETTING.fields())
