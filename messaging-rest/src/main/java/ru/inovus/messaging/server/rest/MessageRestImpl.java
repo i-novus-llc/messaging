@@ -28,7 +28,6 @@ import ru.inovus.messaging.impl.MessageService;
 import ru.inovus.messaging.impl.MessageSettingService;
 import ru.inovus.messaging.impl.RecipientService;
 
-import javax.validation.constraints.Max;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -139,39 +138,45 @@ public class MessageRestImpl implements MessageRest {
     private void buildAndSendMessage(TemplateMessageOutbox templateMessageOutbox) {
         MessageSetting ms = getMessageSetting(templateMessageOutbox.getTemplateCode());
 
-        List<String> userNameList = new ArrayList<>();
         List<UserSetting> userSettings = new ArrayList<>();
 
+        if (!CollectionUtils.isEmpty(templateMessageOutbox.getPermissions())) {
+            Set<Role> roles = getRolesByPermissionCodes(templateMessageOutbox.getPermissions());
 
+            if (!CollectionUtils.isEmpty(roles)) {
+                Set<User> users = getUsersByRoles(roles);
 
-        userNameList = templateMessageOutbox.getUserNameList();
+                if (!CollectionUtils.isEmpty(users)) {
+                    for (User user : users) {
+                        UserSettingCriteria criteria = new UserSettingCriteria();
+                        criteria.setPageSize(1);
+                        criteria.setUser(user.getUsername());
+                        criteria.setTemplateCode(templateMessageOutbox.getTemplateCode());
+                        if (!CollectionUtils.isEmpty(userSettingRest.getSettings(criteria).getContent()))
+                            userSettings.add(userSettingRest.getSettings(criteria).getContent().get(0));
+                    }
+                }
+            }
+        }
+
+        List<String> userNameList = templateMessageOutbox.getUserNameList();
 
         if (!CollectionUtils.isEmpty(userNameList)) {
-            if (userNameList.size() == 1) {
+            for (String userName : userNameList) {
                 UserSettingCriteria criteria = new UserSettingCriteria();
-                criteria.setUser(templateMessageOutbox.getUserNameList().get(0));
+                criteria.setPageSize(1);
+                criteria.setUser(userName);
                 criteria.setTemplateCode(templateMessageOutbox.getTemplateCode());
-                userSettings = Collections.singletonList(userSettingRest.getSettings(criteria).getContent().get(0));
-            } else {
-                for (String userName : userNameList) {
-                    UserSettingCriteria criteria = new UserSettingCriteria();
-                    criteria.setUser(userName);
-                    criteria.setTemplateCode(templateMessageOutbox.getTemplateCode());
+                if (!CollectionUtils.isEmpty(userSettingRest.getSettings(criteria).getContent()))
                     userSettings.add(userSettingRest.getSettings(criteria).getContent().get(0));
-                }
             }
         }
 
         if (!ms.getDisabled()) {
             if (!CollectionUtils.isEmpty(userSettings)) {
-                if (userSettings.size() == 1) {
-                    if (!userSettings.get(0).getDisabled()) {
-                        Message message = buildMessage(ms, userSettings.get(0), templateMessageOutbox);
-                        save(message);
-                        send(message);
-                    }
-                } else {
-                    for (UserSetting userSetting : userSettings) {
+
+                for (UserSetting userSetting : userSettings) {
+                    if (!userSetting.getDisabled()) {
                         Message message = buildMessage(ms, userSetting, templateMessageOutbox);
                         save(message);
                         send(message);

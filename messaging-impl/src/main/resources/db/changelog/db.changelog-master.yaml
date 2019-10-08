@@ -200,16 +200,16 @@ databaseChangeLog:
             relativeToChangelogFile: true
             splitStatements: true
             stripComments: true
-#  - changeSet:
-#      id: MESSAGING-38
-#      author: azainutdinov
-#      changes:
-#        - sqlFile:
-#            encoding: utf8
-#            path: sql/MESSAGING-38.sql
-#            relativeToChangelogFile: true
-#            splitStatements: true
-#            stripComments: true
+  - changeSet:
+      id: MESSAGING-38
+      author: azainutdinov
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/MESSAGING-38.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
   - changeSet:
       id: MESSAGING-39
       author: agolodnaya
