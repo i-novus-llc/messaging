@@ -27,10 +27,10 @@ public class UserSettingCriteria extends RestCriteria {
     @QueryParam("infoType.id")
     private InfoType infoType;
 
-    @QueryParam("templateCode")
+    @QueryParam("name")
     private String name;
 
-    @QueryParam("name")
+    @QueryParam("templateCode")
     private String templateCode;
 
     @QueryParam("enabled.id")
