@@ -11,10 +11,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import ru.inovus.messaging.api.criteria.UserSettingCriteria;
 import ru.inovus.messaging.api.model.Component;
 import ru.inovus.messaging.api.model.InfoType;
 import ru.inovus.messaging.api.model.UserSetting;
-import ru.inovus.messaging.api.criteria.UserSettingCriteria;
 import ru.inovus.messaging.api.rest.UserSettingRest;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageSettingRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.UserSettingRecord;
@@ -68,6 +68,8 @@ public class UserSettingRestImpl implements UserSettingRest {
         return infoTypes;
     }
 
+    //Берутся все записи из таболицы MESSAGE_SETTING, кроме тех, в которых IS_DISABLED = true
+    // + записи из таблицы USER_SETTING, кроме тех, в которых также IS_DISABLED = true
     @Override
     public Page<UserSetting> getSettings(UserSettingCriteria criteria) {
         List<Condition> conditions = new ArrayList<>();
@@ -105,12 +107,15 @@ public class UserSettingRestImpl implements UserSettingRest {
                                         .or(USER_SETTING.IS_DISABLED.notEqual(enabled)))));
         Optional.ofNullable(criteria.getTemplateCode()).filter(StringUtils::isNotBlank)
             .ifPresent(templateCode -> conditions.add(MESSAGE_SETTING.CODE.containsIgnoreCase(templateCode)));
+
+        //Изменила USER_SETTING.ID -> USER_SETTING.MSG_SETTING_ID в связи с тем что были изменения в БД
+        //.leftJoin(COMPONENT).on(MESSAGE_SETTING.COMPONENT_ID.eq(COMPONENT.ID)) - Не совсем понимаю вот эту строку! зачем она
         List<UserSetting> list = dsl
                 .select(MESSAGE_SETTING.fields())
                 .select(USER_SETTING.fields())
                 .select(COMPONENT.fields())
                 .from(MESSAGE_SETTING)
-                .leftJoin(USER_SETTING).on(USER_SETTING.ID.eq(MESSAGE_SETTING.ID),
+                .leftJoin(USER_SETTING).on(USER_SETTING.MSG_SETTING_ID.eq(MESSAGE_SETTING.ID),
                         USER_SETTING.USER_ID.eq(criteria.getUser())) // in fact it's username
                 .leftJoin(COMPONENT).on(MESSAGE_SETTING.COMPONENT_ID.eq(COMPONENT.ID))
                 .where(conditions)
@@ -121,7 +126,7 @@ public class UserSettingRestImpl implements UserSettingRest {
         Integer count = dsl
                 .selectCount()
                 .from(MESSAGE_SETTING)
-                .leftJoin(USER_SETTING).on(USER_SETTING.ID.eq(MESSAGE_SETTING.ID),
+                .leftJoin(USER_SETTING).on(USER_SETTING.MSG_SETTING_ID.eq(MESSAGE_SETTING.ID),
                         USER_SETTING.USER_ID.eq(criteria.getUser()))
 //                .leftJoin(COMPONENT).on(MESSAGE_SETTING.COMPONENT_ID.eq(COMPONENT.ID))//maybe drop this join? not in where clause anyway
                 .where(conditions)
@@ -130,6 +135,7 @@ public class UserSettingRestImpl implements UserSettingRest {
         return new PageImpl<>(list, criteria, (long) count);
     }
 
+    //Изменила USER_SETTING.ID -> USER_SETTING.MSG_SETTING_ID в связи с тем что были изменения в БД
     @Override
     public UserSetting getSetting(String user, Integer id) {
         return dsl
@@ -137,7 +143,7 @@ public class UserSettingRestImpl implements UserSettingRest {
                 .select(USER_SETTING.fields())
                 .select(COMPONENT.fields())
                 .from(MESSAGE_SETTING)
-                .leftJoin(USER_SETTING).on(USER_SETTING.ID.eq(MESSAGE_SETTING.ID),
+                .leftJoin(USER_SETTING).on(USER_SETTING.MSG_SETTING_ID.eq(MESSAGE_SETTING.ID),
                         USER_SETTING.USER_ID.eq(user))
                 .leftJoin(COMPONENT).on(MESSAGE_SETTING.COMPONENT_ID.eq(COMPONENT.ID))
                 .where(MESSAGE_SETTING.ID.eq(id))
@@ -147,32 +153,52 @@ public class UserSettingRestImpl implements UserSettingRest {
 
     @Override
     @Transactional
-    public void updateSetting(String user, Integer id, UserSetting setting) {
-        boolean exists = dsl
+    public void updateSetting(String user, Integer msgSettingId, UserSetting setting) {
+        //1. Проверяем существует ли уже в таблице public.user_setting для переданного пользователя (user) для шаблона уведомления (msgSettingId) своя запись
+        UserSetting userSetting = dsl
+            .select(USER_SETTING.fields())
+            .from(USER_SETTING)
+            .where(USER_SETTING.MSG_SETTING_ID.eq(msgSettingId))
+            .and(USER_SETTING.USER_ID.eq(user))
+            .fetchOne()
+            .map(MAPPER);
+
+        boolean messageSettingsExists;
+
+        // Если в таблице public.user_setting уже ЕСТЬ такая запись , то просто ее обновляем
+        if (userSetting.getId() != null) {
+            dsl
+                .update(USER_SETTING)
+                .set(USER_SETTING.ALERT_TYPE, setting.getAlertType())
+                .set(USER_SETTING.SEND_NOTICE, setting.getInfoTypes() != null && setting.getInfoTypes().contains(InfoType.NOTICE))
+                .set(USER_SETTING.SEND_EMAIL, setting.getInfoTypes() != null && setting.getInfoTypes().contains(InfoType.EMAIL))
+                .set(USER_SETTING.IS_DISABLED, setting.getDisabled())
+                .where(USER_SETTING.ID.eq(userSetting.getId()))
+                .execute();
+        } else {
+//          Если в таблице public.user_setting такой записи НЕТ, то проверяем, есть ли с таким иден-ром запись в обшей таблице с шаблонами уведомлений public.message_setting
+            messageSettingsExists = dsl
                 .selectCount()
-                .from(USER_SETTING)
-                .where(USER_SETTING.ID.eq(id))
+                .from(MESSAGE_SETTING)
+                .where(MESSAGE_SETTING.ID.eq(msgSettingId))
                 .fetchOne()
                 .component1() != 0;
-        if (exists) {
-            dsl
-                    .update(USER_SETTING)
-                    .set(USER_SETTING.ALERT_TYPE, setting.getAlertType())
-                    .set(USER_SETTING.SEND_NOTICE, setting.getInfoTypes() != null && setting.getInfoTypes().contains(InfoType.NOTICE))
-                    .set(USER_SETTING.SEND_EMAIL, setting.getInfoTypes() != null && setting.getInfoTypes().contains(InfoType.EMAIL))
-                    .set(USER_SETTING.IS_DISABLED, setting.getDisabled())
-                    .where(USER_SETTING.ID.eq(id))
-                    .execute();
-        } else {
-            dsl
+
+            if (messageSettingsExists) {
+                UserSetting settings = dsl.selectFrom(USER_SETTING).orderBy(USER_SETTING.ID.desc()).limit(1).fetchOne().map(MAPPER);
+
+//           Если в таблице public.message_setting запись с переданным иден-ром есть, но со ссылкой на нее и указанными настройками пользователя создаем запись в таблице public.user_setting
+                dsl
                     .insertInto(USER_SETTING)
-                    .set(USER_SETTING.ID, id)
+                    .set(USER_SETTING.ID, (settings.getId() + 1))
                     .set(USER_SETTING.USER_ID, user)
                     .set(USER_SETTING.ALERT_TYPE, setting.getAlertType())
                     .set(USER_SETTING.SEND_NOTICE, setting.getInfoTypes() != null && setting.getInfoTypes().contains(InfoType.NOTICE))
                     .set(USER_SETTING.SEND_EMAIL, setting.getInfoTypes() != null && setting.getInfoTypes().contains(InfoType.EMAIL))
                     .set(USER_SETTING.IS_DISABLED, setting.getDisabled())
+                    .set(USER_SETTING.MSG_SETTING_ID, msgSettingId)
                     .execute();
+            }
         }
     }
 

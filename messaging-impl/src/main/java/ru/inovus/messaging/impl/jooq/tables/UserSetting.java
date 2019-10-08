@@ -88,6 +88,11 @@ public class UserSetting extends TableImpl<UserSettingRecord> {
     public final TableField<UserSettingRecord, Boolean> SEND_EMAIL = createField("send_email", org.jooq.impl.SQLDataType.BOOLEAN, this, "");
 
     /**
+     * The column <code>public.user_setting.id</code>. Уникальный идентификатор
+     */
+    public final TableField<UserSettingRecord, Integer> MSG_SETTING_ID = createField("msg_settings_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "Идентификатор шаблона уведомлений, который меняет пользователь");
+
+    /**
      * Create a <code>public.user_setting</code> table reference
      */
     public UserSetting() {
