@@ -4,13 +4,15 @@
 package ru.inovus.messaging.impl.jooq.tables.records;
 
 
-import javax.annotation.Generated;
-
-import org.jooq.*;
+import org.jooq.Field;
+import org.jooq.Record1;
+import org.jooq.Record7;
+import org.jooq.Row7;
 import org.jooq.impl.UpdatableRecordImpl;
-
 import ru.inovus.messaging.api.model.AlertType;
 import ru.inovus.messaging.impl.jooq.tables.UserSetting;
+
+import javax.annotation.Generated;
 
 
 /**
@@ -113,14 +115,14 @@ public class UserSettingRecord extends UpdatableRecordImpl<UserSettingRecord> im
     }
 
     /**
-     * Getter for <code>public.user_setting.msg_settings_id</code>.
+     * Getter for <code>public.user_setting.msg_setting_id</code>.
      */
     public void setMsgSettingId(Integer value) {
         set(6, value);
     }
 
     /**
-     * Getter for <code>public.user_setting.msg_settings_id</code>.
+     * Getter for <code>public.user_setting.msg_setting_id</code>.
      */
     public Integer getMsgSettingId() {
         return (Integer) get(6);
@@ -139,7 +141,7 @@ public class UserSettingRecord extends UpdatableRecordImpl<UserSettingRecord> im
     }
 
     // -------------------------------------------------------------------------
-    // Record6 type implementation
+    // Record7 type implementation
     // -------------------------------------------------------------------------
 
     /**

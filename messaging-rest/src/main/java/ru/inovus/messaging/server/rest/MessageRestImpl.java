@@ -6,6 +6,7 @@ import net.n2oapp.security.admin.rest.api.RoleRestService;
 import net.n2oapp.security.admin.rest.api.UserRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestRoleCriteria;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
+import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -136,7 +137,11 @@ public class MessageRestImpl implements MessageRest {
     }
 
     private void buildAndSendMessage(TemplateMessageOutbox templateMessageOutbox) {
-        MessageSetting ms = getMessageSetting(templateMessageOutbox.getTemplateCode());
+        MessageSetting ms = messageSettingService.getSetting(templateMessageOutbox.getTemplateCode());
+
+        if (ms.getDisabled() != null && ms.getDisabled()) {
+            return;
+        }
 
         List<UserSetting> userSettings = new ArrayList<>();
 
@@ -171,19 +176,19 @@ public class MessageRestImpl implements MessageRest {
                     userSettings.add(userSettingRest.getSettings(criteria).getContent().get(0));
             }
         }
-
-        if (!ms.getDisabled()) {
-            if (!CollectionUtils.isEmpty(userSettings)) {
-
-                for (UserSetting userSetting : userSettings) {
-                    if (!userSetting.getDisabled()) {
-                        Message message = buildMessage(ms, userSetting, templateMessageOutbox);
-                        save(message);
-                        send(message);
-                    }
-                }
-            }
-        }
+//
+//        if (!ms.getDisabled()) {
+//            if (!CollectionUtils.isEmpty(userSettings)) {
+//
+//                for (UserSetting userSetting : userSettings) {
+//                    if (!userSetting.getDisabled()) {
+//                        Message message = buildMessage(ms, userSetting, templateMessageOutbox);
+//                        save(message);
+//                        send(message);
+//                    }
+//                }
+//            }
+//        }
     }
 
     private void save(Message message) {
@@ -197,11 +202,6 @@ public class MessageRestImpl implements MessageRest {
                 mqProvider.publish(new MessageOutbox(message), destinationResolver.resolve(getDestinationMqName(infoType), getDestinationType(infoType)));
             }
         }
-    }
-
-    //Получение шаблона уведомления по коду
-    private MessageSetting getMessageSetting(String templateCode) {
-        return messageSettingService.getSetting(templateCode);
     }
 
     //Построение уведомления по шаблону уведомления и доп. параметрам
