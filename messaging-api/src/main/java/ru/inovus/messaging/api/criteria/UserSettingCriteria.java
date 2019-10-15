@@ -30,6 +30,9 @@ public class UserSettingCriteria extends RestCriteria {
     @QueryParam("name")
     private String name;
 
+    @QueryParam("templateCode")
+    private String templateCode;
+
     @QueryParam("enabled.id")
     private YesNo enabled;
 
@@ -85,4 +88,11 @@ public class UserSettingCriteria extends RestCriteria {
         return enabled != null ? enabled.getValue() : null;
     }
 
+    public String getTemplateCode() {
+        return templateCode;
+    }
+
+    public void setTemplateCode(String templateCode) {
+        this.templateCode = templateCode;
+    }
 }

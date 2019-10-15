@@ -4,29 +4,19 @@
 package ru.inovus.messaging.impl.jooq.tables;
 
 
-import java.util.Arrays;
-import java.util.List;
-
-import javax.annotation.Generated;
-
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Index;
-import org.jooq.Name;
-import org.jooq.Record;
-import org.jooq.Schema;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
-
 import ru.inovus.messaging.api.model.AlertType;
 import ru.inovus.messaging.impl.AlertTypeConverter;
 import ru.inovus.messaging.impl.jooq.Indexes;
 import ru.inovus.messaging.impl.jooq.Keys;
 import ru.inovus.messaging.impl.jooq.Public;
 import ru.inovus.messaging.impl.jooq.tables.records.UserSettingRecord;
+
+import javax.annotation.Generated;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -86,6 +76,11 @@ public class UserSetting extends TableImpl<UserSettingRecord> {
      * The column <code>public.user_setting.send_email</code>.
      */
     public final TableField<UserSettingRecord, Boolean> SEND_EMAIL = createField("send_email", org.jooq.impl.SQLDataType.BOOLEAN, this, "");
+
+    /**
+     * The column <code>public.user_setting.id</code>. Уникальный идентификатор
+     */
+    public final TableField<UserSettingRecord, Integer> MSG_SETTING_ID = createField("msg_setting_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "Идентификатор шаблона уведомлений");
 
     /**
      * Create a <code>public.user_setting</code> table reference

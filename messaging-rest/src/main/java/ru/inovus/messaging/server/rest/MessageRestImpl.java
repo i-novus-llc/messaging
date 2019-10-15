@@ -6,6 +6,7 @@ import net.n2oapp.security.admin.rest.api.RoleRestService;
 import net.n2oapp.security.admin.rest.api.UserRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestRoleCriteria;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
+import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,15 +18,18 @@ import ru.inovus.messaging.api.MessageOutbox;
 import ru.inovus.messaging.api.MessageSetting;
 import ru.inovus.messaging.api.criteria.MessageCriteria;
 import ru.inovus.messaging.api.criteria.RecipientCriteria;
+import ru.inovus.messaging.api.criteria.UserSettingCriteria;
 import ru.inovus.messaging.api.model.*;
 import ru.inovus.messaging.api.queue.DestinationResolver;
 import ru.inovus.messaging.api.queue.DestinationType;
 import ru.inovus.messaging.api.queue.MqProvider;
 import ru.inovus.messaging.api.rest.MessageRest;
+import ru.inovus.messaging.api.rest.UserSettingRest;
 import ru.inovus.messaging.impl.MessageService;
 import ru.inovus.messaging.impl.MessageSettingService;
 import ru.inovus.messaging.impl.RecipientService;
 
+import javax.ws.rs.NotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,6 +49,7 @@ public class MessageRestImpl implements MessageRest {
     private final UserRestService userRestService;
     private final RoleRestService roleRestService;
     private DestinationResolver destinationResolver;
+    private final UserSettingRest userSettingRest;
 
     public MessageRestImpl(MessageService messageService,
                            MessageSettingService messageSettingService,
@@ -56,7 +61,8 @@ public class MessageRestImpl implements MessageRest {
                            MqProvider mqProvider,
                            @Qualifier("userRestServiceJaxRsProxyClient") UserRestService userRestService,
                            @Qualifier("roleRestServiceJaxRsProxyClient") RoleRestService roleRestService,
-                           DestinationResolver destinationResolver) {
+                           DestinationResolver destinationResolver,
+                           UserSettingRest userSettingRest) {
         this.messageService = messageService;
         this.messageSettingService = messageSettingService;
         this.recipientService = recipientService;
@@ -68,6 +74,7 @@ public class MessageRestImpl implements MessageRest {
         this.userRestService = userRestService;
         this.roleRestService = roleRestService;
         this.destinationResolver = destinationResolver;
+        this.userSettingRest = userSettingRest;
     }
 
     @Override
@@ -131,11 +138,57 @@ public class MessageRestImpl implements MessageRest {
     }
 
     private void buildAndSendMessage(TemplateMessageOutbox templateMessageOutbox) {
-        MessageSetting ms = getMessageSetting(templateMessageOutbox.getTemplateCode());
-        if (!ms.getDisabled()) {
-            Message message = buildMessage(ms, templateMessageOutbox);
-            save(message);
-            send(message);
+        MessageSetting ms = messageSettingService.getSetting(templateMessageOutbox.getTemplateCode());
+
+        if (ms.getDisabled() != null && ms.getDisabled()) {
+            return;
+        }
+
+        List<UserSetting> userSettings = new ArrayList<>();
+
+        if (!CollectionUtils.isEmpty(templateMessageOutbox.getPermissions())) {
+            Set<Role> roles = getRolesByPermissionCodes(templateMessageOutbox.getPermissions());
+
+            if (!CollectionUtils.isEmpty(roles)) {
+                Set<User> users = getUsersByRoles(roles);
+
+                if (!CollectionUtils.isEmpty(users)) {
+                    for (User user : users) {
+                        UserSettingCriteria criteria = new UserSettingCriteria();
+                        criteria.setPageSize(1);
+                        criteria.setUser(user.getUsername());
+                        criteria.setTemplateCode(templateMessageOutbox.getTemplateCode());
+                        if (!CollectionUtils.isEmpty(userSettingRest.getSettings(criteria).getContent()))
+                            userSettings.add(userSettingRest.getSettings(criteria).getContent().get(0));
+                    }
+                }
+            }
+        }
+
+        List<String> userNameList = templateMessageOutbox.getUserNameList();
+
+        if (!CollectionUtils.isEmpty(userNameList)) {
+            for (String userName : userNameList) {
+                UserSettingCriteria criteria = new UserSettingCriteria();
+                criteria.setPageSize(1);
+                criteria.setUser(userName);
+                criteria.setTemplateCode(templateMessageOutbox.getTemplateCode());
+
+                List<UserSetting> userSettingList = userSettingRest.getSettings(criteria).getContent();
+
+                if (!CollectionUtils.isEmpty(userSettingList)) {
+                    throw new NotFoundException("User setting for this user with template code " + templateMessageOutbox.getTemplateCode() + " doesn't exists");
+                } else
+                    userSettings.add(userSettingList.get(0));
+            }
+        }
+
+        for (UserSetting userSetting : userSettings) {
+            if (!userSetting.getDisabled()) {
+                Message message = buildMessage(ms, userSetting, templateMessageOutbox);
+                save(message);
+                send(message);
+            }
         }
     }
 
@@ -152,20 +205,15 @@ public class MessageRestImpl implements MessageRest {
         }
     }
 
-    //Получение шаблона уведомления по коду
-    private MessageSetting getMessageSetting(String templateCode) {
-        return messageSettingService.getSetting(templateCode);
-    }
-
     //Построение уведомления по шаблону уведомления и доп. параметрам
-    private Message buildMessage(MessageSetting messageSetting, TemplateMessageOutbox params) {
+    private Message buildMessage(MessageSetting messageSetting, UserSetting userSetting, TemplateMessageOutbox params) {
         Message message = new Message();
         message.setCaption(buildText(messageSetting.getCaption(), params));
         message.setText(buildText(messageSetting.getText(), params));
         message.setSeverity(messageSetting.getSeverity());
-        message.setAlertType(messageSetting.getAlertType());
+        message.setAlertType(userSetting.getAlertType());
         message.setSentAt(params.getSentAt());
-        message.setInfoTypes(messageSetting.getInfoType());
+        message.setInfoTypes(userSetting.getInfoTypes());
         message.setComponent(messageSetting.getComponent());
         message.setFormationType(messageSetting.getFormationType());
         message.setRecipientType(RecipientType.USER);

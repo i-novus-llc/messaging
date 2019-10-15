@@ -25,6 +25,7 @@ public class UserSetting implements Serializable {
     private Component component;
     private String name;
     private Boolean disabled;
+    private String templateCode;
 
     public UserSetting() {
     }
