@@ -158,7 +158,7 @@ public class MessageSettingService {
             .map(MAPPER);
 
         ms.setComponent(ms.getComponent() == null ? null : new Component(ms.getComponent().getId(),
-            dsl.selectFrom(COMPONENT).where(COMPONENT.ID.eq(1)).fetchOne().getName()));
+            dsl.selectFrom(COMPONENT).where(COMPONENT.ID.eq(ms.getComponent().getId())).fetchOne().getName()));
 
         return ms;
     }
