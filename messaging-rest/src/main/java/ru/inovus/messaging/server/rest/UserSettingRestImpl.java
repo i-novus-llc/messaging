@@ -147,7 +147,7 @@ public class UserSettingRestImpl implements UserSettingRest {
             .fetchOne();
 
         if (record == null)
-            throw new NotFoundException();
+            throw new NotFoundException("User setting doesn't exists");
 
         return record.map(MAPPER);
     }
@@ -187,23 +187,23 @@ public class UserSettingRestImpl implements UserSettingRest {
                 .fetchOne()
                 .component1() != 0;
 
-            if (messageSettingsExists) {
-                Record record = dsl.selectFrom(USER_SETTING).orderBy(USER_SETTING.ID.desc()).limit(1).fetchOne();
-
-                UserSetting settings = record != null ? record.map(MAPPER) : null;
+            if (!messageSettingsExists)
+                throw new NotFoundException("Message setting doesn't exists");
 
 //           Если в таблице public.message_setting запись с переданным иден-ром есть, но со ссылкой на нее и указанными настройками пользователя создаем запись в таблице public.user_setting
-                dsl
-                    .insertInto(USER_SETTING)
-                    .set(USER_SETTING.ID, (settings != null ? (settings.getId() + 1) : 1))
-                    .set(USER_SETTING.USER_ID, user)
-                    .set(USER_SETTING.ALERT_TYPE, setting.getAlertType())
-                    .set(USER_SETTING.SEND_NOTICE, setting.getInfoTypes() != null && setting.getInfoTypes().contains(InfoType.NOTICE))
-                    .set(USER_SETTING.SEND_EMAIL, setting.getInfoTypes() != null && setting.getInfoTypes().contains(InfoType.EMAIL))
-                    .set(USER_SETTING.IS_DISABLED, setting.getDisabled())
-                    .set(USER_SETTING.MSG_SETTING_ID, msgSettingId)
-                    .execute();
-            }
+            dsl
+                .insertInto(USER_SETTING)
+                .columns(USER_SETTING.USER_ID, USER_SETTING.ALERT_TYPE, USER_SETTING.SEND_NOTICE,
+                    USER_SETTING.SEND_EMAIL, USER_SETTING.IS_DISABLED, USER_SETTING.MSG_SETTING_ID)
+                .values(
+                    user,
+                    setting.getAlertType(),
+                    setting.getInfoTypes() != null && setting.getInfoTypes().contains(InfoType.NOTICE),
+                    setting.getInfoTypes() != null && setting.getInfoTypes().contains(InfoType.EMAIL),
+                    setting.getDisabled(),
+                    msgSettingId
+                )
+                .execute();
         }
     }
 

@@ -29,6 +29,7 @@ import ru.inovus.messaging.impl.MessageService;
 import ru.inovus.messaging.impl.MessageSettingService;
 import ru.inovus.messaging.impl.RecipientService;
 
+import javax.ws.rs.NotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -172,23 +173,23 @@ public class MessageRestImpl implements MessageRest {
                 criteria.setPageSize(1);
                 criteria.setUser(userName);
                 criteria.setTemplateCode(templateMessageOutbox.getTemplateCode());
-                if (!CollectionUtils.isEmpty(userSettingRest.getSettings(criteria).getContent()))
-                    userSettings.add(userSettingRest.getSettings(criteria).getContent().get(0));
+
+                List<UserSetting> userSettingList = userSettingRest.getSettings(criteria).getContent();
+
+                if (!CollectionUtils.isEmpty(userSettingList)) {
+                    throw new NotFoundException("User setting for this user with template code " + templateMessageOutbox.getTemplateCode() + " doesn't exists");
+                } else
+                    userSettings.add(userSettingList.get(0));
             }
         }
-//
-//        if (!ms.getDisabled()) {
-//            if (!CollectionUtils.isEmpty(userSettings)) {
-//
-//                for (UserSetting userSetting : userSettings) {
-//                    if (!userSetting.getDisabled()) {
-//                        Message message = buildMessage(ms, userSetting, templateMessageOutbox);
-//                        save(message);
-//                        send(message);
-//                    }
-//                }
-//            }
-//        }
+
+        for (UserSetting userSetting : userSettings) {
+            if (!userSetting.getDisabled()) {
+                Message message = buildMessage(ms, userSetting, templateMessageOutbox);
+                save(message);
+                send(message);
+            }
+        }
     }
 
     private void save(Message message) {
