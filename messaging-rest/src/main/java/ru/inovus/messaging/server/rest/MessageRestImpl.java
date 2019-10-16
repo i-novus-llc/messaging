@@ -157,8 +157,11 @@ public class MessageRestImpl implements MessageRest {
                         criteria.setPageSize(1);
                         criteria.setUser(user.getUsername());
                         criteria.setTemplateCode(templateMessageOutbox.getTemplateCode());
-                        if (!CollectionUtils.isEmpty(userSettingRest.getSettings(criteria).getContent()))
-                            userSettings.put(user.getUsername(), userSettingRest.getSettings(criteria).getContent().get(0));
+
+                        List<UserSetting> userSettingList = userSettingRest.getSettings(criteria).getContent();
+
+                        if (!CollectionUtils.isEmpty(userSettingList))
+                            userSettings.put(user.getUsername(), userSettingList.get(0));
                     }
                 }
             }
@@ -175,7 +178,7 @@ public class MessageRestImpl implements MessageRest {
 
                 List<UserSetting> userSettingList = userSettingRest.getSettings(criteria).getContent();
 
-                if (!CollectionUtils.isEmpty(userSettingList)) {
+                if (CollectionUtils.isEmpty(userSettingList)) {
                     throw new NotFoundException("User setting for this user with template code " + templateMessageOutbox.getTemplateCode() + " doesn't exists");
                 } else
                     userSettings.put(userName, userSettingList.get(0));
@@ -184,7 +187,7 @@ public class MessageRestImpl implements MessageRest {
 
         for (Map.Entry<String, UserSetting> entry : userSettings.entrySet()) {
             UserSetting userSetting = entry.getValue();
-            if (!userSetting.getDisabled()) {
+            if (userSetting.getDisabled() == null || !userSetting.getDisabled()) {
                 Message message = buildMessage(ms, entry.getKey(), userSetting, templateMessageOutbox);
                 save(message);
                 send(message);
