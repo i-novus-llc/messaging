@@ -6,7 +6,6 @@ import net.n2oapp.security.admin.rest.api.RoleRestService;
 import net.n2oapp.security.admin.rest.api.UserRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestRoleCriteria;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
-import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -144,7 +143,7 @@ public class MessageRestImpl implements MessageRest {
             return;
         }
 
-        List<UserSetting> userSettings = new ArrayList<>();
+        Map<String, UserSetting> userSettings = new HashMap<>();
 
         if (!CollectionUtils.isEmpty(templateMessageOutbox.getPermissions())) {
             Set<Role> roles = getRolesByPermissionCodes(templateMessageOutbox.getPermissions());
@@ -159,7 +158,7 @@ public class MessageRestImpl implements MessageRest {
                         criteria.setUser(user.getUsername());
                         criteria.setTemplateCode(templateMessageOutbox.getTemplateCode());
                         if (!CollectionUtils.isEmpty(userSettingRest.getSettings(criteria).getContent()))
-                            userSettings.add(userSettingRest.getSettings(criteria).getContent().get(0));
+                            userSettings.put(user.getUsername(), userSettingRest.getSettings(criteria).getContent().get(0));
                     }
                 }
             }
@@ -179,13 +178,14 @@ public class MessageRestImpl implements MessageRest {
                 if (!CollectionUtils.isEmpty(userSettingList)) {
                     throw new NotFoundException("User setting for this user with template code " + templateMessageOutbox.getTemplateCode() + " doesn't exists");
                 } else
-                    userSettings.add(userSettingList.get(0));
+                    userSettings.put(userName, userSettingList.get(0));
             }
         }
 
-        for (UserSetting userSetting : userSettings) {
+        for (Map.Entry<String, UserSetting> entry : userSettings.entrySet()) {
+            UserSetting userSetting = entry.getValue();
             if (!userSetting.getDisabled()) {
-                Message message = buildMessage(ms, userSetting, templateMessageOutbox);
+                Message message = buildMessage(ms, entry.getKey(), userSetting, templateMessageOutbox);
                 save(message);
                 send(message);
             }
@@ -206,7 +206,7 @@ public class MessageRestImpl implements MessageRest {
     }
 
     //Построение уведомления по шаблону уведомления и доп. параметрам
-    private Message buildMessage(MessageSetting messageSetting, UserSetting userSetting, TemplateMessageOutbox params) {
+    private Message buildMessage(MessageSetting messageSetting, String userName, UserSetting userSetting, TemplateMessageOutbox params) {
         Message message = new Message();
         message.setCaption(buildText(messageSetting.getCaption(), params));
         message.setText(buildText(messageSetting.getText(), params));
@@ -218,7 +218,7 @@ public class MessageRestImpl implements MessageRest {
         message.setFormationType(messageSetting.getFormationType());
         message.setRecipientType(RecipientType.USER);
         message.setSystemId(params.getSystemId());
-        message.setRecipients(findRecipients(params.getUserNameList(), params.getPermissions()));
+        message.setRecipients(Collections.singletonList(getRecipientByUserName(userName)));
         message.setData(null);
         message.setNotificationType(params.getTemplateCode());
         message.setObjectId(params.getObjectId());
@@ -232,16 +232,6 @@ public class MessageRestImpl implements MessageRest {
         for (Map.Entry<String, Object> placeHolder : params.getPlaceholders().entrySet())
             text = text.replace(placeHolder.getKey(), placeHolder.getValue().toString());
         return text;
-    }
-
-    //Получение адресатов по ид-р сотрудников и указанным привелегиям
-    private List<Recipient> findRecipients(List<String> userNameList, List<String> permissions) {
-        Set<Recipient> recipients = new HashSet<>();
-
-        addRecipientsByUserName(userNameList, recipients);
-        addRecipientsByPermissionCodes(permissions, recipients);
-
-        return new ArrayList<>(recipients);
     }
 
     //Полуение Пользователей по Ролям
@@ -293,44 +283,22 @@ public class MessageRestImpl implements MessageRest {
         return roles;
     }
 
-    //Добавление Получателей уведомлений по userName Пользователей
-    private void addRecipientsByUserName(List<String> userNameList, Set<Recipient> recipients) {
-        if (!CollectionUtils.isEmpty(userNameList))
-            for (String userName : userNameList) {
-                Recipient recipient = new Recipient();
+    //Построение Получателя уведомления по userName Пользователя
+    private Recipient getRecipientByUserName(String userName) {
+        Recipient recipient = new Recipient();
 
-                if (securityAdminRestEnable) {
-                    RestUserCriteria restUserCriteria = new RestUserCriteria();
-                    restUserCriteria.setUsername(userName);
-                    restUserCriteria.setPage(0);
-                    restUserCriteria.setSize(1);
+        if (securityAdminRestEnable) {
+            RestUserCriteria restUserCriteria = new RestUserCriteria();
+            restUserCriteria.setUsername(userName);
+            restUserCriteria.setPage(0);
+            restUserCriteria.setSize(1);
 
-                    User user = userRestService.findAll(restUserCriteria).getContent().get(0);
-                    recipient.setEmail(user.getEmail());
-                }
-                recipient.setRecipient(userName);
-
-                recipients.add(recipient);
-            }
-    }
-
-    //Добавление Получателей уведомлений по кодам Привилегий
-    private void addRecipientsByPermissionCodes(List<String> permissions, Set<Recipient> recipients) {
-        if (securityAdminRestEnable && !CollectionUtils.isEmpty(permissions)) {
-            Set<Role> roles = getRolesByPermissionCodes(permissions);
-
-            if (!CollectionUtils.isEmpty(roles)) {
-                Set<User> users = getUsersByRoles(roles);
-
-                for (User user : users) {
-                    Recipient recipient = new Recipient();
-                    recipient.setEmail(user.getEmail());
-                    recipient.setRecipient(user.getUsername());
-
-                    recipients.add(recipient);
-                }
-            }
+            User user = userRestService.findAll(restUserCriteria).getContent().get(0);
+            recipient.setEmail(user.getEmail());
         }
+        recipient.setRecipient(userName);
+
+        return recipient;
     }
 
     private DestinationType getDestinationType(InfoType infoType) {
