@@ -56,6 +56,7 @@ public class UserSettingRestImpl implements UserSettingRest {
             setting.setInfoTypes(getInfoTypes(userSetting.getSendNotice(), userSetting.getSendEmail()));
         }
         setting.setTemplateCode(defaultSetting.getCode());
+        setting.setDefaultSetting(userSetting.getId() == null);
         return setting;
     };
 
