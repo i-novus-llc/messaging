@@ -26,6 +26,7 @@ public class UserSetting implements Serializable {
     private String name;
     private Boolean disabled;
     private String templateCode;
+    private boolean defaultSetting;
 
     public UserSetting() {
     }

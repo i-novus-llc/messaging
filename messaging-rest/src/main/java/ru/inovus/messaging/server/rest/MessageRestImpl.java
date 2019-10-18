@@ -28,7 +28,6 @@ import ru.inovus.messaging.impl.MessageService;
 import ru.inovus.messaging.impl.MessageSettingService;
 import ru.inovus.messaging.impl.RecipientService;
 
-import javax.ws.rs.NotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -143,55 +142,27 @@ public class MessageRestImpl implements MessageRest {
             return;
         }
 
-        Map<String, UserSetting> userSettings = new HashMap<>();
+        //Пользователи с настройками (из тех, кто должен получить уведомление)
+        Map<String, UserSetting> usersWithUserSetting = new HashMap<>();
+        //Пользователи без настроек (из тех, кто должен получить уведомление)
+        List<String> usersWithDefaultMsgSetting = new ArrayList<>();
 
-        if (!CollectionUtils.isEmpty(templateMessageOutbox.getPermissions())) {
-            Set<Role> roles = getRolesByPermissionCodes(templateMessageOutbox.getPermissions());
+        setUsersAndMsgSettings(templateMessageOutbox, usersWithUserSetting, usersWithDefaultMsgSetting);
 
-            if (!CollectionUtils.isEmpty(roles)) {
-                Set<User> users = getUsersByRoles(roles);
-
-                if (!CollectionUtils.isEmpty(users)) {
-                    for (User user : users) {
-                        UserSettingCriteria criteria = new UserSettingCriteria();
-                        criteria.setPageSize(1);
-                        criteria.setUser(user.getUsername());
-                        criteria.setTemplateCode(templateMessageOutbox.getTemplateCode());
-
-                        List<UserSetting> userSettingList = userSettingRest.getSettings(criteria).getContent();
-
-                        if (!CollectionUtils.isEmpty(userSettingList))
-                            userSettings.put(user.getUsername(), userSettingList.get(0));
-                    }
-                }
-            }
-        }
-
-        List<String> userNameList = templateMessageOutbox.getUserNameList();
-
-        if (!CollectionUtils.isEmpty(userNameList)) {
-            for (String userName : userNameList) {
-                UserSettingCriteria criteria = new UserSettingCriteria();
-                criteria.setPageSize(1);
-                criteria.setUser(userName);
-                criteria.setTemplateCode(templateMessageOutbox.getTemplateCode());
-
-                List<UserSetting> userSettingList = userSettingRest.getSettings(criteria).getContent();
-
-                if (CollectionUtils.isEmpty(userSettingList)) {
-                    throw new NotFoundException("User setting for this user with template code " + templateMessageOutbox.getTemplateCode() + " doesn't exists");
-                } else
-                    userSettings.put(userName, userSettingList.get(0));
-            }
-        }
-
-        for (Map.Entry<String, UserSetting> entry : userSettings.entrySet()) {
+        //Рассылка пользоватлеям с настройками
+        for (Map.Entry<String, UserSetting> entry : usersWithUserSetting.entrySet()) {
             UserSetting userSetting = entry.getValue();
             if (userSetting.getDisabled() == null || !userSetting.getDisabled()) {
-                Message message = buildMessage(ms, entry.getKey(), userSetting, templateMessageOutbox);
+                Message message = buildMessage(ms, Collections.singletonList(entry.getKey()), userSetting, templateMessageOutbox);
                 save(message);
                 send(message);
             }
+        }
+        //Рассылка пользоватлеям без настроек
+        if (!CollectionUtils.isEmpty(usersWithDefaultMsgSetting)) {
+            Message message = buildMessage(ms, usersWithDefaultMsgSetting, null, templateMessageOutbox);
+            save(message);
+            send(message);
         }
     }
 
@@ -208,20 +179,71 @@ public class MessageRestImpl implements MessageRest {
         }
     }
 
+    //Заполнение списков Пользователей для рассылки уведомления
+    private void setUsersAndMsgSettings(TemplateMessageOutbox templateMessageOutbox, Map<String, UserSetting> usersWithUserSetting, List<String> usersWithDefaultMsgSetting) {
+        setUsersAndMsgSettingsByPermissionCodes(templateMessageOutbox, usersWithUserSetting, usersWithDefaultMsgSetting, templateMessageOutbox.getPermissions());
+        setUsersAndMsgSettingsByUserNames(templateMessageOutbox, usersWithUserSetting, usersWithDefaultMsgSetting, templateMessageOutbox.getUserNameList());
+    }
+
+    //Заполнение списков Пользователей по пермишенам
+    private void setUsersAndMsgSettingsByUserNames(TemplateMessageOutbox templateMessageOutbox, Map<String, UserSetting> usersWithUserSetting,
+                                                   List<String> usersWithDefaultMsgSetting, List<String> userNames) {
+        if (!CollectionUtils.isEmpty(userNames)) {
+            for (String userName : userNames) {
+                UserSetting userSetting = getUserSetting(templateMessageOutbox, userName);
+
+                if (userSetting.isDefaultSetting()) {
+                    usersWithDefaultMsgSetting.add(userName);
+                } else {
+                    usersWithUserSetting.put(userName, userSetting);
+                }
+            }
+        }
+    }
+
+    //Заполнение списков Пользователей по userName
+    private void setUsersAndMsgSettingsByPermissionCodes(TemplateMessageOutbox templateMessageOutbox, Map<String, UserSetting> usersWithUserSetting,
+                                                         List<String> usersWithDefaultMsgSetting, List<String> permissions) {
+        if (!CollectionUtils.isEmpty(permissions)) {
+            Set<User> users = getUserByPermissionCodes(permissions);
+
+            if (!CollectionUtils.isEmpty(users)) {
+                for (User user : users) {
+                    UserSetting userSetting = getUserSetting(templateMessageOutbox, user.getUsername());
+                    if (userSetting.isDefaultSetting()) {
+                        usersWithDefaultMsgSetting.add(user.getUsername());
+                    } else {
+                        usersWithUserSetting.put(user.getUsername(), userSetting);
+                    }
+                }
+            }
+        }
+    }
+
+    //Получение настройки уведомления Пользователя
+    private UserSetting getUserSetting(TemplateMessageOutbox templateMessageOutbox, String userName) {
+        UserSettingCriteria criteria = new UserSettingCriteria();
+        criteria.setPageSize(1);
+        criteria.setUser(userName);
+        criteria.setTemplateCode(templateMessageOutbox.getTemplateCode());
+        List<UserSetting> userSettingList = userSettingRest.getSettings(criteria).getContent();
+        return userSettingList.get(0);
+    }
+
     //Построение уведомления по шаблону уведомления и доп. параметрам
-    private Message buildMessage(MessageSetting messageSetting, String userName, UserSetting userSetting, TemplateMessageOutbox params) {
+    private Message buildMessage(MessageSetting messageSetting, List<String> userNameList, UserSetting userSetting, TemplateMessageOutbox params) {
         Message message = new Message();
         message.setCaption(buildText(messageSetting.getCaption(), params));
         message.setText(buildText(messageSetting.getText(), params));
         message.setSeverity(messageSetting.getSeverity());
-        message.setAlertType(userSetting.getAlertType());
+        message.setAlertType(userSetting == null ? messageSetting.getAlertType() : userSetting.getAlertType());
         message.setSentAt(params.getSentAt());
-        message.setInfoTypes(userSetting.getInfoTypes());
+        message.setInfoTypes(userSetting == null ? messageSetting.getInfoType() : userSetting.getInfoTypes());
         message.setComponent(messageSetting.getComponent());
         message.setFormationType(messageSetting.getFormationType());
         message.setRecipientType(RecipientType.USER);
         message.setSystemId(params.getSystemId());
-        message.setRecipients(Collections.singletonList(getRecipientByUserName(userName)));
+        message.setRecipients(getRecipientByUserName(userNameList));
         message.setData(null);
         message.setNotificationType(params.getTemplateCode());
         message.setObjectId(params.getObjectId());
@@ -235,6 +257,18 @@ public class MessageRestImpl implements MessageRest {
         for (Map.Entry<String, Object> placeHolder : params.getPlaceholders().entrySet())
             text = text.replace(placeHolder.getKey(), placeHolder.getValue().toString());
         return text;
+    }
+
+    //Получение Пользоватлей по кодам Привилегий
+    private Set<User> getUserByPermissionCodes(List<String> permissions) {
+        Set<User> users = null;
+        Set<Role> roles = getRolesByPermissionCodes(permissions);
+
+        if (!CollectionUtils.isEmpty(roles)) {
+            users = getUsersByRoles(roles);
+        }
+
+        return users;
     }
 
     //Полуение Пользователей по Ролям
@@ -284,6 +318,11 @@ public class MessageRestImpl implements MessageRest {
             }
         }
         return roles;
+    }
+
+    //Построение списка Получателей уведомления по списку userName Пользователей
+    private List<Recipient> getRecipientByUserName(List<String> userNameList) {
+        return userNameList.stream().map(this::getRecipientByUserName).collect(Collectors.toList());
     }
 
     //Построение Получателя уведомления по userName Пользователя
