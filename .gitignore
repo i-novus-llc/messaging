@@ -27,3 +27,5 @@ out/
 /properties/dev-custom.properties
 /config/application.*
 .meghanada
+
+package-lock.json
