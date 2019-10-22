@@ -27,7 +27,7 @@ public class MessagingHistoryListPageBinder implements BaseMetadataBinder<Page> 
     @Override
     public Page bind(Page page, BindProcessor bindProcessor) {
 
-        if (!page.getWidgets().containsKey("__history"))
+        if (!page.getWidgets().containsKey("__history") && !page.getWidgets().containsKey("messagingSettings_history"))
             return page;
 
         DataSet data = new DataSet();
@@ -42,7 +42,11 @@ public class MessagingHistoryListPageBinder implements BaseMetadataBinder<Page> 
         df.setValues(data);
         ModelLink ml = new ModelLink(df);
 
-        page.getModels().put(String.format("%s['%s']", ReduxModel.FILTER.name().toLowerCase(), page.getWidgets().get("__history").getId()), ml);
+        if (page.getWidgets().containsKey("__history")) {
+            page.getModels().put(String.format("%s['%s']", ReduxModel.FILTER.name().toLowerCase(), page.getWidgets().get("__history").getId()), ml);
+        } else {
+            page.getModels().put(String.format("%s['%s']", ReduxModel.FILTER.name().toLowerCase(), page.getWidgets().get("messagingSettings_history").getId()), ml);
+        }
 
         return page;
     }
