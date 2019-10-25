@@ -6,7 +6,7 @@ WORKDIR /usr/src/app
 COPY package.json public src ./
 ARG NPM_REGISTRY
 RUN npm install --registry ${NPM_REGISTRY}
-COPY node_modules ./
+COPY . ./
 RUN npm run build
 
 # Stage 1b - external build
