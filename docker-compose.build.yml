@@ -3,15 +3,15 @@ version: "3.6"
 services:
   backend:
     build:
-      context: .
+      context: messaging-rest
       args:
-        JAR_FILE: messaging-rest/target/messaging-rest.jar
+        JAR_FILE: target/messaging-rest.jar
 
-  frontend:
+  messaging-frontend:
     build:
-      context: .
+      context: messaging-admin-frontend
       args:
-        JAR_FILE: messaging-admin-frontend/target/messaging-admin-frontend.jar
+        JAR_FILE: target/messaging-admin-frontend.jar
 
   react:
     build:
