@@ -2,12 +2,16 @@ package ru.inovus.messaging.n2o;
 
 import net.n2oapp.framework.api.data.QueryProcessor;
 import net.n2oapp.security.admin.rest.client.AdminRestClientConfiguration;
+import net.n2oapp.security.auth.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import ru.i_novus.ms.audit.client.UserAccessor;
 
 @Configuration
 @SpringBootApplication
@@ -24,6 +28,18 @@ public class FrontendApplication {
     @Bean
     public UserMessageViewPageNameBinder  pageNameBinder() {
         return new UserMessageViewPageNameBinder(queryProcessor);
+    }
+
+    @Bean
+    public UserAccessor auditUser() {
+        return () -> {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication == null) {
+                return null;
+            }
+            User user = (User) authentication.getPrincipal();
+            return new ru.i_novus.ms.audit.client.model.User(null, user.getUsername());
+        };
     }
 }
 
