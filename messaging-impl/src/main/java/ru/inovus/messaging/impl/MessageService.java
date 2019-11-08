@@ -9,9 +9,9 @@ import ru.inovus.messaging.api.criteria.MessageCriteria;
 import ru.inovus.messaging.api.model.*;
 import ru.inovus.messaging.impl.jooq.tables.records.ComponentRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
+import ru.inovus.messaging.impl.util.DateTimeUtil;
 
-import java.time.Clock;
-import java.time.LocalDateTime;
+import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +22,8 @@ import static ru.inovus.messaging.impl.jooq.Tables.*;
 
 @Service
 public class MessageService {
+
+    private final static ZoneId USER_DEFAULT_ZONE_ID = ZoneId.of("Europe/Moscow");
 
     private static final RecordMapper<Record, Message> MAPPER = rec -> {
         MessageRecord record = rec.into(MESSAGE);
@@ -90,6 +92,16 @@ public class MessageService {
     }
 
     public Page<Message> getMessages(MessageCriteria criteria) {
+        LocalDateTime sentAtBeginDateTime = null;
+        LocalDateTime sentAtEndDateTime = null;
+
+        if (criteria.getSentAtBegin() != null) {
+            sentAtBeginDateTime = DateTimeUtil.toZone(criteria.getSentAtBegin(), USER_DEFAULT_ZONE_ID, ZoneOffset.UTC);
+        }
+        if (criteria.getSentAtEnd() != null) {
+            sentAtEndDateTime = DateTimeUtil.toZone(criteria.getSentAtEnd(), USER_DEFAULT_ZONE_ID, ZoneOffset.UTC);
+        }
+
         List<Condition> conditions = new ArrayList<>();
         Optional.ofNullable(criteria.getSystemId())
             .ifPresent(systemId -> conditions.add(MESSAGE.SYSTEM_ID.eq(systemId)));
@@ -106,9 +118,9 @@ public class MessageService {
                 .ifPresent(infoType -> conditions.add(MESSAGE.SEND_NOTICE.isTrue()));
         }
         //TODO: UTC?
-        Optional.ofNullable(criteria.getSentAtBegin())
+        Optional.ofNullable(sentAtBeginDateTime)
             .ifPresent(start -> conditions.add(MESSAGE.SENT_AT.greaterOrEqual(start)));
-        Optional.ofNullable(criteria.getSentAtEnd())
+        Optional.ofNullable(sentAtEndDateTime)
             .ifPresent(end -> conditions.add(MESSAGE.SENT_AT.lessOrEqual(end)));
         SelectConditionStep<Record> query = dsl
             .select(MESSAGE.fields())
