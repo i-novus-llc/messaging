@@ -36,7 +36,7 @@ services:
       restart_policy:
         max_attempts: 3
 
-  frontend:
+  messaging-frontend:
     environment:
       SPRING_APPLICATION_NAME: "messaging-admin-frontend"
       SPRING_CLOUD_CONSUL_HOST: consul-agent.local
