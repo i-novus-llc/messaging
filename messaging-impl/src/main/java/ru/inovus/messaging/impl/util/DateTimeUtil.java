@@ -6,6 +6,9 @@ import java.time.ZonedDateTime;
 
 public final class DateTimeUtil {
 
+    private DateTimeUtil() {
+    }
+
     public static LocalDateTime toZone(final LocalDateTime time, final ZoneId fromZone, final ZoneId toZone) {
         final ZonedDateTime fromZonedDateTime = time.atZone(fromZone);
         final ZonedDateTime toZonedDateTime = fromZonedDateTime.withZoneSameInstant(toZone);
