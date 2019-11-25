@@ -23,7 +23,7 @@ import static ru.inovus.messaging.impl.jooq.Tables.*;
 @Service
 public class MessageService {
 
-    private final static ZoneId USER_DEFAULT_ZONE_ID = ZoneId.of("Europe/Moscow");
+    private static final ZoneId USER_DEFAULT_ZONE_ID = ZoneId.of("Europe/Moscow");
 
     private static final RecordMapper<Record, Message> MAPPER = rec -> {
         MessageRecord record = rec.into(MESSAGE);

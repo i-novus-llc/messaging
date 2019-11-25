@@ -19,6 +19,11 @@ import java.time.LocalTime;
  */
 @Component
 public class MessagingHistoryListPageBinder implements BaseMetadataBinder<Page> {
+
+    private static final String HISTORY_WIDGET = "__history";
+    private static final String MESSAGING_SETTINGS_HISTORY_WIDGET1 = "messagingSettings_history";
+    private static final String MESSAGING_SETTINGS_HISTORY_WIDGET2 = "messaging_settings_history";
+
     @Override
     public Class<? extends Compiled> getCompiledClass() {
         return Page.class;
@@ -27,7 +32,8 @@ public class MessagingHistoryListPageBinder implements BaseMetadataBinder<Page> 
     @Override
     public Page bind(Page page, BindProcessor bindProcessor) {
 
-        if (!page.getWidgets().containsKey("__history") && !page.getWidgets().containsKey("messagingSettings_history"))
+        if (!page.getWidgets().containsKey(HISTORY_WIDGET) && !page.getWidgets().containsKey(MESSAGING_SETTINGS_HISTORY_WIDGET1)
+            && !page.getWidgets().containsKey(MESSAGING_SETTINGS_HISTORY_WIDGET2))
             return page;
 
         DataSet data = new DataSet();
@@ -42,10 +48,12 @@ public class MessagingHistoryListPageBinder implements BaseMetadataBinder<Page> 
         df.setValues(data);
         ModelLink ml = new ModelLink(df);
 
-        if (page.getWidgets().containsKey("__history")) {
-            page.getModels().put(String.format("%s['%s']", ReduxModel.FILTER.name().toLowerCase(), page.getWidgets().get("__history").getId()), ml);
+        if (page.getWidgets().containsKey(HISTORY_WIDGET)) {
+            page.getModels().put(String.format("%s['%s']", ReduxModel.FILTER.name().toLowerCase(), page.getWidgets().get(HISTORY_WIDGET).getId()), ml);
+        } else if (page.getWidgets().containsKey(MESSAGING_SETTINGS_HISTORY_WIDGET1)) {
+            page.getModels().put(String.format("%s['%s']", ReduxModel.FILTER.name().toLowerCase(), page.getWidgets().get(MESSAGING_SETTINGS_HISTORY_WIDGET1).getId()), ml);
         } else {
-            page.getModels().put(String.format("%s['%s']", ReduxModel.FILTER.name().toLowerCase(), page.getWidgets().get("messagingSettings_history").getId()), ml);
+            page.getModels().put(String.format("%s['%s']", ReduxModel.FILTER.name().toLowerCase(), page.getWidgets().get(MESSAGING_SETTINGS_HISTORY_WIDGET2).getId()), ml);
         }
 
         return page;
