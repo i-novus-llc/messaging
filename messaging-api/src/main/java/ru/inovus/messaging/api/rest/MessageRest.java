@@ -12,6 +12,7 @@ import ru.inovus.messaging.api.model.Recipient;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.UUID;
 
 @Api("Уведомления")
 @Path("/messages")
@@ -27,7 +28,7 @@ public interface MessageRest {
     @Path("/{id}")
     @ApiOperation("Получение сообщения по идентификатору")
     @ApiResponse(code = 200, message = "Сообщение")
-    Message getMessage(@PathParam("id") String id);
+    Message getMessage(@PathParam("id") UUID id);
 
     @GET
     @Path("/recipients")

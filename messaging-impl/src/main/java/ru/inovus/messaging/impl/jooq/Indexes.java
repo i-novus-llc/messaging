@@ -37,9 +37,11 @@ public class Indexes {
     public static final Index COMPONENT_PKEY = Indexes0.COMPONENT_PKEY;
     public static final Index IX_MESSAGE_SYSTEM_ID = Indexes0.IX_MESSAGE_SYSTEM_ID;
     public static final Index MESSAGE_PKEY = Indexes0.MESSAGE_PKEY;
+    public static final Index CODE_UX = Indexes0.CODE_UX;
     public static final Index MESSAGE_SETTING_PKEY = Indexes0.MESSAGE_SETTING_PKEY;
     public static final Index RECIPIENT_PKEY = Indexes0.RECIPIENT_PKEY;
     public static final Index USER_SETTING_PKEY = Indexes0.USER_SETTING_PKEY;
+    public static final Index USER_SETTING_USER_ID_MSG_SETTING_ID_UX = Indexes0.USER_SETTING_USER_ID_MSG_SETTING_ID_UX;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
@@ -49,8 +51,10 @@ public class Indexes {
         public static Index COMPONENT_PKEY = Internal.createIndex("component_pkey", Component.COMPONENT, new OrderField[] { Component.COMPONENT.ID }, true);
         public static Index IX_MESSAGE_SYSTEM_ID = Internal.createIndex("ix_message_system_id", Message.MESSAGE, new OrderField[] { Message.MESSAGE.SYSTEM_ID }, false);
         public static Index MESSAGE_PKEY = Internal.createIndex("message_pkey", Message.MESSAGE, new OrderField[] { Message.MESSAGE.ID }, true);
+        public static Index CODE_UX = Internal.createIndex("code_ux", MessageSetting.MESSAGE_SETTING, new OrderField[] { MessageSetting.MESSAGE_SETTING.CODE }, true);
         public static Index MESSAGE_SETTING_PKEY = Internal.createIndex("message_setting_pkey", MessageSetting.MESSAGE_SETTING, new OrderField[] { MessageSetting.MESSAGE_SETTING.ID }, true);
         public static Index RECIPIENT_PKEY = Internal.createIndex("recipient_pkey", Recipient.RECIPIENT, new OrderField[] { Recipient.RECIPIENT.ID }, true);
         public static Index USER_SETTING_PKEY = Internal.createIndex("user_setting_pkey", UserSetting.USER_SETTING, new OrderField[] { UserSetting.USER_SETTING.ID }, true);
+        public static Index USER_SETTING_USER_ID_MSG_SETTING_ID_UX = Internal.createIndex("user_setting_user_id_msg_setting_id_ux", UserSetting.USER_SETTING, new OrderField[] { UserSetting.USER_SETTING.USER_ID, UserSetting.USER_SETTING.MSG_SETTING_ID }, true);
     }
 }

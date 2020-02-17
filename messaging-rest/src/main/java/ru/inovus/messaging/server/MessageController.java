@@ -11,6 +11,7 @@ import ru.inovus.messaging.impl.FeedService;
 
 import java.security.Principal;
 import java.util.Collection;
+import java.util.UUID;
 
 /**
  * Контроллер для отправки-приема сообщений ч.з. Spring MessageBroker
@@ -50,9 +51,9 @@ public class MessageController {
     }
 
     @MessageMapping("/{systemId}/message.markread")
-    public void receiveMarkRead(@Payload Collection<String> messageIds,
+    public void receiveMarkRead(@Payload Collection<UUID> messageIds,
                                 @DestinationVariable("systemId") String systemId,
                                 Principal principal) {
-        feedService.markRead(principal.getName(), messageIds.toArray(new String[0]));
+        feedService.markRead(principal.getName(), messageIds.toArray(new UUID[0]));
     }
 }

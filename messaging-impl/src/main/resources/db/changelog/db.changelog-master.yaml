@@ -230,3 +230,13 @@ databaseChangeLog:
             relativeToChangelogFile: true
             splitStatements: true
             stripComments: true
+  - changeSet:
+      id: MESSAGING-57
+      author: btsyganov
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/MESSAGING-57.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true

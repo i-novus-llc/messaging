@@ -81,7 +81,7 @@ public class MessageRestImpl implements MessageRest {
     }
 
     @Override
-    public Message getMessage(String id) {
+    public Message getMessage(UUID id) {
         Message message = messageService.getMessage(id);
         enrichRecipientName(message.getRecipients());
         return message;

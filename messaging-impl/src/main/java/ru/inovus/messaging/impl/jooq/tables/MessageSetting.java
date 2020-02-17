@@ -46,7 +46,7 @@ import ru.inovus.messaging.impl.jooq.tables.records.MessageSettingRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class MessageSetting extends TableImpl<MessageSettingRecord> {
 
-    private static final long serialVersionUID = -1862195302;
+    private static final long serialVersionUID = -275882717;
 
     /**
      * The reference instance of <code>public.message_setting</code>
@@ -97,11 +97,6 @@ public class MessageSetting extends TableImpl<MessageSettingRecord> {
     public final TableField<MessageSettingRecord, String> NAME = createField("name", org.jooq.impl.SQLDataType.VARCHAR, this, "Название шаблона (события)");
 
     /**
-     * The column <code>public.message_setting.code</code>. Код шаблона (события)
-     */
-    public final TableField<MessageSettingRecord, String> CODE = createField("code", org.jooq.impl.SQLDataType.VARCHAR, this, "Код шаблона (события)");
-
-    /**
      * The column <code>public.message_setting.is_disabled</code>. Признак выключения уведомления
      */
     public final TableField<MessageSettingRecord, Boolean> IS_DISABLED = createField("is_disabled", org.jooq.impl.SQLDataType.BOOLEAN.defaultValue(org.jooq.impl.DSL.field("false", org.jooq.impl.SQLDataType.BOOLEAN)), this, "Признак выключения уведомления");
@@ -120,6 +115,11 @@ public class MessageSetting extends TableImpl<MessageSettingRecord> {
      * The column <code>public.message_setting.send_email</code>.
      */
     public final TableField<MessageSettingRecord, Boolean> SEND_EMAIL = createField("send_email", org.jooq.impl.SQLDataType.BOOLEAN, this, "");
+
+    /**
+     * The column <code>public.message_setting.code</code>. Код шаблона сообщения
+     */
+    public final TableField<MessageSettingRecord, String> CODE = createField("code", org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Код шаблона сообщения");
 
     /**
      * Create a <code>public.message_setting</code> table reference
@@ -167,7 +167,7 @@ public class MessageSetting extends TableImpl<MessageSettingRecord> {
      */
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.MESSAGE_SETTING_PKEY);
+        return Arrays.<Index>asList(Indexes.CODE_UX, Indexes.MESSAGE_SETTING_PKEY);
     }
 
     /**

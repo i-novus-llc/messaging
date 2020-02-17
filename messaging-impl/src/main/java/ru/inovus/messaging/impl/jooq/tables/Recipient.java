@@ -7,6 +7,7 @@ package ru.inovus.messaging.impl.jooq.tables;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.Generated;
 
@@ -43,7 +44,7 @@ import ru.inovus.messaging.impl.jooq.tables.records.RecipientRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Recipient extends TableImpl<RecipientRecord> {
 
-    private static final long serialVersionUID = 10112680;
+    private static final long serialVersionUID = -1012066416;
 
     /**
      * The reference instance of <code>public.recipient</code>
@@ -71,7 +72,7 @@ public class Recipient extends TableImpl<RecipientRecord> {
     /**
      * The column <code>public.recipient.message_id</code>. Ссылка на сообщение
      */
-    public final TableField<RecipientRecord, String> MESSAGE_ID = createField("message_id", org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Ссылка на сообщение");
+    public final TableField<RecipientRecord, UUID> MESSAGE_ID = createField("message_id", org.jooq.impl.SQLDataType.UUID, this, "Ссылка на сообщение");
 
     /**
      * The column <code>public.recipient.read_at</code>. Помечено прочтенным (дата и время)

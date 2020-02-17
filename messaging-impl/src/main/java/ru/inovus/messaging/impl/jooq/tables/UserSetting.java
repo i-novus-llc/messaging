@@ -4,19 +4,30 @@
 package ru.inovus.messaging.impl.jooq.tables;
 
 
-import org.jooq.*;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.annotation.Generated;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Identity;
+import org.jooq.Index;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
+
 import ru.inovus.messaging.api.model.AlertType;
 import ru.inovus.messaging.impl.AlertTypeConverter;
 import ru.inovus.messaging.impl.jooq.Indexes;
 import ru.inovus.messaging.impl.jooq.Keys;
 import ru.inovus.messaging.impl.jooq.Public;
 import ru.inovus.messaging.impl.jooq.tables.records.UserSettingRecord;
-
-import javax.annotation.Generated;
-import java.util.Arrays;
-import java.util.List;
 
 
 /**
@@ -32,7 +43,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserSetting extends TableImpl<UserSettingRecord> {
 
-    private static final long serialVersionUID = 656920315;
+    private static final long serialVersionUID = 1289598223;
 
     /**
      * The reference instance of <code>public.user_setting</code>
@@ -50,7 +61,7 @@ public class UserSetting extends TableImpl<UserSettingRecord> {
     /**
      * The column <code>public.user_setting.id</code>. Уникальный идентификатор
      */
-    public final TableField<UserSettingRecord, Integer> ID = createField("id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "Уникальный идентификатор");
+    public final TableField<UserSettingRecord, Integer> ID = createField("id", org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaultValue(org.jooq.impl.DSL.field("nextval('user_setting_id_seq'::regclass)", org.jooq.impl.SQLDataType.INTEGER)), this, "Уникальный идентификатор");
 
     /**
      * The column <code>public.user_setting.alert_type</code>. Тип предупреждения
@@ -78,9 +89,9 @@ public class UserSetting extends TableImpl<UserSettingRecord> {
     public final TableField<UserSettingRecord, Boolean> SEND_EMAIL = createField("send_email", org.jooq.impl.SQLDataType.BOOLEAN, this, "");
 
     /**
-     * The column <code>public.user_setting.id</code>. Уникальный идентификатор
+     * The column <code>public.user_setting.msg_setting_id</code>.
      */
-    public final TableField<UserSettingRecord, Integer> MSG_SETTING_ID = createField("msg_setting_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "Идентификатор шаблона уведомлений");
+    public final TableField<UserSettingRecord, Integer> MSG_SETTING_ID = createField("msg_setting_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * Create a <code>public.user_setting</code> table reference
@@ -128,7 +139,15 @@ public class UserSetting extends TableImpl<UserSettingRecord> {
      */
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.USER_SETTING_PKEY);
+        return Arrays.<Index>asList(Indexes.USER_SETTING_PKEY, Indexes.USER_SETTING_USER_ID_MSG_SETTING_ID_UX);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Identity<UserSettingRecord, Integer> getIdentity() {
+        return Keys.IDENTITY_USER_SETTING;
     }
 
     /**

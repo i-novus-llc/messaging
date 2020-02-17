@@ -12,6 +12,8 @@ import ru.inovus.messaging.api.rest.FeedRest;
 import ru.inovus.messaging.impl.FeedService;
 import ru.inovus.messaging.server.MessageController;
 
+import java.util.UUID;
+
 @Controller
 public class FeedRestImpl implements FeedRest {
 
@@ -37,12 +39,12 @@ public class FeedRestImpl implements FeedRest {
     }
 
     @Override
-    public Feed getMessage(String id, String recipient) {
+    public Feed getMessage(String recipient, UUID id) {
         return feedService.getMessage(id, recipient);
     }
 
     @Override
-    public Feed getMessageAndRead(String recipient, String id) {
+    public Feed getMessageAndRead(String recipient, UUID id) {
         Feed result = feedService.getMessageAndRead(id, recipient);
         if (result != null) {
             messageController.sendFeedCount(result.getSystemId(), recipient);

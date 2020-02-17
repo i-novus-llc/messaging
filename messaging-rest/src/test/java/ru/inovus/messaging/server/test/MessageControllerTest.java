@@ -29,17 +29,18 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = BackendApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = {"spring.main.allow-bean-definition-overriding=true","spring.cloud.consul.config.enabled=false"})
+        properties = {"spring.main.allow-bean-definition-overriding=true", "spring.cloud.consul.config.enabled=false"})
 @EnableEmbeddedPg
 public class MessageControllerTest {
 
@@ -82,7 +83,7 @@ public class MessageControllerTest {
 
     @Before
     public void init() {
-        URL = "ws://localhost:" + port + endPoint+"?access_token="+ TOKEN;
+        URL = "ws://localhost:" + port + endPoint + "?access_token=" + TOKEN;
         completableFuture = new CompletableFuture<>();
 
         stompClient = new WebSocketStompClient(new SockJsClient(createTransportClient()));
@@ -98,14 +99,14 @@ public class MessageControllerTest {
 
         assertNotNull(stompSession);
 
-        stompSession.subscribe("/user"+privateDestPrefix+"/" + SYSTEM_ID + "/message.count", new TestUnreadMessagesHandler());
-        stompSession.send(appPrefix+"/" + SYSTEM_ID + "/message.count", null);
+        stompSession.subscribe("/user" + privateDestPrefix + "/" + SYSTEM_ID + "/message.count", new TestUnreadMessagesHandler());
+        stompSession.send(appPrefix + "/" + SYSTEM_ID + "/message.count", null);
 
         Object result = completableFuture.get(10, SECONDS);
         stompSession.disconnect();
 
         assertNotNull(result);
-        assertEquals(((UnreadMessagesInfo)result).getCount(), Integer.valueOf(99));
+        assertEquals(((UnreadMessagesInfo) result).getCount(), Integer.valueOf(99));
     }
 
     @Test
@@ -116,7 +117,7 @@ public class MessageControllerTest {
         }).get(1, SECONDS);
 
         assertNotNull(stompSession);
-        stompSession.send(appPrefix+"/" + SYSTEM_ID + "/message.markreadall", null);
+        stompSession.send(appPrefix + "/" + SYSTEM_ID + "/message.markreadall", null);
         stompSession.disconnect();
 
         Thread.sleep(500); //Сообщение должно дойти
@@ -129,13 +130,17 @@ public class MessageControllerTest {
         StompSession stompSession = stompClient.connect(URL, new StompSessionHandlerAdapter() {
         }).get(1, SECONDS);
 
+        UUID id1 = UUID.randomUUID();
+        UUID id2 = UUID.randomUUID();
+        UUID id3 = UUID.randomUUID();
+
         assertNotNull(stompSession);
-        stompSession.send(appPrefix+"/" + SYSTEM_ID + "/message.markread", Arrays.asList("1","a2","Z"));
+        stompSession.send(appPrefix + "/" + SYSTEM_ID + "/message.markread", Arrays.asList(id1, id2, id3));
         stompSession.disconnect();
 
         Thread.sleep(500); //Сообщение должно дойти
 
-        Mockito.verify(feedService, times(1)).markRead("lkb", "1","a2","Z");
+        Mockito.verify(feedService, times(1)).markRead("lkb", id1, id2, id3);
     }
 
     @Test
@@ -147,14 +152,14 @@ public class MessageControllerTest {
 
         Message message = new Message("Test321");
 
-        stompSession.subscribe("/user"+privateDestPrefix+"/" + SYSTEM_ID + "/message", new TestReceivedMessagesHandler());
-        stompSession.send(appPrefix+"/" + SYSTEM_ID + "/message.private.lkb", message);
+        stompSession.subscribe("/user" + privateDestPrefix + "/" + SYSTEM_ID + "/message", new TestReceivedMessagesHandler());
+        stompSession.send(appPrefix + "/" + SYSTEM_ID + "/message.private.lkb", message);
 
         Object result = completableFuture.get(10, SECONDS);
         stompSession.disconnect();
 
         assertNotNull(result);
-        assertEquals(((Message)result).getId(), "Test321");
+        assertEquals(((Message) result).getId(), "Test321");
     }
 
     private List<Transport> createTransportClient() {
