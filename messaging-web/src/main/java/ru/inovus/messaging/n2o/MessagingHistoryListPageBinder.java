@@ -33,7 +33,7 @@ public class MessagingHistoryListPageBinder implements BaseMetadataBinder<Page> 
     public Page bind(Page page, BindProcessor bindProcessor) {
 
         if (!page.getWidgets().containsKey(HISTORY_WIDGET) && !page.getWidgets().containsKey(MESSAGING_SETTINGS_HISTORY_WIDGET1)
-            && !page.getWidgets().containsKey(MESSAGING_SETTINGS_HISTORY_WIDGET2))
+                && !page.getWidgets().containsKey(MESSAGING_SETTINGS_HISTORY_WIDGET2))
             return page;
 
         DataSet data = new DataSet();
@@ -49,11 +49,11 @@ public class MessagingHistoryListPageBinder implements BaseMetadataBinder<Page> 
         ModelLink ml = new ModelLink(df);
 
         if (page.getWidgets().containsKey(HISTORY_WIDGET)) {
-            page.getModels().put(String.format("%s['%s']", ReduxModel.FILTER.name().toLowerCase(), page.getWidgets().get(HISTORY_WIDGET).getId()), ml);
+            page.getModels().add(ReduxModel.FILTER, HISTORY_WIDGET, ml);
         } else if (page.getWidgets().containsKey(MESSAGING_SETTINGS_HISTORY_WIDGET1)) {
-            page.getModels().put(String.format("%s['%s']", ReduxModel.FILTER.name().toLowerCase(), page.getWidgets().get(MESSAGING_SETTINGS_HISTORY_WIDGET1).getId()), ml);
+            page.getModels().add(ReduxModel.FILTER, MESSAGING_SETTINGS_HISTORY_WIDGET1, ml);
         } else {
-            page.getModels().put(String.format("%s['%s']", ReduxModel.FILTER.name().toLowerCase(), page.getWidgets().get(MESSAGING_SETTINGS_HISTORY_WIDGET2).getId()), ml);
+            page.getModels().add(ReduxModel.FILTER, MESSAGING_SETTINGS_HISTORY_WIDGET2, ml);
         }
 
         return page;

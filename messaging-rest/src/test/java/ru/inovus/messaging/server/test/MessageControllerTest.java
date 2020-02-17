@@ -159,7 +159,7 @@ public class MessageControllerTest {
         stompSession.disconnect();
 
         assertNotNull(result);
-        assertEquals(((Message) result).getId(), "Test321");
+        assertEquals("Test321", ((Message) result).getId());
     }
 
     private List<Transport> createTransportClient() {
