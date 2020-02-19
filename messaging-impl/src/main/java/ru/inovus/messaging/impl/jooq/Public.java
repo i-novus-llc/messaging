@@ -92,7 +92,6 @@ public class Public extends SchemaImpl {
 
     private final List<Sequence<?>> getSequences0() {
         return Arrays.<Sequence<?>>asList(
-            Sequences.MESSAGE_ID_SEQ,
             Sequences.MESSAGE_SETTING_ID_SEQ,
             Sequences.RECIPIENT_ID_SEQ,
             Sequences.USER_SETTING_ID_SEQ);

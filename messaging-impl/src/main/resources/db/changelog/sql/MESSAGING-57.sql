@@ -1,5 +1,3 @@
-CREATE extension IF NOT EXISTS "uuid-ossp";
-
 ALTER TABLE public.recipient DROP CONSTRAINT recipient_message_id_fkey;
 ALTER TABLE public.recipient ADD COLUMN message_id_old varchar;
 UPDATE public.recipient SET message_id_old = message_id;

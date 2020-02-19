@@ -1,8 +1,11 @@
-spring.datasource:
-  url: jdbc:postgresql://localhost/messaging
-  username: postgres
-  password: postgres
-  driver-class-name: org.postgresql.Driver
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost/messaging
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    contexts: default
 
 spring.jooq.sql-dialect: Postgres
 

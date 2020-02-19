@@ -231,6 +231,17 @@ databaseChangeLog:
             splitStatements: true
             stripComments: true
   - changeSet:
+      id: create_uuid_extension
+      author: btsyganov
+      context: devops
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/create_uuid_extension.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
+  - changeSet:
       id: MESSAGING-57
       author: btsyganov
       changes:
