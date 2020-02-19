@@ -233,7 +233,7 @@ databaseChangeLog:
   - changeSet:
       id: create_uuid_extension
       author: btsyganov
-      context: devops
+      context: devops or test
       changes:
         - sqlFile:
             encoding: utf8

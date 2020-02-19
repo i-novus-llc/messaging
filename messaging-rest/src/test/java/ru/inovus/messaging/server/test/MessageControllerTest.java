@@ -40,7 +40,9 @@ import static org.mockito.Mockito.times;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = BackendApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = {"spring.main.allow-bean-definition-overriding=true", "spring.cloud.consul.config.enabled=false"})
+        properties = {"spring.main.allow-bean-definition-overriding=true",
+                "spring.cloud.consul.config.enabled=false",
+                "spring.liquibase.contexts=test"})
 @EnableEmbeddedPg
 public class MessageControllerTest {
 
