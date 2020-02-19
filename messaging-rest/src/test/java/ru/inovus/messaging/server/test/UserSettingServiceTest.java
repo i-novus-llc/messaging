@@ -23,11 +23,12 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(
-    classes = {BackendApplication.class},
-    properties = {"cxf.jaxrs.client.classes-scan=true",
-        "cxf.jaxrs.client.classes-scan-packages=ru.i_novus.messaging.api",
-        "spring.liquibase.change-log: classpath:/messaging-db/test-base-changelog.xml"},
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+        classes = {BackendApplication.class},
+        properties = {"cxf.jaxrs.client.classes-scan=true",
+                "cxf.jaxrs.client.classes-scan-packages=ru.i_novus.messaging.api",
+                "spring.liquibase.change-log: classpath:/messaging-db/test-base-changelog.xml",
+                "spring.liquibase.contexts=test"},
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DefinePort
 @EnableEmbeddedPg
 public class UserSettingServiceTest {
