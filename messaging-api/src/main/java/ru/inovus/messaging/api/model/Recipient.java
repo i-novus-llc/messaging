@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -15,7 +16,7 @@ public class Recipient implements Serializable {
     private Long id;
     private String recipient;
     private LocalDateTime readAt;
-    private String messageId;
+    private UUID messageId;
     private String name;
     private String email;
 

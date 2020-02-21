@@ -5,11 +5,12 @@ import lombok.Setter;
 import net.n2oapp.platform.jaxrs.RestCriteria;
 
 import javax.ws.rs.QueryParam;
+import java.util.UUID;
 
 @Getter
 @Setter
 public class RecipientCriteria extends RestCriteria {
 
     @QueryParam("messageId")
-    private String messageId;
+    private UUID messageId;
 }

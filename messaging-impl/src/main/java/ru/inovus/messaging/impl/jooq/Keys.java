@@ -7,6 +7,7 @@ package ru.inovus.messaging.impl.jooq;
 import javax.annotation.Generated;
 
 import org.jooq.ForeignKey;
+import org.jooq.Identity;
 import org.jooq.UniqueKey;
 import org.jooq.impl.Internal;
 
@@ -40,6 +41,7 @@ public class Keys {
     // IDENTITY definitions
     // -------------------------------------------------------------------------
 
+    public static final Identity<UserSettingRecord, Integer> IDENTITY_USER_SETTING = Identities0.IDENTITY_USER_SETTING;
 
     // -------------------------------------------------------------------------
     // UNIQUE and PRIMARY KEY definitions
@@ -63,6 +65,10 @@ public class Keys {
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
     // -------------------------------------------------------------------------
+
+    private static class Identities0 {
+        public static Identity<UserSettingRecord, Integer> IDENTITY_USER_SETTING = Internal.createIdentity(UserSetting.USER_SETTING, UserSetting.USER_SETTING.ID);
+    }
 
     private static class UniqueKeys0 {
         public static final UniqueKey<ComponentRecord> COMPONENT_PKEY = Internal.createUniqueKey(Component.COMPONENT, "component_pkey", Component.COMPONENT.ID);

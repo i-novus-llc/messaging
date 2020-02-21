@@ -4,15 +4,16 @@
 package ru.inovus.messaging.impl.jooq.tables.records;
 
 
+import javax.annotation.Generated;
+
 import org.jooq.Field;
 import org.jooq.Record1;
 import org.jooq.Record7;
 import org.jooq.Row7;
 import org.jooq.impl.UpdatableRecordImpl;
+
 import ru.inovus.messaging.api.model.AlertType;
 import ru.inovus.messaging.impl.jooq.tables.UserSetting;
-
-import javax.annotation.Generated;
 
 
 /**
@@ -28,7 +29,7 @@ import javax.annotation.Generated;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserSettingRecord extends UpdatableRecordImpl<UserSettingRecord> implements Record7<Integer, AlertType, Boolean, String, Boolean, Boolean, Integer> {
 
-    private static final long serialVersionUID = -1849824552;
+    private static final long serialVersionUID = -997629707;
 
     /**
      * Setter for <code>public.user_setting.id</code>. Уникальный идентификатор
@@ -115,7 +116,7 @@ public class UserSettingRecord extends UpdatableRecordImpl<UserSettingRecord> im
     }
 
     /**
-     * Getter for <code>public.user_setting.msg_setting_id</code>.
+     * Setter for <code>public.user_setting.msg_setting_id</code>.
      */
     public void setMsgSettingId(Integer value) {
         set(6, value);

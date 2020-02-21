@@ -7,6 +7,7 @@ package ru.inovus.messaging.impl.jooq.tables;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.Generated;
 
@@ -50,7 +51,7 @@ import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Message extends TableImpl<MessageRecord> {
 
-    private static final long serialVersionUID = -435450934;
+    private static final long serialVersionUID = -151354692;
 
     /**
      * The reference instance of <code>public.message</code>
@@ -68,7 +69,7 @@ public class Message extends TableImpl<MessageRecord> {
     /**
      * The column <code>public.message.id</code>. Уникальный идентификатор
      */
-    public final TableField<MessageRecord, String> ID = createField("id", org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Уникальный идентификатор");
+    public final TableField<MessageRecord, UUID> ID = createField("id", org.jooq.impl.SQLDataType.UUID.nullable(false).defaultValue(org.jooq.impl.DSL.field("uuid_generate_v4()", org.jooq.impl.SQLDataType.UUID)), this, "Уникальный идентификатор");
 
     /**
      * The column <code>public.message.caption</code>. Заголовок

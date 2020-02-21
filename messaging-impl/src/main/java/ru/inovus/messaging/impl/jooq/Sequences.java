@@ -24,11 +24,6 @@ import org.jooq.impl.SequenceImpl;
 public class Sequences {
 
     /**
-     * The sequence <code>public.message_id_seq</code>
-     */
-    public static final Sequence<Long> MESSAGE_ID_SEQ = new SequenceImpl<Long>("message_id_seq", Public.PUBLIC, org.jooq.impl.SQLDataType.BIGINT.nullable(false));
-
-    /**
      * The sequence <code>public.message_setting_id_seq</code>
      */
     public static final Sequence<Long> MESSAGE_SETTING_ID_SEQ = new SequenceImpl<Long>("message_setting_id_seq", Public.PUBLIC, org.jooq.impl.SQLDataType.BIGINT.nullable(false));
@@ -37,4 +32,9 @@ public class Sequences {
      * The sequence <code>public.recipient_id_seq</code>
      */
     public static final Sequence<Long> RECIPIENT_ID_SEQ = new SequenceImpl<Long>("recipient_id_seq", Public.PUBLIC, org.jooq.impl.SQLDataType.BIGINT.nullable(false));
+
+    /**
+     * The sequence <code>public.user_setting_id_seq</code>
+     */
+    public static final Sequence<Long> USER_SETTING_ID_SEQ = new SequenceImpl<Long>("user_setting_id_seq", Public.PUBLIC, org.jooq.impl.SQLDataType.BIGINT.nullable(false));
 }

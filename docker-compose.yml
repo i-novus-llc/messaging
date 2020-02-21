@@ -63,44 +63,5 @@ services:
       restart_policy:
         max_attempts: 3
 
-  security-admin-backend:
-    image: ${DOCKER_REGISTRY}/security-admin/backend:${TAG}
-    environment:
-      SPRING_APPLICATION_NAME: "messaging-security-admin-backend"
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db/postgres
-      SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
-      SPRING_CLOUD_CONSUL_HOST: consul-agent.local
-      JAVA_OPTS: -Xmx150m
-    depends_on:
-    - db
-    ports:
-    - "8080"
-    deploy:
-      resources:
-        limits:
-          memory: 400M
-      restart_policy:
-        max_attempts: 3
-
-  security-admin-frontend:
-    image: ${DOCKER_REGISTRY}/security-admin/frontend:${TAG}
-    environment:
-      SPRING_APPLICATION_NAME: "messaging-security-admin-frontend"
-      SPRING_CLOUD_CONSUL_HOST: consul-agent.local
-      SEC_ADMIN_REST_URL: http://security-admin-backend:8080/api
-      KEYCLOAK_REALM: messaging
-      SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
-      JAVA_OPTS: -Xmx200m
-    depends_on:
-    - security-admin-backend
-    ports:
-    - "8080"
-    deploy:
-      resources:
-        limits:
-          memory: 500M
-      restart_policy:
-        max_attempts: 3
-
 volumes:
   messaging-db-data:

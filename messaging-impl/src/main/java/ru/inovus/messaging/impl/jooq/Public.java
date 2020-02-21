@@ -35,7 +35,7 @@ import ru.inovus.messaging.impl.jooq.tables.UserSetting;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Public extends SchemaImpl {
 
-    private static final long serialVersionUID = -1717588378;
+    private static final long serialVersionUID = 1285580624;
 
     /**
      * The reference instance of <code>public</code>
@@ -92,9 +92,9 @@ public class Public extends SchemaImpl {
 
     private final List<Sequence<?>> getSequences0() {
         return Arrays.<Sequence<?>>asList(
-            Sequences.MESSAGE_ID_SEQ,
             Sequences.MESSAGE_SETTING_ID_SEQ,
-            Sequences.RECIPIENT_ID_SEQ);
+            Sequences.RECIPIENT_ID_SEQ,
+            Sequences.USER_SETTING_ID_SEQ);
     }
 
     @Override
