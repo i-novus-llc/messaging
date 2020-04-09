@@ -10,7 +10,7 @@
     </unique>
 
     <fields>
-        <field id="id" domain="integer" name="Идентификатор">
+        <field id="id" domain="string" name="Идентификатор">
             <select mapping="['id']"/>
             <filters>
                 <eq filter-id="id">{id}</eq>

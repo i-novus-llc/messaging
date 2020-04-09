@@ -6,7 +6,7 @@
     </list>
 
     <fields>
-        <field id="id" domain="integer" name="Идентификатор">
+        <field id="id" domain="string" name="Идентификатор">
             <select/>
         </field>
         <field id="name" domain="string" name="Наименование">

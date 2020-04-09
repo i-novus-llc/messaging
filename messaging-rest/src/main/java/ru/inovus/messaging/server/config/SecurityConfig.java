@@ -51,6 +51,9 @@ public class SecurityConfig extends ResourceServerConfigurerAdapter {
     @Value("${novus.messaging.check_token_expired}")
     private Boolean checkTokenExpired;
 
+    @Value("${novus.messaging.username.alias}")
+    private String usernameAlias;
+
     @Autowired
     private ResourceServerTokenServices tokenServices;
 
@@ -95,7 +98,7 @@ public class SecurityConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/ws/**")
                 .and()
                 .authorizeRequests()
-                .antMatchers("/ws/**").authenticated()
+                .antMatchers("/ws/**", "/api/users**").authenticated()
                 .antMatchers("/api/**").permitAll()
                 .anyRequest().denyAll();
 
@@ -116,6 +119,10 @@ public class SecurityConfig extends ResourceServerConfigurerAdapter {
         cors.setAllowedMethods(Arrays.asList("GET", "POST", "OPTION"));
         source.registerCorsConfiguration("/api/**", cors);
         return source;
+    }
+
+    @Bean JaxRsJwtHeaderInterceptor jaxRsJwtHeaderInterceptor() {
+        return new JaxRsJwtHeaderInterceptor();
     }
 
     private TokenStore tokenStore(){
@@ -144,7 +151,7 @@ public class SecurityConfig extends ResourceServerConfigurerAdapter {
                         authorities.add(new SimpleGrantedAuthority("ROLE_" + roleCode));
                     }
                 }
-                UserDetails principal = new User("" + map.get("preferred_username"), "N/A", authorities);
+                UserDetails principal = new User("" + map.get(usernameAlias), "N/A", authorities);
                 return new UsernamePasswordAuthenticationToken(principal, "N/A", authorities);
             }
         };
