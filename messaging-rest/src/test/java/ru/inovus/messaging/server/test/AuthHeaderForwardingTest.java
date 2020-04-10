@@ -19,7 +19,7 @@ import java.util.Collections;
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
         properties = {"spring.main.allow-bean-definition-overriding=true",
                 "server.port=8456",
-                "sec.admin.rest.url=http://localhost:8456",
+                "sec.admin.rest.url=http://localhost:${server.port}",
                 "cxf.jaxrs.client.classes-scan-packages=ru.i_novus.messaging.api",
                 "spring.cloud.consul.config.enabled=false",
                 "spring.liquibase.contexts=test"})
@@ -30,7 +30,7 @@ public class AuthHeaderForwardingTest {
     private int port;
 
     @Test
-    public void test() {
+    public void testHeaderForwarding() {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.put("Authorization", Collections.singletonList("Bearer test_token"));
