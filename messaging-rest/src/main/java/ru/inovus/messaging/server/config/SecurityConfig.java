@@ -98,7 +98,7 @@ public class SecurityConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/ws/**")
                 .and()
                 .authorizeRequests()
-                .antMatchers("/ws/**", "/api/users**").authenticated()
+                .antMatchers("/ws/**").authenticated()
                 .antMatchers("/api/**").permitAll()
                 .anyRequest().denyAll();
 
