@@ -51,6 +51,9 @@ public class SecurityConfig extends ResourceServerConfigurerAdapter {
     @Value("${novus.messaging.check_token_expired}")
     private Boolean checkTokenExpired;
 
+    @Value("${novus.messaging.username.alias}")
+    private String usernameAlias;
+
     @Autowired
     private ResourceServerTokenServices tokenServices;
 
@@ -118,6 +121,10 @@ public class SecurityConfig extends ResourceServerConfigurerAdapter {
         return source;
     }
 
+    @Bean JaxRsJwtHeaderInterceptor jaxRsJwtHeaderInterceptor() {
+        return new JaxRsJwtHeaderInterceptor();
+    }
+
     private TokenStore tokenStore(){
         return new JwtTokenStore(accessTokenConverter());
     }
@@ -144,7 +151,7 @@ public class SecurityConfig extends ResourceServerConfigurerAdapter {
                         authorities.add(new SimpleGrantedAuthority("ROLE_" + roleCode));
                     }
                 }
-                UserDetails principal = new User("" + map.get("preferred_username"), "N/A", authorities);
+                UserDetails principal = new User("" + map.get(usernameAlias), "N/A", authorities);
                 return new UsernamePasswordAuthenticationToken(principal, "N/A", authorities);
             }
         };

@@ -1,3 +1,6 @@
+server:
+  port: 8081
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost/messaging
@@ -38,11 +41,7 @@ novus.messaging:
   public_dest_prefix: /topic
   private_dest_prefix: /exchange
   check_token_expired: true
-
-management:
-  context-path: /actuator
-  security:
-    roles: SUPERUSER
+  username.alias: preferred_username
 
 #email sender
 spring.mail.host: smtp.gmail.com
@@ -92,6 +91,3 @@ security:
 #      scope: senduser,sendgroup,sendall
 #      access-token-uri: ${security.oauth2.auth-server-uri}/token
 #      grant-type: client_credentials
-
-server:
-  port: 8081
