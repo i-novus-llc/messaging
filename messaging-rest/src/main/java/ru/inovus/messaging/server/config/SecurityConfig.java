@@ -107,7 +107,7 @@ public class SecurityConfig extends ResourceServerConfigurerAdapter {
                 .and()
                 .csrf()
                 .csrfTokenRepository(
-                        CookieCsrfTokenRepository.withHttpOnlyFalse());
+                        CookieCsrfTokenRepository.withHttpOnlyFalse()).ignoringAntMatchers("/ws/**");
     }
 
     @Bean
