@@ -40,6 +40,8 @@ import java.util.*;
 @EnableResourceServer
 public class SecurityConfig extends ResourceServerConfigurerAdapter {
 
+    private static final String WS_URL_PATTERN = "/ws/**";
+
     //можно взять https://keycloak.i-novus.ru/auth/realms/DOMRF/protocol/openid-connect/certs
     @Value("${novus.messaging.keycloak.modulus}")
     private String modulus;
@@ -95,10 +97,10 @@ public class SecurityConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.requestMatchers()
-                .antMatchers("/ws/**")
+                .antMatchers(WS_URL_PATTERN)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/ws/**").authenticated()
+                .antMatchers(WS_URL_PATTERN).authenticated()
                 .antMatchers("/api/**").permitAll()
                 .anyRequest().denyAll();
 
@@ -107,7 +109,7 @@ public class SecurityConfig extends ResourceServerConfigurerAdapter {
                 .and()
                 .csrf()
                 .csrfTokenRepository(
-                        CookieCsrfTokenRepository.withHttpOnlyFalse());
+                        CookieCsrfTokenRepository.withHttpOnlyFalse()).ignoringAntMatchers(WS_URL_PATTERN);
     }
 
     @Bean
