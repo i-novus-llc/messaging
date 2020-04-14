@@ -7,6 +7,8 @@
     <packaging>pom</packaging>
     <version>3.33-SNAPSHOT</version>
 
+    <name>Messaging</name>
+
     <url>https://messaging.i-novus.ru</url>
 
     <scm>
@@ -16,16 +18,17 @@
         <tag>HEAD</tag>
     </scm>
 
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
     <modules>
         <module>messaging-api</module>
-        <module>messaging-impl</module>
-        <module>messaging-rest</module>
         <module>messaging-client</module>
-        <module>messaging-admin-web</module>
-        <module>messaging-admin-frontend</module>
-        <module>messaging-support-activemq</module>
-        <module>messaging-support-kafka</module>
-        <module>messaging-web</module>
     </modules>
 
     <parent>
@@ -33,6 +36,24 @@
         <artifactId>n2o-platform-parent</artifactId>
         <version>2.12</version>
     </parent>
+
+    <profiles>
+        <profile>
+            <id>build-all-modules</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>messaging-impl</module>
+                <module>messaging-rest</module>
+                <module>messaging-admin-web</module>
+                <module>messaging-admin-frontend</module>
+                <module>messaging-support-activemq</module>
+                <module>messaging-support-kafka</module>
+                <module>messaging-web</module>
+            </modules>
+        </profile>
+    </profiles>
 
     <properties>
         <n2o.version>7.3.32</n2o.version>
