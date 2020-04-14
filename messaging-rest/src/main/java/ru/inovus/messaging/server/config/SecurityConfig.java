@@ -27,7 +27,7 @@ import org.springframework.security.oauth2.provider.authentication.OAuth2Authent
 import org.springframework.security.oauth2.provider.token.*;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -108,8 +108,7 @@ public class SecurityConfig extends ResourceServerConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .csrf()
-                .csrfTokenRepository(
-                        CookieCsrfTokenRepository.withHttpOnlyFalse()).ignoringAntMatchers(WS_URL_PATTERN);
+                .csrfTokenRepository(new HttpSessionCsrfTokenRepository());
     }
 
     @Bean
@@ -123,11 +122,12 @@ public class SecurityConfig extends ResourceServerConfigurerAdapter {
         return source;
     }
 
-    @Bean JaxRsJwtHeaderInterceptor jaxRsJwtHeaderInterceptor() {
+    @Bean
+    JaxRsJwtHeaderInterceptor jaxRsJwtHeaderInterceptor() {
         return new JaxRsJwtHeaderInterceptor();
     }
 
-    private TokenStore tokenStore(){
+    private TokenStore tokenStore() {
         return new JwtTokenStore(accessTokenConverter());
     }
 
