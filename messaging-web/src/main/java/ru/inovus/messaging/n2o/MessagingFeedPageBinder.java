@@ -5,8 +5,9 @@ import net.n2oapp.framework.api.metadata.Compiled;
 import net.n2oapp.framework.api.metadata.ReduxModel;
 import net.n2oapp.framework.api.metadata.compile.BindProcessor;
 import net.n2oapp.framework.api.metadata.meta.ModelLink;
-import net.n2oapp.framework.api.metadata.meta.Page;
 import net.n2oapp.framework.api.metadata.meta.control.DefaultValues;
+import net.n2oapp.framework.api.metadata.meta.page.Page;
+import net.n2oapp.framework.api.metadata.meta.page.SimplePage;
 import net.n2oapp.framework.config.metadata.compile.BaseMetadataBinder;
 import org.springframework.stereotype.Component;
 
@@ -42,7 +43,7 @@ public class MessagingFeedPageBinder implements BaseMetadataBinder<Page> {
         df.setValues(data);
         ModelLink ml = new ModelLink(df);
 
-        page.getModels().put(String.format("%s['%s']", ReduxModel.FILTER.name().toLowerCase(), page.getWidgets().keySet().iterator().next()), ml);
+        page.getModels().put(String.format("%s['%s']", ReduxModel.FILTER.name().toLowerCase(), ((SimplePage) page).getWidget()), ml);
         return page;
     }
 }

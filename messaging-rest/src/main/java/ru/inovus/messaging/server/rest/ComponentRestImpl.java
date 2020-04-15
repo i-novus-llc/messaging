@@ -1,6 +1,5 @@
 package ru.inovus.messaging.server.rest;
 
-import net.n2oapp.platform.jaxrs.RestCriteria;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.RecordMapper;
@@ -8,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Controller;
+import ru.inovus.messaging.api.criteria.BaseMessagingCriteria;
 import ru.inovus.messaging.api.criteria.ComponentCriteria;
 import ru.inovus.messaging.api.model.Component;
 import ru.inovus.messaging.api.rest.ComponentRest;
@@ -33,7 +33,7 @@ public class ComponentRestImpl implements ComponentRest {
         List<Component> list = (criteria == null || criteria.getName() == null) ?
                 dsl.selectFrom(COMPONENT).fetch(MAPPER) :
                 dsl.selectFrom(COMPONENT).where(COMPONENT.NAME.containsIgnoreCase(criteria.getName())).fetch(MAPPER);
-        return new PageImpl<>(list, new RestCriteria(), list.size());
+        return new PageImpl<>(list, new BaseMessagingCriteria(), list.size());
     }
 
 }

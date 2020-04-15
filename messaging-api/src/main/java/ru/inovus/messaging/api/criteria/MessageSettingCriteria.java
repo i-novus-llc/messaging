@@ -15,12 +15,11 @@
  */
 package ru.inovus.messaging.api.criteria;
 
-import net.n2oapp.platform.jaxrs.RestCriteria;
 import ru.inovus.messaging.api.model.*;
 
 import javax.ws.rs.QueryParam;
 
-public class MessageSettingCriteria extends RestCriteria {
+public class MessageSettingCriteria extends BaseMessagingCriteria {
     private static final long serialVersionUID = 7609048158169451957L;
 
     @QueryParam("component.id")

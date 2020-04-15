@@ -1,8 +1,9 @@
 package ru.inovus.messaging.n2o;
 
 import net.n2oapp.framework.api.data.QueryProcessor;
+import net.n2oapp.framework.security.auth.oauth2.gateway.GatewayPrincipalExtractor;
 import net.n2oapp.security.admin.rest.client.AdminRestClientConfiguration;
-import net.n2oapp.security.auth.User;
+import net.n2oapp.security.auth.common.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -26,8 +27,13 @@ public class FrontendApplication {
     private QueryProcessor queryProcessor;
 
     @Bean
-    public UserMessageViewPageNameBinder  pageNameBinder() {
+    public UserMessageViewPageNameBinder pageNameBinder() {
         return new UserMessageViewPageNameBinder(queryProcessor);
+    }
+
+    @Bean
+    public GatewayPrincipalExtractor gatewayPrincipalExtractor() {
+        return new GatewayPrincipalExtractor();
     }
 
     @Bean
