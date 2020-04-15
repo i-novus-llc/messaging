@@ -104,7 +104,7 @@ public class MessageControllerTest {
         stompSession.subscribe("/user" + privateDestPrefix + "/" + SYSTEM_ID + "/message.count", new TestUnreadMessagesHandler());
         stompSession.send(appPrefix + "/" + SYSTEM_ID + "/message.count", null);
 
-        Object result = completableFuture.get(10, SECONDS);
+        Object result = completableFuture.get(15, SECONDS);
         stompSession.disconnect();
 
         assertNotNull(result);
@@ -157,7 +157,7 @@ public class MessageControllerTest {
         stompSession.subscribe("/user" + privateDestPrefix + "/" + SYSTEM_ID + "/message", new TestReceivedMessagesHandler());
         stompSession.send(appPrefix + "/" + SYSTEM_ID + "/message.private.lkb", message);
 
-        Object result = completableFuture.get(10, SECONDS);
+        Object result = completableFuture.get(15, SECONDS);
         stompSession.disconnect();
 
         assertNotNull(result);
