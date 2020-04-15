@@ -42,7 +42,8 @@ import static org.mockito.Mockito.times;
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {"spring.main.allow-bean-definition-overriding=true",
                 "spring.cloud.consul.config.enabled=false",
-                "spring.liquibase.contexts=test"})
+                "spring.liquibase.contexts=test", "sec.admin.rest.url=/",
+                "novus.messaging.username.alias=preferred_username"})
 @EnableEmbeddedPg
 public class MessageControllerTest {
 
@@ -104,7 +105,7 @@ public class MessageControllerTest {
         stompSession.subscribe("/user" + privateDestPrefix + "/" + SYSTEM_ID + "/message.count", new TestUnreadMessagesHandler());
         stompSession.send(appPrefix + "/" + SYSTEM_ID + "/message.count", null);
 
-        Object result = completableFuture.get(15, SECONDS);
+        Object result = completableFuture.get(10, SECONDS);
         stompSession.disconnect();
 
         assertNotNull(result);
@@ -157,7 +158,7 @@ public class MessageControllerTest {
         stompSession.subscribe("/user" + privateDestPrefix + "/" + SYSTEM_ID + "/message", new TestReceivedMessagesHandler());
         stompSession.send(appPrefix + "/" + SYSTEM_ID + "/message.private.lkb", message);
 
-        Object result = completableFuture.get(15, SECONDS);
+        Object result = completableFuture.get(10, SECONDS);
         stompSession.disconnect();
 
         assertNotNull(result);
