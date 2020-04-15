@@ -33,15 +33,15 @@ novus.messaging:
     email: novus-messaging-email
   durable: true
   auth-header-name: X-Auth-Token
-  keycloak.modulus: rnOzE3m3ohRrASPvNUT2sDEaOf-E1qlttRbr4inxUGe2e_SdS-IGqjOzME2H-IByHPEqH5ptZ1GjhHaMo81conYBoA6Dgwz8wo4oARSKRgFXOgqybcBQu_ruUGrbsRD7UvEDNYin84gUkeHSQUJJjBb4f71yUjcWNpD-sC5vpSaPJNgVP1q5kKTjGd6eRmGF2bD0MQHPh_leGWKCxbcOqSxHmQiLV7qGqouJ6YuHCQG3plzuUGmk2fnWzCZ9l1qEoIh-JE0Z3kquroqG9jVzQd5u9Ct6JX2OeXjn4bXzSND_Um6Zztw41XJs1QFPXHA2HVoCeJ1CCm1UtVTUCB0uHw
+  keycloak.modulus: rgK-_dvHbSnFJxhDYFRx9E8HXI96_GRcHl-mes9B2usX9mNrQESDpm-hOzMtal-LjAbqbJmlbL-_Tu7pf4G3MfuiNOmkWiyX9S6B3aKvib6RUC0EKfz8fEH4Z7fZKRRhevU2pTHYaiOz3m7zHkK6snYMcsKpYU_HqyWXPRRh-gcv1a4Rr2ta-CPWfpMWSWW1pgg9lc8rJTUnudRfHusSHqE3L2_ut0Zf8EZiXCSmznP4ifO5Hm95i9z0axnTfb16Ie34b70tFoUJ2sPGGFDdBtgTtx35yJ6QkbuLk-dnIyGrYWWPEah6omjZhec0mRuyzuEbVpmA4Cel5j1Spcx1_Q
   keycloak.exponent: AQAB
-  keycloak.resourceId: lkb-app
+  keycloak.resourceId: admin-web
   app_prefix: /app
   end_point: /ws
   public_dest_prefix: /topic
   private_dest_prefix: /exchange
   check_token_expired: true
-  username.alias: preferred_username
+  username.alias: username
 
 #email sender
 spring.mail.host: smtp.gmail.com
