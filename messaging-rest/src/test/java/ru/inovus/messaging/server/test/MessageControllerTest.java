@@ -42,7 +42,8 @@ import static org.mockito.Mockito.times;
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {"spring.main.allow-bean-definition-overriding=true",
                 "spring.cloud.consul.config.enabled=false",
-                "spring.liquibase.contexts=test"})
+                "spring.liquibase.contexts=test", "sec.admin.rest.url=/",
+                "novus.messaging.username.alias=preferred_username"})
 @EnableEmbeddedPg
 public class MessageControllerTest {
 

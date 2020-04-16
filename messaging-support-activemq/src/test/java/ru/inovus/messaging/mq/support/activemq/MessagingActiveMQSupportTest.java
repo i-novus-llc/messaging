@@ -1,7 +1,6 @@
 package ru.inovus.messaging.mq.support.activemq;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.n2oapp.platform.jaxrs.RestObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +33,7 @@ public class MessagingActiveMQSupportTest {
     private MqProvider mqProvider;
 
     private MessageOutbox receivedMessage;
+
     @Test
     public void testPassMessageTroughPubsubMQ() throws InterruptedException {
         final String WS_SESSION_ID = "ws-session-id";
@@ -55,6 +55,7 @@ public class MessagingActiveMQSupportTest {
 
     private MessageOutbox receivedMessage2;
     private MessageOutbox receivedMessage3;
+
     @Test
     public void testPassMessageTroughSecondPubsubMQ() throws InterruptedException {
         final String WS_SESSION_ID_1 = "ws-session-id-1";
@@ -63,8 +64,14 @@ public class MessagingActiveMQSupportTest {
         receivedMessage2 = null;
         receivedMessage3 = null;
 
-        mqProvider.subscribe(new TopicMqConsumer(WS_SESSION_ID_1, DEFAULT_SYSTEM_ID, "unique-user-id-1", TOPIC_NAME, messageOutbox -> {receivedMessage2 = messageOutbox; System.out.println("receivedMessage2");}));
-        mqProvider.subscribe(new TopicMqConsumer(WS_SESSION_ID_2, DEFAULT_SYSTEM_ID, "unique-user-id-2", TOPIC_NAME, messageOutbox -> {receivedMessage3 = messageOutbox; System.out.println("receivedMessage3");}));
+        mqProvider.subscribe(new TopicMqConsumer(WS_SESSION_ID_1, DEFAULT_SYSTEM_ID, "unique-user-id-1", TOPIC_NAME, messageOutbox -> {
+            receivedMessage2 = messageOutbox;
+            System.out.println("receivedMessage2");
+        }));
+        mqProvider.subscribe(new TopicMqConsumer(WS_SESSION_ID_2, DEFAULT_SYSTEM_ID, "unique-user-id-2", TOPIC_NAME, messageOutbox -> {
+            receivedMessage3 = messageOutbox;
+            System.out.println("receivedMessage3");
+        }));
 
         mqProvider.publish(createNotice(), TOPIC_NAME);
         Thread.sleep(5000);
@@ -78,6 +85,7 @@ public class MessagingActiveMQSupportTest {
     }
 
     private MessageOutbox receivedMessage4;
+
     @Test
     public void testPassMessageTroughProdconsMQ() throws InterruptedException {
         final String QUEUE_NAME = "email-queue-1";
@@ -100,6 +108,7 @@ public class MessagingActiveMQSupportTest {
 
     private MessageOutbox receivedMessage5;
     private MessageOutbox receivedMessage6;
+
     @Test
     public void testPassMessageTroughSecondProdconsMQ() throws InterruptedException {
         final String QUEUE_NAME = "email-queue-2";
@@ -166,7 +175,7 @@ public class MessagingActiveMQSupportTest {
     static class TestConfiguration {
         @Bean("objectMapper")
         ObjectMapper objectMapper() {
-            return new RestObjectMapper(List.of());
+            return new ObjectMapper();
         }
     }
 }

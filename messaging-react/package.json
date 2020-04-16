@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "n2o-framework": "7.3.32",
-    "n2o-auth": "7.3.32",
+    "n2o-framework": "^7.5.2",
+    "n2o-auth": "7.5.2",
     "react": "^16.8.2",
     "react-dom": "^16.8.2",
     "react-scripts": "2.1.5"

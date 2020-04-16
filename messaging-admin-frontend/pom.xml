@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,10 +16,10 @@
 
     <properties>
         <jaxws.version>2.3.2</jaxws.version>
-
         <maven.deploy.skip>true</maven.deploy.skip>
         <backend.default.path>http://localhost:8080/api</backend.default.path>
         <config.server.enable>false</config.server.enable>
+        <jacoco.skip>false</jacoco.skip>
     </properties>
 
     <dependencies>
@@ -39,11 +40,6 @@
         </dependency>
 
         <dependency>
-            <groupId>net.n2oapp.framework</groupId>
-            <artifactId>n2o-config-ehcache</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>ru.i-novus.messaging</groupId>
             <artifactId>messaging-admin-web</artifactId>
             <version>${project.version}</version>
@@ -52,6 +48,11 @@
         <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
             <artifactId>security-auth-oauth2</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.n2oapp.framework.security</groupId>
+            <artifactId>security-auth-oauth2-gateway</artifactId>
         </dependency>
 
         <dependency>
@@ -74,6 +75,11 @@
         <dependency>
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.n2oapp.platform</groupId>
+            <artifactId>n2o-platform-starter-web</artifactId>
         </dependency>
 
         <dependency>

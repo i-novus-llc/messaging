@@ -17,7 +17,6 @@ package ru.inovus.messaging.api.criteria;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.n2oapp.platform.jaxrs.RestCriteria;
 import ru.inovus.messaging.api.model.InfoType;
 import ru.inovus.messaging.api.model.Severity;
 
@@ -26,7 +25,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class MessageCriteria extends RestCriteria {
+public class MessageCriteria extends BaseMessagingCriteria {
 
     private static final long serialVersionUID = 7609048158169451956L;
 
