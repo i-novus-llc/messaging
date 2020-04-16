@@ -41,7 +41,7 @@ novus.messaging:
   public_dest_prefix: /topic
   private_dest_prefix: /exchange
   check_token_expired: true
-  username.alias: preffered_username
+  username.alias: preferred_username
 
 #email sender
 spring.mail.host: smtp.gmail.com
