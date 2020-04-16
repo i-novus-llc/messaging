@@ -49,7 +49,7 @@ public class MessagingHistoryListPageBinder implements BaseMetadataBinder<Page> 
                         .values().stream()
                         .collect(Collectors.toMap(Widget::getId, w -> w));
         }
-        if (widgets.containsKey(HISTORY_WIDGET) && !widgets.containsKey(MESSAGING_SETTINGS_HISTORY_WIDGET1)
+        if (!widgets.containsKey(HISTORY_WIDGET) && !widgets.containsKey(MESSAGING_SETTINGS_HISTORY_WIDGET1)
                 && !widgets.containsKey(MESSAGING_SETTINGS_HISTORY_WIDGET2))
             return page;
 

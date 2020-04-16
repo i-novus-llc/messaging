@@ -48,6 +48,15 @@ public class PageBindersTest extends SourceCompileTestBase {
                 .get(new PageContext("messaging_settings"), new DataSet());
 
         assertDates(page, "filter['messaging_settings_history']");
+
+        Page simplePage = bind("ru/inovus/messaging/n2o/simple/messaging_settings.page.xml")
+                .get(new PageContext("messaging_settings"), new DataSet());
+        assertDates(simplePage, "filter['messaging_settings_history']");
+
+        page = bind("ru/inovus/messaging/n2o/blank.page.xml")
+                .get(new PageContext("blank"), new DataSet());
+        assertThat(page.getModels().size(), is(0));
+
     }
 
     private void assertDates(Page page, String modelLink) {
