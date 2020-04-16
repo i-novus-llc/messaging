@@ -23,7 +23,7 @@ import javax.ws.rs.QueryParam;
 
 @Getter
 @Setter
-public class ComponentCriteria extends RestCriteria {
+public class ComponentCriteria extends BaseMessagingCriteria {
     //todo serialVersionUID
 
     @QueryParam("name")

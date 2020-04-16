@@ -15,7 +15,6 @@
  */
 package ru.inovus.messaging.api.criteria;
 
-import net.n2oapp.platform.jaxrs.RestCriteria;
 import ru.inovus.messaging.api.model.AlertType;
 import ru.inovus.messaging.api.model.InfoType;
 import ru.inovus.messaging.api.model.Severity;
@@ -24,7 +23,7 @@ import ru.inovus.messaging.api.model.YesNo;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 
-public class UserSettingCriteria extends RestCriteria {
+public class UserSettingCriteria extends BaseMessagingCriteria {
     private static final long serialVersionUID = 7609048158169451958L;
 
     @PathParam("user")

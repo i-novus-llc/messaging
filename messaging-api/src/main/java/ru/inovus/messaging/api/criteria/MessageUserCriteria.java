@@ -22,7 +22,7 @@ import javax.ws.rs.QueryParam;
 
 @Getter
 @Setter
-public class MessageUserCriteria extends MessageCriteria {
+public class MessageUserCriteria extends BaseMessagingCriteria {
 
     @QueryParam("user")
     private String user;
