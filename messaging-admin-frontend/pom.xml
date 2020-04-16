@@ -19,6 +19,7 @@
         <maven.deploy.skip>true</maven.deploy.skip>
         <backend.default.path>http://localhost:8080/api</backend.default.path>
         <config.server.enable>false</config.server.enable>
+        <jacoco.skip>false</jacoco.skip>
     </properties>
 
     <dependencies>

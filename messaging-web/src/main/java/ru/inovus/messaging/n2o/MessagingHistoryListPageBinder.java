@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Component
 public class MessagingHistoryListPageBinder implements BaseMetadataBinder<Page> {
 
-    private static final String HISTORY_WIDGET = "__history";
+    private static final String HISTORY_WIDGET = "history";
     private static final String MESSAGING_SETTINGS_HISTORY_WIDGET1 = "messagingSettings_history";
     private static final String MESSAGING_SETTINGS_HISTORY_WIDGET2 = "messaging_settings_history";
 
