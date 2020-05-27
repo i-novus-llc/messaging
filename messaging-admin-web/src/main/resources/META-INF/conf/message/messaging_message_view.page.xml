@@ -31,7 +31,7 @@
                                     <option id="ALL" name="Все"/>
                                 </options>
                             </radio-group>
-                            <output-text id="sentAt" label="Дата отправки" enabled="false" format="date DD.MM.YYYY HH:mm"/>
+                            <output-text id="sentAt" label="Дата отправки" enabled="false"/>
                         </row>
                     </set>
                 </fields>
