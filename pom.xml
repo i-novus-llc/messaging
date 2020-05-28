@@ -5,7 +5,7 @@
     <groupId>ru.i-novus.messaging</groupId>
     <artifactId>messaging-pom</artifactId>
     <packaging>pom</packaging>
-    <version>3.31</version>
+    <version>3.31.1</version>
 
     <url>https://messaging.i-novus.ru</url>
 
@@ -13,7 +13,7 @@
         <connection>scm:git:https://git.i-novus.ru/platform/messaging.git</connection>
         <url>https://git.i-novus.ru/platform/messaging</url>
         <developerConnection>scm:git:https://git.i-novus.ru/platform/messaging.git</developerConnection>
-        <tag>3.31</tag>
+        <tag>3.31.1</tag>
     </scm>
 
     <modules>
