@@ -132,7 +132,7 @@ public class MessageService {
                 .leftJoin(COMPONENT).on(COMPONENT.ID.eq(MESSAGE.COMPONENT_ID))
                 .where(conditions);
         int count = dsl.fetchCount(query);
-        Field fieldSentAt = MESSAGE.field("sent_at");
+        Field<?> fieldSentAt = MESSAGE.field("sent_at");
         List<Message> collection = query
                 .orderBy(fieldSentAt.desc())
                 .limit(criteria.getPageSize())

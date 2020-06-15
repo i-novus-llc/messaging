@@ -2,12 +2,11 @@ package ru.inovus.messaging.mq.support.activemq;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQDestination;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.activemq.command.ActiveMQTopic;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
@@ -26,15 +25,14 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 @Component
 public class ActiveMqProvider implements MqProvider {
-
-    private static final Logger logger = LoggerFactory.getLogger(ActiveMqProvider.class);
 
     private final ObjectMapper objectMapper;
     private final ActiveMQConnectionFactory activeMQConnectionFactory;
     private final JmsTemplate jmsTemplate;
-    private Map<Serializable, DefaultMessageListenerContainer> containers = new ConcurrentHashMap<>();
+    private final Map<Serializable, DefaultMessageListenerContainer> containers = new ConcurrentHashMap<>();
     private final ActiveMQQueue emailQueue;
     private final ActiveMQTopic noticeTopic;
 

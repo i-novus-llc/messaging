@@ -20,11 +20,7 @@ import ru.inovus.messaging.api.MessageOutbox;
 import java.io.Serializable;
 import java.util.function.Consumer;
 
-/**
- * @author RMakhmutov
- * @since 02.04.2019
- */
-public interface MqConsumer<E> {
+public interface MqConsumer {
     Consumer<MessageOutbox> messageHandler();
 
     String mqName();

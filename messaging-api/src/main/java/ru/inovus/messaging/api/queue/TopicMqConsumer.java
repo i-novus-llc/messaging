@@ -25,12 +25,12 @@ import java.util.function.Consumer;
  * @since 02.04.2019
  */
 public class TopicMqConsumer implements MqConsumer {
-    private String topicName;
-    private Consumer<MessageOutbox> messageHandler;
-    private Serializable subscriber;
+    private final String topicName;
+    private final Consumer<MessageOutbox> messageHandler;
+    private final Serializable subscriber;
 
-    public String systemId;
-    public String authToken;
+    public final String systemId;
+    public final String authToken;
 
     public TopicMqConsumer(Serializable subscriber, String systemId, String authToken, String topicName, Consumer<MessageOutbox> messageHandler) {
         this.topicName = topicName;

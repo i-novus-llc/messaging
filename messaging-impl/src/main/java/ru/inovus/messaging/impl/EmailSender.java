@@ -46,12 +46,12 @@ public class EmailSender {
             try {
                 MimeMessage mail = emailSender.createMimeMessage();
                 MimeMessageHelper helper = new MimeMessageHelper(mail, true);
-                helper.setTo(recipientsEmailList.toArray(new String[recipientsEmailList.size()]));
+                helper.setTo(recipientsEmailList.toArray(String[]::new));
                 helper.setSubject(message.getMessage().getCaption());
                 helper.setText(message.getMessage().getText(), true);
                 emailSender.send(mail);
             } catch (MessagingException e) {
-                logger.error("MimeMessage create and send email failed!" + e.getMessage(), e);
+                logger.error("MimeMessage create and send email failed! {}",  e.getMessage(), e);
                 throw new RuntimeException(e);
             }
         }

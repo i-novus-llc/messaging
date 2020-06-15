@@ -1,13 +1,12 @@
 package ru.inovus.messaging.server.rest;
 
+import lombok.extern.slf4j.Slf4j;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.rest.api.RoleRestService;
 import net.n2oapp.security.admin.rest.api.UserRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestRoleCriteria;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -31,11 +30,9 @@ import ru.inovus.messaging.impl.RecipientService;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Controller
 public class MessageRestImpl implements MessageRest {
-
-    private static final Logger log = LoggerFactory.getLogger(MessageRestImpl.class);
-
     private final MessageService messageService;
     private final MessageSettingService messageSettingService;
     private final RecipientService recipientService;
