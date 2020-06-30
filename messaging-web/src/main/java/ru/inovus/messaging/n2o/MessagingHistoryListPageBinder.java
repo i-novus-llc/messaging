@@ -5,14 +5,20 @@ import net.n2oapp.framework.api.metadata.Compiled;
 import net.n2oapp.framework.api.metadata.ReduxModel;
 import net.n2oapp.framework.api.metadata.compile.BindProcessor;
 import net.n2oapp.framework.api.metadata.meta.ModelLink;
-import net.n2oapp.framework.api.metadata.meta.Page;
 import net.n2oapp.framework.api.metadata.meta.control.DefaultValues;
+import net.n2oapp.framework.api.metadata.meta.page.Page;
+import net.n2oapp.framework.api.metadata.meta.page.SimplePage;
+import net.n2oapp.framework.api.metadata.meta.page.StandardPage;
+import net.n2oapp.framework.api.metadata.meta.widget.Widget;
 import net.n2oapp.framework.config.metadata.compile.BaseMetadataBinder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Класс, который нужен для UI ,  для стр. messaging_message_list, устанавливает дефолтные значения в фильтре 'Дата отправки'
@@ -20,7 +26,7 @@ import java.time.LocalTime;
 @Component
 public class MessagingHistoryListPageBinder implements BaseMetadataBinder<Page> {
 
-    private static final String HISTORY_WIDGET = "__history";
+    private static final String HISTORY_WIDGET = "history";
     private static final String MESSAGING_SETTINGS_HISTORY_WIDGET1 = "messagingSettings_history";
     private static final String MESSAGING_SETTINGS_HISTORY_WIDGET2 = "messaging_settings_history";
 
@@ -31,9 +37,20 @@ public class MessagingHistoryListPageBinder implements BaseMetadataBinder<Page> 
 
     @Override
     public Page bind(Page page, BindProcessor bindProcessor) {
-
-        if (!page.getWidgets().containsKey(HISTORY_WIDGET) && !page.getWidgets().containsKey(MESSAGING_SETTINGS_HISTORY_WIDGET1)
-            && !page.getWidgets().containsKey(MESSAGING_SETTINGS_HISTORY_WIDGET2))
+        Map<String, Widget> widgets = new HashMap<>();
+        if (page instanceof SimplePage) {
+            SimplePage simplePage = (SimplePage) page;
+            if (simplePage.getWidget() != null)
+                widgets.put(simplePage.getWidget().getId(), simplePage.getWidget());
+        } else if (page instanceof StandardPage) {
+            StandardPage standardPage = (StandardPage) page;
+            if (standardPage.getWidgets() != null)
+                widgets = standardPage.getWidgets()
+                        .values().stream()
+                        .collect(Collectors.toMap(Widget::getId, w -> w));
+        }
+        if (!widgets.containsKey(HISTORY_WIDGET) && !widgets.containsKey(MESSAGING_SETTINGS_HISTORY_WIDGET1)
+                && !widgets.containsKey(MESSAGING_SETTINGS_HISTORY_WIDGET2))
             return page;
 
         DataSet data = new DataSet();
@@ -48,12 +65,12 @@ public class MessagingHistoryListPageBinder implements BaseMetadataBinder<Page> 
         df.setValues(data);
         ModelLink ml = new ModelLink(df);
 
-        if (page.getWidgets().containsKey(HISTORY_WIDGET)) {
-            page.getModels().put(String.format("%s['%s']", ReduxModel.FILTER.name().toLowerCase(), page.getWidgets().get(HISTORY_WIDGET).getId()), ml);
-        } else if (page.getWidgets().containsKey(MESSAGING_SETTINGS_HISTORY_WIDGET1)) {
-            page.getModels().put(String.format("%s['%s']", ReduxModel.FILTER.name().toLowerCase(), page.getWidgets().get(MESSAGING_SETTINGS_HISTORY_WIDGET1).getId()), ml);
+        if (widgets.containsKey(HISTORY_WIDGET)) {
+            page.getModels().add(ReduxModel.FILTER, HISTORY_WIDGET, ml);
+        } else if (widgets.containsKey(MESSAGING_SETTINGS_HISTORY_WIDGET1)) {
+            page.getModels().add(ReduxModel.FILTER, MESSAGING_SETTINGS_HISTORY_WIDGET1, ml);
         } else {
-            page.getModels().put(String.format("%s['%s']", ReduxModel.FILTER.name().toLowerCase(), page.getWidgets().get(MESSAGING_SETTINGS_HISTORY_WIDGET2).getId()), ml);
+            page.getModels().add(ReduxModel.FILTER, MESSAGING_SETTINGS_HISTORY_WIDGET2, ml);
         }
 
         return page;

@@ -35,7 +35,7 @@
     </parent>
 
     <properties>
-        <n2o.version>7.3.32</n2o.version>
+        <n2o.version>7.7.4</n2o.version>
         <security.admin.version>3.6</security.admin.version>
         <jooq.version>3.11.2</jooq.version>
         <spring.cloud.version>Greenwich.SR2</spring.cloud.version>
