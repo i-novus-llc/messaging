@@ -18,6 +18,7 @@ import ru.inovus.messaging.api.queue.QueueMqConsumer;
 import ru.inovus.messaging.api.queue.TopicMqConsumer;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author RMakhmutov
@@ -129,6 +130,65 @@ public class MessagingActiveMQSupportTest {
 
         /// assert that only one of the consumers reads the message from the queue
         assert (receivedMessage5 != null && receivedMessage6 == null) || (receivedMessage5 == null && receivedMessage6 != null);
+    }
+
+    @Test
+    public void testRepassMessageTroughProdconsMQ() throws InterruptedException {
+        final String QUEUE_NAME = "email-queue-3";
+        final String QUEUE_DESTINATION_NAME = "queue://" + QUEUE_NAME;
+        final String QUEUE_CONSUMER_NAME = "repassEmailConsumer";
+
+        ReConsumer cons = new ReConsumer(2);
+
+        mqProvider.subscribe(new QueueMqConsumer(QUEUE_NAME, cons, QUEUE_CONSUMER_NAME));
+
+        mqProvider.publish(createEmailNotice(), QUEUE_DESTINATION_NAME);
+        Thread.sleep(3000);
+
+        assert cons.execCnt == 3;
+
+        mqProvider.unsubscribe(QUEUE_CONSUMER_NAME);
+    }
+
+    @Test
+    public void testMaxRepassMessageTroughProdconsMQ() throws InterruptedException {
+        final String QUEUE_NAME = "email-queue-4";
+        final String QUEUE_DESTINATION_NAME = "queue://" + QUEUE_NAME;
+        final String QUEUE_CONSUMER_NAME = "repassEmailConsumer2";
+
+        ReConsumer cons = new ReConsumer(-1);
+
+        mqProvider.subscribe(new QueueMqConsumer(QUEUE_NAME, cons, QUEUE_CONSUMER_NAME));
+
+        mqProvider.publish(createEmailNotice(), QUEUE_DESTINATION_NAME);
+        Thread.sleep(3000);
+
+        assert cons.execCnt == 4;
+
+        mqProvider.unsubscribe(QUEUE_CONSUMER_NAME);
+    }
+
+    static class ReConsumer implements Consumer<MessageOutbox> {
+        volatile int execCnt;
+        int remainingFailsCnt;
+
+        ReConsumer(int remainingFailsCnt) {
+            this.remainingFailsCnt = remainingFailsCnt;
+        }
+
+        @Override
+        public void accept(MessageOutbox messageOutbox) {
+            execCnt++;
+
+            if (remainingFailsCnt > 0) {
+                remainingFailsCnt--;
+                throw new RuntimeException();
+            }
+
+            if (remainingFailsCnt == -1) {
+                throw new RuntimeException();
+            }
+        }
     }
 
     private MessageOutbox createNotice() {

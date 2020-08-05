@@ -51,7 +51,7 @@ import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Message extends TableImpl<MessageRecord> {
 
-    private static final long serialVersionUID = -151354692;
+    private static final long serialVersionUID = -2130874024;
 
     /**
      * The reference instance of <code>public.message</code>
@@ -140,6 +140,16 @@ public class Message extends TableImpl<MessageRecord> {
      * The column <code>public.message.send_email</code>.
      */
     public final TableField<MessageRecord, Boolean> SEND_EMAIL = createField("send_email", org.jooq.impl.SQLDataType.BOOLEAN, this, "");
+
+    /**
+     * The column <code>public.message.send_email_date</code>. Дата и время отправки email
+     */
+    public final TableField<MessageRecord, LocalDateTime> SEND_EMAIL_DATE = createField("send_email_date", org.jooq.impl.SQLDataType.TIMESTAMP, this, "Дата и время отправки email", new TimestampToLocalDateTimeConverter());
+
+    /**
+     * The column <code>public.message.send_email_error</code>. Ошибка, возникшая при последней попытке отправки email
+     */
+    public final TableField<MessageRecord, String> SEND_EMAIL_ERROR = createField("send_email_error", org.jooq.impl.SQLDataType.VARCHAR, this, "Ошибка, возникшая при последней попытке отправки email");
 
     /**
      * Create a <code>public.message</code> table reference
