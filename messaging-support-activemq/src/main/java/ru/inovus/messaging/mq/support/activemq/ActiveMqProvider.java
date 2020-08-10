@@ -4,10 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.RedeliveryPolicy;
+import org.apache.activemq.broker.region.policy.RedeliveryPolicyMap;
 import org.apache.activemq.command.ActiveMQDestination;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.activemq.command.ActiveMQTopic;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
@@ -20,6 +24,7 @@ import ru.inovus.messaging.api.queue.TopicMqConsumer;
 
 import javax.jms.Destination;
 import javax.jms.MessageListener;
+import javax.jms.Session;
 import javax.jms.TextMessage;
 import java.io.Serializable;
 import java.util.Map;
@@ -28,6 +33,15 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 @Component
 public class ActiveMqProvider implements MqProvider {
+
+    private static final String INITIAL_REDELIVERY_DELAY = "novus.messaging.redelivery-policy.%s.initial-redelivery-delay";
+    private static final String REDELIVERY_DELAY = "novus.messaging.redelivery-policy.%s.redelivery-delay";
+    private static final String MAXIMUM_REDELIVERIES = "novus.messaging.redelivery-policy.%s.maximum-redeliveries";
+    private static final String USE_EXPONENTIAL_BACK_OFF = "novus.messaging.redelivery-policy.%s.use-exponential-back-off";
+    private static final String BACK_OFF_MULTIPLIER = "novus.messaging.redelivery-policy.%s.back-off-multiplier";
+
+    @Autowired
+    private Environment environment;
 
     private final ObjectMapper objectMapper;
     private final ActiveMQConnectionFactory activeMQConnectionFactory;
@@ -69,7 +83,12 @@ public class ActiveMqProvider implements MqProvider {
         });
         container.setConnectionFactory(activeMQConnectionFactory);
         if (mqConsumer instanceof QueueMqConsumer) {
-            container.setDestination(new ActiveMQQueue(mqConsumer.mqName()));
+            ActiveMQQueue activeMQQueue = new ActiveMQQueue(mqConsumer.mqName());
+            container.setDestination(activeMQQueue);
+
+            container.setSessionAcknowledgeMode(Session.CLIENT_ACKNOWLEDGE);
+
+            setRedeliveryPolicy(activeMQQueue, mqConsumer.mqName());
         } else
         if (mqConsumer instanceof TopicMqConsumer) {
             TopicMqConsumer topicMqHandler = (TopicMqConsumer) mqConsumer;
@@ -85,6 +104,38 @@ public class ActiveMqProvider implements MqProvider {
         container.afterPropertiesSet();
         container.start();
         containers.put(mqConsumer.subscriber(), container);
+    }
+
+    private void setRedeliveryPolicy(ActiveMQQueue activeMQQueue, String mqName) {
+        RedeliveryPolicy emailRedeliveryPolicy = new RedeliveryPolicy();
+
+        Long initialRedeliveryDelay = environment.getProperty(String.format(INITIAL_REDELIVERY_DELAY, mqName), Long.class);
+        if (initialRedeliveryDelay != null) {
+            emailRedeliveryPolicy.setInitialRedeliveryDelay(initialRedeliveryDelay);
+        }
+
+        Long redeliveryDelay = environment.getProperty(String.format(REDELIVERY_DELAY, mqName), Long.class);
+        if (redeliveryDelay != null) {
+            emailRedeliveryPolicy.setRedeliveryDelay(redeliveryDelay);
+        }
+
+        Integer maximumRedeliveries = environment.getProperty(String.format(MAXIMUM_REDELIVERIES, mqName), Integer.class);
+        if (maximumRedeliveries != null) {
+            emailRedeliveryPolicy.setMaximumRedeliveries(maximumRedeliveries);
+        }
+
+        Boolean useExponentialBackOff = environment.getProperty(String.format(USE_EXPONENTIAL_BACK_OFF, mqName), Boolean.class);
+        if (useExponentialBackOff != null) {
+            emailRedeliveryPolicy.setUseExponentialBackOff(useExponentialBackOff);
+        }
+
+        Double backOffMultiplier = environment.getProperty(String.format(BACK_OFF_MULTIPLIER, mqName), Double.class);
+        if (backOffMultiplier != null) {
+            emailRedeliveryPolicy.setBackOffMultiplier(backOffMultiplier);
+        }
+
+        RedeliveryPolicyMap map =  activeMQConnectionFactory.getRedeliveryPolicyMap();
+        map.put(activeMQQueue, emailRedeliveryPolicy);
     }
 
     @Override

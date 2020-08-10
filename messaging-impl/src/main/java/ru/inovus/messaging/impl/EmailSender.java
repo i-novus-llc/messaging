@@ -1,8 +1,10 @@
 package ru.inovus.messaging.impl;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -13,13 +15,18 @@ import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.queue.MqProvider;
 import ru.inovus.messaging.api.queue.QueueMqConsumer;
 
-import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
 public class EmailSender {
+
+    @Autowired
+    private MessageService messageService;
+
     private static final Logger logger = LoggerFactory.getLogger(EmailSender.class);
 
     private JavaMailSender emailSender;
@@ -33,27 +40,30 @@ public class EmailSender {
      * Отправка сообщения на почту
      */
     public void send(MessageOutbox message) {
-        for (Recipient recipient : message.getMessage().getRecipients()) {
-            if (StringUtils.isEmpty(recipient.getEmail())) {
-                logger.error("Message with id={} will not be sent to recipient with id={} due to an empty email address", message.getMessage().getId(), recipient.getRecipient());
+        try {
+            for (Recipient recipient : message.getMessage().getRecipients()) {
+                if (StringUtils.isEmpty(recipient.getEmail())) {
+                    logger.error("Message with id={} will not be sent to recipient with id={} due to an empty email address", message.getMessage().getId(), recipient.getRecipient());
+                }
             }
-        }
-        List<String> recipientsEmailList = message.getMessage().getRecipients().stream()
-            .filter(x -> StringUtils.isNotEmpty(x.getEmail()))
-            .map(Recipient::getEmail)
-            .collect(Collectors.toList());
-        if (!CollectionUtils.isEmpty(recipientsEmailList)) {
-            try {
+            List<String> recipientsEmailList = message.getMessage().getRecipients().stream()
+                .filter(x -> StringUtils.isNotEmpty(x.getEmail()))
+                .map(Recipient::getEmail)
+                .collect(Collectors.toList());
+            if (!CollectionUtils.isEmpty(recipientsEmailList)) {
                 MimeMessage mail = emailSender.createMimeMessage();
                 MimeMessageHelper helper = new MimeMessageHelper(mail, true);
                 helper.setTo(recipientsEmailList.toArray(String[]::new));
                 helper.setSubject(message.getMessage().getCaption());
                 helper.setText(message.getMessage().getText(), true);
                 emailSender.send(mail);
-            } catch (MessagingException e) {
-                logger.error("MimeMessage create and send email failed! {}",  e.getMessage(), e);
-                throw new RuntimeException(e);
             }
+
+            messageService.setSendEmailResult(UUID.fromString(message.getMessage().getId()), LocalDateTime.now(), null);
+        } catch (Exception e) {
+            logger.error("MimeMessage create and send email failed! {}", e.getMessage(), e);
+            messageService.setSendEmailResult(UUID.fromString(message.getMessage().getId()), LocalDateTime.now(), ExceptionUtils.getMessage(e) + "." + ExceptionUtils.getStackTrace(e));
+            throw new RuntimeException(e);
         }
     }
 }

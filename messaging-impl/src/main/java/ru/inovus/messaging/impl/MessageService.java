@@ -11,10 +11,7 @@ import ru.inovus.messaging.impl.jooq.tables.records.ComponentRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
 import ru.inovus.messaging.impl.util.DateTimeUtil;
 
-import java.time.Clock;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -163,6 +160,16 @@ public class MessageService {
                 });
         message.setRecipients(recipients);
         return message;
+    }
+
+    @Transactional
+    public void setSendEmailResult(UUID id, LocalDateTime date, String error) {
+        dsl
+            .update(MESSAGE)
+            .set(MESSAGE.SEND_EMAIL_DATE, date)
+            .set(MESSAGE.SEND_EMAIL_ERROR, error)
+            .where(MESSAGE.ID.eq(id))
+            .execute();
     }
 
 }
