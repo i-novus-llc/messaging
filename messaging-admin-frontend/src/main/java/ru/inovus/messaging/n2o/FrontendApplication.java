@@ -1,5 +1,6 @@
 package ru.inovus.messaging.n2o;
 
+import net.n2oapp.framework.security.auth.oauth2.gateway.GatewayPrincipalExtractor;
 import net.n2oapp.security.admin.rest.client.AdminRestClientConfiguration;
 import net.n2oapp.security.auth.common.User;
 import org.springframework.boot.SpringApplication;
@@ -21,6 +22,11 @@ public class FrontendApplication {
     @Bean
     public UserMessageViewPageNameBinder pageNameBinder() {
         return new UserMessageViewPageNameBinder();
+    }
+
+    @Bean
+    public GatewayPrincipalExtractor gatewayPrincipalExtractor() {
+        return new GatewayPrincipalExtractor();
     }
 
     @Bean
