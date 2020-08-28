@@ -10,23 +10,25 @@ import net.n2oapp.framework.api.metadata.Compiled;
 import net.n2oapp.framework.api.metadata.ReduxModel;
 import net.n2oapp.framework.api.metadata.aware.CompiledClassAware;
 import net.n2oapp.framework.api.metadata.compile.BindProcessor;
-import net.n2oapp.framework.api.metadata.compile.CompileProcessor;
 import net.n2oapp.framework.api.metadata.compile.MetadataBinder;
 import net.n2oapp.framework.api.metadata.global.view.page.N2oPage;
 import net.n2oapp.framework.api.metadata.global.view.widget.N2oWidget;
 import net.n2oapp.framework.api.metadata.meta.ModelLink;
-import net.n2oapp.framework.api.metadata.meta.Page;
+import net.n2oapp.framework.api.metadata.meta.page.Page;
 import net.n2oapp.framework.config.metadata.compile.context.QueryContext;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 
 public class MessagingPageNameBinder implements MetadataBinder<Page>, CompiledClassAware {
 
-    private final QueryProcessor queryProcessor;
     private final String widgetId;
     private final String pageId;
 
-    public MessagingPageNameBinder(QueryProcessor queryProcessor, String widgetId, String pageId) {
-        this.queryProcessor = queryProcessor;
+    @Autowired
+    @Lazy
+    private QueryProcessor queryProcessor;
+
+    public MessagingPageNameBinder(String widgetId, String pageId) {
         this.widgetId = widgetId;
         this.pageId = pageId;
     }

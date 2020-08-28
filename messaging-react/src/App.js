@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import N2O from 'n2o-framework';
 import { authProvider } from 'n2o-auth';
+import createFactoryConfigLight from "n2o-framework/lib/core/factory/createFactoryConfigLight";
 
 const config = {
   security: {
@@ -12,7 +13,7 @@ const config = {
 class App extends Component {
   render() {
     return (
-        <N2O {...config}  />
+        <N2O {...createFactoryConfigLight(config)}  />
     );
   }
 }
