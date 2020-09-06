@@ -11,12 +11,12 @@
         <groupId>net.n2oapp.platform</groupId>
         <artifactId>n2o-platform-parent</artifactId>
         <version>3.0.0</version>
-        <relativePath />
+        <relativePath/>
     </parent>
 
     <properties>
         <n2o.version>7.5.2</n2o.version>
-        <access.version>4.10</access.version>
+        <access.version>4.13</access.version>
         <jooq.version>3.11.2</jooq.version>
         <spring.cloud.version>Greenwich.SR2</spring.cloud.version>
         <config.server.enable>false</config.server.enable>
