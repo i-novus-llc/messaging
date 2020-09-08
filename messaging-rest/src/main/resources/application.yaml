@@ -73,7 +73,7 @@ jaxrs.swagger.resource-package: ru.inovus.messaging.api.rest
 sec:
   admin:
     rest:
-      url: http://docker.one:8806/api
+      url: http://localhost:9999/api
       enable: true
 
 spring.http.encoding.forceResponse: true
