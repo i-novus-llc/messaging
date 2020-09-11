@@ -66,8 +66,43 @@ public class MessagingPageNameBinder implements MetadataBinder<Page>, CompiledCl
         String queryId = widget.getQueryId();
         DataSet data = queryProcessor.executeOneSizeQuery(p.getCompiled(new QueryContext(queryId)), criteria)
                 .getCollection().iterator().next();
-        page.getPageProperty().setTitle(StringUtils.resolveLinks(page.getPageProperty().getTitle(), data));
-        page.getBreadcrumb().forEach(c -> c.setLabel(StringUtils.resolveLinks(c.getLabel(), data)));
+
+        final String title = page.getPageProperty().getTitle();
+
+        if(!StringUtils.isEmpty(title)){
+            page.getPageProperty().setTitle(StringUtils.resolveLinks(title, data));
+        }
+
+        final String htmlTitle = page.getPageProperty().getHtmlTitle();
+
+        if(!StringUtils.isEmpty(htmlTitle)){
+            page.getPageProperty().setHtmlTitle(StringUtils.resolveLinks(htmlTitle, data));
+        }
+
+        final String headerTitle = page.getPageProperty().getHeaderTitle();
+
+        if(!StringUtils.isEmpty(headerTitle)){
+            page.getPageProperty().setHeaderTitle(StringUtils.resolveLinks(headerTitle, data));
+        }
+
+        page.getBreadcrumb().forEach(c -> {
+
+            if (!StringUtils.isEmpty(c.getLabel())) {
+
+                final String label = StringUtils.resolveLinks(c.getLabel(), data);
+
+                c.setLabel(label);
+
+                if (StringUtils.isEmpty(page.getPageProperty().getHtmlTitle())) {
+                    page.getPageProperty().setHtmlTitle(label);
+                }
+
+                if (StringUtils.isEmpty(page.getPageProperty().getHeaderTitle())) {
+                    page.getPageProperty().setHeaderTitle(label);
+                }
+            }
+        });
+
         return page;
 
     }
