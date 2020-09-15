@@ -10,7 +10,7 @@
 - Apache Kafka или ActiveMQ
 
 # Cтек технологий
-- Spring Boot 2.1.1
+- Spring Boot 2.1
 - Spring Cloud Greenwich
 - Jooq 3
 - Liquibase 3.6.2
