@@ -10,6 +10,9 @@
 - Apache Kafka или ActiveMQ
 
 # Cтек технологий
+- Java 11
+- JDBC
+- JMS
 - Spring Boot 2.1
 - Spring Cloud Greenwich
 - Jooq 3
