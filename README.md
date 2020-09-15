@@ -8,6 +8,8 @@
 - Openjdk 11
 - PostgreSQL 11
 - Apache Kafka или ActiveMQ
+- N2O Security Admin 4
+- N2O Audit 2
 
 # Cтек технологий
 - Java 11
@@ -19,8 +21,6 @@
 - Liquibase 3.6.2
 - N2O Platform 3
 - N2O UI Framework 7
-- N2O Security Admin 4
-- N2O Audit 2
 - React
 - Websockets
 
