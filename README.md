@@ -5,7 +5,21 @@
 - обмен сообщениями между пользователями
 
 # Требования
-Для работы сервиса нужно, чтобы был запущен Apache Kafka или ActiveMQ.
+- Openjdk 11
+- PostgreSQL 11
+- Apache Kafka или ActiveMQ
+
+# Cтек технологий
+- Spring Boot 2.1.1
+- Spring Cloud Greenwich
+- Jooq 3
+- Liquibase 3.6.2
+- N2O Platform 3
+- N2O UI Framework 7
+- N2O Security Admin 4
+- N2O Audit 2
+- React
+- Websockets
 
 # Структура проекта
 - `doc` - документация проекта
