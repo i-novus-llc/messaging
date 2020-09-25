@@ -2,6 +2,7 @@ package ru.inovus.messaging.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.*;
+import org.jooq.Record;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
