@@ -70,7 +70,7 @@ public class SecurityAdminUserRoleDataProvider implements UserRoleDataProvider {
         user.setName(securityUser.getName());
         user.setPatronymic(securityUser.getPatronymic());
         user.setIsActive(securityUser.getIsActive());
-        user.setRoles(securityUser.getRoles().isEmpty() ? Collections.EMPTY_LIST :
+        user.setRoles(securityUser.getRoles().isEmpty() ? Collections.emptyList() :
                 securityUser.getRoles().stream().map(this::mapSecurityRole).collect(Collectors.toList()));
 
         return user;

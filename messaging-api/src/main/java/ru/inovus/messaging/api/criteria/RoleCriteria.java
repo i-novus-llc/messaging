@@ -1,5 +1,6 @@
 package ru.inovus.messaging.api.criteria;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,6 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@EqualsAndHashCode
 public class RoleCriteria extends BaseMessagingCriteria {
     @QueryParam("name")
     private String name;
