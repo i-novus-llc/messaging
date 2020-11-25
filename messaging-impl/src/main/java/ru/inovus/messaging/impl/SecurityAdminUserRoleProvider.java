@@ -15,14 +15,14 @@ import ru.inovus.messaging.api.model.User;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-public class SecurityAdminUserRoleDataProvider implements UserRoleDataProvider {
+public class SecurityAdminUserRoleProvider implements UserRoleProvider {
 
     private UserRestService userRestService;
 
     private RoleRestService roleRestService;
 
-    public SecurityAdminUserRoleDataProvider(@Qualifier("userRestServiceJaxRsProxyClient") UserRestService userRestService,
-                                             @Qualifier("roleRestServiceJaxRsProxyClient") RoleRestService roleRestService) {
+    public SecurityAdminUserRoleProvider(@Qualifier("userRestServiceJaxRsProxyClient") UserRestService userRestService,
+                                         @Qualifier("roleRestServiceJaxRsProxyClient") RoleRestService roleRestService) {
         this.userRestService = userRestService;
         this.roleRestService = roleRestService;
     }
@@ -56,7 +56,6 @@ public class SecurityAdminUserRoleDataProvider implements UserRoleDataProvider {
         role.setName(securityRole.getName());
         role.setCode(securityRole.getCode());
         role.setDescription(securityRole.getDescription());
-        role.setNameWithSystem(securityRole.getNameWithSystem());
         return role;
     }
 

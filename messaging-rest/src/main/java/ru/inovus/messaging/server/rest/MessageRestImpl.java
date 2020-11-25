@@ -17,7 +17,7 @@ import ru.inovus.messaging.api.rest.UserSettingRest;
 import ru.inovus.messaging.impl.MessageService;
 import ru.inovus.messaging.impl.MessageSettingService;
 import ru.inovus.messaging.impl.RecipientService;
-import ru.inovus.messaging.impl.UserRoleDataProvider;
+import ru.inovus.messaging.impl.UserRoleProvider;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -34,7 +34,7 @@ public class MessageRestImpl implements MessageRest {
     private final boolean securityAdminRestEnable;
     private DestinationResolver destinationResolver;
     private final UserSettingRest userSettingRest;
-    private final UserRoleDataProvider userRoleDataProvider;
+    private final UserRoleProvider userRoleProvider;
 
     public MessageRestImpl(MessageService messageService,
                            MessageSettingService messageSettingService,
@@ -43,7 +43,7 @@ public class MessageRestImpl implements MessageRest {
                            @Value("${novus.messaging.topic.email}") String emailTopicName,
                            @Value("${sec.admin.rest.enable}") boolean securityAdminRestEnable,
                            MqProvider mqProvider,
-                           UserRoleDataProvider userRoleDataProvider,
+                           UserRoleProvider userRoleProvider,
                            DestinationResolver destinationResolver,
                            UserSettingRest userSettingRest) {
         this.messageService = messageService;
@@ -53,7 +53,7 @@ public class MessageRestImpl implements MessageRest {
         this.noticeTopicName = noticeTopicName;
         this.emailTopicName = emailTopicName;
         this.securityAdminRestEnable = securityAdminRestEnable;
-        this.userRoleDataProvider = userRoleDataProvider;
+        this.userRoleProvider = userRoleProvider;
         this.destinationResolver = destinationResolver;
         this.userSettingRest = userSettingRest;
     }
@@ -105,7 +105,7 @@ public class MessageRestImpl implements MessageRest {
                 userCriteria.setPageSize(1);
                 userCriteria.setPageNumber(0);
 
-                Page<User> userPage = userRoleDataProvider.getUsers(userCriteria);
+                Page<User> userPage = userRoleProvider.getUsers(userCriteria);
                 List<User> userList = userPage.getContent();
                 if (!CollectionUtils.isEmpty(userList)) {
                     User user = userList.get(0);
@@ -260,7 +260,7 @@ public class MessageRestImpl implements MessageRest {
         userCriteria.setRoleIds(roles.stream().map(Role::getId).collect(Collectors.toList()));
         userCriteria.setPageNumber(0);
 
-        Page<User> userPage = userRoleDataProvider.getUsers(userCriteria);
+        Page<User> userPage = userRoleProvider.getUsers(userCriteria);
         Set<User> users = new HashSet<>(userPage.getContent());
 
         if (!CollectionUtils.isEmpty(users) && userPage.getTotalElements() > users.size()) {
@@ -272,7 +272,7 @@ public class MessageRestImpl implements MessageRest {
 
             for (int i = 1; i < pageCount; i++) {
                 userCriteria.setPageNumber(i);
-                userPage = userRoleDataProvider.getUsers(userCriteria);
+                userPage = userRoleProvider.getUsers(userCriteria);
                 users.addAll(userPage.getContent());
             }
         }
@@ -285,7 +285,7 @@ public class MessageRestImpl implements MessageRest {
         roleCriteria.setPermissionCodes(permissions);
         roleCriteria.setPageNumber(0);
 
-        Page<Role> rolePage = userRoleDataProvider.getRoles(roleCriteria);
+        Page<Role> rolePage = userRoleProvider.getRoles(roleCriteria);
         Set<Role> roles = new HashSet<>(rolePage.getContent());
 
         if (!CollectionUtils.isEmpty(roles) && rolePage.getTotalElements() > roles.size()) {
@@ -296,7 +296,7 @@ public class MessageRestImpl implements MessageRest {
 
             for (int i = 1; i < pageCount; i++) {
                 roleCriteria.setPageNumber(i);
-                rolePage = userRoleDataProvider.getRoles(roleCriteria);
+                rolePage = userRoleProvider.getRoles(roleCriteria);
                 roles.addAll(rolePage.getContent());
             }
         }
@@ -318,7 +318,7 @@ public class MessageRestImpl implements MessageRest {
             userCriteria.setPageNumber(0);
             userCriteria.setPageSize(1);
 
-            User user = userRoleDataProvider.getUsers(userCriteria).getContent().get(0);
+            User user = userRoleProvider.getUsers(userCriteria).getContent().get(0);
             recipient.setEmail(user.getEmail());
         }
         recipient.setRecipient(userName);
