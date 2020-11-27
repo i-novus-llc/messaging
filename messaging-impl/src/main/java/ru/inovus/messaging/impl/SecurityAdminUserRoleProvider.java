@@ -61,7 +61,6 @@ public class SecurityAdminUserRoleProvider implements UserRoleProvider {
 
     private User mapSecurityUser(net.n2oapp.security.admin.api.model.User securityUser) {
         User user = new User();
-        user.setId(securityUser.getId());
         user.setUsername(securityUser.getUsername());
         user.setFio(securityUser.getFio());
         user.setEmail(securityUser.getEmail());

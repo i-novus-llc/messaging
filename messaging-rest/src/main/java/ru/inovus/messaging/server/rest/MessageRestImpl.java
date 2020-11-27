@@ -112,7 +112,6 @@ public class MessageRestImpl implements MessageRest {
                     recipientName = user.getFio() + " (" + user.getUsername() + ")";
                     userMap.put(userName, recipientName);
                     recipient.setName(recipientName);
-                    recipient.setId((long) user.getId());
                 }
             }
         }
