@@ -9,6 +9,8 @@ import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServic
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import ru.inovus.messaging.impl.SecurityAdminUserRoleProvider;
+import ru.inovus.messaging.impl.UserRoleProvider;
 import ru.inovus.messaging.server.config.DateMapperConfigurer;
 
 @SpringBootApplication(exclude = {UserDetailsServiceAutoConfiguration.class})
@@ -25,5 +27,10 @@ public class BackendApplication {
     @Bean
     DateMapperConfigurer dateMapperConfigurer() {
         return new DateMapperConfigurer();
+    }
+
+    @Bean
+    public UserRoleProvider userRoleDataProvider(UserRestService userRestService, RoleRestService roleRestService) {
+        return new SecurityAdminUserRoleProvider(userRestService, roleRestService);
     }
 }

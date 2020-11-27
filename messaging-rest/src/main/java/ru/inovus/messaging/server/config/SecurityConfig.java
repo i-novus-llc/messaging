@@ -41,7 +41,7 @@ public class SecurityConfig extends ResourceServerConfigurerAdapter {
 
     private static final String WS_URL_PATTERN = "/ws/**";
 
-    //можно взять https://keycloak.i-novus.ru/auth/realms/DOMRF/protocol/openid-connect/certs
+    //    можно взять https://keycloak.i-novus.ru/auth/realms/DOMRF/protocol/openid-connect/certs
     @Value("${novus.messaging.keycloak.modulus}")
     private String modulus;
     @Value("${novus.messaging.keycloak.exponent}")
