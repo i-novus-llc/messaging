@@ -1,1 +1,0 @@
-insert into public.component values (1, 'PAYMENT');
