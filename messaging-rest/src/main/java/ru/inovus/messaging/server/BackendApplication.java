@@ -17,7 +17,6 @@ import ru.inovus.messaging.impl.SecurityAdminUserRoleProvider;
 import ru.inovus.messaging.impl.UserRoleProvider;
 import ru.inovus.messaging.server.config.DateMapperConfigurer;
 
-import javax.management.modelmbean.XMLParseException;
 import javax.xml.bind.JAXBException;
 
 @SpringBootApplication(exclude = {UserDetailsServiceAutoConfiguration.class})
@@ -35,7 +34,7 @@ public class BackendApplication {
 
     @Bean
     @ConditionalOnProperty(value = "messaging.user-role-provider", havingValue = "configurable")
-    public UserRoleProvider userRoleDataProvider() throws XMLParseException, JAXBException {
+    public UserRoleProvider userRoleDataProvider() throws JAXBException {
         return new ConfigurableUserRoleProvider();
     }
 
