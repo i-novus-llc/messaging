@@ -1,9 +1,11 @@
 package ru.inovus.messaging.impl;
 
+import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpEntity;
@@ -17,9 +19,11 @@ import ru.inovus.messaging.api.model.Role;
 import ru.inovus.messaging.api.model.User;
 import ru.inovus.messaging.impl.xml.XmlMapping;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -41,6 +45,12 @@ public class ConfigurableUserRoleProvider implements UserRoleProvider {
     @Autowired
     private HttpServletRequest request;
 
+    @Autowired
+    ResourceLoader resourceLoader;
+
+    @Value("${messaging.mapping-file-location}")
+    private String mappingFileLocation;
+
     @Value("${messaging.role-provider-url}")
     private String roleUrl;
 
@@ -60,7 +70,8 @@ public class ConfigurableUserRoleProvider implements UserRoleProvider {
 
     private Map<String, String> roleCriteriaMapping = new HashMap<>();
 
-    public ConfigurableUserRoleProvider() throws JAXBException {
+    @PostConstruct
+    private void init() {
         restTemplate = new RestTemplate();
         XmlMapping mapping = readXml();
         if (nonNull(mapping.roleMapping)) {
@@ -252,13 +263,14 @@ public class ConfigurableUserRoleProvider implements UserRoleProvider {
         return role;
     }
 
-    private XmlMapping readXml() throws JAXBException {
+    @SneakyThrows
+    private XmlMapping readXml() {
         XmlMapping mapping;
         try {
-            InputStream io = this.getClass().getResourceAsStream("/userRoleProviderFieldMapping.xml");
+            InputStream io = resourceLoader.getResource(mappingFileLocation).getInputStream();
             Unmarshaller unmarshaller = XmlMapping.JAXB_CONTEXT.createUnmarshaller();
             mapping = (XmlMapping) unmarshaller.unmarshal(io);
-        } catch (JAXBException e) {
+        } catch (JAXBException | IOException e) {
             logger.error("xml mapping file load error ", e);
             throw e;
         }
