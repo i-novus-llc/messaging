@@ -20,7 +20,5 @@ public class User {
 
     private String patronymic;
 
-    private Boolean isActive;
-
     private List<Role> roles;
 }

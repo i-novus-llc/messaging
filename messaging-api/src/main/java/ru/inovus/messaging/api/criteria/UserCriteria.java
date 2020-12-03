@@ -35,5 +35,5 @@ public class UserCriteria extends BaseMessagingCriteria {
     private String fio;
 
     @QueryParam("roleIds")
-    private List<Integer> roleIds;
+    private List<String> roleIds;
 }
