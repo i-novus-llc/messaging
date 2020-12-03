@@ -120,6 +120,16 @@ databaseChangeLog:
             splitStatements: true
             stripComments: true
   - changeSet:
+      id: DOMRFLKB-827-2
+      author: azainutdinov
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/DOMRFLKB-827-2.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
+  - changeSet:
       id: MICROSERVICES-124
       author: rbarysheva
       changes:
@@ -156,6 +166,16 @@ databaseChangeLog:
         - sqlFile:
             encoding: utf8
             path: sql/MICROSERVICES-124-3.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
+  - changeSet:
+      id: DOMRFLKB-3723-1
+      author: azainutdinov
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/DOMRFLKB-3723-1.sql
             relativeToChangelogFile: true
             splitStatements: true
             stripComments: true
