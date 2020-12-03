@@ -15,7 +15,7 @@
             <page-size query-mapping="size"/>
             <page-number query-mapping="page"/>
             <username query-mapping="username"/>
-            <!--            <name query-mapping="name1"/>-->
+            <name query-mapping="searchCriteria"/>
             <!--            <fio query-mapping="fio1"/>-->
             <!--            <roleIds query-mapping="roleIds1"/>-->
         </criteria>
