@@ -1,6 +1,8 @@
 package ru.inovus.messaging.server.rest;
 
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -14,10 +16,7 @@ import ru.inovus.messaging.api.queue.DestinationType;
 import ru.inovus.messaging.api.queue.MqProvider;
 import ru.inovus.messaging.api.rest.MessageRest;
 import ru.inovus.messaging.api.rest.UserSettingRest;
-import ru.inovus.messaging.impl.MessageService;
-import ru.inovus.messaging.impl.MessageSettingService;
-import ru.inovus.messaging.impl.RecipientService;
-import ru.inovus.messaging.impl.UserRoleProvider;
+import ru.inovus.messaging.impl.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -25,6 +24,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @Controller
 public class MessageRestImpl implements MessageRest {
+    private static Logger logger = LoggerFactory.getLogger(ConfigurableUserRoleProvider.class);
+
     private final MessageService messageService;
     private final MessageSettingService messageSettingService;
     private final RecipientService recipientService;
@@ -304,24 +305,27 @@ public class MessageRestImpl implements MessageRest {
 
     //Построение списка Получателей уведомления по списку userName Пользователей
     private List<Recipient> getRecipientByUserName(List<String> userNameList) {
-        return userNameList.stream().map(this::getRecipientByUserName).collect(Collectors.toList());
+        return userNameList.stream().map(this::getRecipientByUserName).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     //Построение Получателя уведомления по userName Пользователя
     private Recipient getRecipientByUserName(String userName) {
         Recipient recipient = new Recipient();
-
         if (securityAdminRestEnable) {
             UserCriteria userCriteria = new UserCriteria();
             userCriteria.setUsername(userName);
             userCriteria.setPageNumber(0);
             userCriteria.setPageSize(1);
-
-            User user = userRoleProvider.getUsers(userCriteria).getContent().get(0);
-            recipient.setEmail(user.getEmail());
+            List<User> users = userRoleProvider.getUsers(userCriteria).getContent();
+            if (CollectionUtils.isEmpty(users)) {
+                logger.warn("User with username: {} not found in user provider", userName);
+                return null;
+            } else {
+                User user = users.get(0);
+                recipient.setEmail(user.getEmail());
+            }
         }
         recipient.setRecipient(userName);
-
         return recipient;
     }
 
