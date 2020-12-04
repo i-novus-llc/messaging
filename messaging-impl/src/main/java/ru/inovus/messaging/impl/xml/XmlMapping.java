@@ -14,7 +14,6 @@ public class XmlMapping {
         try {
             JAXB_CONTEXT = JAXBContext.newInstance(XmlMapping.class);
         } catch (JAXBException e) {
-//          Не выбросится
             throw new RuntimeException(e);
         }
     }
