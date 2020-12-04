@@ -17,7 +17,6 @@ import ru.inovus.messaging.api.queue.MqProvider;
 import ru.inovus.messaging.api.queue.TopicMqConsumer;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -39,14 +38,9 @@ public class KafkaMqProvider implements MqProvider {
     public void subscribe(MqConsumer mqConsumer) {
         ContainerProperties containerProperties = new ContainerProperties(mqConsumer.mqName());
         containerProperties.setMessageListener((MessageListener<String, MessageOutbox>)
-            data -> mqConsumer.messageHandler().accept(data.value()));
+                data -> mqConsumer.messageHandler().accept(data.value()));
 
-        Map<String, Object> consumerConfigs = new HashMap<>();
-        if (mqConsumer instanceof TopicMqConsumer) {
-            consumerConfigs = getConsumerConfigs((TopicMqConsumer) mqConsumer);
-        }
-
-        containers.put(mqConsumer.subscriber(), createContainer(consumerConfigs, containerProperties));
+        containers.put(mqConsumer.subscriber(), createContainer(getConsumerConfigs(mqConsumer), containerProperties));
     }
 
     @Override
@@ -64,19 +58,23 @@ public class KafkaMqProvider implements MqProvider {
     private MessageListenerContainer createContainer(Map<String, Object> consumerConfigs,
                                                      ContainerProperties containerProperties) {
         DefaultKafkaConsumerFactory<String, Message> consumerFactory =
-            new DefaultKafkaConsumerFactory<>(consumerConfigs);
+                new DefaultKafkaConsumerFactory<>(consumerConfigs);
         KafkaMessageListenerContainer<String, Message> container =
-            new KafkaMessageListenerContainer<>(consumerFactory, containerProperties);
+                new KafkaMessageListenerContainer<>(consumerFactory, containerProperties);
         container.start();
         return container;
     }
 
-    private Map<String, Object> getConsumerConfigs(TopicMqConsumer topicMqConsumer) {
+    private Map<String, Object> getConsumerConfigs(MqConsumer topicMqConsumer) {
         Map<String, Object> consumerConfigs = properties.buildConsumerProperties();
-        consumerConfigs.put(ConsumerConfig.GROUP_ID_CONFIG, topicMqConsumer.mqName() + "." + topicMqConsumer.systemId + "." + topicMqConsumer.authToken);
         consumerConfigs.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         consumerConfigs.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ObjectSerializer.class);
         consumerConfigs.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        String groupId = topicMqConsumer.mqName();
+        if (topicMqConsumer instanceof TopicMqConsumer)
+            groupId += "." + ((TopicMqConsumer) topicMqConsumer).systemId + "." + ((TopicMqConsumer) topicMqConsumer).authToken;
+        consumerConfigs.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
+
         return consumerConfigs;
     }
 
