@@ -14,6 +14,12 @@ spring.jooq.sql-dialect: Postgres
 
 spring.jackson.serialization.write_dates_as_timestamps: false
 
+messaging:
+  mapping-file-location: classpath:userRoleProviderFieldMapping.xml
+  user-role-provider: configurable
+  user-provider-url: http://localhost:9999/api/users
+  role-provider-url: http://localhost:9999/api/role
+
 security.user:
   name: admin
   password: admin
@@ -82,21 +88,3 @@ spring.http.encoding.force: true
 keycloak.redirect-url: http://localhost:8081
 keycloak.server-url: https://keycloak.i-novus.ru/auth
 keycloak.realm: security-admin
-
-security:
-  oauth2:
-    auth-server-uri: ${keycloak.server-url}/realms/${keycloak.realm}/protocol/openid-connect
-    resource:
-      id: messaging-service
-      token-info-uri: ${security.oauth2.auth-server-uri}/token/introspect
-      user-info-uri: ${security.oauth2.auth-server-uri}/userinfo
-      jwt.key-value: |
-        -----BEGIN PUBLIC KEY-----
-        MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAi54+TgAUWz3rUrAqdjBcmw6lueJdDcDh5ymU3uuNJsBOTz4mI3lFle505/xta6mpaMZynoS9Nbs6HJswWScCNilc97GFpFpn1KMYV0Ct8Mk0R2gEBk3ky+ASjhMXdd0UIhFywHivU0eaVQVXLfFFg68b/MK4NyJTR33pgUy7VZTtup+h8UFWzVuKu1tfrI6rVe6o2biKM+z258uWXxbEI08DyBTyvAL+GKb0HY1G59BQ/6rziYCVDSO3EQgb+rL4ZNmlVb13W0ePfyWUKnBPcmk9TRejaYmYSZiwQjDgx9+1yBCEeDPPt/LyVAac2Bd5Vq2VVJfz7bUf2TTwT9hBdQIDAQAB
-        -----END PUBLIC KEY-----
-#    client:
-#      client-id: messaging-service
-#      client-secret: 0172295d-3343-4068-9d13-b6f9df3157b3
-#      scope: senduser,sendgroup,sendall
-#      access-token-uri: ${security.oauth2.auth-server-uri}/token
-#      grant-type: client_credentials

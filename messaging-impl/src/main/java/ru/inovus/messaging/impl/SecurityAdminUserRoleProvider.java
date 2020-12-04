@@ -52,7 +52,7 @@ public class SecurityAdminUserRoleProvider implements UserRoleProvider {
 
     private Role mapSecurityRole(net.n2oapp.security.admin.api.model.Role securityRole) {
         Role role = new Role();
-        role.setId(securityRole.getId());
+        role.setId(securityRole.getId().toString());
         role.setName(securityRole.getName());
         role.setCode(securityRole.getCode());
         role.setDescription(securityRole.getDescription());
@@ -61,14 +61,12 @@ public class SecurityAdminUserRoleProvider implements UserRoleProvider {
 
     private User mapSecurityUser(net.n2oapp.security.admin.api.model.User securityUser) {
         User user = new User();
-        user.setId(securityUser.getId());
         user.setUsername(securityUser.getUsername());
         user.setFio(securityUser.getFio());
         user.setEmail(securityUser.getEmail());
         user.setSurname(securityUser.getSurname());
         user.setName(securityUser.getName());
         user.setPatronymic(securityUser.getPatronymic());
-        user.setIsActive(securityUser.getIsActive());
         user.setRoles(securityUser.getRoles().isEmpty() ? Collections.emptyList() :
                 securityUser.getRoles().stream().map(this::mapSecurityRole).collect(Collectors.toList()));
 

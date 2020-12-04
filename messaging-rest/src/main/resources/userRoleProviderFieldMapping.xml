@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping>
+    <user content-mapping="content" count-mapping="totalElements">
+        <response>
+            <username mapping="username"/>
+            <email mapping="email"/>
+            <surname mapping="surname"/>
+            <name mapping="name"/>
+            <patronymic mapping="patronymic"/>
+        </response>
+
+        <criteria>
+            <page-size mapping="size"/>
+            <page-number mapping="page"/>
+            <username mapping="username"/>
+            <name mapping="searchCriteria"/>
+        </criteria>
+    </user>
+</mapping>

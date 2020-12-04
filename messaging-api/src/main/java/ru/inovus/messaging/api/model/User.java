@@ -8,9 +8,6 @@ import java.util.List;
 @Getter
 @Setter
 public class User {
-
-    private Integer id;
-
     private String username;
 
     private String fio;
@@ -22,8 +19,6 @@ public class User {
     private String name;
 
     private String patronymic;
-
-    private Boolean isActive;
 
     private List<Role> roles;
 }
