@@ -78,9 +78,9 @@ public class ConfigurableUserRoleProvider implements UserRoleProvider {
             roleResponseContentLocation = mapping.roleMapping.contentMapping.split("\\.");
             roleMapping.put("count", mapping.roleMapping.countMapping);
             if (nonNull(mapping.roleMapping.response))
-                mapping.roleMapping.response.fields.forEach(field -> roleMapping.put(field.getTagName(), field.getAttribute("response-mapping")));
+                mapping.roleMapping.response.fields.forEach(field -> roleMapping.put(field.getTagName(), field.getAttribute("mapping")));
             if (nonNull(mapping.roleMapping.criteria))
-                mapping.roleMapping.criteria.fields.forEach(field -> roleCriteriaMapping.put(field.getTagName(), field.getAttribute("query-mapping")));
+                mapping.roleMapping.criteria.fields.forEach(field -> roleCriteriaMapping.put(field.getTagName(), field.getAttribute("mapping")));
         }
 
         Element roleXmlElement = null;
@@ -88,11 +88,11 @@ public class ConfigurableUserRoleProvider implements UserRoleProvider {
             userResponseContentLocation = mapping.userMapping.contentMapping.split("\\.");
             userMapping.put("count", mapping.userMapping.countMapping);
             if (nonNull(mapping.userMapping.response)) {
-                mapping.userMapping.response.fields.forEach(field -> userMapping.put(field.getTagName(), field.getAttribute("response-mapping")));
+                mapping.userMapping.response.fields.forEach(field -> userMapping.put(field.getTagName(), field.getAttribute("mapping")));
                 roleXmlElement = mapping.userMapping.response.fields.stream().filter(field -> field.getTagName().equals("roles")).findFirst().orElse(null);
             }
             if (nonNull(mapping.userMapping.criteria))
-                mapping.userMapping.criteria.fields.forEach(field -> userCriteriaMapping.put(field.getTagName(), field.getAttribute("query-mapping")));
+                mapping.userMapping.criteria.fields.forEach(field -> userCriteriaMapping.put(field.getTagName(), field.getAttribute("mapping")));
         }
 
         isUserRolePlainStringArray = Boolean.valueOf(isNull(roleXmlElement) ? "false" : roleXmlElement.getAttribute("plain-string-array"));

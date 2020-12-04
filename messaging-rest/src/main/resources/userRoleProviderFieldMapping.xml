@@ -2,38 +2,18 @@
 <mapping>
     <user content-mapping="content" count-mapping="totalElements">
         <response>
-            <username response-mapping="username"/>
-            <!--            <fio response-mapping="fio1"/>-->
-            <email response-mapping="email"/>
-            <surname response-mapping="surname"/>
-            <name response-mapping="name"/>
-            <patronymic response-mapping="patronymic"/>
-            <!--            <roles response-mapping="roles1" plain-string-array="true" id-mapping="id1" name-mapping="name1" code-mapping="code1" description-mapping="description1"/>-->
+            <username mapping="username"/>
+            <email mapping="email"/>
+            <surname mapping="surname"/>
+            <name mapping="name"/>
+            <patronymic mapping="patronymic"/>
         </response>
 
         <criteria>
-            <page-size query-mapping="size"/>
-            <page-number query-mapping="page"/>
-            <username query-mapping="username"/>
-            <name query-mapping="searchCriteria"/>
-            <!--            <fio query-mapping="fio1"/>-->
-            <!--            <roleIds query-mapping="roleIds1"/>-->
+            <page-size mapping="size"/>
+            <page-number mapping="page"/>
+            <username mapping="username"/>
+            <name mapping="searchCriteria"/>
         </criteria>
     </user>
-    <!--    <role content-mapping="content" count-mapping="totalElements">-->
-    <!--        <response>-->
-    <!--            <id response-mapping="id1" />-->
-    <!--            <name response-mapping="name1" />-->
-    <!--            <code response-mapping="code1" />-->
-    <!--            <description response-mapping="description1" />-->
-    <!--            <count response-mapping="totalElements"/>-->
-    <!--        </response>-->
-
-    <!--        <criteria>-->
-    <!--            <page-size query-mapping="pageSize"/>-->
-    <!--            <name query-mapping="name1"/>-->
-    <!--            <page-number query-mapping="pageNumber"/>-->
-    <!--            <permissionCodes query-mapping="permissionCodes1"/>-->
-    <!--        </criteria>-->
-    <!--    </role>-->
 </mapping>
