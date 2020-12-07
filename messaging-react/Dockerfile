@@ -1,5 +1,5 @@
 # Stage 1 - build sources
-FROM node:7.10 as build-deps
+FROM node:12 as build-deps
 WORKDIR /usr/src/app
 COPY package.json public src ./
 ARG NPM_REGISTRY
