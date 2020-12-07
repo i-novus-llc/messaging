@@ -25,8 +25,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -98,10 +96,14 @@ public class ConfigurableUserRoleProvider implements UserRoleProvider {
         isUserRolePlainStringArray = Boolean.valueOf(isNull(roleXmlElement) ? "false" : roleXmlElement.getAttribute("plain-string-array"));
         if (nonNull(roleXmlElement) && roleXmlElement.getAttributes().getLength() > 2 && !isUserRolePlainStringArray) {
             userRoleMapping = new HashMap<>();
-            if (roleXmlElement.hasAttribute("id-mapping")) userRoleMapping.put("id", roleXmlElement.getAttribute("id-mapping"));
-            if (roleXmlElement.hasAttribute("name-mapping")) userRoleMapping.put("name", roleXmlElement.getAttribute("name-mapping"));
-            if (roleXmlElement.hasAttribute("code-mapping")) userRoleMapping.put("code", roleXmlElement.getAttribute("code-mapping"));
-            if (roleXmlElement.hasAttribute("description-mapping")) userRoleMapping.put("description", roleXmlElement.getAttribute("description-mapping"));
+            if (roleXmlElement.hasAttribute("id-mapping"))
+                userRoleMapping.put("id", roleXmlElement.getAttribute("id-mapping"));
+            if (roleXmlElement.hasAttribute("name-mapping"))
+                userRoleMapping.put("name", roleXmlElement.getAttribute("name-mapping"));
+            if (roleXmlElement.hasAttribute("code-mapping"))
+                userRoleMapping.put("code", roleXmlElement.getAttribute("code-mapping"));
+            if (roleXmlElement.hasAttribute("description-mapping"))
+                userRoleMapping.put("description", roleXmlElement.getAttribute("description-mapping"));
         }
     }
 
@@ -141,13 +143,17 @@ public class ConfigurableUserRoleProvider implements UserRoleProvider {
         List<User> result = new ArrayList<>();
         for (Map<String, Object> responseUser : (List<Map<String, Object>>) content) {
             User user = new User();
-            if (userMapping.containsKey("username")) user.setUsername((String) responseUser.get(userMapping.get("username")));
+            if (userMapping.containsKey("username"))
+                user.setUsername((String) responseUser.get(userMapping.get("username")));
             if (userMapping.containsKey("fio")) user.setFio((String) responseUser.get(userMapping.get("fio")));
             if (userMapping.containsKey("email")) user.setEmail((String) responseUser.get(userMapping.get("email")));
-            if (userMapping.containsKey("surname")) user.setSurname((String) responseUser.get(userMapping.get("surname")));
+            if (userMapping.containsKey("surname"))
+                user.setSurname((String) responseUser.get(userMapping.get("surname")));
             if (userMapping.containsKey("name")) user.setName((String) responseUser.get(userMapping.get("name")));
-            if (userMapping.containsKey("patronymic")) user.setPatronymic((String) responseUser.get(userMapping.get("patronymic")));
-            if (userMapping.containsKey("roles")) user.setRoles(mapUsersRoles((List) responseUser.get(userMapping.get("roles"))));
+            if (userMapping.containsKey("patronymic"))
+                user.setPatronymic((String) responseUser.get(userMapping.get("patronymic")));
+            if (userMapping.containsKey("roles"))
+                user.setRoles(mapUsersRoles((List) responseUser.get(userMapping.get("roles"))));
             result.add(user);
         }
         return result;
@@ -194,7 +200,8 @@ public class ConfigurableUserRoleProvider implements UserRoleProvider {
             if (roleMapping.containsKey("id")) role.setId((String) responseRole.get(roleMapping.get("id")));
             if (roleMapping.containsKey("name")) role.setName((String) responseRole.get(roleMapping.get("name")));
             if (roleMapping.containsKey("code")) role.setCode((String) responseRole.get(roleMapping.get("code")));
-            if (roleMapping.containsKey("description")) role.setDescription((String) responseRole.get(roleMapping.get("description")));
+            if (roleMapping.containsKey("description"))
+                role.setDescription((String) responseRole.get(roleMapping.get("description")));
             result.add(role);
         }
         return result;
@@ -203,32 +210,31 @@ public class ConfigurableUserRoleProvider implements UserRoleProvider {
     private String buildQueryParam(RoleCriteria criteria) {
         Map<String, Object> params = new HashMap<>();
         if (roleCriteriaMapping.containsKey("name")) params.put(roleCriteriaMapping.get("name"), criteria.getName());
-        if (roleCriteriaMapping.containsKey("permissionCodes")) params.put(roleCriteriaMapping.get("permissionCodes"), criteria.getPermissionCodes());
-        if (roleCriteriaMapping.containsKey("page-size")) params.put(roleCriteriaMapping.get("page-size"), criteria.getPageSize());
-        if (roleCriteriaMapping.containsKey("page-number")) params.put(roleCriteriaMapping.get("page-number"), criteria.getPageNumber());
-        return urlEncodeUTF8(params);
+        if (roleCriteriaMapping.containsKey("permissionCodes"))
+            params.put(roleCriteriaMapping.get("permissionCodes"), criteria.getPermissionCodes());
+        if (roleCriteriaMapping.containsKey("page-size"))
+            params.put(roleCriteriaMapping.get("page-size"), criteria.getPageSize());
+        if (roleCriteriaMapping.containsKey("page-number"))
+            params.put(roleCriteriaMapping.get("page-number"), criteria.getPageNumber());
+        return buildQueryParam(params);
     }
 
     private String buildQueryParam(UserCriteria criteria) {
         Map<String, Object> params = new HashMap<>();
-        if (userCriteriaMapping.containsKey("username")) params.put(userCriteriaMapping.get("username"), criteria.getUsername());
+        if (userCriteriaMapping.containsKey("username"))
+            params.put(userCriteriaMapping.get("username"), criteria.getUsername());
         if (userCriteriaMapping.containsKey("name")) params.put(userCriteriaMapping.get("name"), criteria.getName());
         if (userCriteriaMapping.containsKey("fio")) params.put(userCriteriaMapping.get("fio"), criteria.getFio());
-        if (userCriteriaMapping.containsKey("roleIds")) params.put(userCriteriaMapping.get("roleIds"), criteria.getRoleIds());
-        if (userCriteriaMapping.containsKey("page-size")) params.put(userCriteriaMapping.get("page-size"), criteria.getPageSize());
-        if (userCriteriaMapping.containsKey("page-number")) params.put(userCriteriaMapping.get("page-number"), criteria.getPageNumber());
-        return urlEncodeUTF8(params);
+        if (userCriteriaMapping.containsKey("roleIds"))
+            params.put(userCriteriaMapping.get("roleIds"), criteria.getRoleIds());
+        if (userCriteriaMapping.containsKey("page-size"))
+            params.put(userCriteriaMapping.get("page-size"), criteria.getPageSize());
+        if (userCriteriaMapping.containsKey("page-number"))
+            params.put(userCriteriaMapping.get("page-number"), criteria.getPageNumber());
+        return buildQueryParam(params);
     }
 
-    private String urlEncodeUTF8(String s) {
-        try {
-            return URLEncoder.encode(s, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new UnsupportedOperationException(e);
-        }
-    }
-
-    private String urlEncodeUTF8(Map<String, Object> map) {
+    private String buildQueryParam(Map<String, Object> map) {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             if (isNull(entry.getValue())) continue;
@@ -236,8 +242,8 @@ public class ConfigurableUserRoleProvider implements UserRoleProvider {
                 sb.append("&");
             if (!(entry.getValue() instanceof Iterable))
                 sb.append(String.format("%s=%s",
-                        urlEncodeUTF8(entry.getKey()),
-                        urlEncodeUTF8(entry.getValue().toString())
+                        entry.getKey(),
+                        entry.getValue().toString()
                 ));
             else if (entry.getValue() instanceof Iterable) {
                 Iterator iterator = ((Iterable) entry.getValue()).iterator();
@@ -246,8 +252,8 @@ public class ConfigurableUserRoleProvider implements UserRoleProvider {
                     Object next = iterator.next();
                     if (isNull(next)) continue;
                     sb.append(String.format("%s=%s",
-                            urlEncodeUTF8(entry.getKey()),
-                            urlEncodeUTF8(next.toString())));
+                            entry.getKey(),
+                            next.toString()));
                     if (iterator.hasNext())
                         sb.append("&");
                 }
