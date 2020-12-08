@@ -123,7 +123,7 @@ public class ConfigurableUserRoleProvider implements UserRoleProvider {
         return page;
     }
 
-    private HttpEntity prepareRequest(HttpServletRequest request) {
+    private HttpEntity<Map<String, Object>> prepareRequest(HttpServletRequest request) {
         HttpHeaders headers = new HttpHeaders();
         if (nonNull(request)) headers.set("Authorization", request.getHeader("Authorization"));
         return new HttpEntity<>(headers);
