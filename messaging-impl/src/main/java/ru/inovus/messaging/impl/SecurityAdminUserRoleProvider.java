@@ -7,6 +7,7 @@ import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.util.CollectionUtils;
 import ru.inovus.messaging.api.criteria.RoleCriteria;
 import ru.inovus.messaging.api.criteria.UserCriteria;
 import ru.inovus.messaging.api.model.Role;
@@ -67,7 +68,7 @@ public class SecurityAdminUserRoleProvider implements UserRoleProvider {
         user.setSurname(securityUser.getSurname());
         user.setName(securityUser.getName());
         user.setPatronymic(securityUser.getPatronymic());
-        user.setRoles(securityUser.getRoles().isEmpty() ? Collections.emptyList() :
+        user.setRoles(CollectionUtils.isEmpty(securityUser.getRoles()) ? Collections.emptyList() :
                 securityUser.getRoles().stream().map(this::mapSecurityRole).collect(Collectors.toList()));
 
         return user;
