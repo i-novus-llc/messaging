@@ -19,3 +19,4 @@
 - [Security](Security.md)
 - [Frontend](Frontend.md)
 - [TODO](Todo.md)
+- [Свойства для настройки провайдера пользователей и конфигурация маппинга](UserRoleProviderPropertiesAndMappind.md)

@@ -1,3 +1,10 @@
+#Провайдеры
+- security - SecurityAdminUserRoleProvider
+  - Провайдер для получения данных из security-admin
+
+- configurable - ConfigurableUserRoleProvider
+  - Универсальный провайдер с возможностью указания маппинга полей из ответа сервиса предостовляющего информацию о пользователях и ролях, в модели для messaging.
+
 #Настройки провайдеров
 - `messaging.user-role-provider`: configurable
   - Выбор провайдера данных о пользователе и ролях.
@@ -7,7 +14,7 @@
 - `messaging.user-provider-url`: http://localhost:9999/api/users
   - эдпоинт с которого провайдер будет забирать информацию о пользователях
 - `messaging.role-provider-url`: http://localhost:9999/api/role
-  - эдпоинт с которого провайдер будет забирать  информацию о роляъ
+  - эдпоинт с которого провайдер будет забирать  информацию о ролях(не нужен в случае SecurityAdminUserRoleProvider)
 
 #Настройка маппинга в ConfigurableUserRoleProvider
 
@@ -57,7 +64,7 @@
 </mapping>
 ```
 - `<user content-mapping="content" count-mapping="totalElements">` 
-  - content-mapping="content" путь до списка пользователей в мапе ответа. Через точку можно указать вложженый маппинг, например tut.content.lezit.
+  - content-mapping="content" путь до списка пользователей в мапе ответа. Через точку можно указать вложженый маппинг, например page.content.user
   - count-mapping="totalElements" маппинг количесва сущностей подходящих под критерии запроса. Вложенный маппинг не поддерживается
   - данные атрибуты аналогично работают в теге \<role> 
   
