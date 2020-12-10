@@ -13,6 +13,10 @@
         <version>3.37-SNAPSHOT</version>
     </parent>
 
+    <properties>
+        <jacoco.skip>false</jacoco.skip>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>ru.i-novus.messaging</groupId>
