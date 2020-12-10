@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping>
+    <user content-mapping="ment.content" count-mapping="totalMent">
+        <response>
+            <username mapping="Cthulhu"/>
+            <fio mapping="666"/>
+            <email mapping="Petroleum"/>
+            <surname mapping="surname14124"/>
+            <name mapping="nameGame"/>
+            <patronymic mapping="отчество"/>
+            <roles mapping="rolessss"/>
+        </response>
+
+        <criteria>
+            <page-size mapping="size"/>
+            <page-number mapping="page"/>
+            <username mapping="Cthulhu"/>
+            <name mapping="name1"/>
+            <fio mapping="666"/>
+            <roleIds mapping="roleIds1"/>
+        </criteria>
+    </user>
+    <role content-mapping="content" count-mapping="totalElements">
+        <response>
+            <id mapping="id1"/>
+            <name mapping="name1"/>
+            <code mapping="code1"/>
+            <description mapping="description1"/>
+            <count mapping="totalElements"/>
+        </response>
+
+        <criteria>
+            <page-size mapping="pageSize"/>
+            <name mapping="name1"/>
+            <page-number mapping="pageNumber"/>
+            <permissionCodes mapping="permissionCodes1"/>
+        </criteria>
+    </role>
+</mapping>

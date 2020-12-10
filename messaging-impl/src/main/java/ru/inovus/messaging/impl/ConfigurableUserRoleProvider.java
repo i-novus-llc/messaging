@@ -1,10 +1,9 @@
 package ru.inovus.messaging.impl;
 
-import lombok.SneakyThrows;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -19,7 +18,6 @@ import ru.inovus.messaging.api.model.Role;
 import ru.inovus.messaging.api.model.User;
 import ru.inovus.messaging.impl.xml.XmlMapping;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -35,21 +33,18 @@ public class ConfigurableUserRoleProvider implements UserRoleProvider {
 
     private static Logger logger = LoggerFactory.getLogger(ConfigurableUserRoleProvider.class);
 
+    @Setter
     private RestTemplate restTemplate;
-
-    @Value("${messaging.user-provider-url}")
-    private String userUrl;
 
     @Autowired
     private HttpServletRequest request;
 
-    @Autowired
-    ResourceLoader resourceLoader;
+    private ResourceLoader resourceLoader;
 
-    @Value("${messaging.mapping-file-location}")
     private String mappingFileLocation;
 
-    @Value("${messaging.role-provider-url}")
+    private String userUrl;
+
     private String roleUrl;
 
     private String[] userResponseContentLocation;
@@ -68,8 +63,15 @@ public class ConfigurableUserRoleProvider implements UserRoleProvider {
 
     private Map<String, String> roleCriteriaMapping = new HashMap<>();
 
-    @PostConstruct
-    private void init() {
+    public ConfigurableUserRoleProvider(ResourceLoader resourceLoader, String mappingFileLocation, String userUrl, String roleUrl) throws IOException, JAXBException {
+        this.resourceLoader = resourceLoader;
+        this.mappingFileLocation = mappingFileLocation;
+        this.userUrl = userUrl;
+        this.roleUrl = roleUrl;
+        init();
+    }
+
+    private void init() throws IOException, JAXBException {
         restTemplate = new RestTemplate();
         XmlMapping mapping = readXml();
         if (nonNull(mapping.roleMapping)) {
@@ -110,7 +112,7 @@ public class ConfigurableUserRoleProvider implements UserRoleProvider {
     @Override
     public Page<Role> getRoles(RoleCriteria criteria) {
         Map<String, Object> response = restTemplate.exchange(roleUrl + "?" + buildQueryParam(criteria),
-                HttpMethod.GET, prepareRequest(request.getHeader("Authorization")), Map.class).getBody();
+                HttpMethod.GET, prepareRequest(request), Map.class).getBody();
         Page page = new PageImpl(mapRoles(response), criteria, (Integer) response.get(roleMapping.get("count")));
         return page;
     }
@@ -118,14 +120,14 @@ public class ConfigurableUserRoleProvider implements UserRoleProvider {
     @Override
     public Page<User> getUsers(UserCriteria criteria) {
         Map<String, Object> response = restTemplate.exchange(userUrl + "?" + buildQueryParam(criteria),
-                HttpMethod.GET, prepareRequest(request.getHeader("Authorization")), Map.class).getBody();
+                HttpMethod.GET, prepareRequest(request), Map.class).getBody();
         Page page = new PageImpl(mapUsers(response), criteria, (Integer) response.get(userMapping.get("count")));
         return page;
     }
 
-    private HttpEntity prepareRequest(String token) {
+    private HttpEntity<Map<String, Object>> prepareRequest(HttpServletRequest request) {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", token);
+        if (nonNull(request)) headers.set("Authorization", request.getHeader("Authorization"));
         return new HttpEntity<>(headers);
     }
 
@@ -197,7 +199,7 @@ public class ConfigurableUserRoleProvider implements UserRoleProvider {
         List<Role> result = new ArrayList<>();
         for (Map<String, Object> responseRole : (List<Map<String, Object>>) content) {
             Role role = new Role();
-            if (roleMapping.containsKey("id")) role.setId((String) responseRole.get(roleMapping.get("id")));
+            if (roleMapping.containsKey("id")) role.setId(responseRole.get(roleMapping.get("id")).toString());
             if (roleMapping.containsKey("name")) role.setName((String) responseRole.get(roleMapping.get("name")));
             if (roleMapping.containsKey("code")) role.setCode((String) responseRole.get(roleMapping.get("code")));
             if (roleMapping.containsKey("description"))
@@ -269,8 +271,7 @@ public class ConfigurableUserRoleProvider implements UserRoleProvider {
         return role;
     }
 
-    @SneakyThrows
-    private XmlMapping readXml() {
+    private XmlMapping readXml() throws IOException, JAXBException {
         XmlMapping mapping;
         try {
             InputStream io = resourceLoader.getResource(mappingFileLocation).getInputStream();
