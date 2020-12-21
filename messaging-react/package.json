@@ -2,21 +2,22 @@
   "name": "messaging-react",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
   "dependencies": {
     "n2o-framework": "7.9.5",
     "n2o-auth": "7.9.5",
+    "n2o-notifications": "7.9.5",
     "react-scripts": "2.1.5"
   },
   "peerDependencies": {
     "react": "*",
     "react-dom": "*",
     "react-router-dom": "*"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
