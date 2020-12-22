@@ -4,6 +4,7 @@ import net.n2oapp.criteria.dataset.DataSet;
 import net.n2oapp.framework.api.metadata.Compiled;
 import net.n2oapp.framework.api.metadata.ReduxModel;
 import net.n2oapp.framework.api.metadata.compile.BindProcessor;
+import net.n2oapp.framework.api.metadata.global.view.page.BasePageUtil;
 import net.n2oapp.framework.api.metadata.meta.ModelLink;
 import net.n2oapp.framework.api.metadata.meta.control.DefaultValues;
 import net.n2oapp.framework.api.metadata.meta.page.Page;
@@ -44,10 +45,8 @@ public class MessagingHistoryListPageBinder implements BaseMetadataBinder<Page> 
                 widgets.put(simplePage.getWidget().getId(), simplePage.getWidget());
         } else if (page instanceof StandardPage) {
             StandardPage standardPage = (StandardPage) page;
-            if (standardPage.getWidgets() != null)
-                widgets = standardPage.getWidgets()
-                        .values().stream()
-                        .collect(Collectors.toMap(Widget::getId, w -> w));
+            widgets = BasePageUtil.getCompiledWidgets(standardPage).stream()
+                    .collect(Collectors.toMap(Widget::getId, w -> w));
         }
         if (!widgets.containsKey(HISTORY_WIDGET) && !widgets.containsKey(MESSAGING_SETTINGS_HISTORY_WIDGET1)
                 && !widgets.containsKey(MESSAGING_SETTINGS_HISTORY_WIDGET2))
