@@ -9,16 +9,14 @@
 
     <parent>
         <groupId>net.n2oapp.platform</groupId>
-        <artifactId>n2o-platform-parent</artifactId>
-        <version>3.0.5</version>
+        <artifactId>n2o-boot-platform-parent</artifactId>
+        <version>4.2.4</version>
         <relativePath />
     </parent>
 
     <properties>
         <n2o.version>7.9.5</n2o.version>
         <access.version>4.20</access.version>
-        <spring.cloud.version>Greenwich.SR2</spring.cloud.version>
-        <jooq.version>3.11.2</jooq.version>
         <config.server.enable>false</config.server.enable>
         <audit.version>2.3.2</audit.version>
         <jacoco.skip>true</jacoco.skip>
@@ -55,41 +53,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>net.n2oapp.framework</groupId>
-                <artifactId>n2o-api</artifactId>
-                <version>${n2o.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.n2oapp.framework</groupId>
-                <artifactId>n2o-config</artifactId>
-                <version>${n2o.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.n2oapp.framework</groupId>
-                <artifactId>n2o-engine</artifactId>
-                <version>${n2o.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.n2oapp.framework</groupId>
-                <artifactId>n2o-spring-boot-starter</artifactId>
-                <version>${n2o.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jooq</groupId>
-                <artifactId>jooq</artifactId>
-                <version>${jooq.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jooq</groupId>
-                <artifactId>jooq-codegen</artifactId>
-                <version>${jooq.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>3.7</version>
-            </dependency>
             <dependency>
                 <groupId>net.n2oapp.framework.security</groupId>
                 <artifactId>security-admin-rest-api</artifactId>
@@ -154,26 +117,6 @@
                 <groupId>ru.i-novus.messaging</groupId>
                 <artifactId>messaging-web</artifactId>
                 <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-messaging</artifactId>
-                <version>${spring-security.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-tx</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-web</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-jdbc</artifactId>
-                <version>${spring.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
