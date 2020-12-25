@@ -3,8 +3,8 @@
 
     <regions>
         <tabs place="single">
-            <table id="history" ref-id="messaging_message_list"/>
-            <table id="settings" ref-id="messaging_msg_setting_list"/>
+            <table id="history" ref-id="messaging_message_list" name="История уведомлений"/>
+            <table id="settings" ref-id="messaging_msg_setting_list" name="Шаблоны уведомлений"/>
         </tabs>
     </regions>
 

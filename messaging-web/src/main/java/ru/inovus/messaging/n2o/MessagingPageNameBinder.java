@@ -44,8 +44,8 @@ public class MessagingPageNameBinder implements MetadataBinder<Page>, CompiledCl
         String widgetId = this.widgetId;
         if (pageId != null) {
             N2oPage n2oPage = p.getSource(pageId, N2oPage.class);
-            if (n2oPage.getContainers() != null) {
-                widget = n2oPage.getContainers().stream()
+            if (n2oPage.getWidgets() != null) {
+                widget = n2oPage.getWidgets().stream()
                         .filter(w -> w.getId().equals(this.widgetId))
                         .findFirst()
                         .orElse(null);
