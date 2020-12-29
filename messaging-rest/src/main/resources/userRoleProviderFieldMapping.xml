@@ -7,6 +7,7 @@
             <surname mapping="surname"/>
             <name mapping="name"/>
             <patronymic mapping="patronymic"/>
+            <fio mapping="fio"/>
         </response>
 
         <criteria>
