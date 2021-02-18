@@ -24,7 +24,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db/postgres
       SPRING_CLOUD_CONSUL_HOST: consul-agent.local
       SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
-      SEC_ADMIN_REST_URL: http://yandex.develop:8278
+      SEC_ADMIN_REST_URL: http://yandex.develop:8278/api
       JAVA_OPTS: -Xmx200m
     depends_on:
     - db
@@ -42,6 +42,8 @@ services:
       SPRING_APPLICATION_NAME: "messaging-admin-frontend"
       SPRING_CLOUD_CONSUL_HOST: consul-agent.local
       SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
+      SECURITY_OAUTH2_AUTH_SERVER_URI: http://yandex.develop:8278
+      ACCESS_SERVICE_URL: http://yandex.develop:8278/api
       JAVA_OPTS: -Xmx200m
     depends_on:
     - backend
