@@ -3,10 +3,10 @@ FROM node:12 as build-deps
 WORKDIR /usr/src/app
 COPY package.json public src ./
 ARG NPM_REGISTRY
-RUN npm install --registry ${NPM_REGISTRY}
+RUN yarn install --registry ${NPM_REGISTRY}
 # probably this copy can be removed:
 COPY . ./
-RUN npm run build
+RUN yarn run build
 
 # Stage 2 - the production environment
 FROM nginx:1.12-alpine
