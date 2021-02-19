@@ -26,6 +26,9 @@ services:
       SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
       SEC_ADMIN_REST_URL: http://yandex.develop:8278/api
       JAVA_OPTS: -Xmx200m
+      SERVER_PORT: 8080
+      MESSAGING_USER_PROVIDER_URL: http://yandex.develop:8278/api/users
+      MESSAGING_ROLE_PROVIDER_URL: http://yandex.develop:8278/api/role
     depends_on:
     - db
     ports:
@@ -46,6 +49,8 @@ services:
       SECURITY_OAUTH2_CLIENT_CLIENT_ID: frontend
       SECURITY_OAUTH2_CLIENT_CLIENT_SECRET: ca12a678-b275-499b-a778-750bad4d0a77
       ACCESS_SERVICE_URL: http://yandex.develop:8278/api
+      MESSAGING_BACKEND_PATH: http://backend:8080/api
+      MESSAGING_USER_ADMIN_URL: http://yandex.develop:8277
       JAVA_OPTS: -Xmx200m
     depends_on:
     - backend
