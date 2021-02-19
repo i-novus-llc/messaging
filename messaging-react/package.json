@@ -9,9 +9,9 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
-    "n2o-framework": "7.12.1",
-    "n2o-auth": "7.12.1",
-    "n2o-notifications": "7.12.1",
+    "n2o-framework": "7.12.8",
+    "n2o-auth": "7.12.8",
+    "n2o-notifications": "7.12.8",
     "react-scripts": "2.1.5"
   },
   "peerDependencies": {
