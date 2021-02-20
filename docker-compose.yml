@@ -7,7 +7,7 @@ services:
     environment:
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
-    - 5432:5432
+    - "5432:5432"
     deploy:
       resources:
         limits:
@@ -33,7 +33,7 @@ services:
     depends_on:
     - db
     ports:
-    - 8112:8080
+    - "8112:8080"
     deploy:
       resources:
         limits:
@@ -56,7 +56,7 @@ services:
     depends_on:
     - backend
     ports:
-    - 8111:8080
+    - "8111:8080"
     deploy:
       resources:
         limits:
@@ -66,7 +66,7 @@ services:
 
   react:
     ports:
-    - 8110:80
+    - "8110:80"
     deploy:
       resources:
         limits:
@@ -79,7 +79,7 @@ services:
   activemq:
     image: rmohr/activemq:latest
     ports:
-      - 8113:61616
+      - "8113:61616"
 
 volumes:
   messaging-db-data:
