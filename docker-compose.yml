@@ -79,7 +79,7 @@ services:
   activemq:
     image: rmohr/activemq:latest
     ports:
-      - 8113: 61616
+      - 8113:61616
 
 volumes:
   messaging-db-data:
