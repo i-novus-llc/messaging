@@ -2,6 +2,7 @@
 FROM node:15.9.0-alpine3.10 as build-deps
 WORKDIR /usr/src/app
 COPY package.json public src ./
+ARG NODE_OPTIONS=--max-old-space-size=4096
 ARG NPM_REGISTRY
 RUN yarn install --registry ${NPM_REGISTRY}
 # probably this copy can be removed:
