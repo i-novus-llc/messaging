@@ -29,7 +29,7 @@ services:
       SERVER_PORT: 8080
       MESSAGING_USER_PROVIDER_URL: http://yandex.develop:8278/api/users
       MESSAGING_ROLE_PROVIDER_URL: http://yandex.develop:8278/api/role
-      SPRING_ACTIVEMQ_BROKER_URL: tcp://activemq:8113
+      SPRING_ACTIVEMQ_BROKER_URL: tcp://activemq:61616
     depends_on:
     - db
     ports:
