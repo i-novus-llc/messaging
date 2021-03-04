@@ -85,6 +85,6 @@ sec:
 spring.http.encoding.forceResponse: true
 spring.http.encoding.force: true
 
-keycloak.redirect-url: http://localhost:8081
+keycloak.redirect-url: http://localhost:${server.port}
 keycloak.server-url: https://keycloak.i-novus.ru/auth
 keycloak.realm: security-admin
