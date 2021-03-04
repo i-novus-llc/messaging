@@ -1,11 +1,14 @@
 # Stage 1 - build sources
-FROM node:15.9.0-alpine3.10 as build-deps
+FROM node:14.15.4-alpine3.11 as build-deps
 WORKDIR /usr/src/app
 COPY package.json public src ./
 ARG NPM_REGISTRY
 RUN yarn install --registry ${NPM_REGISTRY}
 # probably this copy can be removed:
 COPY . ./
+
+COPY yarn.lock ./
+
 RUN yarn run build
 
 # Stage 2 - the production environment
