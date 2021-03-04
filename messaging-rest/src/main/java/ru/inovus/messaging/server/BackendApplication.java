@@ -14,8 +14,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import ru.inovus.messaging.impl.ConfigurableUserRoleProvider;
-import ru.inovus.messaging.impl.SecurityAdminUserRoleProvider;
+import ru.inovus.messaging.impl.provider.ConfigurableUserRoleProvider;
+import ru.inovus.messaging.impl.provider.SecurityAdminUserRoleProvider;
 import ru.inovus.messaging.impl.UserRoleProvider;
 import ru.inovus.messaging.server.config.DateMapperConfigurer;
 

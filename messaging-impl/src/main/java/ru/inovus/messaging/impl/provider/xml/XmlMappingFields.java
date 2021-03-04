@@ -1,4 +1,4 @@
-package ru.inovus.messaging.impl.xml;
+package ru.inovus.messaging.impl.provider.xml;
 
 import org.w3c.dom.Element;
 

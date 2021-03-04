@@ -23,7 +23,7 @@ import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
 
 import ru.inovus.messaging.api.model.AlertType;
-import ru.inovus.messaging.impl.AlertTypeConverter;
+import ru.inovus.messaging.impl.util.AlertTypeConverter;
 import ru.inovus.messaging.impl.jooq.Indexes;
 import ru.inovus.messaging.impl.jooq.Keys;
 import ru.inovus.messaging.impl.jooq.Public;

@@ -1,4 +1,4 @@
-package ru.inovus.messaging.impl;
+package ru.inovus.messaging.impl.service;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.*;

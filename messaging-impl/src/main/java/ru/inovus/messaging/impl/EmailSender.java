@@ -14,6 +14,7 @@ import ru.inovus.messaging.api.MessageOutbox;
 import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.queue.MqProvider;
 import ru.inovus.messaging.api.queue.QueueMqConsumer;
+import ru.inovus.messaging.impl.service.MessageService;
 
 import javax.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
