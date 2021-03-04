@@ -1,7 +1,7 @@
 # Stage 1 - build sources
 FROM node:14.15.4-alpine3.11 as build-deps
 WORKDIR /usr/src/app
-COPY package.json public src ./
+COPY package.json public src .env yarn.lock ./
 ARG NPM_REGISTRY
 RUN yarn install --no-cache --registry ${NPM_REGISTRY}
 # probably this copy can be removed:
