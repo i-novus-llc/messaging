@@ -63,11 +63,14 @@
     </role>
 </mapping>
 ```
-- `<user content-mapping="content" count-mapping="totalElements">` 
-  - content-mapping="content" путь до списка пользователей в мапе ответа. Через точку можно указать вложженый маппинг, например page.content.user
-  - count-mapping="totalElements" маппинг количесва сущностей подходящих под критерии запроса. Вложенный маппинг не поддерживается
-  - данные атрибуты аналогично работают в теге \<role> 
-  
+
+- `<user content-mapping="content" count-mapping="totalElements">`
+  - content-mapping="content" путь до списка пользователей в мапе ответа. Через точку можно указать вложенный маппинг,
+    например page.content.user
+  - count-mapping="totalElements" маппинг количества сущностей подходящих под критерии запроса. Вложенный маппинг не
+    поддерживается
+  - данные атрибуты аналогично работают в теге \<role>
+
 ```xml
   <response>
     <username mapping="username"/>
