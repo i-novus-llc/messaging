@@ -50,6 +50,7 @@
     <modules>
         <module>messaging-api</module>
         <module>messaging-client</module>
+        <module>messaging-scheduler</module>
     </modules>
 
     <dependencyManagement>
