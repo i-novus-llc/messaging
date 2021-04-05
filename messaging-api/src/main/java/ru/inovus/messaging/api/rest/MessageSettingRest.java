@@ -19,8 +19,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import org.springframework.data.domain.Page;
-import ru.inovus.messaging.api.MessageSetting;
 import ru.inovus.messaging.api.criteria.MessageSettingCriteria;
+import ru.inovus.messaging.api.model.MessageSetting;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

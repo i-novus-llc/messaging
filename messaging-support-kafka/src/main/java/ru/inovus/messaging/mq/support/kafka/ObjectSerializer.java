@@ -2,7 +2,7 @@ package ru.inovus.messaging.mq.support.kafka;
 
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serializer;
-import ru.inovus.messaging.api.MessageOutbox;
+import ru.inovus.messaging.api.model.MessageOutbox;
 
 import java.io.*;
 import java.util.Map;

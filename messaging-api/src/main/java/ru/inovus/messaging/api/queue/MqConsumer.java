@@ -15,7 +15,7 @@
  */
 package ru.inovus.messaging.api.queue;
 
-import ru.inovus.messaging.api.MessageOutbox;
+import ru.inovus.messaging.api.model.MessageOutbox;
 
 import java.io.Serializable;
 import java.util.function.Consumer;

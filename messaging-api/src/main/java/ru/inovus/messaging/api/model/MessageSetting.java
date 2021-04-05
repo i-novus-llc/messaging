@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ru.inovus.messaging.api;
-
-import ru.inovus.messaging.api.model.*;
+package ru.inovus.messaging.api.model;
 
 import java.io.Serializable;
 import java.util.List;

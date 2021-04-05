@@ -10,7 +10,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-import ru.inovus.messaging.api.MessageOutbox;
+import ru.inovus.messaging.api.model.MessageOutbox;
 import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.queue.MqProvider;
 import ru.inovus.messaging.api.queue.QueueMqConsumer;
