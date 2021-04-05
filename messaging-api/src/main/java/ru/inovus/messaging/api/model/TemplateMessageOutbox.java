@@ -27,6 +27,7 @@ public class TemplateMessageOutbox implements Serializable {
 
     private static final long serialVersionUID = 5475383823197483227L;
 
+    private String phoneNumber;
     private String templateCode;
     private LocalDateTime sentAt;
     private List<String> userNameList;
@@ -102,5 +103,13 @@ public class TemplateMessageOutbox implements Serializable {
 
     public void setObjectType(String objectType) {
         this.objectType = objectType;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

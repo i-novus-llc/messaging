@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ru.inovus.messaging.api;
+package ru.inovus.messaging.api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import ru.inovus.messaging.api.model.Message;
-import ru.inovus.messaging.api.model.TemplateMessageOutbox;
 
 import java.io.Serializable;
 
@@ -33,7 +31,7 @@ public class MessageOutbox implements Serializable {
         //
     }
 
-    public MessageOutbox(Message message, TemplateMessageOutbox messageOutbox){
+    public MessageOutbox(Message message, TemplateMessageOutbox messageOutbox) {
         this.message = message;
         this.templateMessageOutbox = messageOutbox;
     }
