@@ -20,6 +20,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import ru.inovus.messaging.api.model.Sms;
 
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -36,5 +37,5 @@ public interface SchedulerRest {
     @Path("/scheduled")
     @ApiOperation("Отправка сообщения")
     @ApiResponse(code = 200, message = "SMS запланировано")
-    void createScheduledMessage(Sms sms);
+    void createScheduledMessage(@Valid Sms sms);
 }
