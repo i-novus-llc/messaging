@@ -20,6 +20,8 @@ import java.time.OffsetTime;
 import java.util.Date;
 import java.util.UUID;
 
+import static java.util.Objects.isNull;
+
 @Getter
 @Setter
 @Controller
@@ -28,15 +30,17 @@ public class SchedulerRestImpl implements SchedulerRest {
     private static final Logger log = LoggerFactory.getLogger(SchedulerRestImpl.class);
 
     private Scheduler scheduler;
+    private MessageRestImpl messageService;
 
     public SchedulerRestImpl(SchedulerFactoryBean schedulerFactoryBean, MessageRestImpl messageService) throws SchedulerException {
         this.scheduler = schedulerFactoryBean.getScheduler();
-        scheduler.getContext().put("messageService", messageService);
+        this.messageService = messageService;
+        scheduler.getContext().put("messageService", this.messageService);
         scheduler.start();
     }
 
     @Override
-    public void createScheduledMessage(Sms sms) throws JsonProcessingException {
+    public void createScheduledMessage(Sms sms) {
         TemplateMessageOutbox templateMessageOutbox = new TemplateMessageOutbox();
         templateMessageOutbox.setPhoneNumber(sms.getPhoneNumber());
         templateMessageOutbox.setTemplateCode(sms.getTemplateCode());
@@ -45,18 +49,22 @@ public class SchedulerRestImpl implements SchedulerRest {
         MessageOutbox messageOutbox = new MessageOutbox();
         messageOutbox.setTemplateMessageOutbox(templateMessageOutbox);
 
-        TriggerBuilder tB = TriggerBuilder.newTrigger();
-        tB = sms.getSendImmediately() ? tB.startNow() : tB.startAt(convertToDate(sms.getTimeToSend()));
-        Trigger trigger = tB.build();
+        if (isNull(sms.getTimeToSend())) {
+            messageService.sendMessage(messageOutbox);
+        } else {
+            Trigger trigger = TriggerBuilder.newTrigger().startAt(convertToDate(sms.getTimeToSend())).build();
 
-        JobDetail jobDetail = JobBuilder.newJob(ScheduledMessageJob.class).withIdentity(UUID.randomUUID().toString())
-                .withDescription(messageDescription(sms, trigger.getStartTime())).build();
-        ObjectMapper mapper = new ObjectMapper();
-        jobDetail.getJobDataMap().put("sms", mapper.writeValueAsString(messageOutbox));
-        try {
-            scheduler.scheduleJob(jobDetail, trigger);
-        } catch (SchedulerException exception) {
-            log.warn("Error with ScheduledMessageJob scheduling", exception);
+            JobDetail jobDetail = JobBuilder.newJob(ScheduledMessageJob.class).withIdentity(UUID.randomUUID().toString())
+                    .withDescription(messageDescription(sms, trigger.getStartTime())).build();
+
+            try {
+                jobDetail.getJobDataMap().put("sms", new ObjectMapper().writeValueAsString(messageOutbox));
+                scheduler.scheduleJob(jobDetail, trigger);
+            } catch (SchedulerException exception) {
+                log.error("Error with ScheduledMessageJob scheduling", exception);
+            } catch (JsonProcessingException e) {
+                log.error("Exception during json processing", e);
+            }
         }
     }
 

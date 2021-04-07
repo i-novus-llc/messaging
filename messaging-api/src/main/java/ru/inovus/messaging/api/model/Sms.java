@@ -8,10 +8,10 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Sms {
     private String phoneNumber;
+    //if null, message will be send immediately
     private LocalDateTime timeToSend;
     private String templateCode;
     private Map<String, Object> placeholders;
-    private Boolean sendImmediately;
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -43,13 +43,5 @@ public class Sms {
 
     public void setTimeToSend(LocalDateTime timeToSend) {
         this.timeToSend = timeToSend;
-    }
-
-    public Boolean getSendImmediately() {
-        return sendImmediately;
-    }
-
-    public void setSendImmediately(Boolean sendImmediately) {
-        this.sendImmediately = sendImmediately;
     }
 }

@@ -15,7 +15,6 @@
  */
 package ru.inovus.messaging.api.rest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -37,5 +36,5 @@ public interface SchedulerRest {
     @Path("/scheduled")
     @ApiOperation("Отправка сообщения")
     @ApiResponse(code = 200, message = "SMS запланировано")
-    void createScheduledMessage(Sms sms) throws JsonProcessingException;
+    void createScheduledMessage(Sms sms);
 }
