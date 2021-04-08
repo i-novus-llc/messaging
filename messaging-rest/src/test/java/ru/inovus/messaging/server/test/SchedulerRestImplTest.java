@@ -31,7 +31,7 @@ import static org.mockito.Mockito.verify;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = BackendApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
-        properties = {"spring.cloud.consul.config.enabled=false",
+        properties = {"spring.cloud.consul.config.enabled=false", "spring.liquibase.change-log: classpath:/messaging-db/test-base-changelog.xml",
                 "spring.liquibase.contexts=test"})
 @EnableEmbeddedPg
 public class SchedulerRestImplTest {
