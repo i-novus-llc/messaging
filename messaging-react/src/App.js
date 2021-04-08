@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import N2O from 'n2o-framework';
-import { authProvider } from 'n2o-auth';
-import createFactoryConfigLight from "n2o-framework/lib/core/factory/createFactoryConfigLight";
+import {authProvider} from 'n2o-auth';
 
 const config = {
   security: {
