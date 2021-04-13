@@ -6,13 +6,6 @@
     </list>
 
     <fields>
-        <field id="id" domain="integer" name="Идентификатор">
-            <select>id</select>
-            <filters>
-                <eq filter-id="id">id={id}</eq>
-            </filters>
-        </field>
-
         <field id="recipient" domain="string" name="Получатель">
             <select>recipient</select>
             <filters>
