@@ -7,7 +7,7 @@
 
     <fields>
         <field id="id">
-            <select mapping="[id]"/>
+            <select mapping="[username]"/>
         </field>
         <field id="recipient" domain="string">
             <select mapping="[username]"/>
