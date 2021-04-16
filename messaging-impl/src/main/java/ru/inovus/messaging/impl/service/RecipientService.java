@@ -1,7 +1,7 @@
 package ru.inovus.messaging.impl.service;
 
-import org.jooq.*;
 import org.jooq.Record;
+import org.jooq.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
@@ -25,7 +25,6 @@ public class RecipientService {
     private static final RecordMapper<Record, Recipient> MAPPER = rec -> {
         RecipientRecord record = rec.into(RECIPIENT);
         Recipient recipient = new Recipient();
-        recipient.setId(record.getId());
         recipient.setEmail(record.getEmail());
         recipient.setMessageId(record.getMessageId());
         recipient.setReadAt(record.getReadAt());

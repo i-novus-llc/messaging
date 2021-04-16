@@ -1,7 +1,7 @@
 package ru.inovus.messaging.impl.service;
 
-import org.jooq.*;
 import org.jooq.Record;
+import org.jooq.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,10 @@ import ru.inovus.messaging.impl.jooq.tables.records.ComponentRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
 import ru.inovus.messaging.impl.util.DateTimeUtil;
 
-import java.time.*;
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -152,7 +155,6 @@ public class MessageService {
                 .where(RECIPIENT.MESSAGE_ID.eq(messageId))
                 .fetch().map(r -> {
                     Recipient recipient = new Recipient();
-                    recipient.setId(r.getId());
                     recipient.setMessageId(r.getMessageId());
                     recipient.setReadAt(r.getReadAt());
                     recipient.setRecipient(r.getRecipient());

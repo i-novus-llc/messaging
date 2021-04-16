@@ -15,6 +15,7 @@
  */
 package ru.inovus.messaging.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,11 +25,11 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Recipient implements Serializable {
 
     private static final long serialVersionUID = 4960064989162334509L;
 
-    private Long id;
     private String recipient;
     private LocalDateTime readAt;
     private UUID messageId;
