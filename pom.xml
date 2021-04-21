@@ -48,8 +48,15 @@
     </organization>
 
     <modules>
+        <module>messaging-admin-frontend</module>
+        <module>messaging-admin-web</module>
         <module>messaging-api</module>
         <module>messaging-client</module>
+        <module>messaging-impl</module>
+        <module>messaging-rest</module>
+        <module>messaging-support-activemq</module>
+        <module>messaging-support-kafka</module>
+        <module>messaging-web</module>
     </modules>
 
     <dependencyManagement>
@@ -123,21 +130,6 @@
     </dependencyManagement>
 
     <profiles>
-        <profile>
-            <id>build-all-modules</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <modules>
-                <module>messaging-impl</module>
-                <module>messaging-rest</module>
-                <module>messaging-admin-web</module>
-                <module>messaging-admin-frontend</module>
-                <module>messaging-support-activemq</module>
-                <module>messaging-support-kafka</module>
-                <module>messaging-web</module>
-            </modules>
-        </profile>
         <profile>
             <id>release</id>
             <activation>
