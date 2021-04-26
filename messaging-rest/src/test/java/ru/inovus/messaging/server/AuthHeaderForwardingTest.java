@@ -1,4 +1,4 @@
-package ru.inovus.messaging.server.test;
+package ru.inovus.messaging.server;
 
 import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
 import org.hamcrest.MatcherAssert;
@@ -8,14 +8,14 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.*;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
-import ru.inovus.messaging.server.BackendApplication;
 
 import java.util.Collections;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = BackendApplication.class,
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = TestApp.class,
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
         properties = {"spring.main.allow-bean-definition-overriding=true",
                 "server.port=8456",
@@ -24,6 +24,7 @@ import java.util.Collections;
                 "spring.cloud.consul.config.enabled=false",
                 "spring.liquibase.contexts=test"})
 @EnableEmbeddedPg
+@TestPropertySource("classpath:application.properties")
 public class AuthHeaderForwardingTest {
 
     @LocalServerPort

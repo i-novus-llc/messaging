@@ -1,5 +1,4 @@
-package ru.inovus.messaging.server.test;
-
+package ru.inovus.messaging.server;
 
 import net.n2oapp.platform.test.autoconfigure.DefinePort;
 import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
@@ -15,7 +14,6 @@ import ru.inovus.messaging.api.model.AlertType;
 import ru.inovus.messaging.api.model.InfoType;
 import ru.inovus.messaging.api.model.UserSetting;
 import ru.inovus.messaging.api.rest.UserSettingRest;
-import ru.inovus.messaging.server.BackendApplication;
 
 import java.util.Collections;
 
@@ -23,7 +21,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(
-        classes = {BackendApplication.class},
+        classes = {TestApp.class},
         properties = {"cxf.jaxrs.client.classes-scan=true",
                 "cxf.jaxrs.client.classes-scan-packages=ru.i_novus.messaging.api",
                 "spring.liquibase.change-log: classpath:/messaging-db/test-base-changelog.xml",
@@ -46,7 +44,6 @@ public class UserSettingServiceTest {
     private static final String USER_SETTING_IS_SEND_EMAIL = "EMAIL";
 
     private static final String USER_SETTING_ALERT_TYPE = "BLOCKER";
-
 
     private UserSettingRest userSettingRest;
 

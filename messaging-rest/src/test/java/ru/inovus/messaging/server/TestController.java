@@ -1,4 +1,4 @@
-package ru.inovus.messaging.server.test;
+package ru.inovus.messaging.server;
 
 import net.n2oapp.security.admin.api.model.User;
 import org.springframework.data.domain.Page;
