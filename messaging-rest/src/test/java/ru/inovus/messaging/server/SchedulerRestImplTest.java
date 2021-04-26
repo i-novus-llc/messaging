@@ -1,4 +1,4 @@
-package ru.inovus.messaging.server.test;
+package ru.inovus.messaging.server;
 
 import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
 import org.junit.Test;
@@ -15,7 +15,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.inovus.messaging.api.model.Sms;
-import ru.inovus.messaging.server.BackendApplication;
 import ru.inovus.messaging.server.rest.MessageRestImpl;
 import ru.inovus.messaging.server.rest.SchedulerRestImpl;
 
@@ -29,7 +28,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = BackendApplication.class,
+@SpringBootTest(classes = TestApp.class,
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
         properties = {"spring.cloud.consul.config.enabled=false", "spring.liquibase.change-log: classpath:/messaging-db/test-base-changelog.xml",
                 "spring.liquibase.contexts=test"})
