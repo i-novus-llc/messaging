@@ -3,9 +3,9 @@ version: "3.6"
 services:
   backend:
     build:
-      context: messaging-rest
+      context: messaging-backend
       args:
-        JAR_FILE: target/messaging-rest.jar
+        JAR_FILE: target/messaging-backend.jar
 
   messaging-frontend:
     build:

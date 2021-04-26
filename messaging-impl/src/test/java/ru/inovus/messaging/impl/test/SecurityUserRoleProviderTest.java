@@ -16,7 +16,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.inovus.messaging.api.criteria.RoleCriteria;
 import ru.inovus.messaging.api.criteria.UserCriteria;
-import ru.inovus.messaging.impl.SecurityAdminUserRoleProvider;
+import ru.inovus.messaging.impl.provider.SecurityAdminUserRoleProvider;
 
 import java.util.List;
 

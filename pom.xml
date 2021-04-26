@@ -5,17 +5,17 @@
     <groupId>ru.i-novus.messaging</groupId>
     <artifactId>messaging-pom</artifactId>
     <packaging>pom</packaging>
-    <version>3.38-SNAPSHOT</version>
+    <version>3.39-SNAPSHOT</version>
 
     <parent>
         <groupId>net.n2oapp.platform</groupId>
         <artifactId>n2o-boot-platform-parent</artifactId>
-        <version>4.2.4</version>
+        <version>4.2.6</version>
         <relativePath />
     </parent>
 
     <properties>
-        <n2o.version>7.12.1</n2o.version>
+        <n2o.version>7.15.0</n2o.version>
         <access.version>4.20</access.version>
         <config.server.enable>false</config.server.enable>
         <audit.version>2.3.2</audit.version>
@@ -48,8 +48,16 @@
     </organization>
 
     <modules>
+        <module>messaging-admin-frontend</module>
+        <module>messaging-admin-web</module>
         <module>messaging-api</module>
         <module>messaging-client</module>
+        <module>messaging-impl</module>
+        <module>messaging-support-activemq</module>
+        <module>messaging-support-kafka</module>
+        <module>messaging-web</module>
+        <module>messaging-backend</module>
+        <module>messaging-rest</module>
     </modules>
 
     <dependencyManagement>
@@ -123,21 +131,6 @@
     </dependencyManagement>
 
     <profiles>
-        <profile>
-            <id>build-all-modules</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <modules>
-                <module>messaging-impl</module>
-                <module>messaging-rest</module>
-                <module>messaging-admin-web</module>
-                <module>messaging-admin-frontend</module>
-                <module>messaging-support-activemq</module>
-                <module>messaging-support-kafka</module>
-                <module>messaging-web</module>
-            </modules>
-        </profile>
         <profile>
             <id>release</id>
             <activation>

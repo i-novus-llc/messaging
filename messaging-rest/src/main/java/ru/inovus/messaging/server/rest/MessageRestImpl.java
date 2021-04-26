@@ -15,6 +15,10 @@ import ru.inovus.messaging.api.queue.MqProvider;
 import ru.inovus.messaging.api.rest.MessageRest;
 import ru.inovus.messaging.api.rest.UserSettingRest;
 import ru.inovus.messaging.impl.*;
+import ru.inovus.messaging.impl.provider.ConfigurableUserRoleProvider;
+import ru.inovus.messaging.impl.service.MessageService;
+import ru.inovus.messaging.impl.service.MessageSettingService;
+import ru.inovus.messaging.impl.service.RecipientService;
 
 import java.util.*;
 import java.util.stream.Collectors;

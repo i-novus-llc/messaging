@@ -8,7 +8,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.UnreadMessagesInfo;
-import ru.inovus.messaging.impl.FeedService;
+import ru.inovus.messaging.impl.service.FeedService;
 
 import java.security.Principal;
 import java.util.Collection;

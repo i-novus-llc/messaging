@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import ru.inovus.messaging.api.criteria.MessageSettingCriteria;
 import ru.inovus.messaging.api.model.MessageSetting;
 import ru.inovus.messaging.api.rest.MessageSettingRest;
-import ru.inovus.messaging.impl.MessageSettingService;
+import ru.inovus.messaging.impl.service.MessageSettingService;
 
 @Controller
 public class MessageSettingRestImpl implements MessageSettingRest {

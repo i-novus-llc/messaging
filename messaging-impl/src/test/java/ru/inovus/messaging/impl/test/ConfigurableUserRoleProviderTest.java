@@ -18,7 +18,7 @@ import ru.inovus.messaging.api.criteria.RoleCriteria;
 import ru.inovus.messaging.api.criteria.UserCriteria;
 import ru.inovus.messaging.api.model.Role;
 import ru.inovus.messaging.api.model.User;
-import ru.inovus.messaging.impl.ConfigurableUserRoleProvider;
+import ru.inovus.messaging.impl.provider.ConfigurableUserRoleProvider;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
