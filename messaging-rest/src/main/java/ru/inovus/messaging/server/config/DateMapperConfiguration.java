@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Configuration
 public class DateMapperConfiguration {
     @Bean
-    public MapperConfigurer DateMapperConfigurer() {
+    public MapperConfigurer dateMapperConfigurer() {
         return mapper -> {
             SimpleModule module = new SimpleModule();
             module.addSerializer(new LocalDateTimeSerializer());
