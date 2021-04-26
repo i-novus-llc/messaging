@@ -1,4 +1,4 @@
-package ru.inovus.messaging.impl;
+package ru.inovus.messaging.impl.provider;
 
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -16,7 +16,8 @@ import ru.inovus.messaging.api.criteria.RoleCriteria;
 import ru.inovus.messaging.api.criteria.UserCriteria;
 import ru.inovus.messaging.api.model.Role;
 import ru.inovus.messaging.api.model.User;
-import ru.inovus.messaging.impl.xml.XmlMapping;
+import ru.inovus.messaging.impl.UserRoleProvider;
+import ru.inovus.messaging.impl.provider.xml.XmlMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBException;

@@ -1,4 +1,4 @@
-package ru.inovus.messaging.impl;
+package ru.inovus.messaging.impl.provider;
 
 import net.n2oapp.security.admin.rest.api.RoleRestService;
 import net.n2oapp.security.admin.rest.api.UserRestService;
@@ -12,6 +12,7 @@ import ru.inovus.messaging.api.criteria.RoleCriteria;
 import ru.inovus.messaging.api.criteria.UserCriteria;
 import ru.inovus.messaging.api.model.Role;
 import ru.inovus.messaging.api.model.User;
+import ru.inovus.messaging.impl.UserRoleProvider;
 
 import java.util.Collections;
 import java.util.stream.Collectors;

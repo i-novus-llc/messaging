@@ -9,7 +9,7 @@ import ru.inovus.messaging.api.UnreadMessagesInfo;
 import ru.inovus.messaging.api.criteria.FeedCriteria;
 import ru.inovus.messaging.api.model.Feed;
 import ru.inovus.messaging.api.rest.FeedRest;
-import ru.inovus.messaging.impl.FeedService;
+import ru.inovus.messaging.impl.service.FeedService;
 import ru.inovus.messaging.server.MessageController;
 
 import java.util.UUID;

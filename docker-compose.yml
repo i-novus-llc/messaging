@@ -25,11 +25,16 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db/postgres
       SPRING_CLOUD_CONSUL_HOST: consul-agent.local
       SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
+      SEC_ADMIN_REST_URL: http://yandex.develop:8278/api
       JAVA_OPTS: -Xmx200m
+      SERVER_PORT: 8080
+      MESSAGING_USER_PROVIDER_URL: http://yandex.develop:8278/api/users
+      MESSAGING_ROLE_PROVIDER_URL: http://yandex.develop:8278/api/role
+      SPRING_ACTIVEMQ_BROKER_URL: tcp://activemq:61616
     depends_on:
     - db
     ports:
-    - "8080"
+    - "8112:8080"
     deploy:
       resources:
         limits:
@@ -43,11 +48,17 @@ services:
       SPRING_APPLICATION_NAME: "messaging-admin-frontend"
       SPRING_CLOUD_CONSUL_HOST: consul-agent.local
       SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
+      SECURITY_OAUTH2_AUTH_SERVER_URI: http://yandex.develop:8278
+      SECURITY_OAUTH2_CLIENT_CLIENT_ID: frontend
+      SECURITY_OAUTH2_CLIENT_CLIENT_SECRET: ca12a678-b275-499b-a778-750bad4d0a77
+      ACCESS_SERVICE_URL: http://yandex.develop:8278/api
+      MESSAGING_BACKEND_PATH: http://backend:8080/api
+      MESSAGING_USER_ADMIN_URL: http://yandex.develop:8277
       JAVA_OPTS: -Xmx200m
     depends_on:
     - backend
     ports:
-    - "8080"
+    - "8111:8080"
     deploy:
       resources:
         limits:
@@ -58,7 +69,7 @@ services:
 
   react:
     ports:
-    - "80"
+    - "8110:80"
     deploy:
       resources:
         limits:
@@ -66,6 +77,13 @@ services:
           cpus: '0.5'
       restart_policy:
         max_attempts: 3
+    depends_on:
+      - messaging-frontend
+
+  activemq:
+    image: rmohr/activemq:latest
+    ports:
+      - "8113:61616"
 
 volumes:
   messaging-db-data:

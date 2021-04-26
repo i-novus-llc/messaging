@@ -1,4 +1,4 @@
-package ru.inovus.messaging.impl;
+package ru.inovus.messaging.impl.service;
 
 import org.jooq.Record;
 import org.jooq.*;

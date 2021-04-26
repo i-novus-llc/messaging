@@ -1,4 +1,4 @@
-package ru.inovus.messaging.impl.xml;
+package ru.inovus.messaging.impl.provider.xml;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

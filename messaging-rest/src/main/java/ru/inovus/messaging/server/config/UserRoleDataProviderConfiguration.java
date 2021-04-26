@@ -9,8 +9,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ResourceLoader;
-import ru.inovus.messaging.impl.ConfigurableUserRoleProvider;
-import ru.inovus.messaging.impl.SecurityAdminUserRoleProvider;
+import ru.inovus.messaging.impl.provider.ConfigurableUserRoleProvider;
+import ru.inovus.messaging.impl.provider.SecurityAdminUserRoleProvider;
 import ru.inovus.messaging.impl.UserRoleProvider;
 
 import javax.xml.bind.JAXBException;
