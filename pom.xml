@@ -57,6 +57,7 @@
         <module>messaging-support-kafka</module>
         <module>messaging-web</module>
         <module>messaging-backend</module>
+        <module>messaging-rest</module>
     </modules>
 
     <dependencyManagement>
