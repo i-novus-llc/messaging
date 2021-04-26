@@ -50,6 +50,7 @@
     <modules>
         <module>messaging-api</module>
         <module>messaging-client</module>
+        <module>messaging-backend</module>
     </modules>
 
     <dependencyManagement>
@@ -136,6 +137,7 @@
                 <module>messaging-support-activemq</module>
                 <module>messaging-support-kafka</module>
                 <module>messaging-web</module>
+                <module>messaging-backend</module>
             </modules>
         </profile>
         <profile>

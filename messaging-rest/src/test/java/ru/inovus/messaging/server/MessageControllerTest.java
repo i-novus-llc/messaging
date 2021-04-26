@@ -1,4 +1,4 @@
-package ru.inovus.messaging.server.test;
+package ru.inovus.messaging.server;
 
 import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
 import org.junit.Before;
@@ -14,7 +14,7 @@ import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 import org.springframework.web.socket.sockjs.client.SockJsClient;
@@ -23,7 +23,6 @@ import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 import ru.inovus.messaging.api.UnreadMessagesInfo;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.impl.FeedService;
-import ru.inovus.messaging.server.BackendApplication;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -37,8 +36,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.times;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = BackendApplication.class,
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = TestApp.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {"spring.main.allow-bean-definition-overriding=true",
                 "spring.cloud.consul.config.enabled=false",
@@ -196,5 +195,4 @@ public class MessageControllerTest {
             completableFuture.complete(payload);
         }
     }
-
 }

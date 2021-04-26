@@ -37,7 +37,7 @@ import java.util.*;
 @Configuration
 @EnableWebSecurity
 @EnableResourceServer
-public class SecurityConfig extends ResourceServerConfigurerAdapter {
+public class SecurityConfiguration extends ResourceServerConfigurerAdapter {
 
     private static final String WS_URL_PATTERN = "/ws/**";
 
@@ -156,5 +156,4 @@ public class SecurityConfig extends ResourceServerConfigurerAdapter {
             }
         };
     }
-
 }
