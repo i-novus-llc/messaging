@@ -2,8 +2,8 @@ package ru.inovus.messaging.server.rest;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-import ru.inovus.messaging.api.MessageSetting;
 import ru.inovus.messaging.api.criteria.MessageSettingCriteria;
+import ru.inovus.messaging.api.model.MessageSetting;
 import ru.inovus.messaging.api.rest.MessageSettingRest;
 import ru.inovus.messaging.impl.service.MessageSettingService;
 

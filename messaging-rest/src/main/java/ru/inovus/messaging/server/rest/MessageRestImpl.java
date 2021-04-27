@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
-import ru.inovus.messaging.api.MessageOutbox;
-import ru.inovus.messaging.api.MessageSetting;
 import ru.inovus.messaging.api.criteria.*;
 import ru.inovus.messaging.api.model.*;
 import ru.inovus.messaging.api.queue.DestinationResolver;
@@ -136,7 +134,7 @@ public class MessageRestImpl implements MessageRest {
 
         setUsersAndMsgSettings(templateMessageOutbox, usersWithUserSetting, usersWithDefaultMsgSetting);
 
-        //Рассылка пользоватлеям с настройками
+        //Рассылка пользователям с настройками
         for (Map.Entry<String, UserSetting> entry : usersWithUserSetting.entrySet()) {
             UserSetting userSetting = entry.getValue();
             if (userSetting.getDisabled() == null || !userSetting.getDisabled()) {
@@ -145,7 +143,7 @@ public class MessageRestImpl implements MessageRest {
                 send(message);
             }
         }
-        //Рассылка пользоватлеям без настроек
+        //Рассылка пользователям без настроек
         if (!CollectionUtils.isEmpty(usersWithDefaultMsgSetting)) {
             Message message = buildMessage(ms, usersWithDefaultMsgSetting, null, templateMessageOutbox);
             save(message);

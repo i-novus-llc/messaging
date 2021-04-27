@@ -1,12 +1,13 @@
 package ru.inovus.messaging.server;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.*;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import ru.inovus.messaging.api.UnreadMessagesInfo;
 import ru.inovus.messaging.api.model.Message;
+import ru.inovus.messaging.api.model.UnreadMessagesInfo;
 import ru.inovus.messaging.impl.service.FeedService;
 
 import java.security.Principal;

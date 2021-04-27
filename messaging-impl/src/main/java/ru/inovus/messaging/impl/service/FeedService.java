@@ -1,17 +1,13 @@
 package ru.inovus.messaging.impl.service;
 
-import org.jooq.*;
 import org.jooq.Record;
+import org.jooq.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.inovus.messaging.api.UnreadMessagesInfo;
 import ru.inovus.messaging.api.criteria.FeedCriteria;
-import ru.inovus.messaging.api.model.Component;
-import ru.inovus.messaging.api.model.Feed;
-import ru.inovus.messaging.api.model.InfoType;
-import ru.inovus.messaging.api.model.RecipientType;
+import ru.inovus.messaging.api.model.*;
 import ru.inovus.messaging.impl.jooq.tables.records.ComponentRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.RecipientRecord;

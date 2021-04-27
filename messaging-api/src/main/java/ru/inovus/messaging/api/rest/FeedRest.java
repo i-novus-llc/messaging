@@ -19,9 +19,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import org.springframework.data.domain.Page;
-import ru.inovus.messaging.api.UnreadMessagesInfo;
 import ru.inovus.messaging.api.criteria.FeedCriteria;
 import ru.inovus.messaging.api.model.Feed;
+import ru.inovus.messaging.api.model.UnreadMessagesInfo;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

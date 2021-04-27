@@ -1,4 +1,6 @@
 databaseChangeLog:
+  - include:
+      file: quartz-db/changelog/quartz-init.xml
   - changeSet:
       id: 1
       author: mhafizov

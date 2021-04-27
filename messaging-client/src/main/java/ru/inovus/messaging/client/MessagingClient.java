@@ -23,7 +23,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 import ru.inovus.messaging.api.ActionStatus;
-import ru.inovus.messaging.api.MessageOutbox;
+import ru.inovus.messaging.api.model.MessageOutbox;
 
 import java.nio.charset.Charset;
 import java.time.Clock;

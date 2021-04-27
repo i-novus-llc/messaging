@@ -24,7 +24,8 @@ import java.io.Serializable;
 @JsonDeserialize(using = InfoTypeDeserializer.class)
 public enum InfoType implements Serializable {
     NOTICE("Центр уведомлений"),
-    EMAIL("Электронная почта");
+    EMAIL("Электронная почта"),
+    SMS("СМС уведомления");
 
     private String name;
 

@@ -8,5 +8,4 @@
 
     <include file="changelog/MESSAGING-110.xml" relativeToChangelogFile="true"/>
     <include file="changelog/MESSAGING-39.xml" relativeToChangelogFile="true"/>
-
 </databaseChangeLog>

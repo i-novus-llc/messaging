@@ -20,8 +20,8 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 import org.springframework.web.socket.sockjs.client.SockJsClient;
 import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
-import ru.inovus.messaging.api.UnreadMessagesInfo;
 import ru.inovus.messaging.api.model.Message;
+import ru.inovus.messaging.api.model.UnreadMessagesInfo;
 import ru.inovus.messaging.impl.service.FeedService;
 
 import java.lang.reflect.Type;

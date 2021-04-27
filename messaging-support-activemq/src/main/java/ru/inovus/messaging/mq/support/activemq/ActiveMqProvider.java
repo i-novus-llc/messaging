@@ -16,7 +16,7 @@ import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.stereotype.Component;
-import ru.inovus.messaging.api.MessageOutbox;
+import ru.inovus.messaging.api.model.MessageOutbox;
 import ru.inovus.messaging.api.queue.MqConsumer;
 import ru.inovus.messaging.api.queue.MqProvider;
 import ru.inovus.messaging.api.queue.QueueMqConsumer;
