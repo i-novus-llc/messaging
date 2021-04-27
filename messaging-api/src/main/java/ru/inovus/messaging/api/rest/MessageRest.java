@@ -18,6 +18,7 @@ package ru.inovus.messaging.api.rest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.Authorization;
 import org.springframework.data.domain.Page;
 import ru.inovus.messaging.api.criteria.MessageCriteria;
 import ru.inovus.messaging.api.criteria.RecipientCriteria;
@@ -29,7 +30,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.UUID;
 
-@Api("Уведомления")
+@Api(value = "Уведомления", authorizations = @Authorization(value = "oauth2"))
 @Path("/messages")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)

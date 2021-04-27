@@ -18,6 +18,7 @@ package ru.inovus.messaging.api.rest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.Authorization;
 import ru.inovus.messaging.api.model.Sms;
 
 import javax.validation.Valid;
@@ -27,7 +28,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-@Api("Пользователи")
+@Api(value = "Отправка сообщения по расписанию", authorizations = @Authorization(value = "oauth2"))
 @Path("messages/")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)

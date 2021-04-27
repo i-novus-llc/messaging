@@ -39,8 +39,6 @@ import java.util.*;
 @EnableResourceServer
 public class SecurityConfiguration extends ResourceServerConfigurerAdapter {
 
-    private static final String WS_URL_PATTERN = "/ws/**";
-
     //    можно взять https://keycloak.i-novus.ru/auth/realms/DOMRF/protocol/openid-connect/certs
     @Value("${novus.messaging.keycloak.modulus}")
     private String modulus;
@@ -87,7 +85,7 @@ public class SecurityConfiguration extends ResourceServerConfigurerAdapter {
     }
 
     @Override
-    public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
+    public void configure(ResourceServerSecurityConfigurer resources) {
         resources.tokenServices(tokenServices);
         resources.resourceId(resourceId);
         resources.authenticationDetailsSource(new OAuth2AuthenticationDetailsSource());
@@ -95,18 +93,13 @@ public class SecurityConfiguration extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.requestMatchers()
-                .antMatchers(WS_URL_PATTERN)
+        http.authorizeRequests()
+                .antMatchers("/api/info", "/api/api-docs", "/api/swagger**").permitAll()
+                .anyRequest().authenticated()
                 .and()
-                .authorizeRequests()
-                .antMatchers(WS_URL_PATTERN).authenticated()
-                .antMatchers("/api/**").permitAll()
-                .anyRequest().denyAll();
-
-        http.sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .csrf().disable();
+                .csrf().disable()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
     @Bean
