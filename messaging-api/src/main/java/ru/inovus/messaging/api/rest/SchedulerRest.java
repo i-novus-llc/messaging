@@ -29,7 +29,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 @Api(value = "Отправка сообщения по расписанию", authorizations = @Authorization(value = "oauth2"))
-@Path("messages/")
+@Path("/messages")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public interface SchedulerRest {
