@@ -29,8 +29,10 @@
             </switch>
             <click>
                 <open-page page-id="messaging_message_user_view"
-                           route="/view" page-name="Просмотр уведомления от {sentAtFormatted}"
-                           detail-field-id="id"/>
+                           route="/:id/view"
+                           page-name="Просмотр уведомления от {sentAtFormatted}">
+                    <path-param name="id" value="{id}"/>
+                </open-page>
             </click>
         </rows>
         <toolbar>
