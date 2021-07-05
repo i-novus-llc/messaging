@@ -26,3 +26,19 @@ security.enabled: true
 Если `security.enabled=false`, то в `X-Auth-Token` надо передать `username` (см. `NoAuthAuthenticator`).
 
 Для передачи токена в рест сервис через feign client, гуглить `feign client access token relay`.
+
+# Миграция
+
+С версии 3.39 изменены названия настроек для задания публичного ключа в сервисе messaging-backend c
+
+```
+novus.messaging.keycloak.modulus
+novus.messaging.keycloak.exponent
+```
+
+на
+
+```
+novus.messaging.jwt.verifier-key.modulus
+novus.messaging.jwt.verifier-key.exponent
+```
