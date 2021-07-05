@@ -40,9 +40,9 @@ import java.util.*;
 public class SecurityConfiguration extends ResourceServerConfigurerAdapter {
 
     //    можно взять https://keycloak.i-novus.ru/auth/realms/DOMRF/protocol/openid-connect/certs
-    @Value("${novus.messaging.keycloak.modulus}")
+    @Value("${novus.messaging.jwt.verifier-key.modulus}")
     private String modulus;
-    @Value("${novus.messaging.keycloak.exponent}")
+    @Value("${novus.messaging.jwt.verifier-key.exponent}")
     private String exponent;
     @Value("${novus.messaging.keycloak.resourceId}")
     private String resourceId;
