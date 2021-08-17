@@ -23,7 +23,7 @@
 
         <dependency>
             <groupId>ru.i-novus.messaging</groupId>
-            <artifactId>messaging-rest</artifactId>
+            <artifactId>messaging-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
 
