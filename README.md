@@ -30,8 +30,7 @@
 - `messaging-admin-web` - конфигурационные файлы N2O для администрирования уведомлений
 - `messaging-api` - общие интерфейсы и модели
 - `messaging-client` - java клиент для REST-сервиса уведомлений
-- `messaging-impl` - скрипты БД и общие классы имплементации для модуля -api
-- `messaging-rest` - REST-сервис уведомлений + websocket сервер
+- `messaging-impl` - скрипты БД и REST-сервис уведомлений + websocket сервер
 - `messaging-support-activemq` - модуль для поддержки работы уведомлений через ActiveMQ
 - `messaging-support-kafka` - модуль для поддержки работы уведомлений через Kafka
 - `messaging-web` - конфигурационные файлы N2O и классы для встраивания в другие N2O приложения
