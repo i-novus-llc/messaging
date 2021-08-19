@@ -71,7 +71,8 @@ public class MessageService {
                         message.getSentAt(), message.getSystemId(),
                         message.getComponent() != null ? message.getComponent().getId() : null,
                         message.getFormationType(), message.getRecipientType(), message.getNotificationType(), message.getObjectId(),
-                        message.getObjectType(), message.getChannelType().getId())
+                        message.getObjectType(),
+                        message.getChannelType() != null ? message.getChannelType().getId() : null)
                 .returning()
                 .fetch().get(0).getId();
         message.setId(id.toString());
@@ -105,14 +106,9 @@ public class MessageService {
                 .ifPresent(componentId -> conditions.add(MESSAGE.COMPONENT_ID.eq(componentId)));
         Optional.ofNullable(criteria.getSeverity())
                 .ifPresent(severity -> conditions.add(MESSAGE.SEVERITY.eq(severity)));
-        if (InfoType.EMAIL.equals(criteria.getChannelType())) {
-            Optional.ofNullable(criteria.getChannelType())
-                    .ifPresent(infoType -> conditions.add(MESSAGE.SEND_EMAIL.isTrue()));
-        }
-        if (InfoType.NOTICE.equals(criteria.getChannelType())) {
-            Optional.ofNullable(criteria.getChannelType())
-                    .ifPresent(infoType -> conditions.add(MESSAGE.SEND_NOTICE.isTrue()));
-        }
+        Optional.ofNullable(criteria.getChannelTypeId())
+                .ifPresent(channelTypeId -> conditions.add(MESSAGE.SEND_CHANNEL.eq(channelTypeId)));
+
         //TODO: UTC?
         Optional.ofNullable(sentAtBeginDateTime)
                 .ifPresent(start -> conditions.add(MESSAGE.SENT_AT.greaterOrEqual(start)));

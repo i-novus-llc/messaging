@@ -39,7 +39,7 @@ public class UserSettingCriteria extends BaseMessagingCriteria {
     private AlertType alertType;
 
     @QueryParam("channelType.id")
-    private InfoType channelType;
+    private String channelTypeId;
 
     @QueryParam("name")
     private String name;
@@ -82,12 +82,12 @@ public class UserSettingCriteria extends BaseMessagingCriteria {
         this.alertType = alertType;
     }
 
-    public InfoType getChannelType() {
-        return channelType;
+    public String getChannelTypeId() {
+        return channelTypeId;
     }
 
-    public void setChannelType(InfoType channelType) {
-        this.channelType = channelType;
+    public void setChannelTypeId(String channelTypeId) {
+        this.channelTypeId = channelTypeId;
     }
 
     public String getName() {

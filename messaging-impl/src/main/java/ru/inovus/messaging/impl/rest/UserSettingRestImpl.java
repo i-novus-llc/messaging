@@ -85,18 +85,10 @@ public class UserSettingRestImpl implements UserSettingRest {
                 USER_SETTING.ALERT_TYPE.isNotNull()
                     .and(USER_SETTING.ALERT_TYPE.eq(alertType))
                     .or(USER_SETTING.ALERT_TYPE.isNull().and(MESSAGE_SETTING.ALERT_TYPE.eq(alertType)))));
-        if (InfoType.EMAIL.equals(criteria.getChannelType())) {
-            Optional.ofNullable(criteria.getChannelType())
-                .ifPresent(infoType -> conditions.add(
-                    USER_SETTING.SEND_EMAIL.isNotNull().and(USER_SETTING.SEND_EMAIL.isTrue())
-                        .or(USER_SETTING.SEND_EMAIL.isNull().and(MESSAGE_SETTING.SEND_EMAIL.isTrue()))));
-        }
-        if (InfoType.NOTICE.equals(criteria.getChannelType())) {
-            Optional.ofNullable(criteria.getChannelType())
-                .ifPresent(infoType -> conditions.add(
-                    USER_SETTING.SEND_NOTICE.isNotNull().and(USER_SETTING.SEND_NOTICE.isTrue())
-                        .or(USER_SETTING.SEND_NOTICE.isNull().and(MESSAGE_SETTING.SEND_NOTICE.isTrue()))));
-        }
+        Optional.ofNullable(criteria.getChannelTypeId())
+                .ifPresent(channelTypeId -> conditions.add(
+                        USER_SETTING.SEND_CHANNEL.eq(channelTypeId)
+                        .or(MESSAGE_SETTING.SEND_CHANNEL.eq(channelTypeId))));
         conditions.add(MESSAGE_SETTING.IS_DISABLED.isFalse());
         Optional.ofNullable(criteria.getEnabled())
             .ifPresent(enabled -> conditions.add(USER_SETTING.IS_DISABLED.isNull().and(DSL.value(enabled))
@@ -173,8 +165,7 @@ public class UserSettingRestImpl implements UserSettingRest {
             dsl
                 .update(USER_SETTING)
                 .set(USER_SETTING.ALERT_TYPE, setting.getAlertType())
-                .set(USER_SETTING.SEND_NOTICE, setting.getChannelType() != null && setting.getChannelType().contains(InfoType.NOTICE))
-                .set(USER_SETTING.SEND_EMAIL, setting.getChannelType() != null && setting.getChannelType().contains(InfoType.EMAIL))
+                .set(USER_SETTING.SEND_CHANNEL, setting.getChannelType() != null ? setting.getChannelType().getId() : null)
                 .set(USER_SETTING.IS_DISABLED, setting.getDisabled())
                 .where(USER_SETTING.MSG_SETTING_ID.eq(msgSettingId))
                 .and(USER_SETTING.USER_ID.eq(user))
@@ -194,13 +185,12 @@ public class UserSettingRestImpl implements UserSettingRest {
 //           Если в таблице public.message_setting запись с переданным иден-ром есть, но со ссылкой на нее и указанными настройками пользователя создаем запись в таблице public.user_setting
             dsl
                 .insertInto(USER_SETTING)
-                .columns(USER_SETTING.USER_ID, USER_SETTING.ALERT_TYPE, USER_SETTING.SEND_NOTICE,
-                    USER_SETTING.SEND_EMAIL, USER_SETTING.IS_DISABLED, USER_SETTING.MSG_SETTING_ID)
+                .columns(USER_SETTING.USER_ID, USER_SETTING.ALERT_TYPE, USER_SETTING.SEND_CHANNEL,
+                    USER_SETTING.IS_DISABLED, USER_SETTING.MSG_SETTING_ID)
                 .values(
                     user,
                     setting.getAlertType(),
-                    setting.getChannelType() != null && setting.getChannelType().contains(InfoType.NOTICE),
-                    setting.getChannelType() != null && setting.getChannelType().contains(InfoType.EMAIL),
+                    setting.getChannelType() != null ? setting.getChannelType().getId() : null,
                     setting.getDisabled(),
                     msgSettingId
                 )

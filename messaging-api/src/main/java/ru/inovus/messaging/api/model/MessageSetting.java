@@ -27,7 +27,7 @@ public class MessageSetting implements Serializable {
     private String text;
     private Severity severity;
     private AlertType alertType;
-    private List<InfoType> channelType;
+    private ChannelType channelType;
     private FormationType formationType;
     private Component component;
     private String name;
@@ -81,11 +81,11 @@ public class MessageSetting implements Serializable {
         this.alertType = alertType;
     }
 
-    public List<InfoType> getChannelType() {
+    public ChannelType getChannelType() {
         return channelType;
     }
 
-    public void setChannelType(List<InfoType> channelType) {
+    public void setChannelType(ChannelType channelType) {
         this.channelType = channelType;
     }
 

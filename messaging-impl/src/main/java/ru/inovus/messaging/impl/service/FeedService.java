@@ -37,7 +37,6 @@ public class FeedService {
     public Page<Feed> getMessageFeed(String recipient, FeedCriteria criteria) {
         List<Condition> conditions = new ArrayList<>();
         conditions.add(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL).or(RECIPIENT.ID.isNotNull()));
-        conditions.add(MESSAGE.SEND_NOTICE.isTrue());
         Optional.ofNullable(criteria.getSystemId())
                 .ifPresent(systemId -> conditions.add(MESSAGE.SYSTEM_ID.eq(systemId)));
         Optional.ofNullable(criteria.getComponentId())
@@ -154,8 +153,7 @@ public class FeedService {
                         MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL).and(RECIPIENT.ID.isNull())
                                 .or(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.USER).and(RECIPIENT.READ_AT.isNull())
                                         .and(RECIPIENT.RECIPIENT_.eq(recipient))),
-                        MESSAGE.SYSTEM_ID.eq(systemId),
-                        MESSAGE.SEND_NOTICE.isTrue())
+                        MESSAGE.SYSTEM_ID.eq(systemId))
                 .fetchOne().value1();
         return new UnreadMessagesInfo(count);
     }
