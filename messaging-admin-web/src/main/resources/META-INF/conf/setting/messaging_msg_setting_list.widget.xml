@@ -28,7 +28,7 @@
                 </input-select>
             </col>
             <col>
-                <input-select id="infoType" label="Информирование" query-id="messaging_channels"/>
+                <input-select id="channelType" label="Информирование" query-id="messaging_channels"/>
             </col>
         </row>
         <row>
@@ -64,7 +64,7 @@
         <column text-field-id="code" label="Код шаблона"/>
         <column text-field-id="severity.name" label="Уровень важности" sorting-direction="desc"/>
         <column text-field-id="alertType.name" label="Способ отображения"/>
-        <column text-field-id="infoType" label="Информирование">
+        <column text-field-id="channelType" label="Информирование">
             <list label-field-id="name"/>
         </column>
         <column text-field-id="formationType.name" label="Тип уведомления"/>

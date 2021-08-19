@@ -6,11 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @ApiModel("Тип канала отправки уведомлений")
-public class ChannelType {
+public class ChannelType implements Serializable {
     @ApiModelProperty("Идентификатор канала")
     private String id;
     @ApiModelProperty("Наименование канала")

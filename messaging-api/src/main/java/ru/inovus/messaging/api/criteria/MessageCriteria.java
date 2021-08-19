@@ -37,8 +37,8 @@ public class MessageCriteria extends BaseMessagingCriteria {
     private LocalDateTime sentAtEnd;
     @QueryParam("severity.id")
     private Severity severity;
-    @QueryParam("infoType.id")
-    private InfoType infoType;
+    @QueryParam("channelType.id")
+    private InfoType channelType;
     @QueryParam("component.id")
     private Integer componentId;
 }

@@ -34,14 +34,14 @@ public class MessageSettingService {
         messageSetting.setName(r.getName());
         messageSetting.setAlertType(r.getAlertType());
         messageSetting.setSeverity(r.getSeverity());
-        List<InfoType> infoTypes = new ArrayList<>();
+        List<InfoType> channelType = new ArrayList<>();
         if (r.getSendNotice() != null && r.getSendNotice()) {
-            infoTypes.add(InfoType.NOTICE);
+            channelType.add(InfoType.NOTICE);
         }
         if (r.getSendEmail() != null && r.getSendEmail()) {
-            infoTypes.add(InfoType.EMAIL);
+            channelType.add(InfoType.EMAIL);
         }
-        messageSetting.setInfoType(infoTypes);
+        messageSetting.setChannelType(channelType);
         messageSetting.setCaption(r.getCaption());
         messageSetting.setText(r.getText());
         messageSetting.setComponent(r.getComponentId() != null ?
@@ -65,12 +65,12 @@ public class MessageSettingService {
                 .ifPresent(severity -> conditions.add(MESSAGE_SETTING.SEVERITY.eq(severity)));
         Optional.ofNullable(criteria.getAlertType())
                 .ifPresent(alertType -> conditions.add(MESSAGE_SETTING.ALERT_TYPE.eq(alertType)));
-        if (InfoType.EMAIL.equals(criteria.getInfoType())) {
-            Optional.ofNullable(criteria.getInfoType())
+        if (InfoType.EMAIL.equals(criteria.getChannelType())) {
+            Optional.ofNullable(criteria.getChannelType())
                     .ifPresent(infoType -> conditions.add(MESSAGE_SETTING.SEND_EMAIL.isTrue()));
         }
-        if (InfoType.NOTICE.equals(criteria.getInfoType())) {
-            Optional.ofNullable(criteria.getInfoType())
+        if (InfoType.NOTICE.equals(criteria.getChannelType())) {
+            Optional.ofNullable(criteria.getChannelType())
                     .ifPresent(infoType -> conditions.add(MESSAGE_SETTING.SEND_NOTICE.isTrue()));
         }
         Optional.ofNullable(criteria.getName()).filter(StringUtils::isNotBlank)
@@ -118,8 +118,8 @@ public class MessageSettingService {
                 )
                 .values(id.intValue(), messageSetting.getName(), messageSetting.getComponent() != null ? messageSetting.getComponent().getId() : null,
                         messageSetting.getAlertType(), messageSetting.getSeverity(),
-                        messageSetting.getInfoType() != null && messageSetting.getInfoType().contains(InfoType.EMAIL),
-                        messageSetting.getInfoType() != null && messageSetting.getInfoType().contains(InfoType.NOTICE),
+                        messageSetting.getChannelType() != null && messageSetting.getChannelType().contains(InfoType.EMAIL),
+                        messageSetting.getChannelType() != null && messageSetting.getChannelType().contains(InfoType.NOTICE),
                         messageSetting.getFormationType(), messageSetting.getDisabled(), messageSetting.getCaption(), messageSetting.getText(),
                         messageSetting.getCode())
                 .execute();
@@ -133,8 +133,8 @@ public class MessageSettingService {
                 .set(MESSAGE_SETTING.COMPONENT_ID, messageSetting.getComponent() != null ? messageSetting.getComponent().getId() : null)
                 .set(MESSAGE_SETTING.ALERT_TYPE, messageSetting.getAlertType())
                 .set(MESSAGE_SETTING.SEVERITY, messageSetting.getSeverity())
-                .set(MESSAGE_SETTING.SEND_EMAIL, messageSetting.getInfoType() != null && messageSetting.getInfoType().contains(InfoType.EMAIL))
-                .set(MESSAGE_SETTING.SEND_NOTICE, messageSetting.getInfoType() != null && messageSetting.getInfoType().contains(InfoType.NOTICE))
+                .set(MESSAGE_SETTING.SEND_EMAIL, messageSetting.getChannelType() != null && messageSetting.getChannelType().contains(InfoType.EMAIL))
+                .set(MESSAGE_SETTING.SEND_NOTICE, messageSetting.getChannelType() != null && messageSetting.getChannelType().contains(InfoType.NOTICE))
                 .set(MESSAGE_SETTING.FORMATION_TYPE, messageSetting.getFormationType())
                 .set(MESSAGE_SETTING.IS_DISABLED, messageSetting.getDisabled())
                 .set(MESSAGE_SETTING.CAPTION, messageSetting.getCaption())

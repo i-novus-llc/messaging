@@ -54,14 +54,14 @@
             <select mapping="['alertTypeName']"/>
         </field>
 
-        <field id="defaultInfoType" domain="object[]">
-            <select mapping="['defaultInfoType']"/>
+        <field id="defaultChannelType" domain="object">
+            <select mapping="['defaultChannelType']"/>
         </field>
 
-        <field id="infoType" domain="object[]">
-            <select mapping="['infoTypes']"/>
+        <field id="channelType" domain="object[]">
+            <select mapping="['channelType']"/>
             <filters>
-                <eq filter-id="infoType.id" domain="string">infoType.id={infoType.id}</eq>
+                <eq filter-id="channelType.id" domain="string">channelType.id={channelType.id}</eq>
             </filters>
         </field>
 

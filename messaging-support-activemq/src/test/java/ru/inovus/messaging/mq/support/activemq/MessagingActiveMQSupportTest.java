@@ -190,7 +190,7 @@ public class MessagingActiveMQSupportTest {
     private MessageOutbox createNotice() {
         MessageOutbox outbox = new MessageOutbox();
         Message message = new Message();
-        message.setInfoTypes(List.of(InfoType.NOTICE));
+        message.setChannelType(List.of(InfoType.NOTICE));
         message.setRecipientType(RecipientType.ALL);
         message.setSystemId(DEFAULT_SYSTEM_ID);
         outbox.setMessage(message);
@@ -200,7 +200,7 @@ public class MessagingActiveMQSupportTest {
     private MessageOutbox createEmailNotice() {
         MessageOutbox outbox = new MessageOutbox();
         Message message = new Message();
-        message.setInfoTypes(List.of(InfoType.EMAIL));
+        message.setChannelType(List.of(InfoType.EMAIL));
         message.setRecipientType(RecipientType.ALL);
         outbox.setMessage(message);
         return outbox;
@@ -209,7 +209,7 @@ public class MessagingActiveMQSupportTest {
     private MessageOutbox createAllNotice() {
         MessageOutbox outbox = new MessageOutbox();
         Message message = new Message();
-        message.setInfoTypes(List.of(InfoType.EMAIL, InfoType.NOTICE));
+        message.setChannelType(List.of(InfoType.EMAIL, InfoType.NOTICE));
         message.setRecipientType(RecipientType.USER);
         message.setRecipients(List.of(new Recipient("unique-user-id")));
         message.setSystemId(DEFAULT_SYSTEM_ID);
@@ -220,7 +220,7 @@ public class MessagingActiveMQSupportTest {
     private MessageOutbox createInvalidNotice() {
         MessageOutbox outbox = new MessageOutbox();
         Message message = new Message();
-        message.setInfoTypes(List.of());
+        message.setChannelType(List.of());
         message.setRecipientType(RecipientType.ALL);
         message.setSystemId(DEFAULT_SYSTEM_ID);
         outbox.setMessage(message);

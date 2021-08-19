@@ -171,12 +171,12 @@ public class FeedService {
         message.setText(record.getText());
         message.setSeverity(record.getSeverity());
         message.setSentAt(record.getSentAt());
-        List<InfoType> infoTypes = new ArrayList<>();
+        List<InfoType> channelType = new ArrayList<>();
         if (record.getSendNotice() != null && record.getSendNotice()) {
-            infoTypes.add(InfoType.NOTICE);
+            channelType.add(InfoType.NOTICE);
         }
         if (record.getSendEmail() != null && record.getSendEmail()) {
-            infoTypes.add(InfoType.EMAIL);
+            channelType.add(InfoType.EMAIL);
         }
         message.setSystemId(record.getSystemId());
         if (componentRecord != null) {

@@ -157,8 +157,8 @@ public class MessageRestImpl implements MessageRest {
     }
 
     private void send(Message message) {
-        for (InfoType infoType : message.getInfoTypes()) {
-            if (infoType == InfoType.NOTICE || (infoType == InfoType.EMAIL && securityAdminRestEnable)) {
+        ChannelType channelType = message.getChannelType();
+            if (channelType == InfoType.NOTICE || (infoType == InfoType.EMAIL && securityAdminRestEnable)) {
                 mqProvider.publish(new MessageOutbox(message), destinationResolver.resolve(getDestinationMqName(infoType), getDestinationType(infoType)));
             }
         }
@@ -223,7 +223,7 @@ public class MessageRestImpl implements MessageRest {
         message.setSeverity(messageSetting.getSeverity());
         message.setAlertType(userSetting == null ? messageSetting.getAlertType() : userSetting.getAlertType());
         message.setSentAt(params.getSentAt());
-        message.setInfoTypes(userSetting == null ? messageSetting.getInfoType() : userSetting.getInfoTypes());
+        message.setChannelType(userSetting == null ? messageSetting.getChannelType() : userSetting.getChannelType());
         message.setComponent(messageSetting.getComponent());
         message.setFormationType(messageSetting.getFormationType());
         message.setRecipientType(RecipientType.USER);

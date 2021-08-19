@@ -86,10 +86,10 @@ public class UserSettingServiceTest {
         assertEquals(USER_SETTING_DEFAULT_ALERT_TYPE, userSetting.getDefaultAlertType().name());
         assertEquals(USER_SETTING_DEFAULT_ALERT_TYPE, userSetting.getAlertType().name());
 
-        assertTrue(userSetting.getDefaultInfoType().stream().anyMatch(infoType -> infoType.name().equals(USER_SETTING_IS_SEND_NOTICE)));
-        assertTrue(userSetting.getDefaultInfoType().stream().anyMatch(infoType -> infoType.name().equals(USER_SETTING_IS_SEND_EMAIL)));
-        assertTrue(userSetting.getInfoTypes().stream().anyMatch(infoType -> infoType.name().equals(USER_SETTING_IS_SEND_NOTICE)));
-        assertTrue(userSetting.getInfoTypes().stream().anyMatch(infoType -> infoType.name().equals(USER_SETTING_IS_SEND_EMAIL)));
+        assertTrue(userSetting.getDefaultChannelType().stream().anyMatch(infoType -> infoType.name().equals(USER_SETTING_IS_SEND_NOTICE)));
+        assertTrue(userSetting.getDefaultChannelType().stream().anyMatch(infoType -> infoType.name().equals(USER_SETTING_IS_SEND_EMAIL)));
+        assertTrue(userSetting.getChannelType().stream().anyMatch(infoType -> infoType.name().equals(USER_SETTING_IS_SEND_NOTICE)));
+        assertTrue(userSetting.getChannelType().stream().anyMatch(infoType -> infoType.name().equals(USER_SETTING_IS_SEND_EMAIL)));
     }
 
     @Test
@@ -97,7 +97,7 @@ public class UserSettingServiceTest {
         UserSetting setting = new UserSetting();
         setting.setDisabled(true);
         setting.setAlertType(AlertType.BLOCKER);
-        setting.setInfoTypes(Collections.singletonList(InfoType.EMAIL));
+        setting.setChannelType(Collections.singletonList(InfoType.EMAIL));
 
         //Создаем уже непосредственно пользовательскую настроку, для пользователя 'admin' и для шаблона уведомления с иде-ром 1,
         userSettingRest.updateSetting(USER_NAME, USER_SETTINGS_ID_3, setting);
@@ -113,11 +113,11 @@ public class UserSettingServiceTest {
         assertEquals(USER_SETTING_ALERT_TYPE, userSetting.getAlertType().name());
 
         //Дефолтные настройки по способам оповещения остались прежними
-        assertTrue(userSetting.getDefaultInfoType().stream().anyMatch(infoType -> infoType.name().equals(USER_SETTING_IS_SEND_NOTICE)));
-        assertTrue(userSetting.getDefaultInfoType().stream().anyMatch(infoType -> infoType.name().equals(USER_SETTING_IS_SEND_EMAIL)));
+        assertTrue(userSetting.getDefaultChannelType().stream().anyMatch(infoType -> infoType.name().equals(USER_SETTING_IS_SEND_NOTICE)));
+        assertTrue(userSetting.getDefaultChannelType().stream().anyMatch(infoType -> infoType.name().equals(USER_SETTING_IS_SEND_EMAIL)));
 
         //В настройках пользователя остался только способ отправки на почту
-        assertFalse(userSetting.getInfoTypes().stream().anyMatch(infoType -> infoType.name().equals(USER_SETTING_IS_SEND_NOTICE)));
-        assertTrue(userSetting.getInfoTypes().stream().anyMatch(infoType -> infoType.name().equals(USER_SETTING_IS_SEND_EMAIL)));
+        assertFalse(userSetting.getChannelType().stream().anyMatch(infoType -> infoType.name().equals(USER_SETTING_IS_SEND_NOTICE)));
+        assertTrue(userSetting.getChannelType().stream().anyMatch(infoType -> infoType.name().equals(USER_SETTING_IS_SEND_EMAIL)));
     }
 }

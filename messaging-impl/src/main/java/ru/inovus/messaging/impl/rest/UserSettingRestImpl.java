@@ -49,11 +49,11 @@ public class UserSettingRestImpl implements UserSettingRest {
                 userSetting.getAlertType() : defaultSetting.getAlertType());
         setting.setDefaultAlertType(defaultSetting.getAlertType());
         List<InfoType> defInfoTypes = getInfoTypes(defaultSetting.getSendNotice(), defaultSetting.getSendEmail());
-        setting.setDefaultInfoType(defInfoTypes);
+        setting.setDefaultChannelType(defInfoTypes);
         if (userSetting.getSendNotice() == null && userSetting.getSendEmail() == null) {
-            setting.setInfoTypes(defInfoTypes);
+            setting.setChannelType(defInfoTypes);
         } else {
-            setting.setInfoTypes(getInfoTypes(userSetting.getSendNotice(), userSetting.getSendEmail()));
+            setting.setChannelType(getInfoTypes(userSetting.getSendNotice(), userSetting.getSendEmail()));
         }
         setting.setTemplateCode(defaultSetting.getCode());
         setting.setDefaultSetting(userSetting.getId() == null);
@@ -85,14 +85,14 @@ public class UserSettingRestImpl implements UserSettingRest {
                 USER_SETTING.ALERT_TYPE.isNotNull()
                     .and(USER_SETTING.ALERT_TYPE.eq(alertType))
                     .or(USER_SETTING.ALERT_TYPE.isNull().and(MESSAGE_SETTING.ALERT_TYPE.eq(alertType)))));
-        if (InfoType.EMAIL.equals(criteria.getInfoType())) {
-            Optional.ofNullable(criteria.getInfoType())
+        if (InfoType.EMAIL.equals(criteria.getChannelType())) {
+            Optional.ofNullable(criteria.getChannelType())
                 .ifPresent(infoType -> conditions.add(
                     USER_SETTING.SEND_EMAIL.isNotNull().and(USER_SETTING.SEND_EMAIL.isTrue())
                         .or(USER_SETTING.SEND_EMAIL.isNull().and(MESSAGE_SETTING.SEND_EMAIL.isTrue()))));
         }
-        if (InfoType.NOTICE.equals(criteria.getInfoType())) {
-            Optional.ofNullable(criteria.getInfoType())
+        if (InfoType.NOTICE.equals(criteria.getChannelType())) {
+            Optional.ofNullable(criteria.getChannelType())
                 .ifPresent(infoType -> conditions.add(
                     USER_SETTING.SEND_NOTICE.isNotNull().and(USER_SETTING.SEND_NOTICE.isTrue())
                         .or(USER_SETTING.SEND_NOTICE.isNull().and(MESSAGE_SETTING.SEND_NOTICE.isTrue()))));
@@ -173,8 +173,8 @@ public class UserSettingRestImpl implements UserSettingRest {
             dsl
                 .update(USER_SETTING)
                 .set(USER_SETTING.ALERT_TYPE, setting.getAlertType())
-                .set(USER_SETTING.SEND_NOTICE, setting.getInfoTypes() != null && setting.getInfoTypes().contains(InfoType.NOTICE))
-                .set(USER_SETTING.SEND_EMAIL, setting.getInfoTypes() != null && setting.getInfoTypes().contains(InfoType.EMAIL))
+                .set(USER_SETTING.SEND_NOTICE, setting.getChannelType() != null && setting.getChannelType().contains(InfoType.NOTICE))
+                .set(USER_SETTING.SEND_EMAIL, setting.getChannelType() != null && setting.getChannelType().contains(InfoType.EMAIL))
                 .set(USER_SETTING.IS_DISABLED, setting.getDisabled())
                 .where(USER_SETTING.MSG_SETTING_ID.eq(msgSettingId))
                 .and(USER_SETTING.USER_ID.eq(user))
@@ -199,8 +199,8 @@ public class UserSettingRestImpl implements UserSettingRest {
                 .values(
                     user,
                     setting.getAlertType(),
-                    setting.getInfoTypes() != null && setting.getInfoTypes().contains(InfoType.NOTICE),
-                    setting.getInfoTypes() != null && setting.getInfoTypes().contains(InfoType.EMAIL),
+                    setting.getChannelType() != null && setting.getChannelType().contains(InfoType.NOTICE),
+                    setting.getChannelType() != null && setting.getChannelType().contains(InfoType.EMAIL),
                     setting.getDisabled(),
                     msgSettingId
                 )

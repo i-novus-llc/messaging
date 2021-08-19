@@ -16,11 +16,15 @@ public class ChannelRestImpl implements ChannelRest {
     @Autowired
     private ListableBeanFactory beanFactory;
 
+    private List<ChannelType> channels;
+
     @Override
     public List<ChannelType> getChannels() {
-        return beanFactory.getBeansOfType(Channel.class)
-                .values().stream()
-                .map(ch -> new ChannelType(ch.getType(), ch.getName()))
-                .collect(Collectors.toList());
+        if (channels == null)
+            channels = beanFactory.getBeansOfType(Channel.class)
+                    .values().stream()
+                    .map(ch -> new ChannelType(ch.getType(), ch.getName()))
+                    .collect(Collectors.toList());
+        return channels;
     }
 }

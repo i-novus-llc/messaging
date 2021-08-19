@@ -16,7 +16,7 @@
                                 <option id="INFO" name="Информация"/>
                             </options>
                         </input-select>
-                        <input-select id="infoType" label="Информирование" query-id="messaging_channels"/>
+                        <input-select id="channelType" label="Информирование" query-id="messaging_channels"/>
                         <date-interval id="sentAt" label="Дата отправки"/>
                     </row>
                 </filters>
@@ -25,7 +25,7 @@
                     <column text-field-id="component.name" label="Компонент"/>
                     <column text-field-id="caption" label="Заголовок"/>
                     <column text-field-id="severity.name" label="Уровень важности"/>
-                    <column text-field-id="infoType" label="Информирование">
+                    <column text-field-id="channelType" label="Информирование">
                         <list label-field-id="name"/>
                     </column>
                 </columns>
