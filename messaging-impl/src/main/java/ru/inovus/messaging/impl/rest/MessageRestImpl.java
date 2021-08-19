@@ -158,10 +158,7 @@ public class MessageRestImpl implements MessageRest {
 
     private void send(Message message) {
         ChannelType channelType = message.getChannelType();
-            if (channelType == InfoType.NOTICE || (infoType == InfoType.EMAIL && securityAdminRestEnable)) {
-                mqProvider.publish(new MessageOutbox(message), destinationResolver.resolve(getDestinationMqName(infoType), getDestinationType(infoType)));
-            }
-        }
+        mqProvider.publish(new MessageOutbox(message), destinationResolver.resolve(getDestinationMqName(channelType), getDestinationType(channelType)));
     }
 
     //Заполнение списков Пользователей для рассылки уведомления
@@ -331,22 +328,22 @@ public class MessageRestImpl implements MessageRest {
         return recipient;
     }
 
-    private DestinationType getDestinationType(InfoType infoType) {
-        switch (infoType) {
-            case EMAIL:
+    private DestinationType getDestinationType(ChannelType channelType) {
+        switch (channelType.getId()) {
+            case "email":
                 return DestinationType.CONSUMER;
-            case NOTICE:
+            case "notice":
                 return DestinationType.SUBSCRIBER;
             default:
                 return null;
         }
     }
 
-    private String getDestinationMqName(InfoType infoType) {
-        switch (infoType) {
-            case EMAIL:
+    private String getDestinationMqName(ChannelType channelType) {
+        switch (channelType.getId()) {
+            case "email":
                 return emailTopicName;
-            case NOTICE:
+            case "notice":
                 return noticeTopicName;
             default:
                 return null;
