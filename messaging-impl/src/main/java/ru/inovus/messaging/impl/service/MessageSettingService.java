@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.inovus.messaging.api.criteria.MessageSettingCriteria;
 import ru.inovus.messaging.api.model.ChannelType;
 import ru.inovus.messaging.api.model.Component;
-import ru.inovus.messaging.api.model.InfoType;
 import ru.inovus.messaging.api.model.MessageSetting;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageSettingRecord;
 
@@ -61,7 +60,7 @@ public class MessageSettingService {
         Optional.ofNullable(criteria.getAlertType())
                 .ifPresent(alertType -> conditions.add(MESSAGE_SETTING.ALERT_TYPE.eq(alertType)));
         Optional.ofNullable(criteria.getChannelTypeId())
-                    .ifPresent(channelTypeId -> conditions.add(MESSAGE_SETTING.SEND_CHANNEL.eq(channelTypeId)));
+                .ifPresent(channelTypeId -> conditions.add(MESSAGE_SETTING.SEND_CHANNEL.eq(channelTypeId)));
         Optional.ofNullable(criteria.getName()).filter(StringUtils::isNotBlank)
                 .ifPresent(name -> conditions.add(MESSAGE_SETTING.NAME.containsIgnoreCase(name)));
         Optional.ofNullable(criteria.getFormationType())

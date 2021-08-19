@@ -16,7 +16,6 @@
 package ru.inovus.messaging.api.criteria;
 
 import ru.inovus.messaging.api.model.AlertType;
-import ru.inovus.messaging.api.model.InfoType;
 import ru.inovus.messaging.api.model.Severity;
 import ru.inovus.messaging.api.model.YesNo;
 
