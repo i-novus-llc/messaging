@@ -57,6 +57,7 @@
         <module>messaging-support-kafka</module>
         <module>messaging-web</module>
         <module>messaging-backend</module>
+        <module>messaging-channel-api</module>
     </modules>
 
     <dependencyManagement>
@@ -89,6 +90,11 @@
             <dependency>
                 <groupId>ru.i-novus.messaging</groupId>
                 <artifactId>messaging-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ru.i-novus.messaging</groupId>
+                <artifactId>messaging-channel-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -24,6 +24,11 @@
         </dependency>
 
         <dependency>
+            <groupId>ru.i-novus.messaging</groupId>
+            <artifactId>messaging-channel-api</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
             <artifactId>security-admin-rest-api</artifactId>
         </dependency>
