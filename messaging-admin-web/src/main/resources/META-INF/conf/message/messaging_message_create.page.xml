@@ -27,11 +27,8 @@
                 </select>
             </row>
             <row>
-                <input-select id="infoType" label="Информирование" required="true" type="multi">
-                    <options>
-                        <option id="EMAIL" name="Электронная почта"/>
-                        <option id="NOTICE" name="Центр уведомлений"/>
-                    </options>
+                <input-select id="infoType" label="Информирование" required="true" type="multi"
+                              query-id="messaging_channels">
                     <dependencies>
                         <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return template.infoType;</set-value>
                     </dependencies>

@@ -11,8 +11,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @ApiModel("Тип канала отправки уведомлений")
 public class ChannelType {
-    @ApiModelProperty("Код канала")
-    private String code;
+    @ApiModelProperty("Идентификатор канала")
+    private String id;
     @ApiModelProperty("Наименование канала")
     private String name;
 }

@@ -20,12 +20,7 @@
                         <option id="HIDDEN" name="Лента уведомлений"/>
                     </options>
                 </input-select>
-                <input-select id="infoType" label="Информирование для пользователя">
-                    <options>
-                        <option id="EMAIL" name="Электронная почта"/>
-                        <option id="NOTICE" name="Центр уведомлений"/>
-                    </options>
-                </input-select>
+                <input-select id="infoType" label="Информирование для пользователя" query-id="messaging_channels"/>
             </row>
             <row>
                 <input-text id="name" label="Событие"/>
