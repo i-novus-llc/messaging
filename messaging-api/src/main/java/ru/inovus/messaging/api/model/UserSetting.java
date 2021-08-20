@@ -35,7 +35,6 @@ public class UserSetting implements Serializable {
     private Severity severity;
     private AlertType defaultAlertType;
     private AlertType alertType;
-    private ChannelType defaultChannelType;
     private ChannelType channelType;
     private Component component;
     private String name;

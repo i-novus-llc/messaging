@@ -227,12 +227,6 @@
                                     <types>.*</types>
                                 </forcedType>
                                 <forcedType>
-                                    <userType>ru.inovus.messaging.api.model.InfoType</userType>
-                                    <converter>ru.inovus.messaging.impl.util.InfoTypeConverter</converter>
-                                    <expression>.*\.info_type.*</expression>
-                                    <types>.*</types>
-                                </forcedType>
-                                <forcedType>
                                     <userType>ru.inovus.messaging.api.model.FormationType</userType>
                                     <converter>ru.inovus.messaging.impl.util.FormationTypeConverter</converter>
                                     <expression>.*\.formation_type.*</expression>

@@ -27,8 +27,6 @@
                             <option id="HIDDEN" name="Лента уведомлений"/>
                         </options>
                     </input-select>
-                    <input-select id="defaultChannelType" label="Информирование по умолчанию" enabled="false"
-                                  query-id="messaging_channels"/>
                 </row>
             </set>
             <line>

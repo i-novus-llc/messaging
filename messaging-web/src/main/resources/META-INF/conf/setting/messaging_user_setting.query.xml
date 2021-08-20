@@ -54,10 +54,6 @@
             <select mapping="['alertTypeName']"/>
         </field>
 
-        <field id="defaultChannelType" domain="object">
-            <select mapping="['defaultChannelType']"/>
-        </field>
-
         <field id="channelType" domain="object[]">
             <select mapping="['channelType']"/>
             <filters>

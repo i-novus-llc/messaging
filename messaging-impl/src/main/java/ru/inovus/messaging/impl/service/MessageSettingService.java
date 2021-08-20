@@ -3,6 +3,7 @@ package ru.inovus.messaging.impl.service;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
 import org.jooq.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
@@ -12,6 +13,7 @@ import ru.inovus.messaging.api.criteria.MessageSettingCriteria;
 import ru.inovus.messaging.api.model.ChannelType;
 import ru.inovus.messaging.api.model.Component;
 import ru.inovus.messaging.api.model.MessageSetting;
+import ru.inovus.messaging.api.rest.ChannelRest;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageSettingRecord;
 
 import java.util.ArrayList;
@@ -27,6 +29,9 @@ import static ru.inovus.messaging.impl.jooq.Tables.MESSAGE_SETTING;
 @Service
 public class MessageSettingService {
 
+    @Autowired
+    private ChannelRest channelRest;
+
     RecordMapper<Record, MessageSetting> MAPPER = rec -> {
         MessageSettingRecord r = rec.into(MESSAGE_SETTING);
         MessageSetting messageSetting = new MessageSetting();
@@ -34,8 +39,10 @@ public class MessageSettingService {
         messageSetting.setName(r.getName());
         messageSetting.setAlertType(r.getAlertType());
         messageSetting.setSeverity(r.getSeverity());
-        ChannelType channelType = ;
-        messageSetting.setChannelType(channelType);
+        if (r.getSendChannel() != null) {
+            ChannelType channelType = channelRest.getChannel(r.getSendChannel());
+            messageSetting.setChannelType(channelType);
+        }
         messageSetting.setCaption(r.getCaption());
         messageSetting.setText(r.getText());
         messageSetting.setComponent(r.getComponentId() != null ?

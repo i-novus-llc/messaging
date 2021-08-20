@@ -113,7 +113,7 @@ public class FeedService {
         for (UUID id : ids) {
             dsl
                     .insertInto(RECIPIENT)
-                    .set(RECIPIENT.ID, RECIPIENT_ID_SEQ.nextval())
+                    .set(RECIPIENT.ID, dsl.nextval(RECIPIENT_ID_SEQ).intValue())
                     .set(RECIPIENT.READ_AT, now)
                     .set(RECIPIENT.MESSAGE_ID, id)
                     .set(RECIPIENT.RECIPIENT_, recipient)
@@ -134,7 +134,7 @@ public class FeedService {
                 if (updated == 0) {
                     dsl
                             .insertInto(RECIPIENT)
-                            .set(RECIPIENT.ID, RECIPIENT_ID_SEQ.nextval())
+                            .set(RECIPIENT.ID, dsl.nextval(RECIPIENT_ID_SEQ).intValue())
                             .set(RECIPIENT.READ_AT, now)
                             .set(RECIPIENT.MESSAGE_ID, id)
                             .set(RECIPIENT.RECIPIENT_, recipient)
@@ -169,13 +169,6 @@ public class FeedService {
         message.setText(record.getText());
         message.setSeverity(record.getSeverity());
         message.setSentAt(record.getSentAt());
-        List<InfoType> channelType = new ArrayList<>();
-        if (record.getSendNotice() != null && record.getSendNotice()) {
-            channelType.add(InfoType.NOTICE);
-        }
-        if (record.getSendEmail() != null && record.getSendEmail()) {
-            channelType.add(InfoType.EMAIL);
-        }
         message.setSystemId(record.getSystemId());
         if (componentRecord != null) {
             message.setComponent(new Component(componentRecord.getId(), componentRecord.getName()));

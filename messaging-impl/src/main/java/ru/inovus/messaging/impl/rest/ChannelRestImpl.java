@@ -20,11 +20,19 @@ public class ChannelRestImpl implements ChannelRest {
 
     @Override
     public List<ChannelType> getChannels() {
+        // TODO - сделать более адекватно
         if (channels == null)
             channels = beanFactory.getBeansOfType(Channel.class)
                     .values().stream()
                     .map(ch -> new ChannelType(ch.getType(), ch.getName()))
                     .collect(Collectors.toList());
         return channels;
+    }
+
+    @Override
+    public ChannelType getChannel(String id) {
+        return getChannels().stream()
+                .filter(ch -> ch.getId().equals(id))
+                .findFirst().orElse(null);
     }
 }

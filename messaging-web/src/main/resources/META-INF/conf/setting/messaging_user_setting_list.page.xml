@@ -39,9 +39,6 @@
             <column text-field-id="name" label="Событие"/>
             <column text-field-id="severity.name" label="Уровень важности"/>
             <column text-field-id="defaultAlertType.name" label="Способ отображения по умолчанию"/>
-            <column text-field-id="defaultChannelType" label="Информирование по умолчанию">
-                <list label-field-id="name"/>
-            </column>
             <column text-field-id="alertType.name" label="Способ отображения для пользователя"/>
             <column text-field-id="channelType" label="Информирование для пользователя">
                 <list label-field-id="name"/>
