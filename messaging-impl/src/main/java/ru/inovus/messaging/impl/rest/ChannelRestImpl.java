@@ -16,7 +16,7 @@ public class ChannelRestImpl implements ChannelRest {
 
     @Override
     public List<ChannelType> getChannels() {
-        return channelService.getChannels();
+        return channelService.getChannelTypes();
     }
 
     @Override

@@ -6,31 +6,35 @@ import org.springframework.stereotype.Service;
 import ru.inovus.messaging.api.model.ChannelType;
 import ru.inovus.messaging.channel.api.Channel;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-// TODO - отрефакторить весь класс
 @Service
 public class ChannelService {
     @Autowired
     private ListableBeanFactory beanFactory;
 
     private List<ChannelType> channelTypes;
-    Map<String, Channel> channels = beanFactory.getBeansOfType(Channel.class);
 
-    public List<ChannelType> getChannels() {
-        if (channelTypes == null) {
-            channelTypes = channels
-                    .values().stream()
-                    .map(ch -> new ChannelType(ch.getType(), ch.getName()))
-                    .collect(Collectors.toList());
-        }
+    private Map<String, Channel> channels;
+
+    @PostConstruct
+    public void postConstruct() {
+        channels = beanFactory.getBeansOfType(Channel.class);
+        channelTypes = channels
+                .values().stream()
+                .map(ch -> new ChannelType(ch.getType(), ch.getName()))
+                .collect(Collectors.toList());
+    }
+
+    public List<ChannelType> getChannelTypes() {
         return channelTypes;
     }
 
     public ChannelType getChannelType(String id) {
-        return getChannels().stream()
+        return channelTypes.stream()
                 .filter(ch -> ch.getId().equals(id))
                 .findFirst().orElse(null);
     }
