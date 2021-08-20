@@ -13,7 +13,6 @@ import ru.inovus.messaging.api.criteria.MessageSettingCriteria;
 import ru.inovus.messaging.api.model.ChannelType;
 import ru.inovus.messaging.api.model.Component;
 import ru.inovus.messaging.api.model.MessageSetting;
-import ru.inovus.messaging.api.rest.ChannelRest;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageSettingRecord;
 
 import java.util.ArrayList;
@@ -30,7 +29,7 @@ import static ru.inovus.messaging.impl.jooq.Tables.MESSAGE_SETTING;
 public class MessageSettingService {
 
     @Autowired
-    private ChannelRest channelRest;
+    private ChannelService channelService;
 
     RecordMapper<Record, MessageSetting> MAPPER = rec -> {
         MessageSettingRecord r = rec.into(MESSAGE_SETTING);
@@ -40,7 +39,7 @@ public class MessageSettingService {
         messageSetting.setAlertType(r.getAlertType());
         messageSetting.setSeverity(r.getSeverity());
         if (r.getSendChannel() != null) {
-            ChannelType channelType = channelRest.getChannel(r.getSendChannel());
+            ChannelType channelType = channelService.getChannelType(r.getSendChannel());
             messageSetting.setChannelType(channelType);
         }
         messageSetting.setCaption(r.getCaption());

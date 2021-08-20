@@ -10,12 +10,13 @@ import org.springframework.util.CollectionUtils;
 import ru.inovus.messaging.api.criteria.*;
 import ru.inovus.messaging.api.model.*;
 import ru.inovus.messaging.api.queue.DestinationResolver;
-import ru.inovus.messaging.api.queue.DestinationType;
 import ru.inovus.messaging.api.queue.MqProvider;
 import ru.inovus.messaging.api.rest.MessageRest;
 import ru.inovus.messaging.api.rest.UserSettingRest;
+import ru.inovus.messaging.channel.api.Channel;
 import ru.inovus.messaging.impl.UserRoleProvider;
 import ru.inovus.messaging.impl.provider.ConfigurableUserRoleProvider;
+import ru.inovus.messaging.impl.service.ChannelService;
 import ru.inovus.messaging.impl.service.MessageService;
 import ru.inovus.messaging.impl.service.MessageSettingService;
 import ru.inovus.messaging.impl.service.RecipientService;
@@ -31,9 +32,8 @@ public class MessageRestImpl implements MessageRest {
     private final MessageService messageService;
     private final MessageSettingService messageSettingService;
     private final RecipientService recipientService;
+    private final ChannelService channelService;
     private final MqProvider mqProvider;
-    private final String noticeTopicName;
-    private final String emailTopicName;
     private final boolean securityAdminRestEnable;
     private DestinationResolver destinationResolver;
     private final UserSettingRest userSettingRest;
@@ -42,8 +42,7 @@ public class MessageRestImpl implements MessageRest {
     public MessageRestImpl(MessageService messageService,
                            MessageSettingService messageSettingService,
                            RecipientService recipientService,
-                           @Value("${novus.messaging.topic.notice}") String noticeTopicName,
-                           @Value("${novus.messaging.topic.email}") String emailTopicName,
+                           ChannelService channelService,
                            @Value("${sec.admin.rest.enable}") boolean securityAdminRestEnable,
                            MqProvider mqProvider,
                            UserRoleProvider userRoleProvider,
@@ -52,9 +51,8 @@ public class MessageRestImpl implements MessageRest {
         this.messageService = messageService;
         this.messageSettingService = messageSettingService;
         this.recipientService = recipientService;
+        this.channelService = channelService;
         this.mqProvider = mqProvider;
-        this.noticeTopicName = noticeTopicName;
-        this.emailTopicName = emailTopicName;
         this.securityAdminRestEnable = securityAdminRestEnable;
         this.userRoleProvider = userRoleProvider;
         this.destinationResolver = destinationResolver;
@@ -157,8 +155,8 @@ public class MessageRestImpl implements MessageRest {
     }
 
     private void send(Message message) {
-        ChannelType channelType = message.getChannelType();
-        mqProvider.publish(new MessageOutbox(message), destinationResolver.resolve(getDestinationMqName(channelType), getDestinationType(channelType)));
+        Channel channel = channelService.getChannel(message.getChannelType().getId());
+        mqProvider.publish(new MessageOutbox(message), destinationResolver.resolve(channel.getDestinationMqName(), channel.getDestinationType()));
     }
 
     //Заполнение списков Пользователей для рассылки уведомления
@@ -326,27 +324,5 @@ public class MessageRestImpl implements MessageRest {
         }
         recipient.setRecipient(userName);
         return recipient;
-    }
-
-    private DestinationType getDestinationType(ChannelType channelType) {
-        switch (channelType.getId()) {
-            case "email":
-                return DestinationType.CONSUMER;
-            case "notice":
-                return DestinationType.SUBSCRIBER;
-            default:
-                return null;
-        }
-    }
-
-    private String getDestinationMqName(ChannelType channelType) {
-        switch (channelType.getId()) {
-            case "email":
-                return emailTopicName;
-            case "notice":
-                return noticeTopicName;
-            default:
-                return null;
-        }
     }
 }

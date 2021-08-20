@@ -14,10 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.inovus.messaging.api.criteria.UserSettingCriteria;
 import ru.inovus.messaging.api.model.Component;
 import ru.inovus.messaging.api.model.UserSetting;
-import ru.inovus.messaging.api.rest.ChannelRest;
 import ru.inovus.messaging.api.rest.UserSettingRest;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageSettingRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.UserSettingRecord;
+import ru.inovus.messaging.impl.service.ChannelService;
 
 import javax.ws.rs.NotFoundException;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class UserSettingRestImpl implements UserSettingRest {
     private DSLContext dsl;
 
     @Autowired
-    private ChannelRest channelRest;
+    private ChannelService channelService;
 
     private RecordMapper<Record, UserSetting> MAPPER = record -> {
         MessageSettingRecord defaultSetting = record.into(MESSAGE_SETTING);
@@ -52,7 +52,7 @@ public class UserSettingRestImpl implements UserSettingRest {
                 userSetting.getAlertType() : defaultSetting.getAlertType());
         setting.setDefaultAlertType(defaultSetting.getAlertType());
 
-        setting.setChannelType(channelRest.getChannel(
+        setting.setChannelType(channelService.getChannelType(
                 userSetting.getSendChannel() != null ? userSetting.getSendChannel() : defaultSetting.getSendChannel()
         ));
 
