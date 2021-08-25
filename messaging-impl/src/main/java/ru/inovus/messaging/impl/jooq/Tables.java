@@ -3,7 +3,6 @@
  */
 package ru.inovus.messaging.impl.jooq;
 
-
 import ru.inovus.messaging.impl.jooq.tables.*;
 
 
@@ -12,6 +11,11 @@ import ru.inovus.messaging.impl.jooq.tables.*;
  */
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Tables {
+
+    /**
+     * Канал отправки
+     */
+    public static final Channel CHANNEL = Channel.CHANNEL;
 
     /**
      * Компоненты системы

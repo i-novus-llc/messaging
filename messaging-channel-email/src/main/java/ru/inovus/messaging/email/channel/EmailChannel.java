@@ -1,40 +1,34 @@
-package ru.inovus.messaging.impl;
+package ru.inovus.messaging.email.channel;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import ru.inovus.messaging.api.model.MessageOutbox;
 import ru.inovus.messaging.api.model.Recipient;
-import ru.inovus.messaging.api.queue.MqProvider;
-import ru.inovus.messaging.api.queue.QueueMqConsumer;
-import ru.inovus.messaging.impl.service.MessageService;
+import ru.inovus.messaging.channel.api.queue.AbstractChannel;
+import ru.inovus.messaging.channel.api.queue.MqProvider;
 
 import javax.mail.internet.MimeMessage;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
-public class EmailSender {
+@PropertySource("classpath:channel.properties")
+public class EmailChannel extends AbstractChannel {
 
-    @Autowired
-    private MessageService messageService;
-
-    private static final Logger logger = LoggerFactory.getLogger(EmailSender.class);
+    private static final Logger logger = LoggerFactory.getLogger(EmailChannel.class);
 
     private JavaMailSender emailSender;
 
-    public EmailSender(JavaMailSender emailSender, MqProvider mqProvider, @Value("${novus.messaging.topic.email}") String emailQueueName) {
+    public EmailChannel(@Value("${messaging.channel.email-queue-name}") String queueName, MqProvider mqProvider, JavaMailSender emailSender) {
+        super(queueName, mqProvider);
         this.emailSender = emailSender;
-        mqProvider.subscribe(new QueueMqConsumer(emailQueueName, this::send, emailQueueName));
     }
 
     /**
@@ -48,9 +42,9 @@ public class EmailSender {
                 }
             }
             List<String> recipientsEmailList = message.getMessage().getRecipients().stream()
-                .filter(x -> StringUtils.isNotEmpty(x.getEmail()))
-                .map(Recipient::getEmail)
-                .collect(Collectors.toList());
+                    .filter(x -> StringUtils.hasLength(x.getEmail()))
+                    .map(Recipient::getEmail)
+                    .collect(Collectors.toList());
             if (!CollectionUtils.isEmpty(recipientsEmailList)) {
                 MimeMessage mail = emailSender.createMimeMessage();
                 MimeMessageHelper helper = new MimeMessageHelper(mail, true);
@@ -60,11 +54,20 @@ public class EmailSender {
                 emailSender.send(mail);
             }
 
-            messageService.setSendEmailResult(UUID.fromString(message.getMessage().getId()), LocalDateTime.now(), null);
+            //todo  тут должна быть очередь для статусов
+            reportSendStatus();
+//            messageService.setSendEmailResult(UUID.fromString(message.getMessage().getId()), LocalDateTime.now(), null);
         } catch (Exception e) {
             logger.error("MimeMessage create and send email failed! {}", e.getMessage(), e);
-            messageService.setSendEmailResult(UUID.fromString(message.getMessage().getId()), LocalDateTime.now(), ExceptionUtils.getMessage(e) + "." + ExceptionUtils.getStackTrace(e));
+            //todo  тут должна быть очередь для статусов
+            reportSendStatus();
+//            messageService.setSendEmailResult(UUID.fromString(message.getMessage().getId()), LocalDateTime.now(), ExceptionUtils.getMessage(e) + "." + ExceptionUtils.getStackTrace(e));
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void reportSendStatus() {
+
     }
 }

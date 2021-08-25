@@ -13,12 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ru.inovus.messaging.api.queue;
+package ru.inovus.messaging.channel.api.queue;
 
-/**
- * @author RMakhmutov
- * @since 03.04.2019
- */
-public interface DestinationResolver {
-    String resolve(String mqDestinationName, DestinationType destinationType);
+import ru.inovus.messaging.api.model.MessageOutbox;
+
+import java.io.Serializable;
+import java.util.function.Consumer;
+
+public interface MqConsumer {
+    Consumer<MessageOutbox> messageHandler();
+
+    String mqName();
+
+    Serializable subscriber();
 }

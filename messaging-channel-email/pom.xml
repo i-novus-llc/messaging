@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>messaging-pom</artifactId>
+        <groupId>ru.i-novus.messaging</groupId>
+        <version>3.40-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>messaging-channel-email</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>ru.i-novus.messaging</groupId>
+            <artifactId>messaging-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.i-novus.messaging</groupId>
+            <artifactId>messaging-channel-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>production</id>
+            <properties>
+                <config.server.enable>true</config.server.enable>
+            </properties>
+        </profile>
+        <profile>
+            <id>embedded-broker</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.activemq</groupId>
+                    <artifactId>activemq-broker</artifactId>
+                    <scope>runtime</scope>
+                </dependency>
+                <dependency>
+                    <groupId>ru.i-novus.messaging</groupId>
+                    <artifactId>messaging-support-activemq</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>activemq</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>ru.i-novus.messaging</groupId>
+                    <artifactId>messaging-support-activemq</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>kafka</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>ru.i-novus.messaging</groupId>
+                    <artifactId>messaging-support-kafka</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
+</project>

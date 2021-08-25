@@ -1,47 +1,32 @@
 package ru.inovus.messaging.impl.service;
 
-import org.springframework.beans.factory.ListableBeanFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.jooq.DSLContext;
+import org.jooq.RecordMapper;
 import org.springframework.stereotype.Service;
-import ru.inovus.messaging.api.model.ChannelType;
-import ru.inovus.messaging.channel.api.Channel;
+import ru.inovus.messaging.api.model.Channel;
+import ru.inovus.messaging.impl.jooq.tables.records.ChannelRecord;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+
+import static ru.inovus.messaging.impl.jooq.tables.Channel.CHANNEL;
 
 @Service
 public class ChannelService {
-    @Autowired
-    private ListableBeanFactory beanFactory;
 
-    private List<ChannelType> channelTypes;
-
-    private Map<String, Channel> channels;
-
-    @PostConstruct
-    public void postConstruct() {
-        channels = beanFactory.getBeansOfType(Channel.class);
-        channelTypes = channels
-                .values().stream()
-                .map(ch -> new ChannelType(ch.getType(), ch.getName()))
-                .collect(Collectors.toList());
+    public ChannelService(DSLContext dsl) {
+        this.dsl = dsl;
     }
 
-    public List<ChannelType> getChannelTypes() {
-        return channelTypes;
+    private final DSLContext dsl;
+
+    private final RecordMapper<ChannelRecord, Channel> MAPPER = record ->
+            new Channel(record.getId(), record.getName(), record.getQueueName());
+
+    public List<Channel> getChannels() {
+        return dsl.selectFrom(CHANNEL).fetch(MAPPER);
     }
 
-    public ChannelType getChannelType(String id) {
-        return channelTypes.stream()
-                .filter(ch -> ch.getId().equals(id))
-                .findFirst().orElse(null);
-    }
-
-    public Channel getChannel(String type) {
-        return channels.values().stream()
-                .filter(ch -> ch.getType().equals(type))
-                .findFirst().orElse(null);
+    public Channel getChannel(String id) {
+        return dsl.selectFrom(CHANNEL).where(CHANNEL.ID.eq(id)).fetchOne(MAPPER);
     }
 }

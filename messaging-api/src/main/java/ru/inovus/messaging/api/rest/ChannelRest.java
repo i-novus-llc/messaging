@@ -4,7 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.Authorization;
-import ru.inovus.messaging.api.model.ChannelType;
+import ru.inovus.messaging.api.model.Channel;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -19,11 +19,11 @@ public interface ChannelRest {
     @GET
     @ApiOperation("Получение списка каналов")
     @ApiResponse(code = 200, message = "Список каналов")
-    List<ChannelType> getChannels();
+    List<Channel> getChannels();
 
     @GET
     @ApiOperation("Получение канала по идентификатору")
     @ApiResponse(code = 200, message = "Канал")
-    ChannelType getChannel(@PathParam("id") String id);
+    Channel getChannel(@PathParam("id") String id);
 }
 

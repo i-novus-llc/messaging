@@ -2,7 +2,7 @@ package ru.inovus.messaging.impl.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import ru.inovus.messaging.api.model.ChannelType;
+import ru.inovus.messaging.api.model.Channel;
 import ru.inovus.messaging.api.rest.ChannelRest;
 import ru.inovus.messaging.impl.service.ChannelService;
 
@@ -15,12 +15,12 @@ public class ChannelRestImpl implements ChannelRest {
     private ChannelService channelService;
 
     @Override
-    public List<ChannelType> getChannels() {
-        return channelService.getChannelTypes();
+    public List<Channel> getChannels() {
+        return channelService.getChannels();
     }
 
     @Override
-    public ChannelType getChannel(String id) {
-        return channelService.getChannelType(id);
+    public Channel getChannel(String id) {
+        return channelService.getChannel(id);
     }
 }

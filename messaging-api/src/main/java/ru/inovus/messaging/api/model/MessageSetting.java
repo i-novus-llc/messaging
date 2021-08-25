@@ -16,7 +16,6 @@
 package ru.inovus.messaging.api.model;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class MessageSetting implements Serializable {
 
@@ -27,7 +26,7 @@ public class MessageSetting implements Serializable {
     private String text;
     private Severity severity;
     private AlertType alertType;
-    private ChannelType channelType;
+    private Channel channel;
     private FormationType formationType;
     private Component component;
     private String name;
@@ -81,12 +80,12 @@ public class MessageSetting implements Serializable {
         this.alertType = alertType;
     }
 
-    public ChannelType getChannelType() {
-        return channelType;
+    public Channel getChannel() {
+        return channel;
     }
 
-    public void setChannelType(ChannelType channelType) {
-        this.channelType = channelType;
+    public void setChannel(Channel channel) {
+        this.channel = channel;
     }
 
     public FormationType getFormationType() {

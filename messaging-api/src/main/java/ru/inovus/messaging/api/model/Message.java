@@ -34,7 +34,7 @@ public class Message implements Serializable {
     private AlertType alertType;
     private LocalDateTime sentAt;
     private LocalDateTime readAt;
-    private ChannelType channelType;
+    private Channel channel;
     private Component component;
     private FormationType formationType;
     private RecipientType recipientType;
@@ -142,12 +142,12 @@ public class Message implements Serializable {
         this.readAt = readAt;
     }
 
-    public ChannelType getChannelType() {
-        return channelType;
+    public Channel getChannel() {
+        return channel;
     }
 
-    public void setChannelType(ChannelType channelType) {
-        this.channelType = channelType;
+    public void setChannel(Channel channel) {
+        this.channel = channel;
     }
 
     public Component getComponent() {

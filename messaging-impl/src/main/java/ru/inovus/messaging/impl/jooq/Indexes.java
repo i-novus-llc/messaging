@@ -3,7 +3,6 @@
  */
 package ru.inovus.messaging.impl.jooq;
 
-
 import org.jooq.Index;
 import org.jooq.OrderField;
 import org.jooq.impl.Internal;

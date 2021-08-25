@@ -52,7 +52,7 @@ public class UserSettingRestImpl implements UserSettingRest {
                 userSetting.getAlertType() : defaultSetting.getAlertType());
         setting.setDefaultAlertType(defaultSetting.getAlertType());
 
-        setting.setChannelType(channelService.getChannelType(
+        setting.setChannel(channelService.getChannel(
                 userSetting.getSendChannel() != null ? userSetting.getSendChannel() : defaultSetting.getSendChannel()
         ));
 
@@ -155,7 +155,7 @@ public class UserSettingRestImpl implements UserSettingRest {
             dsl
                     .update(USER_SETTING)
                     .set(USER_SETTING.ALERT_TYPE, setting.getAlertType())
-                    .set(USER_SETTING.SEND_CHANNEL, setting.getChannelType() != null ? setting.getChannelType().getId() : null)
+                    .set(USER_SETTING.SEND_CHANNEL, setting.getChannel() != null ? setting.getChannel().getId() : null)
                     .set(USER_SETTING.IS_DISABLED, setting.getDisabled())
                     .where(USER_SETTING.MSG_SETTING_ID.eq(msgSettingId))
                     .and(USER_SETTING.USER_ID.eq(user))
@@ -180,7 +180,7 @@ public class UserSettingRestImpl implements UserSettingRest {
                     .values(
                             user,
                             setting.getAlertType(),
-                            setting.getChannelType() != null ? setting.getChannelType().getId() : null,
+                            setting.getChannel() != null ? setting.getChannel().getId() : null,
                             setting.getDisabled(),
                             msgSettingId
                     )

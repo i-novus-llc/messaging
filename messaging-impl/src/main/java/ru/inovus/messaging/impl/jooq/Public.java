@@ -3,7 +3,6 @@
  */
 package ru.inovus.messaging.impl.jooq;
 
-
 import org.jooq.Catalog;
 import org.jooq.Sequence;
 import org.jooq.Table;
@@ -20,12 +19,17 @@ import java.util.List;
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Public extends SchemaImpl {
 
-    private static final long serialVersionUID = 1060642501;
+    private static final long serialVersionUID = -82604470;
 
     /**
      * The reference instance of <code>public</code>
      */
     public static final Public PUBLIC = new Public();
+
+    /**
+     * Канал отправки
+     */
+    public final Channel CHANNEL = Channel.CHANNEL;
 
     /**
      * Компоненты системы
@@ -77,6 +81,7 @@ public class Public extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.<Table<?>>asList(
+                Channel.CHANNEL,
                 Component.COMPONENT,
                 Message.MESSAGE,
                 MessageSetting.MESSAGE_SETTING,

@@ -3,28 +3,16 @@
  */
 package ru.inovus.messaging.impl.jooq.tables;
 
-
-import java.util.Arrays;
-import java.util.List;
-
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row2;
-import org.jooq.Schema;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
-
 import ru.inovus.messaging.impl.jooq.Keys;
 import ru.inovus.messaging.impl.jooq.Public;
 import ru.inovus.messaging.impl.jooq.tables.records.ComponentRecord;
 
-import static org.jooq.impl.SQLDataType.*;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -51,12 +39,12 @@ public class Component extends TableImpl<ComponentRecord> {
     /**
      * The column <code>public.component.id</code>. Уникальный идентификатор
      */
-    public final TableField<ComponentRecord, Integer> ID = createField(DSL.name("id"), INTEGER.nullable(false), this, "Уникальный идентификатор");
+    public final TableField<ComponentRecord, Integer> ID = createField(DSL.name("id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "Уникальный идентификатор");
 
     /**
      * The column <code>public.component.name</code>. Наименование компонента
      */
-    public final TableField<ComponentRecord, String> NAME = createField(DSL.name("name"), VARCHAR, this, "Наименование компонента");
+    public final TableField<ComponentRecord, String> NAME = createField(DSL.name("name"), org.jooq.impl.SQLDataType.VARCHAR, this, "Наименование компонента");
 
     /**
      * Create a <code>public.component</code> table reference

@@ -20,7 +20,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.List;
 
 @Setter
 @Getter
@@ -35,7 +34,7 @@ public class UserSetting implements Serializable {
     private Severity severity;
     private AlertType defaultAlertType;
     private AlertType alertType;
-    private ChannelType channelType;
+    private Channel channel;
     private Component component;
     private String name;
     private Boolean disabled;

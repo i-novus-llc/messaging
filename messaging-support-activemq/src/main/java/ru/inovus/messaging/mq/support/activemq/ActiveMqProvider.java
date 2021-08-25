@@ -17,12 +17,11 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.stereotype.Component;
 import ru.inovus.messaging.api.model.MessageOutbox;
-import ru.inovus.messaging.api.queue.MqConsumer;
-import ru.inovus.messaging.api.queue.MqProvider;
-import ru.inovus.messaging.api.queue.QueueMqConsumer;
-import ru.inovus.messaging.api.queue.TopicMqConsumer;
+import ru.inovus.messaging.channel.api.queue.MqConsumer;
+import ru.inovus.messaging.channel.api.queue.MqProvider;
+import ru.inovus.messaging.channel.api.queue.QueueMqConsumer;
+import ru.inovus.messaging.channel.api.queue.TopicMqConsumer;
 
-import javax.jms.Destination;
 import javax.jms.MessageListener;
 import javax.jms.Session;
 import javax.jms.TextMessage;
@@ -47,23 +46,17 @@ public class ActiveMqProvider implements MqProvider {
     private final ActiveMQConnectionFactory activeMQConnectionFactory;
     private final JmsTemplate jmsTemplate;
     private final Map<Serializable, DefaultMessageListenerContainer> containers = new ConcurrentHashMap<>();
-    private final ActiveMQQueue emailQueue;
-    private final ActiveMQTopic noticeTopic;
 
     private final Boolean durable;
 
     public ActiveMqProvider(ObjectMapper objectMapper,
                             @Value("${spring.activemq.broker-url}") String brokerUrl,
-                            @Value("${novus.messaging.topic.notice}") String noticeTopicName,
-                            @Value("${novus.messaging.topic.email}") String emailQueueName,
                             @Value("${novus.messaging.durable}") Boolean durable) {
         this.objectMapper = objectMapper;
         this.durable = durable;
         activeMQConnectionFactory = new ActiveMQConnectionFactory();
         activeMQConnectionFactory.setBrokerURL(brokerUrl);
         this.jmsTemplate = new JmsTemplate(new CachingConnectionFactory(activeMQConnectionFactory));
-        this.emailQueue = new ActiveMQQueue(emailQueueName);
-        this.noticeTopic = new ActiveMQTopic(noticeTopicName);
     }
 
     @Override
@@ -89,8 +82,7 @@ public class ActiveMqProvider implements MqProvider {
             container.setSessionAcknowledgeMode(Session.CLIENT_ACKNOWLEDGE);
 
             setRedeliveryPolicy(activeMQQueue, mqConsumer.mqName());
-        } else
-        if (mqConsumer instanceof TopicMqConsumer) {
+        } else if (mqConsumer instanceof TopicMqConsumer) {
             TopicMqConsumer topicMqHandler = (TopicMqConsumer) mqConsumer;
             container.setDestination(new ActiveMQTopic(topicMqHandler.mqName()));
             container.setPubSubDomain(true);
@@ -134,13 +126,17 @@ public class ActiveMqProvider implements MqProvider {
             emailRedeliveryPolicy.setBackOffMultiplier(backOffMultiplier);
         }
 
-        RedeliveryPolicyMap map =  activeMQConnectionFactory.getRedeliveryPolicyMap();
+        RedeliveryPolicyMap map = activeMQConnectionFactory.getRedeliveryPolicyMap();
         map.put(activeMQQueue, emailRedeliveryPolicy);
     }
 
     @Override
     public void publish(MessageOutbox message, String mqDestinationName) {
-        send(message, ActiveMQDestination.createDestination(mqDestinationName, ActiveMQDestination.TOPIC_TYPE));
+        try {
+            jmsTemplate.convertAndSend(ActiveMQDestination.createDestination(mqDestinationName, ActiveMQDestination.QUEUE_TYPE), objectMapper.writeValueAsString(message));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -149,20 +145,6 @@ public class ActiveMqProvider implements MqProvider {
         if (container != null) {
             container.stop();
             container.shutdown();
-        }
-    }
-
-    /**
-     * Отправка в очередь нового сообщения
-     *
-     * @param message сообщение
-     * @param destination топик или очередь
-     */
-    private void send(MessageOutbox message, Destination destination) {
-        try {
-            jmsTemplate.convertAndSend(destination, objectMapper.writeValueAsString(message));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
         }
     }
 }

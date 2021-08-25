@@ -3,7 +3,6 @@
  */
 package ru.inovus.messaging.impl.jooq;
 
-
 import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.TableField;
@@ -30,6 +29,7 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final UniqueKey<ChannelRecord> CHANNEL_PKEY = UniqueKeys0.CHANNEL_PKEY;
     public static final UniqueKey<ComponentRecord> COMPONENT_PKEY = UniqueKeys0.COMPONENT_PKEY;
     public static final UniqueKey<MessageRecord> MESSAGE_PKEY = UniqueKeys0.MESSAGE_PKEY;
     public static final UniqueKey<MessageSettingRecord> MESSAGE_SETTING_PKEY = UniqueKeys0.MESSAGE_SETTING_PKEY;
@@ -41,9 +41,12 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final ForeignKey<MessageRecord, ComponentRecord> MESSAGE__MESSAGE_COMPONENT_ID_FKEY = ForeignKeys0.MESSAGE__MESSAGE_COMPONENT_ID_FKEY;
+    public static final ForeignKey<MessageRecord, ChannelRecord> MESSAGE__CHANNEL_CODE_FK = ForeignKeys0.MESSAGE__CHANNEL_CODE_FK;
     public static final ForeignKey<MessageSettingRecord, ComponentRecord> MESSAGE_SETTING__MESSAGE_SETTING_COMPONENT_ID_FKEY = ForeignKeys0.MESSAGE_SETTING__MESSAGE_SETTING_COMPONENT_ID_FKEY;
+    public static final ForeignKey<MessageSettingRecord, ChannelRecord> MESSAGE_SETTING__CHANNEL_CODE_FK = ForeignKeys0.MESSAGE_SETTING__CHANNEL_CODE_FK;
     public static final ForeignKey<RecipientRecord, MessageRecord> RECIPIENT__RECIPIENT_MESSAGE_ID_FKEY = ForeignKeys0.RECIPIENT__RECIPIENT_MESSAGE_ID_FKEY;
     public static final ForeignKey<UserSettingRecord, MessageSettingRecord> USER_SETTING__USER_SETTING_MSG_SETTINGS_ID_MESSAGE_SETTING_ID_FK = ForeignKeys0.USER_SETTING__USER_SETTING_MSG_SETTINGS_ID_MESSAGE_SETTING_ID_FK;
+    public static final ForeignKey<UserSettingRecord, ChannelRecord> USER_SETTING__CHANNEL_CODE_FK = ForeignKeys0.USER_SETTING__CHANNEL_CODE_FK;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
@@ -54,6 +57,7 @@ public class Keys {
     }
 
     private static class UniqueKeys0 {
+        public static final UniqueKey<ChannelRecord> CHANNEL_PKEY = Internal.createUniqueKey(Channel.CHANNEL, "channel_pkey", new TableField[]{Channel.CHANNEL.ID}, true);
         public static final UniqueKey<ComponentRecord> COMPONENT_PKEY = Internal.createUniqueKey(Component.COMPONENT, "component_pkey", new TableField[]{Component.COMPONENT.ID}, true);
         public static final UniqueKey<MessageRecord> MESSAGE_PKEY = Internal.createUniqueKey(Message.MESSAGE, "message_pkey", new TableField[]{Message.MESSAGE.ID}, true);
         public static final UniqueKey<MessageSettingRecord> MESSAGE_SETTING_PKEY = Internal.createUniqueKey(MessageSetting.MESSAGE_SETTING, "message_setting_pkey", new TableField[]{MessageSetting.MESSAGE_SETTING.ID}, true);
@@ -63,8 +67,11 @@ public class Keys {
 
     private static class ForeignKeys0 {
         public static final ForeignKey<MessageRecord, ComponentRecord> MESSAGE__MESSAGE_COMPONENT_ID_FKEY = Internal.createForeignKey(Keys.COMPONENT_PKEY, Message.MESSAGE, "message_component_id_fkey", new TableField[]{Message.MESSAGE.COMPONENT_ID}, true);
+        public static final ForeignKey<MessageRecord, ChannelRecord> MESSAGE__CHANNEL_CODE_FK = Internal.createForeignKey(Keys.CHANNEL_PKEY, Message.MESSAGE, "channel_code_fk", new TableField[]{Message.MESSAGE.SEND_CHANNEL}, true);
         public static final ForeignKey<MessageSettingRecord, ComponentRecord> MESSAGE_SETTING__MESSAGE_SETTING_COMPONENT_ID_FKEY = Internal.createForeignKey(Keys.COMPONENT_PKEY, MessageSetting.MESSAGE_SETTING, "message_setting_component_id_fkey", new TableField[]{MessageSetting.MESSAGE_SETTING.COMPONENT_ID}, true);
+        public static final ForeignKey<MessageSettingRecord, ChannelRecord> MESSAGE_SETTING__CHANNEL_CODE_FK = Internal.createForeignKey(Keys.CHANNEL_PKEY, MessageSetting.MESSAGE_SETTING, "channel_code_fk", new TableField[]{MessageSetting.MESSAGE_SETTING.SEND_CHANNEL}, true);
         public static final ForeignKey<RecipientRecord, MessageRecord> RECIPIENT__RECIPIENT_MESSAGE_ID_FKEY = Internal.createForeignKey(Keys.MESSAGE_PKEY, Recipient.RECIPIENT, "recipient_message_id_fkey", new TableField[]{Recipient.RECIPIENT.MESSAGE_ID}, true);
         public static final ForeignKey<UserSettingRecord, MessageSettingRecord> USER_SETTING__USER_SETTING_MSG_SETTINGS_ID_MESSAGE_SETTING_ID_FK = Internal.createForeignKey(Keys.MESSAGE_SETTING_PKEY, UserSetting.USER_SETTING, "user_setting_msg_settings_id_message_setting_id_fk", new TableField[]{UserSetting.USER_SETTING.MSG_SETTING_ID}, true);
+        public static final ForeignKey<UserSettingRecord, ChannelRecord> USER_SETTING__CHANNEL_CODE_FK = Internal.createForeignKey(Keys.CHANNEL_PKEY, UserSetting.USER_SETTING, "channel_code_fk", new TableField[]{UserSetting.USER_SETTING.SEND_CHANNEL}, true);
     }
 }

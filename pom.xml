@@ -58,6 +58,7 @@
         <module>messaging-web</module>
         <module>messaging-backend</module>
         <module>messaging-channel-api</module>
+        <module>messaging-channel-email</module>
     </modules>
 
     <dependencyManagement>

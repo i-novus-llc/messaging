@@ -10,7 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.inovus.messaging.api.criteria.MessageSettingCriteria;
-import ru.inovus.messaging.api.model.ChannelType;
+import ru.inovus.messaging.api.model.Channel;
 import ru.inovus.messaging.api.model.Component;
 import ru.inovus.messaging.api.model.MessageSetting;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageSettingRecord;
@@ -32,23 +32,23 @@ public class MessageSettingService {
     private ChannelService channelService;
 
     RecordMapper<Record, MessageSetting> MAPPER = rec -> {
-        MessageSettingRecord r = rec.into(MESSAGE_SETTING);
+        MessageSettingRecord settingRec = rec.into(MESSAGE_SETTING);
         MessageSetting messageSetting = new MessageSetting();
-        messageSetting.setId(r.getId());
-        messageSetting.setName(r.getName());
-        messageSetting.setAlertType(r.getAlertType());
-        messageSetting.setSeverity(r.getSeverity());
-        if (r.getSendChannel() != null) {
-            ChannelType channelType = channelService.getChannelType(r.getSendChannel());
-            messageSetting.setChannelType(channelType);
+        messageSetting.setId(settingRec.getId());
+        messageSetting.setName(settingRec.getName());
+        messageSetting.setAlertType(settingRec.getAlertType());
+        messageSetting.setSeverity(settingRec.getSeverity());
+        if (settingRec.getSendChannel() != null) {
+            Channel channel = channelService.getChannel(settingRec.getSendChannel());
+            messageSetting.setChannel(channel);
         }
-        messageSetting.setCaption(r.getCaption());
-        messageSetting.setText(r.getText());
-        messageSetting.setComponent(r.getComponentId() != null ?
-                new Component(r.getComponentId(), "") : null);
-        messageSetting.setFormationType(r.getFormationType());
-        messageSetting.setDisabled(r.getIsDisabled());
-        messageSetting.setCode(r.getCode());
+        messageSetting.setCaption(settingRec.getCaption());
+        messageSetting.setText(settingRec.getText());
+        messageSetting.setComponent(settingRec.getComponentId() != null ?
+                new Component(settingRec.getComponentId(), "") : null);
+        messageSetting.setFormationType(settingRec.getFormationType());
+        messageSetting.setDisabled(settingRec.getIsDisabled());
+        messageSetting.setCode(settingRec.getCode());
         return messageSetting;
     };
     private final DSLContext dsl;
@@ -112,7 +112,7 @@ public class MessageSettingService {
                 )
                 .values(id.intValue(), messageSetting.getName(), messageSetting.getComponent() != null ? messageSetting.getComponent().getId() : null,
                         messageSetting.getAlertType(), messageSetting.getSeverity(),
-                        messageSetting.getChannelType() != null ? messageSetting.getChannelType().getId() : null,
+                        messageSetting.getChannel() != null ? messageSetting.getChannel().getId() : null,
                         messageSetting.getFormationType(), messageSetting.getDisabled(), messageSetting.getCaption(), messageSetting.getText(),
                         messageSetting.getCode())
                 .execute();
@@ -126,7 +126,7 @@ public class MessageSettingService {
                 .set(MESSAGE_SETTING.COMPONENT_ID, messageSetting.getComponent() != null ? messageSetting.getComponent().getId() : null)
                 .set(MESSAGE_SETTING.ALERT_TYPE, messageSetting.getAlertType())
                 .set(MESSAGE_SETTING.SEVERITY, messageSetting.getSeverity())
-                .set(MESSAGE_SETTING.SEND_CHANNEL, messageSetting.getChannelType() != null ? messageSetting.getChannelType().getId() : null)
+                .set(MESSAGE_SETTING.SEND_CHANNEL, messageSetting.getChannel() != null ? messageSetting.getChannel().getId() : null)
                 .set(MESSAGE_SETTING.FORMATION_TYPE, messageSetting.getFormationType())
                 .set(MESSAGE_SETTING.IS_DISABLED, messageSetting.getDisabled())
                 .set(MESSAGE_SETTING.CAPTION, messageSetting.getCaption())

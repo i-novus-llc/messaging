@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.inovus.messaging.api.criteria.MessageCriteria;
 import ru.inovus.messaging.api.model.*;
+import ru.inovus.messaging.impl.jooq.tables.records.ChannelRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.ComponentRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
 import ru.inovus.messaging.impl.util.DateTimeUtil;
@@ -39,8 +40,8 @@ public class MessageService {
         message.setAlertType(record.getAlertType());
         message.setSeverity(record.getSeverity());
         message.setSentAt(record.getSentAt());
-        ChannelType channelType = null;
-        message.setChannelType(channelType);
+        ChannelRecord channelRecord = rec.into(CHANNEL);
+        message.setChannel(new Channel(channelRecord.getId(), channelRecord.getName(), channelRecord.getQueueName()));
         message.setFormationType(record.getFormationType());
         message.setRecipientType(record.getRecipientType());
         message.setSystemId(record.getSystemId());
@@ -72,7 +73,7 @@ public class MessageService {
                         message.getComponent() != null ? message.getComponent().getId() : null,
                         message.getFormationType(), message.getRecipientType(), message.getNotificationType(), message.getObjectId(),
                         message.getObjectType(),
-                        message.getChannelType() != null ? message.getChannelType().getId() : null)
+                        message.getChannel() != null ? message.getChannel().getId() : null)
                 .returning()
                 .fetch().get(0).getId();
         message.setId(id.toString());
