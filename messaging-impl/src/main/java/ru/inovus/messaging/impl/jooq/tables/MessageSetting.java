@@ -3,11 +3,26 @@
  */
 package ru.inovus.messaging.impl.jooq.tables;
 
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.jooq.Check;
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Index;
+import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.*;
+import org.jooq.Row11;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.Internal;
 import org.jooq.impl.TableImpl;
+
 import ru.inovus.messaging.api.model.AlertType;
 import ru.inovus.messaging.api.model.FormationType;
 import ru.inovus.messaging.api.model.Severity;
@@ -19,17 +34,14 @@ import ru.inovus.messaging.impl.util.AlertTypeConverter;
 import ru.inovus.messaging.impl.util.FormationTypeConverter;
 import ru.inovus.messaging.impl.util.SeverityConverter;
 
-import java.util.Arrays;
-import java.util.List;
-
 
 /**
  * Шаблоны уведомлений (общесистемные настройки)
  */
-@SuppressWarnings({"all", "unchecked", "rawtypes"})
+@SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class MessageSetting extends TableImpl<MessageSettingRecord> {
 
-    private static final long serialVersionUID = 878195039;
+    private static final long serialVersionUID = -514069478;
 
     /**
      * The reference instance of <code>public.message_setting</code>
@@ -95,9 +107,9 @@ public class MessageSetting extends TableImpl<MessageSettingRecord> {
     public final TableField<MessageSettingRecord, String> CODE = createField(DSL.name("code"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Код шаблона сообщения");
 
     /**
-     * The column <code>public.message_setting.send_channel</code>. Канал отправки
+     * The column <code>public.message_setting.channel_id</code>. Идентификатор канала отправки
      */
-    public final TableField<MessageSettingRecord, String> SEND_CHANNEL = createField(DSL.name("send_channel"), org.jooq.impl.SQLDataType.VARCHAR, this, "Канал отправки");
+    public final TableField<MessageSettingRecord, String> CHANNEL_ID = createField(DSL.name("channel_id"), org.jooq.impl.SQLDataType.VARCHAR, this, "Идентификатор канала отправки");
 
     /**
      * Create a <code>public.message_setting</code> table reference
@@ -154,7 +166,7 @@ public class MessageSetting extends TableImpl<MessageSettingRecord> {
 
     @Override
     public List<ForeignKey<MessageSettingRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<MessageSettingRecord, ?>>asList(Keys.MESSAGE_SETTING__MESSAGE_SETTING_COMPONENT_ID_FKEY, Keys.MESSAGE_SETTING__CHANNEL_CODE_FK);
+        return Arrays.<ForeignKey<MessageSettingRecord, ?>>asList(Keys.MESSAGE_SETTING__MESSAGE_SETTING_COMPONENT_ID_FKEY, Keys.MESSAGE_SETTING__MESSAGE_SETTING_CHANNEL_ID_CHANNEL_ID_FK);
     }
 
     public Component component() {
@@ -162,15 +174,15 @@ public class MessageSetting extends TableImpl<MessageSettingRecord> {
     }
 
     public Channel channel() {
-        return new Channel(this, Keys.MESSAGE_SETTING__CHANNEL_CODE_FK);
+        return new Channel(this, Keys.MESSAGE_SETTING__MESSAGE_SETTING_CHANNEL_ID_CHANNEL_ID_FK);
     }
 
     @Override
     public List<Check<MessageSettingRecord>> getChecks() {
         return Arrays.<Check<MessageSettingRecord>>asList(
-                Internal.createCheck(this, DSL.name("message_setting_alert_type_check"), "(((alert_type)::text = ANY ((ARRAY['BLOCKER'::character varying, 'POPUP'::character varying, 'HIDDEN'::character varying])::text[])))", true)
-                , Internal.createCheck(this, DSL.name("message_setting_formation_type_check"), "(((formation_type)::text = ANY ((ARRAY['AUTO'::character varying, 'HAND'::character varying])::text[])))", true)
-                , Internal.createCheck(this, DSL.name("message_setting_severity_check"), "(((severity)::text = ANY (ARRAY[('40'::character varying)::text, ('30'::character varying)::text, ('20'::character varying)::text, ('10'::character varying)::text])))", true)
+              Internal.createCheck(this, DSL.name("message_setting_alert_type_check"), "(((alert_type)::text = ANY ((ARRAY['BLOCKER'::character varying, 'POPUP'::character varying, 'HIDDEN'::character varying])::text[])))", true)
+            , Internal.createCheck(this, DSL.name("message_setting_formation_type_check"), "(((formation_type)::text = ANY ((ARRAY['AUTO'::character varying, 'HAND'::character varying])::text[])))", true)
+            , Internal.createCheck(this, DSL.name("message_setting_severity_check"), "(((severity)::text = ANY (ARRAY[('40'::character varying)::text, ('30'::character varying)::text, ('20'::character varying)::text, ('10'::character varying)::text])))", true)
         );
     }
 

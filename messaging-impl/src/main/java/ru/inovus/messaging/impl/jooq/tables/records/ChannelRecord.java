@@ -3,17 +3,20 @@
  */
 package ru.inovus.messaging.impl.jooq.tables.records;
 
+
 import org.jooq.Field;
 import org.jooq.Record1;
 import org.jooq.Record3;
 import org.jooq.Row3;
 import org.jooq.impl.UpdatableRecordImpl;
+
 import ru.inovus.messaging.impl.jooq.tables.Channel;
+
 
 /**
  * Канал отправки
  */
-@SuppressWarnings({"all", "unchecked", "rawtypes"})
+@SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements Record3<String, String, String> {
 
     private static final long serialVersionUID = -1880177342;

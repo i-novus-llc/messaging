@@ -11,7 +11,7 @@ import org.jooq.impl.Internal;
 /**
  * Convenience access to all sequences in public
  */
-@SuppressWarnings({"all", "unchecked", "rawtypes"})
+@SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Sequences {
 
     /**

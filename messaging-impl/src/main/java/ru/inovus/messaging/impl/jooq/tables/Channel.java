@@ -3,21 +3,32 @@
  */
 package ru.inovus.messaging.impl.jooq.tables;
 
-import org.jooq.Record;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.TableImpl;
-import ru.inovus.messaging.impl.jooq.Keys;
-import ru.inovus.messaging.impl.jooq.Public;
-import ru.inovus.messaging.impl.jooq.tables.records.ChannelRecord;
 
 import java.util.Arrays;
 import java.util.List;
 
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Row3;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.TableImpl;
+
+import ru.inovus.messaging.impl.jooq.Keys;
+import ru.inovus.messaging.impl.jooq.Public;
+import ru.inovus.messaging.impl.jooq.tables.records.ChannelRecord;
+
+
 /**
  * Канал отправки
  */
-@SuppressWarnings({"all", "unchecked", "rawtypes"})
+@SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Channel extends TableImpl<ChannelRecord> {
 
     private static final long serialVersionUID = -1440393253;

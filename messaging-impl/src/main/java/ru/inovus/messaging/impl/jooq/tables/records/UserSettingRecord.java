@@ -3,11 +3,13 @@
  */
 package ru.inovus.messaging.impl.jooq.tables.records;
 
+
 import org.jooq.Field;
 import org.jooq.Record1;
 import org.jooq.Record6;
 import org.jooq.Row6;
 import org.jooq.impl.UpdatableRecordImpl;
+
 import ru.inovus.messaging.api.model.AlertType;
 import ru.inovus.messaging.impl.jooq.tables.UserSetting;
 
@@ -15,10 +17,10 @@ import ru.inovus.messaging.impl.jooq.tables.UserSetting;
 /**
  * Пользовательские настройки уведомлений
  */
-@SuppressWarnings({"all", "unchecked", "rawtypes"})
+@SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserSettingRecord extends UpdatableRecordImpl<UserSettingRecord> implements Record6<Integer, AlertType, Boolean, String, Integer, String> {
 
-    private static final long serialVersionUID = -1279293101;
+    private static final long serialVersionUID = 1280857415;
 
     /**
      * Setter for <code>public.user_setting.id</code>. Уникальный идентификатор
@@ -91,16 +93,16 @@ public class UserSettingRecord extends UpdatableRecordImpl<UserSettingRecord> im
     }
 
     /**
-     * Setter for <code>public.user_setting.send_channel</code>. Канал отправки
+     * Setter for <code>public.user_setting.channel_id</code>. Идентификатор канала отправки
      */
-    public void setSendChannel(String value) {
+    public void setChannelId(String value) {
         set(5, value);
     }
 
     /**
-     * Getter for <code>public.user_setting.send_channel</code>. Канал отправки
+     * Getter for <code>public.user_setting.channel_id</code>. Идентификатор канала отправки
      */
-    public String getSendChannel() {
+    public String getChannelId() {
         return (String) get(5);
     }
 
@@ -154,7 +156,7 @@ public class UserSettingRecord extends UpdatableRecordImpl<UserSettingRecord> im
 
     @Override
     public Field<String> field6() {
-        return UserSetting.USER_SETTING.SEND_CHANNEL;
+        return UserSetting.USER_SETTING.CHANNEL_ID;
     }
 
     @Override
@@ -184,7 +186,7 @@ public class UserSettingRecord extends UpdatableRecordImpl<UserSettingRecord> im
 
     @Override
     public String component6() {
-        return getSendChannel();
+        return getChannelId();
     }
 
     @Override
@@ -214,7 +216,7 @@ public class UserSettingRecord extends UpdatableRecordImpl<UserSettingRecord> im
 
     @Override
     public String value6() {
-        return getSendChannel();
+        return getChannelId();
     }
 
     @Override
@@ -249,7 +251,7 @@ public class UserSettingRecord extends UpdatableRecordImpl<UserSettingRecord> im
 
     @Override
     public UserSettingRecord value6(String value) {
-        setSendChannel(value);
+        setChannelId(value);
         return this;
     }
 
@@ -278,7 +280,7 @@ public class UserSettingRecord extends UpdatableRecordImpl<UserSettingRecord> im
     /**
      * Create a detached, initialised UserSettingRecord
      */
-    public UserSettingRecord(Integer id, AlertType alertType, Boolean isDisabled, String userId, Integer msgSettingId, String sendChannel) {
+    public UserSettingRecord(Integer id, AlertType alertType, Boolean isDisabled, String userId, Integer msgSettingId, String channelId) {
         super(UserSetting.USER_SETTING);
 
         set(0, id);
@@ -286,6 +288,6 @@ public class UserSettingRecord extends UpdatableRecordImpl<UserSettingRecord> im
         set(2, isDisabled);
         set(3, userId);
         set(4, msgSettingId);
-        set(5, sendChannel);
+        set(5, channelId);
     }
 }

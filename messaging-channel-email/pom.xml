@@ -26,11 +26,6 @@
             <groupId>ru.i-novus.messaging</groupId>
             <artifactId>messaging-channel-api</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
     </dependencies>
 
     <profiles>

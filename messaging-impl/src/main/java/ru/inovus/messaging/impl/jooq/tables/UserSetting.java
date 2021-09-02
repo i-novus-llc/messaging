@@ -3,11 +3,27 @@
  */
 package ru.inovus.messaging.impl.jooq.tables;
 
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.jooq.Check;
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Identity;
+import org.jooq.Index;
+import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.*;
+import org.jooq.Row6;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.Internal;
 import org.jooq.impl.TableImpl;
+
 import ru.inovus.messaging.api.model.AlertType;
 import ru.inovus.messaging.impl.jooq.Indexes;
 import ru.inovus.messaging.impl.jooq.Keys;
@@ -15,17 +31,14 @@ import ru.inovus.messaging.impl.jooq.Public;
 import ru.inovus.messaging.impl.jooq.tables.records.UserSettingRecord;
 import ru.inovus.messaging.impl.util.AlertTypeConverter;
 
-import java.util.Arrays;
-import java.util.List;
-
 
 /**
  * Пользовательские настройки уведомлений
  */
-@SuppressWarnings({"all", "unchecked", "rawtypes"})
+@SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserSetting extends TableImpl<UserSettingRecord> {
 
-    private static final long serialVersionUID = 2053199056;
+    private static final long serialVersionUID = 644230951;
 
     /**
      * The reference instance of <code>public.user_setting</code>
@@ -66,9 +79,9 @@ public class UserSetting extends TableImpl<UserSettingRecord> {
     public final TableField<UserSettingRecord, Integer> MSG_SETTING_ID = createField(DSL.name("msg_setting_id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
-     * The column <code>public.user_setting.send_channel</code>. Канал отправки
+     * The column <code>public.user_setting.channel_id</code>. Идентификатор канала отправки
      */
-    public final TableField<UserSettingRecord, String> SEND_CHANNEL = createField(DSL.name("send_channel"), org.jooq.impl.SQLDataType.VARCHAR, this, "Канал отправки");
+    public final TableField<UserSettingRecord, String> CHANNEL_ID = createField(DSL.name("channel_id"), org.jooq.impl.SQLDataType.VARCHAR, this, "Идентификатор канала отправки");
 
     /**
      * Create a <code>public.user_setting</code> table reference
@@ -130,7 +143,7 @@ public class UserSetting extends TableImpl<UserSettingRecord> {
 
     @Override
     public List<ForeignKey<UserSettingRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<UserSettingRecord, ?>>asList(Keys.USER_SETTING__USER_SETTING_MSG_SETTINGS_ID_MESSAGE_SETTING_ID_FK, Keys.USER_SETTING__CHANNEL_CODE_FK);
+        return Arrays.<ForeignKey<UserSettingRecord, ?>>asList(Keys.USER_SETTING__USER_SETTING_MSG_SETTINGS_ID_MESSAGE_SETTING_ID_FK, Keys.USER_SETTING__USER_SETTING_CHANNEL_ID_CHANNEL_ID_FK);
     }
 
     public MessageSetting messageSetting() {
@@ -138,13 +151,13 @@ public class UserSetting extends TableImpl<UserSettingRecord> {
     }
 
     public Channel channel() {
-        return new Channel(this, Keys.USER_SETTING__CHANNEL_CODE_FK);
+        return new Channel(this, Keys.USER_SETTING__USER_SETTING_CHANNEL_ID_CHANNEL_ID_FK);
     }
 
     @Override
     public List<Check<UserSettingRecord>> getChecks() {
         return Arrays.<Check<UserSettingRecord>>asList(
-                Internal.createCheck(this, DSL.name("user_setting_alert_type_check"), "(((alert_type)::text = ANY ((ARRAY['BLOCKER'::character varying, 'POPUP'::character varying, 'HIDDEN'::character varying])::text[])))", true)
+              Internal.createCheck(this, DSL.name("user_setting_alert_type_check"), "(((alert_type)::text = ANY ((ARRAY['BLOCKER'::character varying, 'POPUP'::character varying, 'HIDDEN'::character varying])::text[])))", true)
         );
     }
 

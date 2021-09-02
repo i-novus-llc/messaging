@@ -3,26 +3,36 @@
  */
 package ru.inovus.messaging.impl.jooq.tables;
 
-import org.jooq.Record;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
-import org.jooq.impl.TimestampToLocalDateTimeConverter;
-import ru.inovus.messaging.impl.jooq.Keys;
-import ru.inovus.messaging.impl.jooq.Public;
-import ru.inovus.messaging.impl.jooq.tables.records.RecipientRecord;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Row5;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
+import org.jooq.impl.TimestampToLocalDateTimeConverter;
+
+import ru.inovus.messaging.impl.jooq.Keys;
+import ru.inovus.messaging.impl.jooq.Public;
+import ru.inovus.messaging.impl.jooq.tables.records.RecipientRecord;
+
 
 /**
  * Получатели сообщения
  */
-@SuppressWarnings({"all", "unchecked", "rawtypes"})
+@SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Recipient extends TableImpl<RecipientRecord> {
 
     private static final long serialVersionUID = 1226022086;

@@ -3,28 +3,30 @@
  */
 package ru.inovus.messaging.impl.jooq.tables.records;
 
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 import org.jooq.Field;
 import org.jooq.Record1;
 import org.jooq.Record16;
 import org.jooq.Row16;
 import org.jooq.impl.UpdatableRecordImpl;
+
 import ru.inovus.messaging.api.model.AlertType;
 import ru.inovus.messaging.api.model.FormationType;
 import ru.inovus.messaging.api.model.RecipientType;
 import ru.inovus.messaging.api.model.Severity;
 import ru.inovus.messaging.impl.jooq.tables.Message;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
 
 /**
  * Сообщения
  */
-@SuppressWarnings({"all", "unchecked", "rawtypes"})
+@SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements Record16<UUID, String, String, Severity, AlertType, LocalDateTime, String, Integer, FormationType, RecipientType, String, String, String, LocalDateTime, String, String> {
 
-    private static final long serialVersionUID = 43009204;
+    private static final long serialVersionUID = -1753504608;
 
     /**
      * Setter for <code>public.message.id</code>. Уникальный идентификатор
@@ -237,16 +239,16 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
     }
 
     /**
-     * Setter for <code>public.message.send_channel</code>. Канал отправки
+     * Setter for <code>public.message.channel_id</code>. Идентификатор канала отправки
      */
-    public void setSendChannel(String value) {
+    public void setChannelId(String value) {
         set(15, value);
     }
 
     /**
-     * Getter for <code>public.message.send_channel</code>. Канал отправки
+     * Getter for <code>public.message.channel_id</code>. Идентификатор канала отправки
      */
-    public String getSendChannel() {
+    public String getChannelId() {
         return (String) get(15);
     }
 
@@ -350,7 +352,7 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
 
     @Override
     public Field<String> field16() {
-        return Message.MESSAGE.SEND_CHANNEL;
+        return Message.MESSAGE.CHANNEL_ID;
     }
 
     @Override
@@ -430,7 +432,7 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
 
     @Override
     public String component16() {
-        return getSendChannel();
+        return getChannelId();
     }
 
     @Override
@@ -510,7 +512,7 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
 
     @Override
     public String value16() {
-        return getSendChannel();
+        return getChannelId();
     }
 
     @Override
@@ -605,7 +607,7 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
 
     @Override
     public MessageRecord value16(String value) {
-        setSendChannel(value);
+        setChannelId(value);
         return this;
     }
 
@@ -644,7 +646,7 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
     /**
      * Create a detached, initialised MessageRecord
      */
-    public MessageRecord(UUID id, String caption, String text, Severity severity, AlertType alertType, LocalDateTime sentAt, String systemId, Integer componentId, FormationType formationType, RecipientType recipientType, String notificationType, String objectId, String objectType, LocalDateTime sendEmailDate, String sendEmailError, String sendChannel) {
+    public MessageRecord(UUID id, String caption, String text, Severity severity, AlertType alertType, LocalDateTime sentAt, String systemId, Integer componentId, FormationType formationType, RecipientType recipientType, String notificationType, String objectId, String objectType, LocalDateTime sendEmailDate, String sendEmailError, String channelId) {
         super(Message.MESSAGE);
 
         set(0, id);
@@ -662,6 +664,6 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
         set(12, objectType);
         set(13, sendEmailDate);
         set(14, sendEmailError);
-        set(15, sendChannel);
+        set(15, channelId);
     }
 }

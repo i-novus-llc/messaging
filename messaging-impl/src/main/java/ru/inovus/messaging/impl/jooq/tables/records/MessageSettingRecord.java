@@ -3,11 +3,13 @@
  */
 package ru.inovus.messaging.impl.jooq.tables.records;
 
+
 import org.jooq.Field;
 import org.jooq.Record1;
 import org.jooq.Record11;
 import org.jooq.Row11;
 import org.jooq.impl.UpdatableRecordImpl;
+
 import ru.inovus.messaging.api.model.AlertType;
 import ru.inovus.messaging.api.model.FormationType;
 import ru.inovus.messaging.api.model.Severity;
@@ -17,10 +19,10 @@ import ru.inovus.messaging.impl.jooq.tables.MessageSetting;
 /**
  * Шаблоны уведомлений (общесистемные настройки)
  */
-@SuppressWarnings({"all", "unchecked", "rawtypes"})
+@SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class MessageSettingRecord extends UpdatableRecordImpl<MessageSettingRecord> implements Record11<Integer, String, String, Severity, AlertType, Integer, String, Boolean, FormationType, String, String> {
 
-    private static final long serialVersionUID = -479037481;
+    private static final long serialVersionUID = -1727367207;
 
     /**
      * Setter for <code>public.message_setting.id</code>. Уникальный идентификатор
@@ -163,16 +165,16 @@ public class MessageSettingRecord extends UpdatableRecordImpl<MessageSettingReco
     }
 
     /**
-     * Setter for <code>public.message_setting.send_channel</code>. Канал отправки
+     * Setter for <code>public.message_setting.channel_id</code>. Идентификатор канала отправки
      */
-    public void setSendChannel(String value) {
+    public void setChannelId(String value) {
         set(10, value);
     }
 
     /**
-     * Getter for <code>public.message_setting.send_channel</code>. Канал отправки
+     * Getter for <code>public.message_setting.channel_id</code>. Идентификатор канала отправки
      */
-    public String getSendChannel() {
+    public String getChannelId() {
         return (String) get(10);
     }
 
@@ -251,7 +253,7 @@ public class MessageSettingRecord extends UpdatableRecordImpl<MessageSettingReco
 
     @Override
     public Field<String> field11() {
-        return MessageSetting.MESSAGE_SETTING.SEND_CHANNEL;
+        return MessageSetting.MESSAGE_SETTING.CHANNEL_ID;
     }
 
     @Override
@@ -306,7 +308,7 @@ public class MessageSettingRecord extends UpdatableRecordImpl<MessageSettingReco
 
     @Override
     public String component11() {
-        return getSendChannel();
+        return getChannelId();
     }
 
     @Override
@@ -361,7 +363,7 @@ public class MessageSettingRecord extends UpdatableRecordImpl<MessageSettingReco
 
     @Override
     public String value11() {
-        return getSendChannel();
+        return getChannelId();
     }
 
     @Override
@@ -426,7 +428,7 @@ public class MessageSettingRecord extends UpdatableRecordImpl<MessageSettingReco
 
     @Override
     public MessageSettingRecord value11(String value) {
-        setSendChannel(value);
+        setChannelId(value);
         return this;
     }
 
@@ -460,7 +462,7 @@ public class MessageSettingRecord extends UpdatableRecordImpl<MessageSettingReco
     /**
      * Create a detached, initialised MessageSettingRecord
      */
-    public MessageSettingRecord(Integer id, String caption, String text, Severity severity, AlertType alertType, Integer componentId, String name, Boolean isDisabled, FormationType formationType, String code, String sendChannel) {
+    public MessageSettingRecord(Integer id, String caption, String text, Severity severity, AlertType alertType, Integer componentId, String name, Boolean isDisabled, FormationType formationType, String code, String channelId) {
         super(MessageSetting.MESSAGE_SETTING);
 
         set(0, id);
@@ -473,6 +475,6 @@ public class MessageSettingRecord extends UpdatableRecordImpl<MessageSettingReco
         set(7, isDisabled);
         set(8, formationType);
         set(9, code);
-        set(10, sendChannel);
+        set(10, channelId);
     }
 }

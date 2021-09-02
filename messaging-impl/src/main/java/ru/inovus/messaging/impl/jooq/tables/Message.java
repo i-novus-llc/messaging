@@ -3,10 +3,26 @@
  */
 package ru.inovus.messaging.impl.jooq.tables;
 
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
+import org.jooq.Check;
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Index;
+import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.*;
-import org.jooq.impl.Internal;
+import org.jooq.Row16;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.*;
+
 import ru.inovus.messaging.api.model.AlertType;
 import ru.inovus.messaging.api.model.FormationType;
 import ru.inovus.messaging.api.model.RecipientType;
@@ -20,11 +36,6 @@ import ru.inovus.messaging.impl.util.FormationTypeConverter;
 import ru.inovus.messaging.impl.util.RecipientTypeConverter;
 import ru.inovus.messaging.impl.util.SeverityConverter;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-
 
 /**
  * Сообщения
@@ -32,7 +43,7 @@ import java.util.UUID;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Message extends TableImpl<MessageRecord> {
 
-    private static final long serialVersionUID = -860782334;
+    private static final long serialVersionUID = -1382108795;
 
     /**
      * The reference instance of <code>public.message</code>
@@ -123,9 +134,9 @@ public class Message extends TableImpl<MessageRecord> {
     public final TableField<MessageRecord, String> SEND_EMAIL_ERROR = createField(DSL.name("send_email_error"), org.jooq.impl.SQLDataType.VARCHAR, this, "Ошибка, возникшая при последней попытке отправки email");
 
     /**
-     * The column <code>public.message.send_channel</code>. Канал отправки
+     * The column <code>public.message.channel_id</code>. Идентификатор канала отправки
      */
-    public final TableField<MessageRecord, String> SEND_CHANNEL = createField(DSL.name("send_channel"), org.jooq.impl.SQLDataType.VARCHAR, this, "Канал отправки");
+    public final TableField<MessageRecord, String> CHANNEL_ID = createField(DSL.name("channel_id"), org.jooq.impl.SQLDataType.VARCHAR, this, "Идентификатор канала отправки");
 
     /**
      * Create a <code>public.message</code> table reference
@@ -182,7 +193,7 @@ public class Message extends TableImpl<MessageRecord> {
 
     @Override
     public List<ForeignKey<MessageRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<MessageRecord, ?>>asList(Keys.MESSAGE__MESSAGE_COMPONENT_ID_FKEY, Keys.MESSAGE__CHANNEL_CODE_FK);
+        return Arrays.<ForeignKey<MessageRecord, ?>>asList(Keys.MESSAGE__MESSAGE_COMPONENT_ID_FKEY, Keys.MESSAGE__MESSAGE_CHANNEL_ID_CHANNEL_ID_FK);
     }
 
     public Component component() {
@@ -190,16 +201,16 @@ public class Message extends TableImpl<MessageRecord> {
     }
 
     public Channel channel() {
-        return new Channel(this, Keys.MESSAGE__CHANNEL_CODE_FK);
+        return new Channel(this, Keys.MESSAGE__MESSAGE_CHANNEL_ID_CHANNEL_ID_FK);
     }
 
     @Override
     public List<Check<MessageRecord>> getChecks() {
         return Arrays.<Check<MessageRecord>>asList(
-                Internal.createCheck(this, DSL.name("message_alert_type_check"), "(((alert_type)::text = ANY ((ARRAY['BLOCKER'::character varying, 'POPUP'::character varying, 'HIDDEN'::character varying])::text[])))", true)
-                , Internal.createCheck(this, DSL.name("message_formation_type_check"), "(((formation_type)::text = ANY ((ARRAY['AUTO'::character varying, 'HAND'::character varying])::text[])))", true)
-                , Internal.createCheck(this, DSL.name("message_recipient_type_check"), "(((recipient_type)::text = ANY ((ARRAY['ALL'::character varying, 'USER'::character varying])::text[])))", true)
-                , Internal.createCheck(this, DSL.name("message_severity_check"), "(((severity)::text = ANY (ARRAY[('40'::character varying)::text, ('30'::character varying)::text, ('20'::character varying)::text, ('10'::character varying)::text])))", true)
+              Internal.createCheck(this, DSL.name("message_alert_type_check"), "(((alert_type)::text = ANY ((ARRAY['BLOCKER'::character varying, 'POPUP'::character varying, 'HIDDEN'::character varying])::text[])))", true)
+            , Internal.createCheck(this, DSL.name("message_formation_type_check"), "(((formation_type)::text = ANY ((ARRAY['AUTO'::character varying, 'HAND'::character varying])::text[])))", true)
+            , Internal.createCheck(this, DSL.name("message_recipient_type_check"), "(((recipient_type)::text = ANY ((ARRAY['ALL'::character varying, 'USER'::character varying])::text[])))", true)
+            , Internal.createCheck(this, DSL.name("message_severity_check"), "(((severity)::text = ANY (ARRAY[('40'::character varying)::text, ('30'::character varying)::text, ('20'::character varying)::text, ('10'::character varying)::text])))", true)
         );
     }
 

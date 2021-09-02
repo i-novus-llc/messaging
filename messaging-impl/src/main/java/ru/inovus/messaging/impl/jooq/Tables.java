@@ -3,13 +3,19 @@
  */
 package ru.inovus.messaging.impl.jooq;
 
-import ru.inovus.messaging.impl.jooq.tables.*;
+
+import ru.inovus.messaging.impl.jooq.tables.Channel;
+import ru.inovus.messaging.impl.jooq.tables.Component;
+import ru.inovus.messaging.impl.jooq.tables.Message;
+import ru.inovus.messaging.impl.jooq.tables.MessageSetting;
+import ru.inovus.messaging.impl.jooq.tables.Recipient;
+import ru.inovus.messaging.impl.jooq.tables.UserSetting;
 
 
 /**
  * Convenience access to all tables in public
  */
-@SuppressWarnings({"all", "unchecked", "rawtypes"})
+@SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tables {
 
     /**
