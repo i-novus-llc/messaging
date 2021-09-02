@@ -37,7 +37,6 @@ public class FeedService {
     public Page<Feed> getMessageFeed(String recipient, FeedCriteria criteria) {
         List<Condition> conditions = new ArrayList<>();
         conditions.add(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL).or(RECIPIENT.ID.isNotNull()));
-        conditions.add(MESSAGE.SEND_NOTICE.isTrue());
         Optional.ofNullable(criteria.getSystemId())
                 .ifPresent(systemId -> conditions.add(MESSAGE.SYSTEM_ID.eq(systemId)));
         Optional.ofNullable(criteria.getComponentId())
@@ -114,7 +113,7 @@ public class FeedService {
         for (UUID id : ids) {
             dsl
                     .insertInto(RECIPIENT)
-                    .set(RECIPIENT.ID, RECIPIENT_ID_SEQ.nextval())
+                    .set(RECIPIENT.ID, dsl.nextval(RECIPIENT_ID_SEQ).intValue())
                     .set(RECIPIENT.READ_AT, now)
                     .set(RECIPIENT.MESSAGE_ID, id)
                     .set(RECIPIENT.RECIPIENT_, recipient)
@@ -135,7 +134,7 @@ public class FeedService {
                 if (updated == 0) {
                     dsl
                             .insertInto(RECIPIENT)
-                            .set(RECIPIENT.ID, RECIPIENT_ID_SEQ.nextval())
+                            .set(RECIPIENT.ID, dsl.nextval(RECIPIENT_ID_SEQ).intValue())
                             .set(RECIPIENT.READ_AT, now)
                             .set(RECIPIENT.MESSAGE_ID, id)
                             .set(RECIPIENT.RECIPIENT_, recipient)
@@ -154,8 +153,7 @@ public class FeedService {
                         MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL).and(RECIPIENT.ID.isNull())
                                 .or(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.USER).and(RECIPIENT.READ_AT.isNull())
                                         .and(RECIPIENT.RECIPIENT_.eq(recipient))),
-                        MESSAGE.SYSTEM_ID.eq(systemId),
-                        MESSAGE.SEND_NOTICE.isTrue())
+                        MESSAGE.SYSTEM_ID.eq(systemId))
                 .fetchOne().value1();
         return new UnreadMessagesInfo(count);
     }
@@ -171,13 +169,6 @@ public class FeedService {
         message.setText(record.getText());
         message.setSeverity(record.getSeverity());
         message.setSentAt(record.getSentAt());
-        List<InfoType> infoTypes = new ArrayList<>();
-        if (record.getSendNotice() != null && record.getSendNotice()) {
-            infoTypes.add(InfoType.NOTICE);
-        }
-        if (record.getSendEmail() != null && record.getSendEmail()) {
-            infoTypes.add(InfoType.EMAIL);
-        }
         message.setSystemId(record.getSystemId());
         if (componentRecord != null) {
             message.setComponent(new Component(componentRecord.getId(), componentRecord.getName()));

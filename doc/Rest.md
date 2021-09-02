@@ -18,7 +18,10 @@ POST /messages
   "text": "Test content",
   "severity": "INFO",
   "alertType": "POPUP",
-  "infoTypes": ["NOTICE", "EMAIL"],
+  "channelType": {
+    "id": "notice",
+    "name": "Центр уведомлений"
+  },
   "recipientType": "USER",
   "systemId": "dev.1265"
   "recipients": [
@@ -39,10 +42,6 @@ SEVERE - Важный;
 BLOCKER - "Блокирующее сообщение";
 POPUP - "Всплывающее сообщение";
 HIDDEN - "Лента сообщений";
-
-Значения infoTypes:
-NOTICE - уведомление в системе,
-EMAIL - сообщение на почту
 
 Значения recipientType:
 USER - конкретным пользователям

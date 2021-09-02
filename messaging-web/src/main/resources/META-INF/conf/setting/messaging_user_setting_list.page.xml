@@ -20,12 +20,7 @@
                         <option id="HIDDEN" name="Лента уведомлений"/>
                     </options>
                 </input-select>
-                <input-select id="infoType" label="Информирование для пользователя">
-                    <options>
-                        <option id="EMAIL" name="Электронная почта"/>
-                        <option id="NOTICE" name="Центр уведомлений"/>
-                    </options>
-                </input-select>
+                <input-select id="channelType" label="Информирование для пользователя" query-id="messaging_channels"/>
             </row>
             <row>
                 <input-text id="name" label="Событие"/>
@@ -44,11 +39,8 @@
             <column text-field-id="name" label="Событие"/>
             <column text-field-id="severity.name" label="Уровень важности"/>
             <column text-field-id="defaultAlertType.name" label="Способ отображения по умолчанию"/>
-            <column text-field-id="defaultInfoType" label="Информирование по умолчанию">
-                <list label-field-id="name"/>
-            </column>
             <column text-field-id="alertType.name" label="Способ отображения для пользователя"/>
-            <column text-field-id="infoType" label="Информирование для пользователя">
+            <column text-field-id="channelType" label="Информирование для пользователя">
                 <list label-field-id="name"/>
             </column>
             <column text-field-id="enabled" label="Включено">

@@ -39,14 +39,8 @@ public class MessageService {
         message.setAlertType(record.getAlertType());
         message.setSeverity(record.getSeverity());
         message.setSentAt(record.getSentAt());
-        List<InfoType> infoTypes = new ArrayList<>();
-        if (record.getSendNotice() != null && record.getSendNotice()) {
-            infoTypes.add(InfoType.NOTICE);
-        }
-        if (record.getSendEmail() != null && record.getSendEmail()) {
-            infoTypes.add(InfoType.EMAIL);
-        }
-        message.setInfoTypes(infoTypes);
+        ChannelType channelType = null;
+        message.setChannelType(channelType);
         message.setFormationType(record.getFormationType());
         message.setRecipientType(record.getRecipientType());
         message.setSystemId(record.getSystemId());
@@ -72,14 +66,13 @@ public class MessageService {
                 .columns(MESSAGE.ID, MESSAGE.CAPTION, MESSAGE.TEXT, MESSAGE.SEVERITY, MESSAGE.ALERT_TYPE,
                         MESSAGE.SENT_AT, MESSAGE.SYSTEM_ID, MESSAGE.COMPONENT_ID,
                         MESSAGE.FORMATION_TYPE, MESSAGE.RECIPIENT_TYPE, MESSAGE.NOTIFICATION_TYPE, MESSAGE.OBJECT_ID,
-                        MESSAGE.OBJECT_TYPE, MESSAGE.SEND_NOTICE,
-                        MESSAGE.SEND_EMAIL)
+                        MESSAGE.OBJECT_TYPE, MESSAGE.SEND_CHANNEL)
                 .values(id, message.getCaption(), message.getText(), message.getSeverity(), message.getAlertType(),
-                        message.getSentAt(), message.getSystemId(), message.getComponent() != null ?
-                                message.getComponent().getId() : null,
+                        message.getSentAt(), message.getSystemId(),
+                        message.getComponent() != null ? message.getComponent().getId() : null,
                         message.getFormationType(), message.getRecipientType(), message.getNotificationType(), message.getObjectId(),
-                        message.getObjectType(), message.getInfoTypes() != null && message.getInfoTypes().contains(InfoType.NOTICE),
-                        message.getInfoTypes() != null && message.getInfoTypes().contains(InfoType.EMAIL))
+                        message.getObjectType(),
+                        message.getChannelType() != null ? message.getChannelType().getId() : null)
                 .returning()
                 .fetch().get(0).getId();
         message.setId(id.toString());
@@ -113,14 +106,9 @@ public class MessageService {
                 .ifPresent(componentId -> conditions.add(MESSAGE.COMPONENT_ID.eq(componentId)));
         Optional.ofNullable(criteria.getSeverity())
                 .ifPresent(severity -> conditions.add(MESSAGE.SEVERITY.eq(severity)));
-        if (InfoType.EMAIL.equals(criteria.getInfoType())) {
-            Optional.ofNullable(criteria.getInfoType())
-                    .ifPresent(infoType -> conditions.add(MESSAGE.SEND_EMAIL.isTrue()));
-        }
-        if (InfoType.NOTICE.equals(criteria.getInfoType())) {
-            Optional.ofNullable(criteria.getInfoType())
-                    .ifPresent(infoType -> conditions.add(MESSAGE.SEND_NOTICE.isTrue()));
-        }
+        Optional.ofNullable(criteria.getChannelTypeId())
+                .ifPresent(channelTypeId -> conditions.add(MESSAGE.SEND_CHANNEL.eq(channelTypeId)));
+
         //TODO: UTC?
         Optional.ofNullable(sentAtBeginDateTime)
                 .ifPresent(start -> conditions.add(MESSAGE.SENT_AT.greaterOrEqual(start)));
@@ -168,11 +156,11 @@ public class MessageService {
     @Transactional
     public void setSendEmailResult(UUID id, LocalDateTime date, String error) {
         dsl
-            .update(MESSAGE)
-            .set(MESSAGE.SEND_EMAIL_DATE, date)
-            .set(MESSAGE.SEND_EMAIL_ERROR, error)
-            .where(MESSAGE.ID.eq(id))
-            .execute();
+                .update(MESSAGE)
+                .set(MESSAGE.SEND_EMAIL_DATE, date)
+                .set(MESSAGE.SEND_EMAIL_ERROR, error)
+                .where(MESSAGE.ID.eq(id))
+                .execute();
     }
 
 }

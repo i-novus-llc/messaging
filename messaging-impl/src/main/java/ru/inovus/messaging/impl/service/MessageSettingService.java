@@ -3,14 +3,15 @@ package ru.inovus.messaging.impl.service;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
 import org.jooq.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.inovus.messaging.api.criteria.MessageSettingCriteria;
+import ru.inovus.messaging.api.model.ChannelType;
 import ru.inovus.messaging.api.model.Component;
-import ru.inovus.messaging.api.model.InfoType;
 import ru.inovus.messaging.api.model.MessageSetting;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageSettingRecord;
 
@@ -27,6 +28,9 @@ import static ru.inovus.messaging.impl.jooq.Tables.MESSAGE_SETTING;
 @Service
 public class MessageSettingService {
 
+    @Autowired
+    private ChannelService channelService;
+
     RecordMapper<Record, MessageSetting> MAPPER = rec -> {
         MessageSettingRecord r = rec.into(MESSAGE_SETTING);
         MessageSetting messageSetting = new MessageSetting();
@@ -34,14 +38,10 @@ public class MessageSettingService {
         messageSetting.setName(r.getName());
         messageSetting.setAlertType(r.getAlertType());
         messageSetting.setSeverity(r.getSeverity());
-        List<InfoType> infoTypes = new ArrayList<>();
-        if (r.getSendNotice() != null && r.getSendNotice()) {
-            infoTypes.add(InfoType.NOTICE);
+        if (r.getSendChannel() != null) {
+            ChannelType channelType = channelService.getChannelType(r.getSendChannel());
+            messageSetting.setChannelType(channelType);
         }
-        if (r.getSendEmail() != null && r.getSendEmail()) {
-            infoTypes.add(InfoType.EMAIL);
-        }
-        messageSetting.setInfoType(infoTypes);
         messageSetting.setCaption(r.getCaption());
         messageSetting.setText(r.getText());
         messageSetting.setComponent(r.getComponentId() != null ?
@@ -65,14 +65,8 @@ public class MessageSettingService {
                 .ifPresent(severity -> conditions.add(MESSAGE_SETTING.SEVERITY.eq(severity)));
         Optional.ofNullable(criteria.getAlertType())
                 .ifPresent(alertType -> conditions.add(MESSAGE_SETTING.ALERT_TYPE.eq(alertType)));
-        if (InfoType.EMAIL.equals(criteria.getInfoType())) {
-            Optional.ofNullable(criteria.getInfoType())
-                    .ifPresent(infoType -> conditions.add(MESSAGE_SETTING.SEND_EMAIL.isTrue()));
-        }
-        if (InfoType.NOTICE.equals(criteria.getInfoType())) {
-            Optional.ofNullable(criteria.getInfoType())
-                    .ifPresent(infoType -> conditions.add(MESSAGE_SETTING.SEND_NOTICE.isTrue()));
-        }
+        Optional.ofNullable(criteria.getChannelTypeId())
+                .ifPresent(channelTypeId -> conditions.add(MESSAGE_SETTING.SEND_CHANNEL.eq(channelTypeId)));
         Optional.ofNullable(criteria.getName()).filter(StringUtils::isNotBlank)
                 .ifPresent(name -> conditions.add(MESSAGE_SETTING.NAME.containsIgnoreCase(name)));
         Optional.ofNullable(criteria.getFormationType())
@@ -111,15 +105,14 @@ public class MessageSettingService {
         dsl
                 .insertInto(MESSAGE_SETTING)
                 .columns(MESSAGE_SETTING.ID, MESSAGE_SETTING.NAME, MESSAGE_SETTING.COMPONENT_ID,
-                        MESSAGE_SETTING.ALERT_TYPE, MESSAGE_SETTING.SEVERITY, MESSAGE_SETTING.SEND_EMAIL, MESSAGE_SETTING.SEND_NOTICE,
+                        MESSAGE_SETTING.ALERT_TYPE, MESSAGE_SETTING.SEVERITY, MESSAGE_SETTING.SEND_CHANNEL,
                         MESSAGE_SETTING.FORMATION_TYPE, MESSAGE_SETTING.IS_DISABLED,
                         MESSAGE_SETTING.CAPTION, MESSAGE_SETTING.TEXT,
                         MESSAGE_SETTING.CODE
                 )
                 .values(id.intValue(), messageSetting.getName(), messageSetting.getComponent() != null ? messageSetting.getComponent().getId() : null,
                         messageSetting.getAlertType(), messageSetting.getSeverity(),
-                        messageSetting.getInfoType() != null && messageSetting.getInfoType().contains(InfoType.EMAIL),
-                        messageSetting.getInfoType() != null && messageSetting.getInfoType().contains(InfoType.NOTICE),
+                        messageSetting.getChannelType() != null ? messageSetting.getChannelType().getId() : null,
                         messageSetting.getFormationType(), messageSetting.getDisabled(), messageSetting.getCaption(), messageSetting.getText(),
                         messageSetting.getCode())
                 .execute();
@@ -133,8 +126,7 @@ public class MessageSettingService {
                 .set(MESSAGE_SETTING.COMPONENT_ID, messageSetting.getComponent() != null ? messageSetting.getComponent().getId() : null)
                 .set(MESSAGE_SETTING.ALERT_TYPE, messageSetting.getAlertType())
                 .set(MESSAGE_SETTING.SEVERITY, messageSetting.getSeverity())
-                .set(MESSAGE_SETTING.SEND_EMAIL, messageSetting.getInfoType() != null && messageSetting.getInfoType().contains(InfoType.EMAIL))
-                .set(MESSAGE_SETTING.SEND_NOTICE, messageSetting.getInfoType() != null && messageSetting.getInfoType().contains(InfoType.NOTICE))
+                .set(MESSAGE_SETTING.SEND_CHANNEL, messageSetting.getChannelType() != null ? messageSetting.getChannelType().getId() : null)
                 .set(MESSAGE_SETTING.FORMATION_TYPE, messageSetting.getFormationType())
                 .set(MESSAGE_SETTING.IS_DISABLED, messageSetting.getDisabled())
                 .set(MESSAGE_SETTING.CAPTION, messageSetting.getCaption())

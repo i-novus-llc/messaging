@@ -12,13 +12,12 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.inovus.messaging.api.criteria.UserSettingCriteria;
 import ru.inovus.messaging.api.model.AlertType;
-import ru.inovus.messaging.api.model.InfoType;
+import ru.inovus.messaging.api.model.ChannelType;
 import ru.inovus.messaging.api.model.UserSetting;
 import ru.inovus.messaging.api.rest.UserSettingRest;
 
-import java.util.Collections;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(
@@ -43,8 +42,8 @@ public class UserSettingServiceTest {
     private static final String USER_SETTING_TEMPLATE_CODE = "LKB-PAYMENT-NTF-1";
     private static final boolean USER_SETTING_IS_DISABLED = false;
     private static final String USER_SETTING_DEFAULT_ALERT_TYPE = "HIDDEN";
-    private static final String USER_SETTING_IS_SEND_NOTICE = "NOTICE";
-    private static final String USER_SETTING_IS_SEND_EMAIL = "EMAIL";
+    private static final String USER_SETTING_IS_SEND_NOTICE = "notice";
+    private static final String USER_SETTING_IS_SEND_EMAIL = "email";
 
     private static final String USER_SETTING_ALERT_TYPE = "BLOCKER";
 
@@ -86,10 +85,7 @@ public class UserSettingServiceTest {
         assertEquals(USER_SETTING_DEFAULT_ALERT_TYPE, userSetting.getDefaultAlertType().name());
         assertEquals(USER_SETTING_DEFAULT_ALERT_TYPE, userSetting.getAlertType().name());
 
-        assertTrue(userSetting.getDefaultInfoType().stream().anyMatch(infoType -> infoType.name().equals(USER_SETTING_IS_SEND_NOTICE)));
-        assertTrue(userSetting.getDefaultInfoType().stream().anyMatch(infoType -> infoType.name().equals(USER_SETTING_IS_SEND_EMAIL)));
-        assertTrue(userSetting.getInfoTypes().stream().anyMatch(infoType -> infoType.name().equals(USER_SETTING_IS_SEND_NOTICE)));
-        assertTrue(userSetting.getInfoTypes().stream().anyMatch(infoType -> infoType.name().equals(USER_SETTING_IS_SEND_EMAIL)));
+        assertEquals(USER_SETTING_IS_SEND_EMAIL, userSetting.getChannelType().getId());
     }
 
     @Test
@@ -97,9 +93,9 @@ public class UserSettingServiceTest {
         UserSetting setting = new UserSetting();
         setting.setDisabled(true);
         setting.setAlertType(AlertType.BLOCKER);
-        setting.setInfoTypes(Collections.singletonList(InfoType.EMAIL));
+        setting.setChannelType(new ChannelType(USER_SETTING_IS_SEND_NOTICE, "Центр уведомлений"));
 
-        //Создаем уже непосредственно пользовательскую настроку, для пользователя 'admin' и для шаблона уведомления с иде-ром 1,
+        //Создаем уже непосредственно пользовательскую настройку, для пользователя 'admin' и для шаблона уведомления с иде-ром 1,
         userSettingRest.updateSetting(USER_NAME, USER_SETTINGS_ID_3, setting);
 
         //Получаем пользовательскую для пользователя 'admin' и для шаблона уведомления с иде-ром 1, с внесенными изменениями
@@ -112,12 +108,7 @@ public class UserSettingServiceTest {
         //Изменилось значение для вида сообщения, которое изменяется пользователем
         assertEquals(USER_SETTING_ALERT_TYPE, userSetting.getAlertType().name());
 
-        //Дефолтные настройки по способам оповещения остались прежними
-        assertTrue(userSetting.getDefaultInfoType().stream().anyMatch(infoType -> infoType.name().equals(USER_SETTING_IS_SEND_NOTICE)));
-        assertTrue(userSetting.getDefaultInfoType().stream().anyMatch(infoType -> infoType.name().equals(USER_SETTING_IS_SEND_EMAIL)));
-
-        //В настройках пользователя остался только способ отправки на почту
-        assertFalse(userSetting.getInfoTypes().stream().anyMatch(infoType -> infoType.name().equals(USER_SETTING_IS_SEND_NOTICE)));
-        assertTrue(userSetting.getInfoTypes().stream().anyMatch(infoType -> infoType.name().equals(USER_SETTING_IS_SEND_EMAIL)));
+        //В настройках пользователя способ отправки на почту
+        assertEquals(USER_SETTING_IS_SEND_NOTICE, userSetting.getChannelType().getId());
     }
 }

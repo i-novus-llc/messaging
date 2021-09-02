@@ -27,12 +27,8 @@
                         <option id="HIDDEN" name="Лента уведомлений"/>
                     </options>
                 </input-select>
-                <input-select id="infoType" label="Информирование" required="true" type="multi">
-                    <options>
-                        <option id="EMAIL" name="Электронная почта"/>
-                        <option id="NOTICE" name="Центр уведомлений"/>
-                    </options>
-                </input-select>
+                <input-select id="channelType" label="Информирование" required="true"
+                              query-id="messaging_channels"/>
                 <hidden id="formationType.id" default-value="HAND"/>
             </row>
             <row>

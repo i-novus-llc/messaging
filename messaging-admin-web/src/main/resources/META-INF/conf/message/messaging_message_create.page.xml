@@ -27,13 +27,10 @@
                 </select>
             </row>
             <row>
-                <input-select id="infoType" label="Информирование" required="true" type="multi">
-                    <options>
-                        <option id="EMAIL" name="Электронная почта"/>
-                        <option id="NOTICE" name="Центр уведомлений"/>
-                    </options>
+                <input-select id="channelType" label="Информирование" required="true"
+                              query-id="messaging_channels">
                     <dependencies>
-                        <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return template.infoType;</set-value>
+                        <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return template.channelType;</set-value>
                     </dependencies>
                 </input-select>
                 <select id="alertType" label="Способ отображения" required="true">

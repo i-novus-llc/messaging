@@ -24,6 +24,11 @@
         </dependency>
 
         <dependency>
+            <groupId>ru.i-novus.messaging</groupId>
+            <artifactId>messaging-channel-api</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
             <artifactId>security-admin-rest-api</artifactId>
         </dependency>
@@ -219,12 +224,6 @@
                                     <userType>ru.inovus.messaging.api.model.AlertType</userType>
                                     <converter>ru.inovus.messaging.impl.util.AlertTypeConverter</converter>
                                     <expression>.*\.alert_type.*</expression>
-                                    <types>.*</types>
-                                </forcedType>
-                                <forcedType>
-                                    <userType>ru.inovus.messaging.api.model.InfoType</userType>
-                                    <converter>ru.inovus.messaging.impl.util.InfoTypeConverter</converter>
-                                    <expression>.*\.info_type.*</expression>
                                     <types>.*</types>
                                 </forcedType>
                                 <forcedType>

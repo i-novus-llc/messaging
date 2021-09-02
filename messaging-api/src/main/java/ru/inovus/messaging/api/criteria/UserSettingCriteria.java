@@ -16,7 +16,6 @@
 package ru.inovus.messaging.api.criteria;
 
 import ru.inovus.messaging.api.model.AlertType;
-import ru.inovus.messaging.api.model.InfoType;
 import ru.inovus.messaging.api.model.Severity;
 import ru.inovus.messaging.api.model.YesNo;
 
@@ -38,8 +37,8 @@ public class UserSettingCriteria extends BaseMessagingCriteria {
     @QueryParam("alertType.id")
     private AlertType alertType;
 
-    @QueryParam("infoType.id")
-    private InfoType infoType;
+    @QueryParam("channelType.id")
+    private String channelTypeId;
 
     @QueryParam("name")
     private String name;
@@ -82,12 +81,12 @@ public class UserSettingCriteria extends BaseMessagingCriteria {
         this.alertType = alertType;
     }
 
-    public InfoType getInfoType() {
-        return infoType;
+    public String getChannelTypeId() {
+        return channelTypeId;
     }
 
-    public void setInfoType(InfoType infoType) {
-        this.infoType = infoType;
+    public void setChannelTypeId(String channelTypeId) {
+        this.channelTypeId = channelTypeId;
     }
 
     public String getName() {
