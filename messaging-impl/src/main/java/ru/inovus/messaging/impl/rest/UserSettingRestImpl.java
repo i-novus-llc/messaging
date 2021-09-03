@@ -53,7 +53,7 @@ public class UserSettingRestImpl implements UserSettingRest {
         setting.setDefaultAlertType(defaultSetting.getAlertType());
 
         setting.setChannel(channelService.getChannel(
-                userSetting.getSendChannel() != null ? userSetting.getSendChannel() : defaultSetting.getSendChannel()
+                userSetting.getChannelId() != null ? userSetting.getChannelId() : defaultSetting.getChannelId()
         ));
 
         setting.setTemplateCode(defaultSetting.getCode());
@@ -77,8 +77,8 @@ public class UserSettingRestImpl implements UserSettingRest {
                                 .or(USER_SETTING.ALERT_TYPE.isNull().and(MESSAGE_SETTING.ALERT_TYPE.eq(alertType)))));
         Optional.ofNullable(criteria.getChannelTypeId())
                 .ifPresent(channelTypeId -> conditions.add(
-                        USER_SETTING.SEND_CHANNEL.eq(channelTypeId)
-                                .or(MESSAGE_SETTING.SEND_CHANNEL.eq(channelTypeId))));
+                        USER_SETTING.CHANNEL_ID.eq(channelTypeId)
+                                .or(MESSAGE_SETTING.CHANNEL_ID.eq(channelTypeId))));
         conditions.add(MESSAGE_SETTING.IS_DISABLED.isFalse());
         Optional.ofNullable(criteria.getEnabled())
                 .ifPresent(enabled -> conditions.add(USER_SETTING.IS_DISABLED.isNull().and(DSL.value(enabled))
@@ -155,7 +155,7 @@ public class UserSettingRestImpl implements UserSettingRest {
             dsl
                     .update(USER_SETTING)
                     .set(USER_SETTING.ALERT_TYPE, setting.getAlertType())
-                    .set(USER_SETTING.SEND_CHANNEL, setting.getChannel() != null ? setting.getChannel().getId() : null)
+                    .set(USER_SETTING.CHANNEL_ID, setting.getChannel() != null ? setting.getChannel().getId() : null)
                     .set(USER_SETTING.IS_DISABLED, setting.getDisabled())
                     .where(USER_SETTING.MSG_SETTING_ID.eq(msgSettingId))
                     .and(USER_SETTING.USER_ID.eq(user))
@@ -175,7 +175,7 @@ public class UserSettingRestImpl implements UserSettingRest {
 //           Если в таблице public.message_setting запись с переданным иден-ром есть, но со ссылкой на нее и указанными настройками пользователя создаем запись в таблице public.user_setting
             dsl
                     .insertInto(USER_SETTING)
-                    .columns(USER_SETTING.USER_ID, USER_SETTING.ALERT_TYPE, USER_SETTING.SEND_CHANNEL,
+                    .columns(USER_SETTING.USER_ID, USER_SETTING.ALERT_TYPE, USER_SETTING.CHANNEL_ID,
                             USER_SETTING.IS_DISABLED, USER_SETTING.MSG_SETTING_ID)
                     .values(
                             user,

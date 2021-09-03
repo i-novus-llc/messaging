@@ -67,7 +67,7 @@ public class MessageService {
                 .columns(MESSAGE.ID, MESSAGE.CAPTION, MESSAGE.TEXT, MESSAGE.SEVERITY, MESSAGE.ALERT_TYPE,
                         MESSAGE.SENT_AT, MESSAGE.SYSTEM_ID, MESSAGE.COMPONENT_ID,
                         MESSAGE.FORMATION_TYPE, MESSAGE.RECIPIENT_TYPE, MESSAGE.NOTIFICATION_TYPE, MESSAGE.OBJECT_ID,
-                        MESSAGE.OBJECT_TYPE, MESSAGE.SEND_CHANNEL)
+                        MESSAGE.OBJECT_TYPE, MESSAGE.CHANNEL_ID)
                 .values(id, message.getCaption(), message.getText(), message.getSeverity(), message.getAlertType(),
                         message.getSentAt(), message.getSystemId(),
                         message.getComponent() != null ? message.getComponent().getId() : null,
@@ -108,7 +108,7 @@ public class MessageService {
         Optional.ofNullable(criteria.getSeverity())
                 .ifPresent(severity -> conditions.add(MESSAGE.SEVERITY.eq(severity)));
         Optional.ofNullable(criteria.getChannelTypeId())
-                .ifPresent(channelTypeId -> conditions.add(MESSAGE.SEND_CHANNEL.eq(channelTypeId)));
+                .ifPresent(channelTypeId -> conditions.add(MESSAGE.CHANNEL_ID.eq(channelTypeId)));
 
         //TODO: UTC?
         Optional.ofNullable(sentAtBeginDateTime)

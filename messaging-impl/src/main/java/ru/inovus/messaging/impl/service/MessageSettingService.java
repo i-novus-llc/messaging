@@ -38,8 +38,8 @@ public class MessageSettingService {
         messageSetting.setName(settingRec.getName());
         messageSetting.setAlertType(settingRec.getAlertType());
         messageSetting.setSeverity(settingRec.getSeverity());
-        if (settingRec.getSendChannel() != null) {
-            Channel channel = channelService.getChannel(settingRec.getSendChannel());
+        if (settingRec.getChannelId() != null) {
+            Channel channel = channelService.getChannel(settingRec.getChannelId());
             messageSetting.setChannel(channel);
         }
         messageSetting.setCaption(settingRec.getCaption());
@@ -66,7 +66,7 @@ public class MessageSettingService {
         Optional.ofNullable(criteria.getAlertType())
                 .ifPresent(alertType -> conditions.add(MESSAGE_SETTING.ALERT_TYPE.eq(alertType)));
         Optional.ofNullable(criteria.getChannelTypeId())
-                .ifPresent(channelTypeId -> conditions.add(MESSAGE_SETTING.SEND_CHANNEL.eq(channelTypeId)));
+                .ifPresent(channelTypeId -> conditions.add(MESSAGE_SETTING.CHANNEL_ID.eq(channelTypeId)));
         Optional.ofNullable(criteria.getName()).filter(StringUtils::isNotBlank)
                 .ifPresent(name -> conditions.add(MESSAGE_SETTING.NAME.containsIgnoreCase(name)));
         Optional.ofNullable(criteria.getFormationType())
@@ -105,7 +105,7 @@ public class MessageSettingService {
         dsl
                 .insertInto(MESSAGE_SETTING)
                 .columns(MESSAGE_SETTING.ID, MESSAGE_SETTING.NAME, MESSAGE_SETTING.COMPONENT_ID,
-                        MESSAGE_SETTING.ALERT_TYPE, MESSAGE_SETTING.SEVERITY, MESSAGE_SETTING.SEND_CHANNEL,
+                        MESSAGE_SETTING.ALERT_TYPE, MESSAGE_SETTING.SEVERITY, MESSAGE_SETTING.CHANNEL_ID,
                         MESSAGE_SETTING.FORMATION_TYPE, MESSAGE_SETTING.IS_DISABLED,
                         MESSAGE_SETTING.CAPTION, MESSAGE_SETTING.TEXT,
                         MESSAGE_SETTING.CODE
@@ -126,7 +126,7 @@ public class MessageSettingService {
                 .set(MESSAGE_SETTING.COMPONENT_ID, messageSetting.getComponent() != null ? messageSetting.getComponent().getId() : null)
                 .set(MESSAGE_SETTING.ALERT_TYPE, messageSetting.getAlertType())
                 .set(MESSAGE_SETTING.SEVERITY, messageSetting.getSeverity())
-                .set(MESSAGE_SETTING.SEND_CHANNEL, messageSetting.getChannel() != null ? messageSetting.getChannel().getId() : null)
+                .set(MESSAGE_SETTING.CHANNEL_ID, messageSetting.getChannel() != null ? messageSetting.getChannel().getId() : null)
                 .set(MESSAGE_SETTING.FORMATION_TYPE, messageSetting.getFormationType())
                 .set(MESSAGE_SETTING.IS_DISABLED, messageSetting.getDisabled())
                 .set(MESSAGE_SETTING.CAPTION, messageSetting.getCaption())
