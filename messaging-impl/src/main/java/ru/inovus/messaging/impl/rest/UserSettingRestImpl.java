@@ -75,10 +75,10 @@ public class UserSettingRestImpl implements UserSettingRest {
                         USER_SETTING.ALERT_TYPE.isNotNull()
                                 .and(USER_SETTING.ALERT_TYPE.eq(alertType))
                                 .or(USER_SETTING.ALERT_TYPE.isNull().and(MESSAGE_SETTING.ALERT_TYPE.eq(alertType)))));
-        Optional.ofNullable(criteria.getChannelTypeId())
-                .ifPresent(channelTypeId -> conditions.add(
-                        USER_SETTING.CHANNEL_ID.eq(channelTypeId)
-                                .or(MESSAGE_SETTING.CHANNEL_ID.eq(channelTypeId))));
+        Optional.ofNullable(criteria.getChannelId())
+                .ifPresent(channelId -> conditions.add(
+                        USER_SETTING.CHANNEL_ID.eq(channelId)
+                                .or(MESSAGE_SETTING.CHANNEL_ID.eq(channelId))));
         conditions.add(MESSAGE_SETTING.IS_DISABLED.isFalse());
         Optional.ofNullable(criteria.getEnabled())
                 .ifPresent(enabled -> conditions.add(USER_SETTING.IS_DISABLED.isNull().and(DSL.value(enabled))

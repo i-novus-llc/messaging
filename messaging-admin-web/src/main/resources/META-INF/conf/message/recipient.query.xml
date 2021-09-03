@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0" object-id="messaging_message">
+<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0"
+       object-id="messaging_message">
 
     <list result-mapping="['content']" count-mapping="['totalElements']">
         <rest filters-separator="&amp;">${messaging.backend.path}/messages/recipients?{filters}&amp;{sorting}&amp;size={limit}&amp;page={page}</rest>
@@ -7,31 +8,31 @@
 
     <fields>
         <field id="recipient" domain="string" name="Получатель">
-            <select>recipient</select>
+            <select mapping="['recipient']"/>
             <filters>
                 <eq filter-id="recipient">recipient={recipient}</eq>
             </filters>
         </field>
 
         <field id="name" domain="string" name="Получатель">
-            <select>name</select>
+            <select mapping="['name']"/>
         </field>
 
         <field id="messageId" domain="string">
-            <select>messageId</select>
+            <select mapping="['messageId']"/>
             <filters>
                 <eq filter-id="messageId">messageId={messageId}</eq>
             </filters>
         </field>
 
         <field id="readAt" domain="date" name="Дата прочтения">
-            <select normalize="T(ru.inovus.messaging.n2o.utils.LocalDateTimeUtils).parseDateToMsk(#this)" mapping="['readAt']"/>
+            <select normalize="T(ru.inovus.messaging.n2o.utils.LocalDateTimeUtils).parseDateToMsk(#this)"
+                    mapping="['readAt']"/>
         </field>
 
         <field id="email" domain="date">
-            <select>readAt</select>
+            <select mapping="['readAt']"/>
         </field>
 
     </fields>
-
 </query>

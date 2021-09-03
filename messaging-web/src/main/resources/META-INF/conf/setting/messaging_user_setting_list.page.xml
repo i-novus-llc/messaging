@@ -1,7 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-2.0" name="Пользовательские настройки уведомлений">
-    <table query-id="messaging_user_setting" name="Пользовательские настройки уведомлений" id="message_setting_list">
-        <filters search-buttons="false">
+<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-3.0"
+             name="Пользовательские настройки уведомлений">
+    <table id="message_setting_list" query-id="messaging_user_setting">
+        <filters>
             <row>
                 <input-select id="component" label="Компонент" query-id="messaging_component"
                               label-field-id="name" search-field-id="name"/>
@@ -20,7 +21,7 @@
                         <option id="HIDDEN" name="Лента уведомлений"/>
                     </options>
                 </input-select>
-                <input-select id="channelType" label="Информирование для пользователя" query-id="messaging_channels"/>
+                <input-select id="infoType" label="Информирование для пользователя" query-id="messaging_channels"/>
             </row>
             <row>
                 <input-text id="name" label="Событие"/>
@@ -40,15 +41,13 @@
             <column text-field-id="severity.name" label="Уровень важности"/>
             <column text-field-id="defaultAlertType.name" label="Способ отображения по умолчанию"/>
             <column text-field-id="alertType.name" label="Способ отображения для пользователя"/>
-            <column text-field-id="channelType" label="Информирование для пользователя">
-                <list label-field-id="name"/>
-            </column>
+            <column text-field-id="infoType.name" label="Информирование для пользователя"/>
             <column text-field-id="enabled" label="Включено">
                 <checkbox/>
             </column>
         </columns>
         <toolbar>
-            <button label="Изменить" id="update" model="resolve" icon="fa fa-edit">
+            <button label="Изменить" id="update" icon="fa fa-edit">
                 <show-modal page-id="messaging_user_setting" submit-operation-id="update"
                             close-after-submit="true" detail-field-id="id" object-id="messaging_user_setting"/>
             </button>

@@ -3,8 +3,6 @@
         color="inverse"
         brand-name="Уведомления"
         welcome-page-id="messaging_settings">
-
     <nav ref-id="messaging"/>
     <extra-menu ref-id="user"/>
-
 </header>

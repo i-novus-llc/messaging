@@ -25,19 +25,21 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class MessageCriteria extends BaseMessagingCriteria {
-
-    private static final long serialVersionUID = 7609048158169451956L;
-
     @QueryParam("systemId")
     private String systemId;
+
     @QueryParam("sentAtBegin")
     private LocalDateTime sentAtBegin;
+
     @QueryParam("sentAtEnd")
     private LocalDateTime sentAtEnd;
+
     @QueryParam("severity.id")
     private Severity severity;
-    @QueryParam("channelType.id")
-    private String channelTypeId;
+
+    @QueryParam("infoType.id")
+    private String channelId;
+
     @QueryParam("component.id")
     private Integer componentId;
 }

@@ -107,8 +107,8 @@ public class MessageService {
                 .ifPresent(componentId -> conditions.add(MESSAGE.COMPONENT_ID.eq(componentId)));
         Optional.ofNullable(criteria.getSeverity())
                 .ifPresent(severity -> conditions.add(MESSAGE.SEVERITY.eq(severity)));
-        Optional.ofNullable(criteria.getChannelTypeId())
-                .ifPresent(channelTypeId -> conditions.add(MESSAGE.CHANNEL_ID.eq(channelTypeId)));
+        Optional.ofNullable(criteria.getChannelId())
+                .ifPresent(channelId -> conditions.add(MESSAGE.CHANNEL_ID.eq(channelId)));
 
         //TODO: UTC?
         Optional.ofNullable(sentAtBeginDateTime)
@@ -118,8 +118,10 @@ public class MessageService {
         SelectConditionStep<Record> query = dsl
                 .select(MESSAGE.fields())
                 .select(COMPONENT.fields())
+                .select(CHANNEL.fields())
                 .from(MESSAGE)
                 .leftJoin(COMPONENT).on(COMPONENT.ID.eq(MESSAGE.COMPONENT_ID))
+                .leftJoin(CHANNEL).on(CHANNEL.ID.eq(MESSAGE.CHANNEL_ID))
                 .where(conditions);
         int count = dsl.fetchCount(query);
         Field<?> fieldSentAt = MESSAGE.field("sent_at");
@@ -135,8 +137,10 @@ public class MessageService {
         Message message = dsl
                 .select(MESSAGE.fields())
                 .select(COMPONENT.fields())
+                .select(CHANNEL.fields())
                 .from(MESSAGE)
                 .leftJoin(COMPONENT).on(COMPONENT.ID.eq(MESSAGE.COMPONENT_ID))
+                .leftJoin(CHANNEL).on(CHANNEL.ID.eq(MESSAGE.CHANNEL_ID))
                 .where(MESSAGE.ID.cast(UUID.class).eq(messageId))
                 .fetchOne(MAPPER);
         List<Recipient> recipients = dsl

@@ -1,18 +1,18 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<object xmlns="http://n2oapp.net/framework/config/schema/object-3.0">
+<object xmlns="http://n2oapp.net/framework/config/schema/object-4.0">
 
     <operations>
         <operation id="update">
             <invocation>
                 <rest method="PUT">${messaging.backend.path}/user/{user}/settings/{id}</rest>
             </invocation>
-            <in-parameters>
-                <param id="id" mapping="['id']"/>
-                <param id="alertType.id" mapping="['alertType']"/>
-                <param id="channelType" mapping="['channelType']"/>
-                <param id="disabled" mapping="['disabled']"/>
-                <param id="user" default-value="#{username!}" mapping="['user']"/>
-            </in-parameters>
+            <in>
+                <field id="id" mapping="['id']"/>
+                <field id="alertType.id" mapping="['alertType']"/>
+                <field id="infoType" mapping="['channel']"/>
+                <field id="disabled" mapping="['disabled']"/>
+                <field id="user" default-value="#{username!}" mapping="['user']"/>
+            </in>
         </operation>
     </operations>
 

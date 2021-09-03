@@ -65,8 +65,8 @@ public class MessageSettingService {
                 .ifPresent(severity -> conditions.add(MESSAGE_SETTING.SEVERITY.eq(severity)));
         Optional.ofNullable(criteria.getAlertType())
                 .ifPresent(alertType -> conditions.add(MESSAGE_SETTING.ALERT_TYPE.eq(alertType)));
-        Optional.ofNullable(criteria.getChannelTypeId())
-                .ifPresent(channelTypeId -> conditions.add(MESSAGE_SETTING.CHANNEL_ID.eq(channelTypeId)));
+        Optional.ofNullable(criteria.getChannelId())
+                .ifPresent(channelId -> conditions.add(MESSAGE_SETTING.CHANNEL_ID.eq(channelId)));
         Optional.ofNullable(criteria.getName()).filter(StringUtils::isNotBlank)
                 .ifPresent(name -> conditions.add(MESSAGE_SETTING.NAME.containsIgnoreCase(name)));
         Optional.ofNullable(criteria.getFormationType())
