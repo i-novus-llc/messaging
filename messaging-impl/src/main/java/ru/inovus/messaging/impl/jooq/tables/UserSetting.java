@@ -4,32 +4,20 @@
 package ru.inovus.messaging.impl.jooq.tables;
 
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.jooq.Check;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Identity;
-import org.jooq.Index;
-import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row6;
-import org.jooq.Schema;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.Internal;
 import org.jooq.impl.TableImpl;
-
-import ru.inovus.messaging.api.model.AlertType;
+import ru.inovus.messaging.api.model.enums.AlertType;
 import ru.inovus.messaging.impl.jooq.Indexes;
 import ru.inovus.messaging.impl.jooq.Keys;
 import ru.inovus.messaging.impl.jooq.Public;
 import ru.inovus.messaging.impl.jooq.tables.records.UserSettingRecord;
 import ru.inovus.messaging.impl.util.AlertTypeConverter;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 /**

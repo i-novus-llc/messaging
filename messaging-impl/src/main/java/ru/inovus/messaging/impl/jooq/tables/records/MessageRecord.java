@@ -4,20 +4,19 @@
 package ru.inovus.messaging.impl.jooq.tables.records;
 
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
 import org.jooq.Field;
 import org.jooq.Record1;
 import org.jooq.Record16;
 import org.jooq.Row16;
 import org.jooq.impl.UpdatableRecordImpl;
-
-import ru.inovus.messaging.api.model.AlertType;
-import ru.inovus.messaging.api.model.FormationType;
-import ru.inovus.messaging.api.model.RecipientType;
-import ru.inovus.messaging.api.model.Severity;
+import ru.inovus.messaging.api.model.enums.AlertType;
+import ru.inovus.messaging.api.model.enums.FormationType;
+import ru.inovus.messaging.api.model.enums.RecipientType;
+import ru.inovus.messaging.api.model.enums.Severity;
 import ru.inovus.messaging.impl.jooq.tables.Message;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 
 /**

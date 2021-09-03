@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ru.inovus.messaging.api.model;
+package ru.inovus.messaging.api.model.enums;
 
-public enum RecipientType {
-    USER("Пользователь"),
-    ALL("Все");
+public enum YesNo {
+    YES(true),NO(false);
 
-    private String name;
+    private Boolean value;
 
-    RecipientType(String name) {
-        this.name = name;
+    YesNo(Boolean value) {
+        this.value = value;
     }
 
-    public String getName() {
-        return name;
+    public Boolean getValue() {
+        return value;
     }
 }

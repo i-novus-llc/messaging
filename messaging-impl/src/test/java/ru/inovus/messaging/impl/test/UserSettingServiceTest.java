@@ -11,7 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.inovus.messaging.api.criteria.UserSettingCriteria;
-import ru.inovus.messaging.api.model.AlertType;
+import ru.inovus.messaging.api.model.enums.AlertType;
 import ru.inovus.messaging.api.model.Channel;
 import ru.inovus.messaging.api.model.UserSetting;
 import ru.inovus.messaging.api.rest.UserSettingRest;

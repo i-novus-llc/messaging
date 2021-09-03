@@ -10,7 +10,7 @@ import org.jooq.Record6;
 import org.jooq.Row6;
 import org.jooq.impl.UpdatableRecordImpl;
 
-import ru.inovus.messaging.api.model.AlertType;
+import ru.inovus.messaging.api.model.enums.AlertType;
 import ru.inovus.messaging.impl.jooq.tables.UserSetting;
 
 

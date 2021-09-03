@@ -17,9 +17,9 @@ package ru.inovus.messaging.api.criteria;
 
 import lombok.Getter;
 import lombok.Setter;
-import ru.inovus.messaging.api.model.AlertType;
-import ru.inovus.messaging.api.model.Severity;
-import ru.inovus.messaging.api.model.YesNo;
+import ru.inovus.messaging.api.model.enums.AlertType;
+import ru.inovus.messaging.api.model.enums.Severity;
+import ru.inovus.messaging.api.model.enums.YesNo;
 
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;

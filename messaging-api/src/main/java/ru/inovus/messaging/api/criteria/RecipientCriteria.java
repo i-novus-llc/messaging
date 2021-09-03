@@ -24,7 +24,6 @@ import java.util.UUID;
 @Getter
 @Setter
 public class RecipientCriteria extends BaseMessagingCriteria {
-
     @QueryParam("messageId")
     private UUID messageId;
 }

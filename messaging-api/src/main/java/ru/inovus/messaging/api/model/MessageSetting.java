@@ -15,6 +15,10 @@
  */
 package ru.inovus.messaging.api.model;
 
+import ru.inovus.messaging.api.model.enums.AlertType;
+import ru.inovus.messaging.api.model.enums.FormationType;
+import ru.inovus.messaging.api.model.enums.Severity;
+
 import java.io.Serializable;
 
 public class MessageSetting implements Serializable {

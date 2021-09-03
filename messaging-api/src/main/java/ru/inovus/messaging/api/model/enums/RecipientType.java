@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ru.inovus.messaging.api.model;
+package ru.inovus.messaging.api.model.enums;
 
-public enum AlertType {
-    BLOCKER,
-    POPUP,
-    HIDDEN;
+public enum RecipientType {
+    USER("Пользователь"),
+    ALL("Все");
+
+    private String name;
+
+    RecipientType(String name) {
+        this.name = name;
+    }
 
     public String getName() {
-        switch (this) {
-            case BLOCKER: return "Блокирующее сообщение";
-            case POPUP: return "Всплывающее сообщение";
-            case HIDDEN: return "Лента сообщений";
-            default: return null;
-        }
+        return name;
     }
 }

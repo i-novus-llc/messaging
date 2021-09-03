@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.inovus.messaging.api.model.Channel;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.MessageOutbox;
-import ru.inovus.messaging.api.model.RecipientType;
+import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.api.queue.QueueMqConsumer;
 import ru.inovus.messaging.channel.api.queue.TopicMqConsumer;

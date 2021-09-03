@@ -28,8 +28,7 @@
                             <input-text id="caption" label="Заголовок уведомления" enabled="false"/>
                         </row>
                         <row>
-                            <text-area id="text" label="Текст уведомления" rows="5" enabled="false">
-                            </text-area>
+                            <text-area id="text" label="Текст уведомления" max-rows="5" enabled="false"/>
                         </row>
                         <row>
                             <radio-group id="recipientType" label="Тип получателей" inline="true" enabled="false">

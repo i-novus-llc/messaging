@@ -17,7 +17,7 @@ package ru.inovus.messaging.api.criteria;
 
 import lombok.Getter;
 import lombok.Setter;
-import ru.inovus.messaging.api.model.Severity;
+import ru.inovus.messaging.api.model.enums.Severity;
 
 import javax.ws.rs.QueryParam;
 import java.time.LocalDateTime;

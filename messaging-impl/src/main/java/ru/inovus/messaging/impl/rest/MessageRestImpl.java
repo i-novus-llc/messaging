@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import ru.inovus.messaging.api.criteria.*;
 import ru.inovus.messaging.api.model.*;
+import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.rest.MessageRest;
 import ru.inovus.messaging.api.rest.UserSettingRest;
 import ru.inovus.messaging.channel.api.queue.DestinationResolver;

@@ -23,10 +23,10 @@ import org.jooq.TableOptions;
 import org.jooq.UniqueKey;
 import org.jooq.impl.*;
 
-import ru.inovus.messaging.api.model.AlertType;
-import ru.inovus.messaging.api.model.FormationType;
-import ru.inovus.messaging.api.model.RecipientType;
-import ru.inovus.messaging.api.model.Severity;
+import ru.inovus.messaging.api.model.enums.AlertType;
+import ru.inovus.messaging.api.model.enums.FormationType;
+import ru.inovus.messaging.api.model.enums.RecipientType;
+import ru.inovus.messaging.api.model.enums.Severity;
 import ru.inovus.messaging.impl.jooq.Indexes;
 import ru.inovus.messaging.impl.jooq.Keys;
 import ru.inovus.messaging.impl.jooq.Public;
