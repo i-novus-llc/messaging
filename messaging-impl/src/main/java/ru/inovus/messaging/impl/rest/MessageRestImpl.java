@@ -12,7 +12,6 @@ import ru.inovus.messaging.api.model.*;
 import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.rest.MessageRest;
 import ru.inovus.messaging.api.rest.UserSettingRest;
-import ru.inovus.messaging.channel.api.queue.DestinationResolver;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.impl.UserRoleProvider;
 import ru.inovus.messaging.impl.provider.ConfigurableUserRoleProvider;
@@ -35,7 +34,6 @@ public class MessageRestImpl implements MessageRest {
     private final ChannelService channelService;
     private final MqProvider mqProvider;
     private final boolean securityAdminRestEnable;
-    private DestinationResolver destinationResolver;
     private final UserSettingRest userSettingRest;
     private final UserRoleProvider userRoleProvider;
 
@@ -46,7 +44,6 @@ public class MessageRestImpl implements MessageRest {
                            @Value("${sec.admin.rest.enable}") boolean securityAdminRestEnable,
                            MqProvider mqProvider,
                            UserRoleProvider userRoleProvider,
-                           DestinationResolver destinationResolver,
                            UserSettingRest userSettingRest) {
         this.messageService = messageService;
         this.messageSettingService = messageSettingService;
@@ -55,7 +52,6 @@ public class MessageRestImpl implements MessageRest {
         this.mqProvider = mqProvider;
         this.securityAdminRestEnable = securityAdminRestEnable;
         this.userRoleProvider = userRoleProvider;
-        this.destinationResolver = destinationResolver;
         this.userSettingRest = userSettingRest;
     }
 

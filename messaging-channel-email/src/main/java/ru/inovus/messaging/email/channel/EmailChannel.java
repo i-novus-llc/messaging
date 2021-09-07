@@ -18,6 +18,9 @@ import javax.mail.internet.MimeMessage;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Реализация канала отправки сообщений по Email
+ */
 @Component
 @PropertySource("classpath:channel.properties")
 public class EmailChannel extends AbstractChannel {
@@ -26,21 +29,22 @@ public class EmailChannel extends AbstractChannel {
 
     private JavaMailSender emailSender;
 
-    public EmailChannel(@Value("${messaging.channel.email-queue-name}") String queueName, MqProvider mqProvider, JavaMailSender emailSender) {
+    public EmailChannel(@Value("${messaging.channel.email-queue-name}") String queueName,
+                        MqProvider mqProvider,
+                        JavaMailSender emailSender) {
         super(queueName, mqProvider);
         this.emailSender = emailSender;
     }
 
-    /**
-     * Отправка сообщения на почту
-     */
+
     public void send(MessageOutbox message) {
         try {
             for (Recipient recipient : message.getMessage().getRecipients()) {
-                if (StringUtils.isEmpty(recipient.getEmail())) {
-                    logger.error("Message with id={} will not be sent to recipient with id={} due to an empty email address", message.getMessage().getId(), recipient.getRecipient());
-                }
+                if (StringUtils.isEmpty(recipient.getEmail()))
+                    logger.error("Message with id={} will not be sent to recipient with id={} due to an empty email address",
+                            message.getMessage().getId(), recipient.getRecipient());
             }
+
             List<String> recipientsEmailList = message.getMessage().getRecipients().stream()
                     .filter(x -> StringUtils.hasLength(x.getEmail()))
                     .map(Recipient::getEmail)
