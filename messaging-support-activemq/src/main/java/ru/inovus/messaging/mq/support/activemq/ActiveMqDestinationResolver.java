@@ -2,8 +2,8 @@ package ru.inovus.messaging.mq.support.activemq;
 
 import org.apache.activemq.command.ActiveMQDestination;
 import org.springframework.stereotype.Component;
-import ru.inovus.messaging.api.queue.DestinationResolver;
-import ru.inovus.messaging.api.queue.DestinationType;
+import ru.inovus.messaging.channel.api.queue.DestinationResolver;
+import ru.inovus.messaging.channel.api.queue.DestinationType;
 
 /**
  * @author RMakhmutov
@@ -14,9 +14,9 @@ public class ActiveMqDestinationResolver implements DestinationResolver {
     @Override
     public String resolve(String mqDestinationName, DestinationType destinationType) {
         switch (destinationType) {
-            case CONSUMER:
+            case QUEUE:
                 return ActiveMQDestination.QUEUE_QUALIFIED_PREFIX + mqDestinationName;
-            case SUBSCRIBER:
+            case TOPIC:
                 return ActiveMQDestination.TOPIC_QUALIFIED_PREFIX + mqDestinationName;
             default:
                 return mqDestinationName;

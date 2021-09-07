@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <page xmlns="http://n2oapp.net/framework/config/schema/page-3.0"
-      layout="TopBottomLayout"
       name="Просмотр уведомления от {sentAtFormatted}">
     <regions>
         <region place="top">
@@ -29,8 +28,7 @@
                             <input-text id="caption" label="Заголовок уведомления" enabled="false"/>
                         </row>
                         <row>
-                            <text-area id="text" label="Текст уведомления" rows="5" enabled="false">
-                            </text-area>
+                            <text-area id="text" label="Текст уведомления" max-rows="5" enabled="false"/>
                         </row>
                         <row>
                             <radio-group id="recipientType" label="Тип получателей" inline="true" enabled="false">
@@ -39,14 +37,15 @@
                                     <option id="ALL" name="Все"/>
                                 </options>
                             </radio-group>
-                            <output-text id="sentAt" label="Дата отправки" enabled="false" />
+                            <output-text id="sentAt" label="Дата отправки" enabled="false"/>
                         </row>
                     </set>
                 </fields>
             </form>
         </region>
         <line place="bottom">
-            <table query-id="recipient" depends-on="view" detail-field-id="messageId" visible="{recipientType.id == 'USER'}" name="Получатели">
+            <table query-id="recipient" depends-on="view" detail-field-id="messageId"
+                   visible="{recipientType.id == 'USER'}" name="Получатели">
                 <columns>
                     <column text-field-id="readAt"/>
                     <column text-field-id="name"/>

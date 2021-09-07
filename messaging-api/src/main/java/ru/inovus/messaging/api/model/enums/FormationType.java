@@ -13,24 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ru.inovus.messaging.api.model;
+package ru.inovus.messaging.api.model.enums;
 
-public enum Severity {
-    INFO("10", "Информация"),
-    WARNING("20", "Предупреждение"),
-    ERROR("30", "Ошибка"),
-    SEVERE("40", "Важный");
+public enum FormationType {
+    AUTO("Автоматическое"),
+    HAND("Ручное");
 
-    private String value;
     private String name;
 
-    Severity(String value, String name) {
-        this.value = value;
+    FormationType(String name) {
         this.name = name;
-    }
-
-    public String getValue() {
-        return value;
     }
 
     public String getName() {

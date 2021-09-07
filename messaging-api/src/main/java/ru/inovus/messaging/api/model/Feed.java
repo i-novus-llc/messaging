@@ -18,6 +18,7 @@ package ru.inovus.messaging.api.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
+import ru.inovus.messaging.api.model.enums.Severity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

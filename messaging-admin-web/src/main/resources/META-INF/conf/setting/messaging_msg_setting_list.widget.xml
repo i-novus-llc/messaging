@@ -1,8 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <table xmlns="http://n2oapp.net/framework/config/schema/n2o-widget-4.0"
-       query-id="messaging_msg_setting" name="Шаблоны уведомлений" id="message_setting_list">
+       query-id="messaging_msg_setting" id="message_setting_list">
     <filters>
-        <!--<set>-->
         <row>
             <col>
                 <input-select id="component" label="Компонент" query-id="messaging_component"
@@ -28,7 +27,7 @@
                 </input-select>
             </col>
             <col>
-                <input-select id="channelType" label="Информирование" query-id="messaging_channels"/>
+                <input-select id="infoType" label="Информирование" query-id="messaging_channels"/>
             </col>
         </row>
         <row>
@@ -64,9 +63,7 @@
         <column text-field-id="code" label="Код шаблона"/>
         <column text-field-id="severity.name" label="Уровень важности" sorting-direction="desc"/>
         <column text-field-id="alertType.name" label="Способ отображения"/>
-        <column text-field-id="channelType" label="Информирование">
-            <list label-field-id="name"/>
-        </column>
+        <column text-field-id="infoType.name" label="Информирование"/>
         <column text-field-id="formationType.name" label="Тип уведомления"/>
         <column text-field-id="enabled" label="Включено">
             <checkbox/>

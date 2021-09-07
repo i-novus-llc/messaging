@@ -13,16 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ru.inovus.messaging.api.queue;
-import ru.inovus.messaging.api.model.MessageOutbox;
+package ru.inovus.messaging.channel.api.queue;
 
-import java.io.Serializable;
-
-public interface MqProvider {
-
-    void subscribe(MqConsumer mqConsumer);
-
-    void publish(MessageOutbox message, String mqDestinationName);
-
-    void unsubscribe(Serializable subscriber);
+/**
+ * @author RMakhmutov
+ * @since 03.04.2019
+ */
+public interface DestinationResolver {
+    String resolve(String mqDestinationName, DestinationType destinationType);
 }

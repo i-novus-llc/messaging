@@ -9,11 +9,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import ru.inovus.messaging.api.criteria.*;
 import ru.inovus.messaging.api.model.*;
-import ru.inovus.messaging.api.queue.DestinationResolver;
-import ru.inovus.messaging.api.queue.MqProvider;
+import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.rest.MessageRest;
 import ru.inovus.messaging.api.rest.UserSettingRest;
-import ru.inovus.messaging.channel.api.Channel;
+import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.impl.UserRoleProvider;
 import ru.inovus.messaging.impl.provider.ConfigurableUserRoleProvider;
 import ru.inovus.messaging.impl.service.ChannelService;
@@ -35,7 +34,6 @@ public class MessageRestImpl implements MessageRest {
     private final ChannelService channelService;
     private final MqProvider mqProvider;
     private final boolean securityAdminRestEnable;
-    private DestinationResolver destinationResolver;
     private final UserSettingRest userSettingRest;
     private final UserRoleProvider userRoleProvider;
 
@@ -46,7 +44,6 @@ public class MessageRestImpl implements MessageRest {
                            @Value("${sec.admin.rest.enable}") boolean securityAdminRestEnable,
                            MqProvider mqProvider,
                            UserRoleProvider userRoleProvider,
-                           DestinationResolver destinationResolver,
                            UserSettingRest userSettingRest) {
         this.messageService = messageService;
         this.messageSettingService = messageSettingService;
@@ -55,7 +52,6 @@ public class MessageRestImpl implements MessageRest {
         this.mqProvider = mqProvider;
         this.securityAdminRestEnable = securityAdminRestEnable;
         this.userRoleProvider = userRoleProvider;
-        this.destinationResolver = destinationResolver;
         this.userSettingRest = userSettingRest;
     }
 
@@ -155,8 +151,8 @@ public class MessageRestImpl implements MessageRest {
     }
 
     private void send(Message message) {
-        Channel channel = channelService.getChannel(message.getChannelType().getId());
-        mqProvider.publish(new MessageOutbox(message), destinationResolver.resolve(channel.getDestinationMqName(), channel.getDestinationType()));
+        Channel channel = channelService.getChannel(message.getChannel().getId());
+        mqProvider.publish(new MessageOutbox(message), channel.getQueueName());
     }
 
     //Заполнение списков Пользователей для рассылки уведомления
@@ -218,7 +214,7 @@ public class MessageRestImpl implements MessageRest {
         message.setSeverity(messageSetting.getSeverity());
         message.setAlertType(userSetting == null ? messageSetting.getAlertType() : userSetting.getAlertType());
         message.setSentAt(params.getSentAt());
-        message.setChannelType(userSetting == null ? messageSetting.getChannelType() : userSetting.getChannelType());
+        message.setChannel(userSetting == null ? messageSetting.getChannel() : userSetting.getChannel());
         message.setComponent(messageSetting.getComponent());
         message.setFormationType(messageSetting.getFormationType());
         message.setRecipientType(RecipientType.USER);

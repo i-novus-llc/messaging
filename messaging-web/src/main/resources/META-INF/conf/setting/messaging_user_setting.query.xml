@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0" object-id="messaging_user_setting">
+<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0"
+       object-id="messaging_user_setting">
 
     <list result-mapping="['content']" count-mapping="['totalElements']">
         <rest filters-separator="&amp;">${messaging.backend.path}/user/{username}/settings?{filters}&amp;{sorting}&amp;size={limit}&amp;page={page}</rest>
@@ -13,7 +14,7 @@
         <field id="id" domain="string" name="Идентификатор">
             <select mapping="['id']"/>
             <filters>
-                <eq filter-id="id">{id}</eq>
+                <eq filter-id="id"/>
             </filters>
         </field>
 
@@ -54,10 +55,10 @@
             <select mapping="['alertTypeName']"/>
         </field>
 
-        <field id="channelType" domain="object[]">
-            <select mapping="['channelType']"/>
+        <field id="infoType" domain="object">
+            <select mapping="['channel']"/>
             <filters>
-                <eq filter-id="channelType.id" domain="string">channelType.id={channelType.id}</eq>
+                <eq filter-id="infoType.id" domain="string">channel.id={infoType.id}</eq>
             </filters>
         </field>
 

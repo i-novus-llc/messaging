@@ -8,12 +8,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.junit4.SpringRunner;
-import ru.inovus.messaging.api.model.*;
-import ru.inovus.messaging.api.queue.MqProvider;
-import ru.inovus.messaging.api.queue.QueueMqConsumer;
-import ru.inovus.messaging.api.queue.TopicMqConsumer;
+import ru.inovus.messaging.api.model.Channel;
+import ru.inovus.messaging.api.model.Message;
+import ru.inovus.messaging.api.model.MessageOutbox;
+import ru.inovus.messaging.api.model.enums.RecipientType;
+import ru.inovus.messaging.channel.api.queue.MqProvider;
+import ru.inovus.messaging.channel.api.queue.QueueMqConsumer;
+import ru.inovus.messaging.channel.api.queue.TopicMqConsumer;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -190,7 +192,7 @@ public class MessagingActiveMQSupportTest {
     private MessageOutbox createNotice() {
         MessageOutbox outbox = new MessageOutbox();
         Message message = new Message();
-        message.setChannelType(new ChannelType("notice", "Центр уведомлений"));
+        message.setChannel(new Channel("notice", "Центр уведомлений", "notice"));
         message.setRecipientType(RecipientType.ALL);
         message.setSystemId(DEFAULT_SYSTEM_ID);
         outbox.setMessage(message);
@@ -200,7 +202,7 @@ public class MessagingActiveMQSupportTest {
     private MessageOutbox createEmailNotice() {
         MessageOutbox outbox = new MessageOutbox();
         Message message = new Message();
-        message.setChannelType(new ChannelType("email", "Электронная почта"));
+        message.setChannel(new Channel("email", "Электронная почта", "email"));
         message.setRecipientType(RecipientType.ALL);
         outbox.setMessage(message);
         return outbox;
@@ -209,7 +211,7 @@ public class MessagingActiveMQSupportTest {
     private MessageOutbox createInvalidNotice() {
         MessageOutbox outbox = new MessageOutbox();
         Message message = new Message();
-        message.setChannelType(null);
+        message.setChannel(null);
         message.setRecipientType(RecipientType.ALL);
         message.setSystemId(DEFAULT_SYSTEM_ID);
         outbox.setMessage(message);

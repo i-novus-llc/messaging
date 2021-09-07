@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ru.inovus.messaging.api.queue;
+package ru.inovus.messaging.channel.api.queue;
 
 import ru.inovus.messaging.api.model.MessageOutbox;
 

@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ru.inovus.messaging.api.queue;
+package ru.inovus.messaging.api.model.enums;
 
-import ru.inovus.messaging.api.model.MessageOutbox;
+public enum YesNo {
+    YES(true),NO(false);
 
-import java.io.Serializable;
-import java.util.function.Consumer;
+    private Boolean value;
 
-public interface MqConsumer {
-    Consumer<MessageOutbox> messageHandler();
+    YesNo(Boolean value) {
+        this.value = value;
+    }
 
-    String mqName();
-
-    Serializable subscriber();
+    public Boolean getValue() {
+        return value;
+    }
 }

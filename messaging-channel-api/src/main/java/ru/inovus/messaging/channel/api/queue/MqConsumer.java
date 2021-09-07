@@ -13,19 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ru.inovus.messaging.api.model;
+package ru.inovus.messaging.channel.api.queue;
 
-public enum AlertType {
-    BLOCKER,
-    POPUP,
-    HIDDEN;
+import ru.inovus.messaging.api.model.MessageOutbox;
 
-    public String getName() {
-        switch (this) {
-            case BLOCKER: return "Блокирующее сообщение";
-            case POPUP: return "Всплывающее сообщение";
-            case HIDDEN: return "Лента сообщений";
-            default: return null;
-        }
-    }
+import java.io.Serializable;
+import java.util.function.Consumer;
+
+public interface MqConsumer {
+    Consumer<MessageOutbox> messageHandler();
+
+    String mqName();
+
+    Serializable subscriber();
 }

@@ -11,10 +11,10 @@ import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.MessageOutbox;
 import ru.inovus.messaging.api.model.Recipient;
-import ru.inovus.messaging.api.model.RecipientType;
-import ru.inovus.messaging.api.queue.MqConsumer;
-import ru.inovus.messaging.api.queue.MqProvider;
-import ru.inovus.messaging.api.queue.TopicMqConsumer;
+import ru.inovus.messaging.api.model.enums.RecipientType;
+import ru.inovus.messaging.channel.api.queue.MqConsumer;
+import ru.inovus.messaging.channel.api.queue.MqProvider;
+import ru.inovus.messaging.channel.api.queue.TopicMqConsumer;
 import ru.inovus.messaging.impl.MessageController;
 
 import java.time.Clock;

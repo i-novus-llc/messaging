@@ -4,21 +4,22 @@
 package ru.inovus.messaging.impl.jooq.tables.records;
 
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 import org.jooq.Field;
 import org.jooq.Record1;
 import org.jooq.Record5;
 import org.jooq.Row5;
 import org.jooq.impl.UpdatableRecordImpl;
-import ru.inovus.messaging.impl.jooq.tables.Recipient;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
+import ru.inovus.messaging.impl.jooq.tables.Recipient;
 
 
 /**
  * Получатели сообщения
  */
-@SuppressWarnings({"all", "unchecked", "rawtypes"})
+@SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class RecipientRecord extends UpdatableRecordImpl<RecipientRecord> implements Record5<Integer, String, UUID, LocalDateTime, String> {
 
     private static final long serialVersionUID = -773044418;

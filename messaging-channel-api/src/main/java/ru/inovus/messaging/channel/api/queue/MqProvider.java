@@ -13,19 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ru.inovus.messaging.api.model;
+package ru.inovus.messaging.channel.api.queue;
 
-public enum RecipientType {
-    USER("Пользователь"),
-    ALL("Все");
+import ru.inovus.messaging.api.model.MessageOutbox;
 
-    private String name;
+import java.io.Serializable;
 
-    RecipientType(String name) {
-        this.name = name;
-    }
+public interface MqProvider {
 
-    public String getName() {
-        return name;
-    }
+    void subscribe(MqConsumer mqConsumer);
+
+    void publish(MessageOutbox message, String mqDestinationName);
+
+    void unsubscribe(Serializable subscriber);
 }

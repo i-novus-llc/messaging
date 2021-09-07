@@ -15,13 +15,18 @@
  */
 package ru.inovus.messaging.api.criteria;
 
-import ru.inovus.messaging.api.model.*;
+import lombok.Getter;
+import lombok.Setter;
+import ru.inovus.messaging.api.model.enums.AlertType;
+import ru.inovus.messaging.api.model.enums.FormationType;
+import ru.inovus.messaging.api.model.enums.Severity;
+import ru.inovus.messaging.api.model.enums.YesNo;
 
 import javax.ws.rs.QueryParam;
 
+@Getter
+@Setter
 public class MessageSettingCriteria extends BaseMessagingCriteria {
-    private static final long serialVersionUID = 7609048158169451957L;
-
     @QueryParam("component.id")
     private Integer componentId;
 
@@ -31,8 +36,8 @@ public class MessageSettingCriteria extends BaseMessagingCriteria {
     @QueryParam("alertType.id")
     private AlertType alertType;
 
-    @QueryParam("channelType.id")
-    private String channelTypeId;
+    @QueryParam("infoType.id")
+    private String channelId;
 
     @QueryParam("name")
     private String name;
@@ -46,67 +51,8 @@ public class MessageSettingCriteria extends BaseMessagingCriteria {
     @QueryParam("code")
     private String code;
 
-    public Integer getComponentId() {
-        return componentId;
-    }
-
-    public void setComponentId(Integer componentId) {
-        this.componentId = componentId;
-    }
-
-    public Severity getSeverity() {
-        return severity;
-    }
-
-    public void setSeverity(Severity severity) {
-        this.severity = severity;
-    }
-
-    public AlertType getAlertType() {
-        return alertType;
-    }
-
-    public void setAlertType(AlertType alertType) {
-        this.alertType = alertType;
-    }
-
-    public String getChannelTypeId() {
-        return channelTypeId;
-    }
-
-    public void setChannelTypeId(String channelTypeId) {
-        this.channelTypeId = channelTypeId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public FormationType getFormationType() {
-        return formationType;
-    }
-
-    public void setFormationType(FormationType formationType) {
-        this.formationType = formationType;
-    }
-
-    public void setEnabled(YesNo enabled) {
-        this.enabled = enabled;
-    }
 
     public Boolean getEnabled() {
         return enabled != null ? enabled.getValue() : null;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 }

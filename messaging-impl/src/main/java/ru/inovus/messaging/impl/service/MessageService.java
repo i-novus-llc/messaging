@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.inovus.messaging.api.criteria.MessageCriteria;
 import ru.inovus.messaging.api.model.*;
+import ru.inovus.messaging.api.model.enums.RecipientType;
+import ru.inovus.messaging.impl.jooq.tables.records.ChannelRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.ComponentRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
 import ru.inovus.messaging.impl.util.DateTimeUtil;
@@ -39,8 +41,8 @@ public class MessageService {
         message.setAlertType(record.getAlertType());
         message.setSeverity(record.getSeverity());
         message.setSentAt(record.getSentAt());
-        ChannelType channelType = null;
-        message.setChannelType(channelType);
+        ChannelRecord channelRecord = rec.into(CHANNEL);
+        message.setChannel(new Channel(channelRecord.getId(), channelRecord.getName(), channelRecord.getQueueName()));
         message.setFormationType(record.getFormationType());
         message.setRecipientType(record.getRecipientType());
         message.setSystemId(record.getSystemId());
@@ -66,13 +68,13 @@ public class MessageService {
                 .columns(MESSAGE.ID, MESSAGE.CAPTION, MESSAGE.TEXT, MESSAGE.SEVERITY, MESSAGE.ALERT_TYPE,
                         MESSAGE.SENT_AT, MESSAGE.SYSTEM_ID, MESSAGE.COMPONENT_ID,
                         MESSAGE.FORMATION_TYPE, MESSAGE.RECIPIENT_TYPE, MESSAGE.NOTIFICATION_TYPE, MESSAGE.OBJECT_ID,
-                        MESSAGE.OBJECT_TYPE, MESSAGE.SEND_CHANNEL)
+                        MESSAGE.OBJECT_TYPE, MESSAGE.CHANNEL_ID)
                 .values(id, message.getCaption(), message.getText(), message.getSeverity(), message.getAlertType(),
                         message.getSentAt(), message.getSystemId(),
                         message.getComponent() != null ? message.getComponent().getId() : null,
                         message.getFormationType(), message.getRecipientType(), message.getNotificationType(), message.getObjectId(),
                         message.getObjectType(),
-                        message.getChannelType() != null ? message.getChannelType().getId() : null)
+                        message.getChannel() != null ? message.getChannel().getId() : null)
                 .returning()
                 .fetch().get(0).getId();
         message.setId(id.toString());
@@ -106,8 +108,8 @@ public class MessageService {
                 .ifPresent(componentId -> conditions.add(MESSAGE.COMPONENT_ID.eq(componentId)));
         Optional.ofNullable(criteria.getSeverity())
                 .ifPresent(severity -> conditions.add(MESSAGE.SEVERITY.eq(severity)));
-        Optional.ofNullable(criteria.getChannelTypeId())
-                .ifPresent(channelTypeId -> conditions.add(MESSAGE.SEND_CHANNEL.eq(channelTypeId)));
+        Optional.ofNullable(criteria.getChannelId())
+                .ifPresent(channelId -> conditions.add(MESSAGE.CHANNEL_ID.eq(channelId)));
 
         //TODO: UTC?
         Optional.ofNullable(sentAtBeginDateTime)
@@ -117,8 +119,10 @@ public class MessageService {
         SelectConditionStep<Record> query = dsl
                 .select(MESSAGE.fields())
                 .select(COMPONENT.fields())
+                .select(CHANNEL.fields())
                 .from(MESSAGE)
                 .leftJoin(COMPONENT).on(COMPONENT.ID.eq(MESSAGE.COMPONENT_ID))
+                .leftJoin(CHANNEL).on(CHANNEL.ID.eq(MESSAGE.CHANNEL_ID))
                 .where(conditions);
         int count = dsl.fetchCount(query);
         Field<?> fieldSentAt = MESSAGE.field("sent_at");
@@ -134,8 +138,10 @@ public class MessageService {
         Message message = dsl
                 .select(MESSAGE.fields())
                 .select(COMPONENT.fields())
+                .select(CHANNEL.fields())
                 .from(MESSAGE)
                 .leftJoin(COMPONENT).on(COMPONENT.ID.eq(MESSAGE.COMPONENT_ID))
+                .leftJoin(CHANNEL).on(CHANNEL.ID.eq(MESSAGE.CHANNEL_ID))
                 .where(MESSAGE.ID.cast(UUID.class).eq(messageId))
                 .fetchOne(MAPPER);
         List<Recipient> recipients = dsl

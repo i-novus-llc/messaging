@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
@@ -11,10 +12,14 @@ import java.io.Serializable;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @ApiModel("Тип канала отправки уведомлений")
-public class ChannelType implements Serializable {
+public class Channel implements Serializable {
     @ApiModelProperty("Идентификатор канала")
     private String id;
     @ApiModelProperty("Наименование канала")
     private String name;
+    @ApiModelProperty("Идентификатор очереди канала")
+    private String queueName;
 }
+

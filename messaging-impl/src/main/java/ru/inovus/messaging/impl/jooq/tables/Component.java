@@ -24,8 +24,6 @@ import ru.inovus.messaging.impl.jooq.Keys;
 import ru.inovus.messaging.impl.jooq.Public;
 import ru.inovus.messaging.impl.jooq.tables.records.ComponentRecord;
 
-import static org.jooq.impl.SQLDataType.*;
-
 
 /**
  * Компоненты системы
@@ -51,12 +49,12 @@ public class Component extends TableImpl<ComponentRecord> {
     /**
      * The column <code>public.component.id</code>. Уникальный идентификатор
      */
-    public final TableField<ComponentRecord, Integer> ID = createField(DSL.name("id"), INTEGER.nullable(false), this, "Уникальный идентификатор");
+    public final TableField<ComponentRecord, Integer> ID = createField(DSL.name("id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "Уникальный идентификатор");
 
     /**
      * The column <code>public.component.name</code>. Наименование компонента
      */
-    public final TableField<ComponentRecord, String> NAME = createField(DSL.name("name"), VARCHAR, this, "Наименование компонента");
+    public final TableField<ComponentRecord, String> NAME = createField(DSL.name("name"), org.jooq.impl.SQLDataType.VARCHAR, this, "Наименование компонента");
 
     /**
      * Create a <code>public.component</code> table reference

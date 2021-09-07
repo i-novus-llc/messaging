@@ -13,12 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ru.inovus.messaging.api.queue;
+package ru.inovus.messaging.api.model.enums;
 
-/**
- * @author RMakhmutov
- * @since 03.04.2019
- */
-public enum DestinationType {
-    CONSUMER, SUBSCRIBER
+public enum AlertType {
+    BLOCKER("Блокирующее сообщение"),
+    POPUP("Всплывающее сообщение"),
+    HIDDEN("Лента сообщений");
+
+    private String name;
+
+    AlertType(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

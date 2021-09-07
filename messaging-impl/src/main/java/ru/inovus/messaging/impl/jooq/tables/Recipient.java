@@ -4,27 +4,35 @@
 package ru.inovus.messaging.impl.jooq.tables;
 
 
-import org.jooq.Record;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.TableImpl;
-import org.jooq.impl.TimestampToLocalDateTimeConverter;
-import ru.inovus.messaging.impl.jooq.Keys;
-import ru.inovus.messaging.impl.jooq.Public;
-import ru.inovus.messaging.impl.jooq.tables.records.RecipientRecord;
-
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static org.jooq.impl.SQLDataType.*;
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Name;
+import org.jooq.Record;
+import org.jooq.Row5;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
+import org.jooq.impl.TimestampToLocalDateTimeConverter;
+
+import ru.inovus.messaging.impl.jooq.Keys;
+import ru.inovus.messaging.impl.jooq.Public;
+import ru.inovus.messaging.impl.jooq.tables.records.RecipientRecord;
 
 
 /**
  * Получатели сообщения
  */
-@SuppressWarnings({"all", "unchecked", "rawtypes"})
+@SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Recipient extends TableImpl<RecipientRecord> {
 
     private static final long serialVersionUID = 1226022086;
@@ -45,27 +53,27 @@ public class Recipient extends TableImpl<RecipientRecord> {
     /**
      * The column <code>public.recipient.id</code>. Уникальный идентификатор
      */
-    public final TableField<RecipientRecord, Integer> ID = createField(DSL.name("id"), INTEGER.nullable(false), this, "Уникальный идентификатор");
+    public final TableField<RecipientRecord, Integer> ID = createField(DSL.name("id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "Уникальный идентификатор");
 
     /**
      * The column <code>public.recipient.recipient</code>. Получатель
      */
-    public final TableField<RecipientRecord, String> RECIPIENT_ = createField(DSL.name("recipient"), VARCHAR.nullable(false), this, "Получатель");
+    public final TableField<RecipientRecord, String> RECIPIENT_ = createField(DSL.name("recipient"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Получатель");
 
     /**
      * The column <code>public.recipient.message_id</code>. Ссылка на сообщение
      */
-    public final TableField<RecipientRecord, UUID> MESSAGE_ID = createField(DSL.name("message_id"), UUID, this, "Ссылка на сообщение");
+    public final TableField<RecipientRecord, UUID> MESSAGE_ID = createField(DSL.name("message_id"), org.jooq.impl.SQLDataType.UUID, this, "Ссылка на сообщение");
 
     /**
      * The column <code>public.recipient.read_at</code>. Помечено прочтенным (дата и время)
      */
-    public final TableField<RecipientRecord, LocalDateTime> READ_AT = createField(DSL.name("read_at"), TIMESTAMP, this, "Помечено прочтенным (дата и время)", new TimestampToLocalDateTimeConverter());
+    public final TableField<RecipientRecord, LocalDateTime> READ_AT = createField(DSL.name("read_at"), SQLDataType.TIMESTAMP, this, "Помечено прочтенным (дата и время)", new TimestampToLocalDateTimeConverter());
 
     /**
      * The column <code>public.recipient.email</code>.
      */
-    public final TableField<RecipientRecord, String> EMAIL = createField(DSL.name("email"), VARCHAR, this, "");
+    public final TableField<RecipientRecord, String> EMAIL = createField(DSL.name("email"), org.jooq.impl.SQLDataType.VARCHAR, this, "");
 
     /**
      * Create a <code>public.recipient</code> table reference

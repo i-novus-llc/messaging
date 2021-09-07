@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0" object-id="messaging_message">
+<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0"
+       object-id="messaging_message">
 
     <list result-mapping="['content']" count-mapping="['totalElements']">
         <rest filters-separator="&amp;">${messaging.backend.path}/messages?{filters}&amp;{sorting}&amp;size={limit}&amp;page={page}</rest>
@@ -11,20 +12,20 @@
 
     <fields>
         <field id="id" domain="string" name="Идентификатор">
-            <select>id</select>
+            <select mapping="['id']"/>
             <filters>
                 <eq filter-id="id">{id}</eq>
             </filters>
         </field>
 
         <field id="component.id" domain="integer">
-            <select>component.id</select>
+            <select mapping="['component.id']"/>
             <filters>
                 <eq filter-id="component.id">component.id={component.id}</eq>
             </filters>
         </field>
         <field id="component.name" domain="string">
-            <select>component.name</select>
+            <select mapping="['component.name']"/>
         </field>
 
         <field id="severity.id" domain="string">
@@ -37,10 +38,10 @@
             <select mapping="['severityName']"/>
         </field>
 
-        <field id="channelType" domain="object">
-            <select mapping="['channelType']"/>
+        <field id="infoType" domain="object">
+            <select mapping="['channel']"/>
             <filters>
-                <eq filter-id="channelType.id" domain="string">channelType.id={channelType.id}</eq>
+                <eq filter-id="infoType.id" domain="string">channel.id={infoType.id}</eq>
             </filters>
         </field>
 
@@ -60,11 +61,11 @@
 
 
         <field id="caption" domain="string">
-            <select>caption</select>
+            <select mapping="['caption']"/>
         </field>
 
         <field id="text" domain="string">
-            <select>text</select>
+            <select mapping="['text']"/>
         </field>
 
         <field id="sentAt" domain="date">
@@ -80,7 +81,7 @@
         </field>
 
         <field id="systemId">
-            <select>systemId</select>
+            <select mapping="['systemId']"/>
             <filters>
                 <eq filter-id="systemId" default-value="${default.system.id}">systemId={systemId}</eq><!--TODO: default-value from context-->
             </filters>

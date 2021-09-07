@@ -9,13 +9,14 @@ import org.jooq.Record1;
 import org.jooq.Record2;
 import org.jooq.Row2;
 import org.jooq.impl.UpdatableRecordImpl;
+
 import ru.inovus.messaging.impl.jooq.tables.Component;
 
 
 /**
  * Компоненты системы
  */
-@SuppressWarnings({"all", "unchecked", "rawtypes"})
+@SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class ComponentRecord extends UpdatableRecordImpl<ComponentRecord> implements Record2<Integer, String> {
 
     private static final long serialVersionUID = -885985476;

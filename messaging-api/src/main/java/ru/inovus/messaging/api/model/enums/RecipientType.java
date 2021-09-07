@@ -13,16 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ru.inovus.messaging.api.model;
+package ru.inovus.messaging.api.model.enums;
 
-public enum FormationType {
-    AUTO, HAND;
+public enum RecipientType {
+    USER("Пользователь"),
+    ALL("Все");
+
+    private String name;
+
+    RecipientType(String name) {
+        this.name = name;
+    }
 
     public String getName() {
-        switch (this) {
-            case AUTO: return "Автоматическое";
-            case HAND: return "Ручное";
-            default: return null;
-        }
+        return name;
     }
 }

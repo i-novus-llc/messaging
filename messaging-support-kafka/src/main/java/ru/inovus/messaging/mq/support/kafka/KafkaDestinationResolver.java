@@ -1,8 +1,8 @@
 package ru.inovus.messaging.mq.support.kafka;
 
 import org.springframework.stereotype.Component;
-import ru.inovus.messaging.api.queue.DestinationResolver;
-import ru.inovus.messaging.api.queue.DestinationType;
+import ru.inovus.messaging.channel.api.queue.DestinationResolver;
+import ru.inovus.messaging.channel.api.queue.DestinationType;
 
 /**
  * @author RMakhmutov

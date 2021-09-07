@@ -18,7 +18,7 @@ POST /messages
   "text": "Test content",
   "severity": "INFO",
   "alertType": "POPUP",
-  "channelType": {
+  "infoType": {
     "id": "notice",
     "name": "Центр уведомлений"
   },
