@@ -32,9 +32,6 @@ import java.util.Map;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Message implements Serializable {
-
-    private static final long serialVersionUID = 5475383823197483227L;
-
     private String id;
     private String caption;
     private String text;
@@ -52,31 +49,4 @@ public class Message implements Serializable {
     private String notificationType;
     private String objectId;
     private String objectType;
-
-    public Message() {
-    }
-
-    public Message(String id) {
-        this.id = id;
-    }
-
-    public String getSeverityName() {
-        return this.severity != null ? severity.getName() : null;
-    }
-
-    public String getAlertTypeName() {
-        return alertType != null ? alertType.getName() : null;
-    }
-
-    public String getFormationTypeName() {
-        return formationType != null ? formationType.getName() : null;
-    }
-
-    public String getRecipientTypeName() {
-        return recipientType != null ? recipientType.getName() : null;
-    }
-
-    public void setChannel(Channel channel) {
-        this.channel = channel;
-    }
 }

@@ -154,7 +154,8 @@ public class MessageControllerTest {
 
         assertNotNull(stompSession);
 
-        Message message = new Message("Test321");
+        Message message = new Message();
+        message.setId("Test321");
 
         stompSession.subscribe("/user" + privateDestPrefix + "/" + SYSTEM_ID + "/message", new TestReceivedMessagesHandler());
         stompSession.send(appPrefix + "/" + SYSTEM_ID + "/message.private.lkb", message);

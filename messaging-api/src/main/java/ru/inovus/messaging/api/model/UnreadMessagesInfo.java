@@ -15,25 +15,17 @@
  */
 package ru.inovus.messaging.api.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 
+@Getter
+@Setter
 public class UnreadMessagesInfo implements Serializable {
-    private static final long serialVersionUID = 3983516912352834017L;
-
     private Integer count;
 
-    public UnreadMessagesInfo() {
-    }
-
     public UnreadMessagesInfo(Integer count) {
-        this.count = count;
-    }
-
-    public Integer getCount() {
-        return count;
-    }
-
-    public void setCount(Integer count) {
         this.count = count;
     }
 }
