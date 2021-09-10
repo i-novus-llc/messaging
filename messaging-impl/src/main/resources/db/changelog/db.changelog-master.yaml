@@ -242,3 +242,13 @@ databaseChangeLog:
             relativeToChangelogFile: true
             splitStatements: true
             stripComments: true
+  - changeSet:
+      id: MESSAGING-202
+      author: ilebedenko
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/MESSAGING-202.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true

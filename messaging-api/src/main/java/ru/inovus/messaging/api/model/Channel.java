@@ -19,7 +19,7 @@ public class Channel implements Serializable {
     private String id;
     @ApiModelProperty("Наименование канала")
     private String name;
-    @ApiModelProperty("Идентификатор очереди канала")
+    @ApiModelProperty("Наименование очереди канала")
     private String queueName;
 }
 

@@ -7,19 +7,19 @@ package ru.inovus.messaging.impl.jooq;
 import ru.inovus.messaging.impl.jooq.tables.Channel;
 import ru.inovus.messaging.impl.jooq.tables.Component;
 import ru.inovus.messaging.impl.jooq.tables.Message;
+import ru.inovus.messaging.impl.jooq.tables.MessageRecipient;
 import ru.inovus.messaging.impl.jooq.tables.MessageSetting;
-import ru.inovus.messaging.impl.jooq.tables.Recipient;
 import ru.inovus.messaging.impl.jooq.tables.UserSetting;
 
 
 /**
- * Convenience access to all tables in public
+ * Convenience access to all tables in messaging
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tables {
 
     /**
-     * Канал отправки
+     * Каналы отправки уведомлений
      */
     public static final Channel CHANNEL = Channel.CHANNEL;
 
@@ -29,19 +29,19 @@ public class Tables {
     public static final Component COMPONENT = Component.COMPONENT;
 
     /**
-     * Сообщения
+     * Уведомления
      */
     public static final Message MESSAGE = Message.MESSAGE;
+
+    /**
+     * Получатель уведомления
+     */
+    public static final MessageRecipient MESSAGE_RECIPIENT = MessageRecipient.MESSAGE_RECIPIENT;
 
     /**
      * Шаблоны уведомлений (общесистемные настройки)
      */
     public static final MessageSetting MESSAGE_SETTING = MessageSetting.MESSAGE_SETTING;
-
-    /**
-     * Получатели сообщения
-     */
-    public static final Recipient RECIPIENT = Recipient.RECIPIENT;
 
     /**
      * Пользовательские настройки уведомлений

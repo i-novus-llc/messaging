@@ -22,157 +22,157 @@ import ru.inovus.messaging.impl.jooq.tables.MessageSetting;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class MessageSettingRecord extends UpdatableRecordImpl<MessageSettingRecord> implements Record11<Integer, String, String, Severity, AlertType, Integer, String, Boolean, FormationType, String, String> {
 
-    private static final long serialVersionUID = -1727367207;
+    private static final long serialVersionUID = 53403457;
 
     /**
-     * Setter for <code>public.message_setting.id</code>. Уникальный идентификатор
+     * Setter for <code>messaging.message_setting.id</code>. Уникальный идентификатор
      */
     public void setId(Integer value) {
         set(0, value);
     }
 
     /**
-     * Getter for <code>public.message_setting.id</code>. Уникальный идентификатор
+     * Getter for <code>messaging.message_setting.id</code>. Уникальный идентификатор
      */
     public Integer getId() {
         return (Integer) get(0);
     }
 
     /**
-     * Setter for <code>public.message_setting.caption</code>. Заголовок
+     * Setter for <code>messaging.message_setting.caption</code>. Заголовок уведомления
      */
     public void setCaption(String value) {
         set(1, value);
     }
 
     /**
-     * Getter for <code>public.message_setting.caption</code>. Заголовок
+     * Getter for <code>messaging.message_setting.caption</code>. Заголовок уведомления
      */
     public String getCaption() {
         return (String) get(1);
     }
 
     /**
-     * Setter for <code>public.message_setting.text</code>. Содержимое сообщения
+     * Setter for <code>messaging.message_setting.text</code>. Содержимое уведомления
      */
     public void setText(String value) {
         set(2, value);
     }
 
     /**
-     * Getter for <code>public.message_setting.text</code>. Содержимое сообщения
+     * Getter for <code>messaging.message_setting.text</code>. Содержимое уведомления
      */
     public String getText() {
         return (String) get(2);
     }
 
     /**
-     * Setter for <code>public.message_setting.severity</code>. Жесткость сообщения
+     * Setter for <code>messaging.message_setting.severity</code>. Важность уведомления
      */
     public void setSeverity(Severity value) {
         set(3, value);
     }
 
     /**
-     * Getter for <code>public.message_setting.severity</code>. Жесткость сообщения
+     * Getter for <code>messaging.message_setting.severity</code>. Важность уведомления
      */
     public Severity getSeverity() {
         return (Severity) get(3);
     }
 
     /**
-     * Setter for <code>public.message_setting.alert_type</code>. Тип предупреждения
+     * Setter for <code>messaging.message_setting.alert_type</code>. Способ отображения уведомления
      */
     public void setAlertType(AlertType value) {
         set(4, value);
     }
 
     /**
-     * Getter for <code>public.message_setting.alert_type</code>. Тип предупреждения
+     * Getter for <code>messaging.message_setting.alert_type</code>. Способ отображения уведомления
      */
     public AlertType getAlertType() {
         return (AlertType) get(4);
     }
 
     /**
-     * Setter for <code>public.message_setting.component_id</code>. Ссылка на системный справочник компонентов Системы. Системный справочник будет настраиваться для каждой Системы при необходимости
+     * Setter for <code>messaging.message_setting.component_id</code>. Идентификатор компонента (модуля, подсистемы), к которому относится уведомление
      */
     public void setComponentId(Integer value) {
         set(5, value);
     }
 
     /**
-     * Getter for <code>public.message_setting.component_id</code>. Ссылка на системный справочник компонентов Системы. Системный справочник будет настраиваться для каждой Системы при необходимости
+     * Getter for <code>messaging.message_setting.component_id</code>. Идентификатор компонента (модуля, подсистемы), к которому относится уведомление
      */
     public Integer getComponentId() {
         return (Integer) get(5);
     }
 
     /**
-     * Setter for <code>public.message_setting.name</code>. Название шаблона (события)
+     * Setter for <code>messaging.message_setting.name</code>. Наименование шаблона уведомления
      */
     public void setName(String value) {
         set(6, value);
     }
 
     /**
-     * Getter for <code>public.message_setting.name</code>. Название шаблона (события)
+     * Getter for <code>messaging.message_setting.name</code>. Наименование шаблона уведомления
      */
     public String getName() {
         return (String) get(6);
     }
 
     /**
-     * Setter for <code>public.message_setting.is_disabled</code>. Признак выключения уведомления
+     * Setter for <code>messaging.message_setting.is_disabled</code>. Признак выключения уведомления
      */
     public void setIsDisabled(Boolean value) {
         set(7, value);
     }
 
     /**
-     * Getter for <code>public.message_setting.is_disabled</code>. Признак выключения уведомления
+     * Getter for <code>messaging.message_setting.is_disabled</code>. Признак выключения уведомления
      */
     public Boolean getIsDisabled() {
         return (Boolean) get(7);
     }
 
     /**
-     * Setter for <code>public.message_setting.formation_type</code>. Тип формирования уведомления
+     * Setter for <code>messaging.message_setting.formation_type</code>. Тип формирования уведомления
      */
     public void setFormationType(FormationType value) {
         set(8, value);
     }
 
     /**
-     * Getter for <code>public.message_setting.formation_type</code>. Тип формирования уведомления
+     * Getter for <code>messaging.message_setting.formation_type</code>. Тип формирования уведомления
      */
     public FormationType getFormationType() {
         return (FormationType) get(8);
     }
 
     /**
-     * Setter for <code>public.message_setting.code</code>. Код шаблона сообщения
+     * Setter for <code>messaging.message_setting.code</code>. Код шаблона уведомления
      */
     public void setCode(String value) {
         set(9, value);
     }
 
     /**
-     * Getter for <code>public.message_setting.code</code>. Код шаблона сообщения
+     * Getter for <code>messaging.message_setting.code</code>. Код шаблона уведомления
      */
     public String getCode() {
         return (String) get(9);
     }
 
     /**
-     * Setter for <code>public.message_setting.channel_id</code>. Идентификатор канала отправки
+     * Setter for <code>messaging.message_setting.channel_id</code>. Идентификатор канала отправки уведомления
      */
     public void setChannelId(String value) {
         set(10, value);
     }
 
     /**
-     * Getter for <code>public.message_setting.channel_id</code>. Идентификатор канала отправки
+     * Getter for <code>messaging.message_setting.channel_id</code>. Идентификатор канала отправки уведомления
      */
     public String getChannelId() {
         return (String) get(10);

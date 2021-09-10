@@ -20,87 +20,87 @@ import ru.inovus.messaging.impl.jooq.tables.UserSetting;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserSettingRecord extends UpdatableRecordImpl<UserSettingRecord> implements Record6<Integer, AlertType, Boolean, String, Integer, String> {
 
-    private static final long serialVersionUID = 1280857415;
+    private static final long serialVersionUID = -696783937;
 
     /**
-     * Setter for <code>public.user_setting.id</code>. Уникальный идентификатор
+     * Setter for <code>messaging.user_setting.id</code>. Уникальный идентификатор
      */
     public void setId(Integer value) {
         set(0, value);
     }
 
     /**
-     * Getter for <code>public.user_setting.id</code>. Уникальный идентификатор
+     * Getter for <code>messaging.user_setting.id</code>. Уникальный идентификатор
      */
     public Integer getId() {
         return (Integer) get(0);
     }
 
     /**
-     * Setter for <code>public.user_setting.alert_type</code>. Тип предупреждения
+     * Setter for <code>messaging.user_setting.alert_type</code>. Способ отображения уведомления
      */
     public void setAlertType(AlertType value) {
         set(1, value);
     }
 
     /**
-     * Getter for <code>public.user_setting.alert_type</code>. Тип предупреждения
+     * Getter for <code>messaging.user_setting.alert_type</code>. Способ отображения уведомления
      */
     public AlertType getAlertType() {
         return (AlertType) get(1);
     }
 
     /**
-     * Setter for <code>public.user_setting.is_disabled</code>. Признак выключения уведомления
+     * Setter for <code>messaging.user_setting.is_disabled</code>. Признак выключения уведомления
      */
     public void setIsDisabled(Boolean value) {
         set(2, value);
     }
 
     /**
-     * Getter for <code>public.user_setting.is_disabled</code>. Признак выключения уведомления
+     * Getter for <code>messaging.user_setting.is_disabled</code>. Признак выключения уведомления
      */
     public Boolean getIsDisabled() {
         return (Boolean) get(2);
     }
 
     /**
-     * Setter for <code>public.user_setting.user_id</code>. Идентификатор пользователя
+     * Setter for <code>messaging.user_setting.user_id</code>. Идентификатор пользователя, к которому относится настройка
      */
     public void setUserId(String value) {
         set(3, value);
     }
 
     /**
-     * Getter for <code>public.user_setting.user_id</code>. Идентификатор пользователя
+     * Getter for <code>messaging.user_setting.user_id</code>. Идентификатор пользователя, к которому относится настройка
      */
     public String getUserId() {
         return (String) get(3);
     }
 
     /**
-     * Setter for <code>public.user_setting.msg_setting_id</code>.
+     * Setter for <code>messaging.user_setting.msg_setting_id</code>. Идентификатор шаблона уведомления
      */
     public void setMsgSettingId(Integer value) {
         set(4, value);
     }
 
     /**
-     * Getter for <code>public.user_setting.msg_setting_id</code>.
+     * Getter for <code>messaging.user_setting.msg_setting_id</code>. Идентификатор шаблона уведомления
      */
     public Integer getMsgSettingId() {
         return (Integer) get(4);
     }
 
     /**
-     * Setter for <code>public.user_setting.channel_id</code>. Идентификатор канала отправки
+     * Setter for <code>messaging.user_setting.channel_id</code>. Идентификатор канала отправки уведомления
      */
     public void setChannelId(String value) {
         set(5, value);
     }
 
     /**
-     * Getter for <code>public.user_setting.channel_id</code>. Идентификатор канала отправки
+     * Getter for <code>messaging.user_setting.channel_id</code>. Идентификатор канала отправки уведомления
      */
     public String getChannelId() {
         return (String) get(5);

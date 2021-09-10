@@ -9,28 +9,28 @@ import org.jooq.impl.Internal;
 
 
 /**
- * Convenience access to all sequences in public
+ * Convenience access to all sequences in messaging
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Sequences {
 
     /**
-     * The sequence <code>public.message_id_seq</code>
+     * The sequence <code>messaging.message_id_seq</code>
      */
-    public static final Sequence<Long> MESSAGE_ID_SEQ = Internal.createSequence("message_id_seq", Public.PUBLIC, org.jooq.impl.SQLDataType.BIGINT.nullable(false), null, null, null, null, false, null);
+    public static final Sequence<Long> MESSAGE_ID_SEQ = Internal.createSequence("message_id_seq", Messaging.MESSAGING, org.jooq.impl.SQLDataType.BIGINT.nullable(false), null, null, null, null, false, null);
 
     /**
-     * The sequence <code>public.message_setting_id_seq</code>
+     * The sequence <code>messaging.message_setting_id_seq</code>
      */
-    public static final Sequence<Long> MESSAGE_SETTING_ID_SEQ = Internal.createSequence("message_setting_id_seq", Public.PUBLIC, org.jooq.impl.SQLDataType.BIGINT.nullable(false), null, null, null, null, false, null);
+    public static final Sequence<Long> MESSAGE_SETTING_ID_SEQ = Internal.createSequence("message_setting_id_seq", Messaging.MESSAGING, org.jooq.impl.SQLDataType.BIGINT.nullable(false), null, null, null, null, false, null);
 
     /**
-     * The sequence <code>public.recipient_id_seq</code>
+     * The sequence <code>messaging.recipient_id_seq</code>
      */
-    public static final Sequence<Long> RECIPIENT_ID_SEQ = Internal.createSequence("recipient_id_seq", Public.PUBLIC, org.jooq.impl.SQLDataType.BIGINT.nullable(false), null, null, null, null, false, null);
+    public static final Sequence<Long> RECIPIENT_ID_SEQ = Internal.createSequence("recipient_id_seq", Messaging.MESSAGING, org.jooq.impl.SQLDataType.BIGINT.nullable(false), null, null, null, null, false, null);
 
     /**
-     * The sequence <code>public.user_setting_id_seq</code>
+     * The sequence <code>messaging.user_setting_id_seq</code>
      */
-    public static final Sequence<Long> USER_SETTING_ID_SEQ = Internal.createSequence("user_setting_id_seq", Public.PUBLIC, org.jooq.impl.SQLDataType.BIGINT.nullable(false), null, null, null, null, false, null);
+    public static final Sequence<Long> USER_SETTING_ID_SEQ = Internal.createSequence("user_setting_id_seq", Messaging.MESSAGING, org.jooq.impl.SQLDataType.BIGINT.nullable(false), null, null, null, null, false, null);
 }

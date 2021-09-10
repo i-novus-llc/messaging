@@ -4,25 +4,16 @@
 package ru.inovus.messaging.impl.jooq.tables;
 
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row2;
-import org.jooq.Schema;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
-
 import ru.inovus.messaging.impl.jooq.Keys;
-import ru.inovus.messaging.impl.jooq.Public;
+import ru.inovus.messaging.impl.jooq.Messaging;
 import ru.inovus.messaging.impl.jooq.tables.records.ComponentRecord;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -31,10 +22,10 @@ import ru.inovus.messaging.impl.jooq.tables.records.ComponentRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Component extends TableImpl<ComponentRecord> {
 
-    private static final long serialVersionUID = -639022786;
+    private static final long serialVersionUID = 1523508789;
 
     /**
-     * The reference instance of <code>public.component</code>
+     * The reference instance of <code>messaging.component</code>
      */
     public static final Component COMPONENT = new Component();
 
@@ -47,31 +38,31 @@ public class Component extends TableImpl<ComponentRecord> {
     }
 
     /**
-     * The column <code>public.component.id</code>. Уникальный идентификатор
+     * The column <code>messaging.component.id</code>. Уникальный идентификатор
      */
     public final TableField<ComponentRecord, Integer> ID = createField(DSL.name("id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "Уникальный идентификатор");
 
     /**
-     * The column <code>public.component.name</code>. Наименование компонента
+     * The column <code>messaging.component.name</code>. Наименование компонента
      */
     public final TableField<ComponentRecord, String> NAME = createField(DSL.name("name"), org.jooq.impl.SQLDataType.VARCHAR, this, "Наименование компонента");
 
     /**
-     * Create a <code>public.component</code> table reference
+     * Create a <code>messaging.component</code> table reference
      */
     public Component() {
         this(DSL.name("component"), null);
     }
 
     /**
-     * Create an aliased <code>public.component</code> table reference
+     * Create an aliased <code>messaging.component</code> table reference
      */
     public Component(String alias) {
         this(DSL.name(alias), COMPONENT);
     }
 
     /**
-     * Create an aliased <code>public.component</code> table reference
+     * Create an aliased <code>messaging.component</code> table reference
      */
     public Component(Name alias) {
         this(alias, COMPONENT);
@@ -91,7 +82,7 @@ public class Component extends TableImpl<ComponentRecord> {
 
     @Override
     public Schema getSchema() {
-        return Public.PUBLIC;
+        return Messaging.MESSAGING;
     }
 
     @Override
