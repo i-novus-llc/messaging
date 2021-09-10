@@ -73,6 +73,11 @@ COMMENT ON COLUMN messaging.message_recipient.recipient_name IS 'Имя конт
 COMMENT ON COLUMN messaging.message_recipient.read_at IS 'Дата и время прочтения уведомления';
 COMMENT ON COLUMN messaging.message_recipient.recipient_send_channel_id IS 'Идентификатор получателя в формате канала доставки';
 
+ALTER SEQUENCE IF EXISTS message_id_seq SET SCHEMA messaging;
+ALTER SEQUENCE IF EXISTS message_setting_id_seq SET SCHEMA messaging;
+ALTER SEQUENCE IF EXISTS recipient_id_seq SET SCHEMA messaging;
+ALTER SEQUENCE IF EXISTS user_setting_id_seq SET SCHEMA messaging;
+
 
 
 

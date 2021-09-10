@@ -81,7 +81,7 @@ public class MessageService {
         if (recipient != null && RecipientType.USER.equals(message.getRecipientType())) {
             for (Recipient rec : recipient) {
                 dsl
-                        .insertInto(RECIPIENT)
+                        .insertInto(MESSAGE_RECIPIENT)
                         .values(RECIPIENT_ID_SEQ.nextval(),
                                 rec.getRecipient(), id, null, rec.getEmail())
                         .execute();
@@ -145,28 +145,17 @@ public class MessageService {
                 .where(MESSAGE.ID.cast(UUID.class).eq(messageId))
                 .fetchOne(MAPPER);
         List<Recipient> recipients = dsl
-                .selectFrom(RECIPIENT)
-                .where(RECIPIENT.MESSAGE_ID.eq(messageId))
+                .selectFrom(MESSAGE_RECIPIENT)
+                .where(MESSAGE_RECIPIENT.MESSAGE_ID.eq(messageId))
                 .fetch().map(r -> {
                     Recipient recipient = new Recipient();
                     recipient.setMessageId(r.getMessageId());
                     recipient.setReadAt(r.getReadAt());
-                    recipient.setRecipient(r.getRecipient());
-                    recipient.setEmail(r.getEmail());
+                    recipient.setRecipient(r.getRecipientName());
+                    recipient.setEmail(r.getRecipientSendChannelId());
                     return recipient;
                 });
         message.setRecipients(recipients);
         return message;
     }
-
-    @Transactional
-    public void setSendEmailResult(UUID id, LocalDateTime date, String error) {
-        dsl
-                .update(MESSAGE)
-                .set(MESSAGE.SEND_EMAIL_DATE, date)
-                .set(MESSAGE.SEND_EMAIL_ERROR, error)
-                .where(MESSAGE.ID.eq(id))
-                .execute();
     }
-
-}

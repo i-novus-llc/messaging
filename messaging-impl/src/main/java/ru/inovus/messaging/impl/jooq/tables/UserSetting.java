@@ -7,12 +7,11 @@ package ru.inovus.messaging.impl.jooq.tables;
 import org.jooq.Record;
 import org.jooq.*;
 import org.jooq.impl.DSL;
-import org.jooq.impl.Internal;
 import org.jooq.impl.TableImpl;
 import ru.inovus.messaging.api.model.enums.AlertType;
 import ru.inovus.messaging.impl.jooq.Indexes;
 import ru.inovus.messaging.impl.jooq.Keys;
-import ru.inovus.messaging.impl.jooq.Public;
+import ru.inovus.messaging.impl.jooq.Messaging;
 import ru.inovus.messaging.impl.jooq.tables.records.UserSettingRecord;
 import ru.inovus.messaging.impl.util.AlertTypeConverter;
 
@@ -26,10 +25,10 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserSetting extends TableImpl<UserSettingRecord> {
 
-    private static final long serialVersionUID = 644230951;
+    private static final long serialVersionUID = 1912798765;
 
     /**
-     * The reference instance of <code>public.user_setting</code>
+     * The reference instance of <code>messaging.user_setting</code>
      */
     public static final UserSetting USER_SETTING = new UserSetting();
 
@@ -42,51 +41,51 @@ public class UserSetting extends TableImpl<UserSettingRecord> {
     }
 
     /**
-     * The column <code>public.user_setting.id</code>. Уникальный идентификатор
+     * The column <code>messaging.user_setting.id</code>. Уникальный идентификатор
      */
-    public final TableField<UserSettingRecord, Integer> ID = createField(DSL.name("id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaultValue(org.jooq.impl.DSL.field("nextval('user_setting_id_seq'::regclass)", org.jooq.impl.SQLDataType.INTEGER)), this, "Уникальный идентификатор");
+    public final TableField<UserSettingRecord, Integer> ID = createField(DSL.name("id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaultValue(org.jooq.impl.DSL.field("nextval('messaging.user_setting_id_seq'::regclass)", org.jooq.impl.SQLDataType.INTEGER)), this, "Уникальный идентификатор");
 
     /**
-     * The column <code>public.user_setting.alert_type</code>. Тип предупреждения
+     * The column <code>messaging.user_setting.alert_type</code>. Способ отображения уведомления
      */
-    public final TableField<UserSettingRecord, AlertType> ALERT_TYPE = createField(DSL.name("alert_type"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Тип предупреждения", new AlertTypeConverter());
+    public final TableField<UserSettingRecord, AlertType> ALERT_TYPE = createField(DSL.name("alert_type"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Способ отображения уведомления", new AlertTypeConverter());
 
     /**
-     * The column <code>public.user_setting.is_disabled</code>. Признак выключения уведомления
+     * The column <code>messaging.user_setting.is_disabled</code>. Признак выключения уведомления
      */
     public final TableField<UserSettingRecord, Boolean> IS_DISABLED = createField(DSL.name("is_disabled"), org.jooq.impl.SQLDataType.BOOLEAN.defaultValue(org.jooq.impl.DSL.field("false", org.jooq.impl.SQLDataType.BOOLEAN)), this, "Признак выключения уведомления");
 
     /**
-     * The column <code>public.user_setting.user_id</code>. Идентификатор пользователя
+     * The column <code>messaging.user_setting.user_id</code>. Идентификатор пользователя, к которому относится настройка
      */
-    public final TableField<UserSettingRecord, String> USER_ID = createField(DSL.name("user_id"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Идентификатор пользователя");
+    public final TableField<UserSettingRecord, String> USER_ID = createField(DSL.name("user_id"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Идентификатор пользователя, к которому относится настройка");
 
     /**
-     * The column <code>public.user_setting.msg_setting_id</code>.
+     * The column <code>messaging.user_setting.msg_setting_id</code>. Идентификатор шаблона уведомления
      */
-    public final TableField<UserSettingRecord, Integer> MSG_SETTING_ID = createField(DSL.name("msg_setting_id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<UserSettingRecord, Integer> MSG_SETTING_ID = createField(DSL.name("msg_setting_id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "Идентификатор шаблона уведомления");
 
     /**
-     * The column <code>public.user_setting.channel_id</code>. Идентификатор канала отправки
+     * The column <code>messaging.user_setting.channel_id</code>. Идентификатор канала отправки уведомления
      */
-    public final TableField<UserSettingRecord, String> CHANNEL_ID = createField(DSL.name("channel_id"), org.jooq.impl.SQLDataType.VARCHAR, this, "Идентификатор канала отправки");
+    public final TableField<UserSettingRecord, String> CHANNEL_ID = createField(DSL.name("channel_id"), org.jooq.impl.SQLDataType.VARCHAR, this, "Идентификатор канала отправки уведомления");
 
     /**
-     * Create a <code>public.user_setting</code> table reference
+     * Create a <code>messaging.user_setting</code> table reference
      */
     public UserSetting() {
         this(DSL.name("user_setting"), null);
     }
 
     /**
-     * Create an aliased <code>public.user_setting</code> table reference
+     * Create an aliased <code>messaging.user_setting</code> table reference
      */
     public UserSetting(String alias) {
         this(DSL.name(alias), USER_SETTING);
     }
 
     /**
-     * Create an aliased <code>public.user_setting</code> table reference
+     * Create an aliased <code>messaging.user_setting</code> table reference
      */
     public UserSetting(Name alias) {
         this(alias, USER_SETTING);
@@ -106,7 +105,7 @@ public class UserSetting extends TableImpl<UserSettingRecord> {
 
     @Override
     public Schema getSchema() {
-        return Public.PUBLIC;
+        return Messaging.MESSAGING;
     }
 
     @Override
@@ -140,13 +139,6 @@ public class UserSetting extends TableImpl<UserSettingRecord> {
 
     public Channel channel() {
         return new Channel(this, Keys.USER_SETTING__USER_SETTING_CHANNEL_ID_CHANNEL_ID_FK);
-    }
-
-    @Override
-    public List<Check<UserSettingRecord>> getChecks() {
-        return Arrays.<Check<UserSettingRecord>>asList(
-              Internal.createCheck(this, DSL.name("user_setting_alert_type_check"), "(((alert_type)::text = ANY ((ARRAY['BLOCKER'::character varying, 'POPUP'::character varying, 'HIDDEN'::character varying])::text[])))", true)
-        );
     }
 
     @Override

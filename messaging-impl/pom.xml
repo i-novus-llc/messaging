@@ -215,11 +215,7 @@
                                 <database>
                                     <name>org.jooq.meta.postgres.PostgresDatabase</name>
                                     <includes>.*</includes>
-                                    <excludes>
-                                        .*databasechangelog.*
-                                        |.*qrtz_.*
-                                    </excludes>
-                                    <inputSchema>public</inputSchema>
+                                    <inputSchema>messaging</inputSchema>
                                     <forcedTypes>
                                         <forcedType>
                                             <userType>ru.inovus.messaging.api.model.enums.Severity</userType>

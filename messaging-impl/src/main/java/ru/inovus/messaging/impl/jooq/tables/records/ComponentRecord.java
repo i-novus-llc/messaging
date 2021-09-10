@@ -19,31 +19,31 @@ import ru.inovus.messaging.impl.jooq.tables.Component;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class ComponentRecord extends UpdatableRecordImpl<ComponentRecord> implements Record2<Integer, String> {
 
-    private static final long serialVersionUID = -885985476;
+    private static final long serialVersionUID = 658683810;
 
     /**
-     * Setter for <code>public.component.id</code>. Уникальный идентификатор
+     * Setter for <code>messaging.component.id</code>. Уникальный идентификатор
      */
     public void setId(Integer value) {
         set(0, value);
     }
 
     /**
-     * Getter for <code>public.component.id</code>. Уникальный идентификатор
+     * Getter for <code>messaging.component.id</code>. Уникальный идентификатор
      */
     public Integer getId() {
         return (Integer) get(0);
     }
 
     /**
-     * Setter for <code>public.component.name</code>. Наименование компонента
+     * Setter for <code>messaging.component.name</code>. Наименование компонента
      */
     public void setName(String value) {
         set(1, value);
     }
 
     /**
-     * Getter for <code>public.component.name</code>. Наименование компонента
+     * Getter for <code>messaging.component.name</code>. Наименование компонента
      */
     public String getName() {
         return (String) get(1);

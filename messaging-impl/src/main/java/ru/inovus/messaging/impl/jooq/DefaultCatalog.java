@@ -4,11 +4,11 @@
 package ru.inovus.messaging.impl.jooq;
 
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.jooq.Schema;
 import org.jooq.impl.CatalogImpl;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -17,7 +17,7 @@ import org.jooq.impl.CatalogImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefaultCatalog extends CatalogImpl {
 
-    private static final long serialVersionUID = 669349714;
+    private static final long serialVersionUID = -417191367;
 
     /**
      * The reference instance of <code>DEFAULT_CATALOG</code>
@@ -25,9 +25,9 @@ public class DefaultCatalog extends CatalogImpl {
     public static final DefaultCatalog DEFAULT_CATALOG = new DefaultCatalog();
 
     /**
-     * The schema <code>public</code>.
+     * The schema <code>messaging</code>.
      */
-    public final Public PUBLIC = Public.PUBLIC;
+    public final Messaging MESSAGING = Messaging.MESSAGING;
 
     /**
      * No further instances allowed
@@ -39,6 +39,6 @@ public class DefaultCatalog extends CatalogImpl {
     @Override
     public final List<Schema> getSchemas() {
         return Arrays.<Schema>asList(
-            Public.PUBLIC);
+            Messaging.MESSAGING);
     }
 }

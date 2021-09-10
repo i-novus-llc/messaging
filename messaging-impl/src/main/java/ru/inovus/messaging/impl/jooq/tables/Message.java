@@ -4,49 +4,41 @@
 package ru.inovus.messaging.impl.jooq.tables;
 
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-
-import org.jooq.Check;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Index;
-import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row16;
-import org.jooq.Schema;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
-import org.jooq.impl.*;
-
+import org.jooq.*;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
+import org.jooq.impl.TimestampToLocalDateTimeConverter;
 import ru.inovus.messaging.api.model.enums.AlertType;
 import ru.inovus.messaging.api.model.enums.FormationType;
 import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.model.enums.Severity;
 import ru.inovus.messaging.impl.jooq.Indexes;
 import ru.inovus.messaging.impl.jooq.Keys;
-import ru.inovus.messaging.impl.jooq.Public;
+import ru.inovus.messaging.impl.jooq.Messaging;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
 import ru.inovus.messaging.impl.util.AlertTypeConverter;
 import ru.inovus.messaging.impl.util.FormationTypeConverter;
 import ru.inovus.messaging.impl.util.RecipientTypeConverter;
 import ru.inovus.messaging.impl.util.SeverityConverter;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
 
 /**
- * Сообщения
+ * Уведомления
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Message extends TableImpl<MessageRecord> {
 
-    private static final long serialVersionUID = -1382108795;
+    private static final long serialVersionUID = 122176216;
 
     /**
-     * The reference instance of <code>public.message</code>
+     * The reference instance of <code>messaging.message</code>
      */
     public static final Message MESSAGE = new Message();
 
@@ -59,101 +51,91 @@ public class Message extends TableImpl<MessageRecord> {
     }
 
     /**
-     * The column <code>public.message.id</code>. Уникальный идентификатор
+     * The column <code>messaging.message.id</code>. Уникальный идентификатор
      */
     public final TableField<MessageRecord, UUID> ID = createField(DSL.name("id"), org.jooq.impl.SQLDataType.UUID.nullable(false).defaultValue(org.jooq.impl.DSL.field("uuid_generate_v4()", org.jooq.impl.SQLDataType.UUID)), this, "Уникальный идентификатор");
 
     /**
-     * The column <code>public.message.caption</code>. Заголовок
+     * The column <code>messaging.message.caption</code>. Заголовок уведомления
      */
-    public final TableField<MessageRecord, String> CAPTION = createField(DSL.name("caption"), org.jooq.impl.SQLDataType.VARCHAR, this, "Заголовок");
+    public final TableField<MessageRecord, String> CAPTION = createField(DSL.name("caption"), org.jooq.impl.SQLDataType.VARCHAR, this, "Заголовок уведомления");
 
     /**
-     * The column <code>public.message.text</code>. Содержимое сообщения
+     * The column <code>messaging.message.text</code>. Содержимое уведомления
      */
-    public final TableField<MessageRecord, String> TEXT = createField(DSL.name("text"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Содержимое сообщения");
+    public final TableField<MessageRecord, String> TEXT = createField(DSL.name("text"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Содержимое уведомления");
 
     /**
-     * The column <code>public.message.severity</code>. Жесткость сообщения
+     * The column <code>messaging.message.severity</code>. Важность уведомления
      */
-    public final TableField<MessageRecord, Severity> SEVERITY = createField(DSL.name("severity"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Жесткость сообщения", new SeverityConverter());
+    public final TableField<MessageRecord, Severity> SEVERITY = createField(DSL.name("severity"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Важность уведомления", new SeverityConverter());
 
     /**
-     * The column <code>public.message.alert_type</code>. Тип предупреждения
+     * The column <code>messaging.message.alert_type</code>. Способ отображения уведомления
      */
-    public final TableField<MessageRecord, AlertType> ALERT_TYPE = createField(DSL.name("alert_type"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Тип предупреждения", new AlertTypeConverter());
+    public final TableField<MessageRecord, AlertType> ALERT_TYPE = createField(DSL.name("alert_type"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Способ отображения уведомления", new AlertTypeConverter());
 
     /**
-     * The column <code>public.message.sent_at</code>. Отправлено (дата и время)
+     * The column <code>messaging.message.sent_at</code>. Дата и время отправки уведомления
      */
-    public final TableField<MessageRecord, LocalDateTime> SENT_AT = createField(DSL.name("sent_at"), SQLDataType.TIMESTAMP, this, "Отправлено (дата и время)", new TimestampToLocalDateTimeConverter());
+    public final TableField<MessageRecord, LocalDateTime> SENT_AT = createField(DSL.name("sent_at"), SQLDataType.TIMESTAMP, this, "Дата и время отправки уведомления", new TimestampToLocalDateTimeConverter());
 
     /**
-     * The column <code>public.message.system_id</code>. Идентификатор системы
+     * The column <code>messaging.message.system_id</code>. Идентификатор системы, к которой относится уведомление
      */
-    public final TableField<MessageRecord, String> SYSTEM_ID = createField(DSL.name("system_id"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Идентификатор системы");
+    public final TableField<MessageRecord, String> SYSTEM_ID = createField(DSL.name("system_id"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Идентификатор системы, к которой относится уведомление");
 
     /**
-     * The column <code>public.message.component_id</code>. Компонент Системы, к которому относится уведомление
+     * The column <code>messaging.message.component_id</code>. Идентификатор компонента (модуля, подсистемы), к которому относится уведомление
      */
-    public final TableField<MessageRecord, Integer> COMPONENT_ID = createField(DSL.name("component_id"), org.jooq.impl.SQLDataType.INTEGER, this, "Компонент Системы, к которому относится уведомление");
+    public final TableField<MessageRecord, Integer> COMPONENT_ID = createField(DSL.name("component_id"), org.jooq.impl.SQLDataType.INTEGER, this, "Идентификатор компонента (модуля, подсистемы), к которому относится уведомление");
 
     /**
-     * The column <code>public.message.formation_type</code>. Тип формирования уведомления
+     * The column <code>messaging.message.formation_type</code>. Тип формирования уведомления
      */
     public final TableField<MessageRecord, FormationType> FORMATION_TYPE = createField(DSL.name("formation_type"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false).defaultValue(org.jooq.impl.DSL.field("'AUTO'::character varying", org.jooq.impl.SQLDataType.VARCHAR)), this, "Тип формирования уведомления", new FormationTypeConverter());
 
     /**
-     * The column <code>public.message.recipient_type</code>.
+     * The column <code>messaging.message.recipient_type</code>. Тип получателя уведомления
      */
-    public final TableField<MessageRecord, RecipientType> RECIPIENT_TYPE = createField(DSL.name("recipient_type"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "", new RecipientTypeConverter());
+    public final TableField<MessageRecord, RecipientType> RECIPIENT_TYPE = createField(DSL.name("recipient_type"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Тип получателя уведомления", new RecipientTypeConverter());
 
     /**
-     * The column <code>public.message.notification_type</code>.
+     * The column <code>messaging.message.notification_type</code>. Код шаблона, который был использован для формирования уведомления
      */
-    public final TableField<MessageRecord, String> NOTIFICATION_TYPE = createField(DSL.name("notification_type"), org.jooq.impl.SQLDataType.VARCHAR, this, "");
+    public final TableField<MessageRecord, String> NOTIFICATION_TYPE = createField(DSL.name("notification_type"), org.jooq.impl.SQLDataType.VARCHAR, this, "Код шаблона, который был использован для формирования уведомления");
 
     /**
-     * The column <code>public.message.object_id</code>.
+     * The column <code>messaging.message.object_id</code>. Идентификатор объекта, по которому было направлено уведомление
      */
-    public final TableField<MessageRecord, String> OBJECT_ID = createField(DSL.name("object_id"), org.jooq.impl.SQLDataType.VARCHAR, this, "");
+    public final TableField<MessageRecord, String> OBJECT_ID = createField(DSL.name("object_id"), org.jooq.impl.SQLDataType.VARCHAR, this, "Идентификатор объекта, по которому было направлено уведомление");
 
     /**
-     * The column <code>public.message.object_type</code>.
+     * The column <code>messaging.message.object_type</code>. Тип объекта, по которому было направлено уведомление
      */
-    public final TableField<MessageRecord, String> OBJECT_TYPE = createField(DSL.name("object_type"), org.jooq.impl.SQLDataType.VARCHAR, this, "");
+    public final TableField<MessageRecord, String> OBJECT_TYPE = createField(DSL.name("object_type"), org.jooq.impl.SQLDataType.VARCHAR, this, "Тип объекта, по которому было направлено уведомление");
 
     /**
-     * The column <code>public.message.send_email_date</code>. Дата и время отправки email
+     * The column <code>messaging.message.channel_id</code>. Идентификатор канала отправки уведомления
      */
-    public final TableField<MessageRecord, LocalDateTime> SEND_EMAIL_DATE = createField(DSL.name("send_email_date"), org.jooq.impl.SQLDataType.LOCALDATETIME, this, "Дата и время отправки email");
+    public final TableField<MessageRecord, String> CHANNEL_ID = createField(DSL.name("channel_id"), org.jooq.impl.SQLDataType.VARCHAR, this, "Идентификатор канала отправки уведомления");
 
     /**
-     * The column <code>public.message.send_email_error</code>. Ошибка, возникшая при последней попытке отправки email
-     */
-    public final TableField<MessageRecord, String> SEND_EMAIL_ERROR = createField(DSL.name("send_email_error"), org.jooq.impl.SQLDataType.VARCHAR, this, "Ошибка, возникшая при последней попытке отправки email");
-
-    /**
-     * The column <code>public.message.channel_id</code>. Идентификатор канала отправки
-     */
-    public final TableField<MessageRecord, String> CHANNEL_ID = createField(DSL.name("channel_id"), org.jooq.impl.SQLDataType.VARCHAR, this, "Идентификатор канала отправки");
-
-    /**
-     * Create a <code>public.message</code> table reference
+     * Create a <code>messaging.message</code> table reference
      */
     public Message() {
         this(DSL.name("message"), null);
     }
 
     /**
-     * Create an aliased <code>public.message</code> table reference
+     * Create an aliased <code>messaging.message</code> table reference
      */
     public Message(String alias) {
         this(DSL.name(alias), MESSAGE);
     }
 
     /**
-     * Create an aliased <code>public.message</code> table reference
+     * Create an aliased <code>messaging.message</code> table reference
      */
     public Message(Name alias) {
         this(alias, MESSAGE);
@@ -164,7 +146,7 @@ public class Message extends TableImpl<MessageRecord> {
     }
 
     private Message(Name alias, Table<MessageRecord> aliased, Field<?>[] parameters) {
-        super(alias, null, aliased, parameters, DSL.comment("Сообщения"), TableOptions.table());
+        super(alias, null, aliased, parameters, DSL.comment("Уведомления"), TableOptions.table());
     }
 
     public <O extends Record> Message(Table<O> child, ForeignKey<O, MessageRecord> key) {
@@ -173,7 +155,7 @@ public class Message extends TableImpl<MessageRecord> {
 
     @Override
     public Schema getSchema() {
-        return Public.PUBLIC;
+        return Messaging.MESSAGING;
     }
 
     @Override
@@ -205,16 +187,6 @@ public class Message extends TableImpl<MessageRecord> {
     }
 
     @Override
-    public List<Check<MessageRecord>> getChecks() {
-        return Arrays.<Check<MessageRecord>>asList(
-              Internal.createCheck(this, DSL.name("message_alert_type_check"), "(((alert_type)::text = ANY ((ARRAY['BLOCKER'::character varying, 'POPUP'::character varying, 'HIDDEN'::character varying])::text[])))", true)
-            , Internal.createCheck(this, DSL.name("message_formation_type_check"), "(((formation_type)::text = ANY ((ARRAY['AUTO'::character varying, 'HAND'::character varying])::text[])))", true)
-            , Internal.createCheck(this, DSL.name("message_recipient_type_check"), "(((recipient_type)::text = ANY ((ARRAY['ALL'::character varying, 'USER'::character varying])::text[])))", true)
-            , Internal.createCheck(this, DSL.name("message_severity_check"), "(((severity)::text = ANY (ARRAY[('40'::character varying)::text, ('30'::character varying)::text, ('20'::character varying)::text, ('10'::character varying)::text])))", true)
-        );
-    }
-
-    @Override
     public Message as(String alias) {
         return new Message(DSL.name(alias), this);
     }
@@ -241,11 +213,11 @@ public class Message extends TableImpl<MessageRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row16 type methods
+    // Row14 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row16<UUID, String, String, Severity, AlertType, LocalDateTime, String, Integer, FormationType, RecipientType, String, String, String, LocalDateTime, String, String> fieldsRow() {
-        return (Row16) super.fieldsRow();
+    public Row14<UUID, String, String, Severity, AlertType, LocalDateTime, String, Integer, FormationType, RecipientType, String, String, String, String> fieldsRow() {
+        return (Row14) super.fieldsRow();
     }
 }

@@ -14,50 +14,50 @@ import ru.inovus.messaging.impl.jooq.tables.Channel;
 
 
 /**
- * Канал отправки
+ * Каналы отправки уведомлений
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements Record3<String, String, String> {
 
-    private static final long serialVersionUID = -1880177342;
+    private static final long serialVersionUID = 348679975;
 
     /**
-     * Setter for <code>public.channel.id</code>. Уникальный код канала
+     * Setter for <code>messaging.channel.id</code>. Уникальный идентификатор
      */
     public void setId(String value) {
         set(0, value);
     }
 
     /**
-     * Getter for <code>public.channel.id</code>. Уникальный код канала
+     * Getter for <code>messaging.channel.id</code>. Уникальный идентификатор
      */
     public String getId() {
         return (String) get(0);
     }
 
     /**
-     * Setter for <code>public.channel.name</code>. Имя канала для отображения на UI
+     * Setter for <code>messaging.channel.name</code>. Наименование канала
      */
     public void setName(String value) {
         set(1, value);
     }
 
     /**
-     * Getter for <code>public.channel.name</code>. Имя канала для отображения на UI
+     * Getter for <code>messaging.channel.name</code>. Наименование канала
      */
     public String getName() {
         return (String) get(1);
     }
 
     /**
-     * Setter for <code>public.channel.queue_name</code>. Имя очереди канала
+     * Setter for <code>messaging.channel.queue_name</code>. Наименование очереди канала
      */
     public void setQueueName(String value) {
         set(2, value);
     }
 
     /**
-     * Getter for <code>public.channel.queue_name</code>. Имя очереди канала
+     * Getter for <code>messaging.channel.queue_name</code>. Наименование очереди канала
      */
     public String getQueueName() {
         return (String) get(2);

@@ -8,7 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.inovus.messaging.api.criteria.RecipientCriteria;
 import ru.inovus.messaging.api.model.Recipient;
-import ru.inovus.messaging.impl.jooq.tables.records.RecipientRecord;
+import ru.inovus.messaging.impl.jooq.tables.records.MessageRecipientRecord;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,19 +16,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static ru.inovus.messaging.impl.jooq.Tables.MESSAGE_RECIPIENT;
 import static ru.inovus.messaging.impl.jooq.Tables.MESSAGE_SETTING;
-import static ru.inovus.messaging.impl.jooq.Tables.RECIPIENT;
 
 @Service
 public class RecipientService {
 
     private static final RecordMapper<Record, Recipient> MAPPER = rec -> {
-        RecipientRecord record = rec.into(RECIPIENT);
+        MessageRecipientRecord record = rec.into(MESSAGE_RECIPIENT);
         Recipient recipient = new Recipient();
-        recipient.setEmail(record.getEmail());
+        recipient.setEmail(record.getRecipientSendChannelId());
         recipient.setMessageId(record.getMessageId());
         recipient.setReadAt(record.getReadAt());
-        recipient.setRecipient(record.getRecipient());
+        recipient.setRecipient(record.getRecipientName());
         return recipient;
     };
     private final DSLContext dsl;
@@ -40,10 +40,10 @@ public class RecipientService {
     public Page<Recipient> getRecipients(RecipientCriteria criteria) {
         List<Condition> conditions = new ArrayList<>();
         Optional.ofNullable(criteria.getMessageId())
-                .ifPresent(messageId -> conditions.add(RECIPIENT.MESSAGE_ID.eq(messageId)));
+                .ifPresent(messageId -> conditions.add(MESSAGE_RECIPIENT.MESSAGE_ID.eq(messageId)));
         SelectConditionStep<Record> query = dsl
-                .select(RECIPIENT.fields())
-                .from(RECIPIENT)
+                .select(MESSAGE_RECIPIENT.fields())
+                .from(MESSAGE_RECIPIENT)
                 .where(conditions);
         int count = dsl.fetchCount(query);
         List<Recipient> collection = query

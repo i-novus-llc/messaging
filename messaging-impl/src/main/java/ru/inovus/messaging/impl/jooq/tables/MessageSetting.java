@@ -4,35 +4,23 @@
 package ru.inovus.messaging.impl.jooq.tables;
 
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.jooq.Check;
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Index;
-import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row11;
-import org.jooq.Schema;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
-import org.jooq.impl.Internal;
 import org.jooq.impl.TableImpl;
-
 import ru.inovus.messaging.api.model.enums.AlertType;
 import ru.inovus.messaging.api.model.enums.FormationType;
 import ru.inovus.messaging.api.model.enums.Severity;
 import ru.inovus.messaging.impl.jooq.Indexes;
 import ru.inovus.messaging.impl.jooq.Keys;
-import ru.inovus.messaging.impl.jooq.Public;
+import ru.inovus.messaging.impl.jooq.Messaging;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageSettingRecord;
 import ru.inovus.messaging.impl.util.AlertTypeConverter;
 import ru.inovus.messaging.impl.util.FormationTypeConverter;
 import ru.inovus.messaging.impl.util.SeverityConverter;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -41,10 +29,10 @@ import ru.inovus.messaging.impl.util.SeverityConverter;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class MessageSetting extends TableImpl<MessageSettingRecord> {
 
-    private static final long serialVersionUID = -514069478;
+    private static final long serialVersionUID = 1068731507;
 
     /**
-     * The reference instance of <code>public.message_setting</code>
+     * The reference instance of <code>messaging.message_setting</code>
      */
     public static final MessageSetting MESSAGE_SETTING = new MessageSetting();
 
@@ -57,76 +45,76 @@ public class MessageSetting extends TableImpl<MessageSettingRecord> {
     }
 
     /**
-     * The column <code>public.message_setting.id</code>. Уникальный идентификатор
+     * The column <code>messaging.message_setting.id</code>. Уникальный идентификатор
      */
     public final TableField<MessageSettingRecord, Integer> ID = createField(DSL.name("id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "Уникальный идентификатор");
 
     /**
-     * The column <code>public.message_setting.caption</code>. Заголовок
+     * The column <code>messaging.message_setting.caption</code>. Заголовок уведомления
      */
-    public final TableField<MessageSettingRecord, String> CAPTION = createField(DSL.name("caption"), org.jooq.impl.SQLDataType.VARCHAR, this, "Заголовок");
+    public final TableField<MessageSettingRecord, String> CAPTION = createField(DSL.name("caption"), org.jooq.impl.SQLDataType.VARCHAR, this, "Заголовок уведомления");
 
     /**
-     * The column <code>public.message_setting.text</code>. Содержимое сообщения
+     * The column <code>messaging.message_setting.text</code>. Содержимое уведомления
      */
-    public final TableField<MessageSettingRecord, String> TEXT = createField(DSL.name("text"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Содержимое сообщения");
+    public final TableField<MessageSettingRecord, String> TEXT = createField(DSL.name("text"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Содержимое уведомления");
 
     /**
-     * The column <code>public.message_setting.severity</code>. Жесткость сообщения
+     * The column <code>messaging.message_setting.severity</code>. Важность уведомления
      */
-    public final TableField<MessageSettingRecord, Severity> SEVERITY = createField(DSL.name("severity"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Жесткость сообщения", new SeverityConverter());
+    public final TableField<MessageSettingRecord, Severity> SEVERITY = createField(DSL.name("severity"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Важность уведомления", new SeverityConverter());
 
     /**
-     * The column <code>public.message_setting.alert_type</code>. Тип предупреждения
+     * The column <code>messaging.message_setting.alert_type</code>. Способ отображения уведомления
      */
-    public final TableField<MessageSettingRecord, AlertType> ALERT_TYPE = createField(DSL.name("alert_type"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Тип предупреждения", new AlertTypeConverter());
+    public final TableField<MessageSettingRecord, AlertType> ALERT_TYPE = createField(DSL.name("alert_type"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Способ отображения уведомления", new AlertTypeConverter());
 
     /**
-     * The column <code>public.message_setting.component_id</code>. Ссылка на системный справочник компонентов Системы. Системный справочник будет настраиваться для каждой Системы при необходимости
+     * The column <code>messaging.message_setting.component_id</code>. Идентификатор компонента (модуля, подсистемы), к которому относится уведомление
      */
-    public final TableField<MessageSettingRecord, Integer> COMPONENT_ID = createField(DSL.name("component_id"), org.jooq.impl.SQLDataType.INTEGER, this, "Ссылка на системный справочник компонентов Системы. Системный справочник будет настраиваться для каждой Системы при необходимости");
+    public final TableField<MessageSettingRecord, Integer> COMPONENT_ID = createField(DSL.name("component_id"), org.jooq.impl.SQLDataType.INTEGER, this, "Идентификатор компонента (модуля, подсистемы), к которому относится уведомление");
 
     /**
-     * The column <code>public.message_setting.name</code>. Название шаблона (события)
+     * The column <code>messaging.message_setting.name</code>. Наименование шаблона уведомления
      */
-    public final TableField<MessageSettingRecord, String> NAME = createField(DSL.name("name"), org.jooq.impl.SQLDataType.VARCHAR, this, "Название шаблона (события)");
+    public final TableField<MessageSettingRecord, String> NAME = createField(DSL.name("name"), org.jooq.impl.SQLDataType.VARCHAR, this, "Наименование шаблона уведомления");
 
     /**
-     * The column <code>public.message_setting.is_disabled</code>. Признак выключения уведомления
+     * The column <code>messaging.message_setting.is_disabled</code>. Признак выключения уведомления
      */
     public final TableField<MessageSettingRecord, Boolean> IS_DISABLED = createField(DSL.name("is_disabled"), org.jooq.impl.SQLDataType.BOOLEAN.defaultValue(org.jooq.impl.DSL.field("false", org.jooq.impl.SQLDataType.BOOLEAN)), this, "Признак выключения уведомления");
 
     /**
-     * The column <code>public.message_setting.formation_type</code>. Тип формирования уведомления
+     * The column <code>messaging.message_setting.formation_type</code>. Тип формирования уведомления
      */
     public final TableField<MessageSettingRecord, FormationType> FORMATION_TYPE = createField(DSL.name("formation_type"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Тип формирования уведомления", new FormationTypeConverter());
 
     /**
-     * The column <code>public.message_setting.code</code>. Код шаблона сообщения
+     * The column <code>messaging.message_setting.code</code>. Код шаблона уведомления
      */
-    public final TableField<MessageSettingRecord, String> CODE = createField(DSL.name("code"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Код шаблона сообщения");
+    public final TableField<MessageSettingRecord, String> CODE = createField(DSL.name("code"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Код шаблона уведомления");
 
     /**
-     * The column <code>public.message_setting.channel_id</code>. Идентификатор канала отправки
+     * The column <code>messaging.message_setting.channel_id</code>. Идентификатор канала отправки уведомления
      */
-    public final TableField<MessageSettingRecord, String> CHANNEL_ID = createField(DSL.name("channel_id"), org.jooq.impl.SQLDataType.VARCHAR, this, "Идентификатор канала отправки");
+    public final TableField<MessageSettingRecord, String> CHANNEL_ID = createField(DSL.name("channel_id"), org.jooq.impl.SQLDataType.VARCHAR, this, "Идентификатор канала отправки уведомления");
 
     /**
-     * Create a <code>public.message_setting</code> table reference
+     * Create a <code>messaging.message_setting</code> table reference
      */
     public MessageSetting() {
         this(DSL.name("message_setting"), null);
     }
 
     /**
-     * Create an aliased <code>public.message_setting</code> table reference
+     * Create an aliased <code>messaging.message_setting</code> table reference
      */
     public MessageSetting(String alias) {
         this(DSL.name(alias), MESSAGE_SETTING);
     }
 
     /**
-     * Create an aliased <code>public.message_setting</code> table reference
+     * Create an aliased <code>messaging.message_setting</code> table reference
      */
     public MessageSetting(Name alias) {
         this(alias, MESSAGE_SETTING);
@@ -146,7 +134,7 @@ public class MessageSetting extends TableImpl<MessageSettingRecord> {
 
     @Override
     public Schema getSchema() {
-        return Public.PUBLIC;
+        return Messaging.MESSAGING;
     }
 
     @Override
@@ -175,15 +163,6 @@ public class MessageSetting extends TableImpl<MessageSettingRecord> {
 
     public Channel channel() {
         return new Channel(this, Keys.MESSAGE_SETTING__MESSAGE_SETTING_CHANNEL_ID_CHANNEL_ID_FK);
-    }
-
-    @Override
-    public List<Check<MessageSettingRecord>> getChecks() {
-        return Arrays.<Check<MessageSettingRecord>>asList(
-              Internal.createCheck(this, DSL.name("message_setting_alert_type_check"), "(((alert_type)::text = ANY ((ARRAY['BLOCKER'::character varying, 'POPUP'::character varying, 'HIDDEN'::character varying])::text[])))", true)
-            , Internal.createCheck(this, DSL.name("message_setting_formation_type_check"), "(((formation_type)::text = ANY ((ARRAY['AUTO'::character varying, 'HAND'::character varying])::text[])))", true)
-            , Internal.createCheck(this, DSL.name("message_setting_severity_check"), "(((severity)::text = ANY (ARRAY[('40'::character varying)::text, ('30'::character varying)::text, ('20'::character varying)::text, ('10'::character varying)::text])))", true)
-        );
     }
 
     @Override

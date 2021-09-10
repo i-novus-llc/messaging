@@ -14,7 +14,7 @@ import ru.inovus.messaging.impl.jooq.tables.UserSetting;
 
 
 /**
- * A class modelling indexes of tables of the <code>public</code> schema.
+ * A class modelling indexes of tables of the <code>messaging</code> schema.
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Indexes {
