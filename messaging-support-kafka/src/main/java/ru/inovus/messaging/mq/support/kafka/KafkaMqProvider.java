@@ -15,6 +15,7 @@ import ru.inovus.messaging.api.model.MessageOutbox;
 import ru.inovus.messaging.channel.api.queue.MqConsumer;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.api.queue.TopicMqConsumer;
+import ru.inovus.messaging.channel.api.queue.models.QueueObject;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -24,11 +25,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class KafkaMqProvider implements MqProvider {
 
     private Map<Serializable, MessageListenerContainer> containers = new ConcurrentHashMap<>();
-    private final KafkaTemplate<String, MessageOutbox> kafkaTemplate;
+    private final KafkaTemplate<String, QueueObject> kafkaTemplate;
 
     private final KafkaProperties properties;
 
-    public KafkaMqProvider(KafkaTemplate<String, MessageOutbox> kafkaTemplate,
+    public KafkaMqProvider(KafkaTemplate<String, QueueObject> kafkaTemplate,
                            KafkaProperties properties) {
         this.kafkaTemplate = kafkaTemplate;
         this.properties = properties;
@@ -44,8 +45,8 @@ public class KafkaMqProvider implements MqProvider {
     }
 
     @Override
-    public void publish(MessageOutbox message, String mqDestinationName) {
-        kafkaTemplate.send(mqDestinationName, String.valueOf(System.currentTimeMillis()), message);
+    public void publish(QueueObject queueObject, String mqDestinationName) {
+        kafkaTemplate.send(mqDestinationName, String.valueOf(System.currentTimeMillis()), queueObject);
     }
 
     @Override

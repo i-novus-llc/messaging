@@ -29,6 +29,9 @@ public class RecipientService {
         recipient.setMessageId(record.getMessageId());
         recipient.setReadAt(record.getReadAt());
         recipient.setName(record.getRecipientName());
+        recipient.setStatus(record.getStatus());
+        recipient.setDeparturedAt(record.getDeparturedAt());
+        recipient.setSendMessageError(record.getSendMessageError());
         return recipient;
     };
     private final DSLContext dsl;

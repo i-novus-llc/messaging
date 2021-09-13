@@ -8,11 +8,11 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import ru.inovus.messaging.api.model.MessageOutbox;
-import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.enums.SendStatus;
 import ru.inovus.messaging.channel.api.queue.AbstractChannel;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
+import ru.inovus.messaging.channel.api.queue.models.MessageQO;
+import ru.inovus.messaging.channel.api.queue.models.MessageStatusQO;
 
 import javax.mail.internet.MimeMessage;
 import java.util.List;
@@ -28,43 +28,45 @@ public class EmailChannel extends AbstractChannel {
 
     private JavaMailSender emailSender;
 
-    public EmailChannel(@Value("${messaging.channel.email-queue-name}") String queueName,
+    public EmailChannel(@Value("${novus.messaging.channel.email.queue}") String messageQueueName,
+                        @Value("${novus.messaging.status.queue}") String statusQueueName,
                         MqProvider mqProvider,
                         JavaMailSender emailSender) {
-        super(queueName, mqProvider);
+        super(mqProvider, messageQueueName, statusQueueName);
         this.emailSender = emailSender;
     }
 
 
-    public void send(MessageOutbox message) {
+    public void send(MessageQO message) {
+        MessageStatusQO statusQO = new MessageStatusQO();
+        statusQO.setMessageId(message.getId());
+
         try {
-            for (Recipient recipient : message.getMessage().getRecipients()) {
+            for (MessageQO.RecipientQO recipient : message.getRecipients()) {
                 if (StringUtils.isEmpty(recipient.getEmail()))
                     log.error("Message with id={} will not be sent to recipient with id={} due to an empty email address",
-                            message.getMessage().getId(), recipient.getName());
+                            message.getId(), recipient.getName());
             }
 
-            List<String> recipientsEmailList = message.getMessage().getRecipients().stream()
+            List<String> recipientsEmailList = message.getRecipients().stream()
                     .filter(x -> !StringUtils.isEmpty(x.getEmail()))
-                    .map(Recipient::getEmail)
+                    .map(MessageQO.RecipientQO::getEmail)
                     .collect(Collectors.toList());
             if (!CollectionUtils.isEmpty(recipientsEmailList)) {
                 MimeMessage mail = emailSender.createMimeMessage();
                 MimeMessageHelper helper = new MimeMessageHelper(mail, true);
                 helper.setTo(recipientsEmailList.toArray(String[]::new));
-                helper.setSubject(message.getMessage().getCaption());
-                helper.setText(message.getMessage().getText(), true);
+                helper.setSubject(message.getCaption());
+                helper.setText(message.getText(), true);
                 emailSender.send(mail);
             }
-            reportSendStatus(SendStatus.SENT);
+            statusQO.setStatus(SendStatus.SENT);
         } catch (Exception e) {
             log.error("MimeMessage create and send email failed! {}", e.getMessage());
-            reportSendStatus(SendStatus.FAILED);
+            statusQO.setStatus(SendStatus.FAILED);
+            statusQO.setErrorMessage(e.getMessage());
+        } finally {
+            super.reportSendStatus(statusQO);
         }
-    }
-
-    @Override
-    public void reportSendStatus(SendStatus status) {
-
     }
 }

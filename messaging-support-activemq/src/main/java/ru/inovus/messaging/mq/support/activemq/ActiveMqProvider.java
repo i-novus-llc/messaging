@@ -21,6 +21,7 @@ import ru.inovus.messaging.channel.api.queue.MqConsumer;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.api.queue.QueueMqConsumer;
 import ru.inovus.messaging.channel.api.queue.TopicMqConsumer;
+import ru.inovus.messaging.channel.api.queue.models.QueueObject;
 
 import javax.jms.MessageListener;
 import javax.jms.Session;
@@ -131,9 +132,9 @@ public class ActiveMqProvider implements MqProvider {
     }
 
     @Override
-    public void publish(MessageOutbox message, String mqDestinationName) {
+    public void publish(QueueObject queueObject, String mqDestinationName) {
         try {
-            jmsTemplate.convertAndSend(ActiveMQDestination.createDestination(mqDestinationName, ActiveMQDestination.QUEUE_TYPE), objectMapper.writeValueAsString(message));
+            jmsTemplate.convertAndSend(ActiveMQDestination.createDestination(mqDestinationName, ActiveMQDestination.QUEUE_TYPE), objectMapper.writeValueAsString(queueObject));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

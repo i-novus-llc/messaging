@@ -18,6 +18,7 @@ package ru.inovus.messaging.api.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
+import ru.inovus.messaging.api.model.enums.SendStatus;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -31,4 +32,7 @@ public class Recipient implements Serializable {
     private UUID messageId;
     private String name;
     private String email;
+    private SendStatus status;
+    private LocalDateTime departuredAt;
+    private String sendMessageError;
 }

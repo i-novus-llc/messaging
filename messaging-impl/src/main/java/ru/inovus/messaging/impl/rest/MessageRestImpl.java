@@ -13,6 +13,7 @@ import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.rest.MessageRest;
 import ru.inovus.messaging.api.rest.UserSettingRest;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
+import ru.inovus.messaging.channel.api.queue.models.MessageQO;
 import ru.inovus.messaging.impl.UserRoleProvider;
 import ru.inovus.messaging.impl.provider.ConfigurableUserRoleProvider;
 import ru.inovus.messaging.impl.service.ChannelService;
@@ -152,7 +153,7 @@ public class MessageRestImpl implements MessageRest {
 
     private void send(Message message) {
         Channel channel = channelService.getChannel(message.getChannel().getId());
-        mqProvider.publish(new MessageOutbox(message), channel.getQueueName());
+        mqProvider.publish(constructMessageQO(message), channel.getQueueName());
     }
 
     //Заполнение списков Пользователей для рассылки уведомления
@@ -320,5 +321,22 @@ public class MessageRestImpl implements MessageRest {
         }
         recipient.setName(userName);
         return recipient;
+    }
+
+    private MessageQO constructMessageQO(Message message) {
+        MessageQO messageQO = new MessageQO();
+        messageQO.setId(UUID.fromString(message.getId()));
+        messageQO.setCaption(message.getCaption());
+        messageQO.setText(message.getText());
+        messageQO.setSeverity(message.getSeverity());
+        if (message.getRecipients() != null)
+            messageQO.setRecipients(message.getRecipients().stream()
+            .map(r -> {
+                MessageQO.RecipientQO recipientQO = new MessageQO.RecipientQO();
+                recipientQO.setName(r.getName());
+                recipientQO.setEmail(r.getEmail());
+                return recipientQO;
+            }).collect(Collectors.toList()));
+        return messageQO;
     }
 }
