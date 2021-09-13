@@ -8,9 +8,9 @@
 
     <fields>
         <field id="recipient" domain="string" name="Получатель">
-            <select mapping="['recipient']"/>
+            <select mapping="['name']"/>
             <filters>
-                <eq filter-id="recipient">recipient={recipient}</eq>
+                <eq filter-id="recipient">name={recipient}</eq>
             </filters>
         </field>
 

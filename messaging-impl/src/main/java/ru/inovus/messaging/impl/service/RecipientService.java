@@ -28,7 +28,7 @@ public class RecipientService {
         recipient.setEmail(record.getRecipientSendChannelId());
         recipient.setMessageId(record.getMessageId());
         recipient.setReadAt(record.getReadAt());
-        recipient.setRecipient(record.getRecipientName());
+        recipient.setName(record.getRecipientName());
         return recipient;
     };
     private final DSLContext dsl;

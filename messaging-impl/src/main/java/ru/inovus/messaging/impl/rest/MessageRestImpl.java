@@ -92,13 +92,13 @@ public class MessageRestImpl implements MessageRest {
         Map<String, String> userMap = new HashMap<>();
 
         for (Recipient recipient : recipients) {
-            String userName = recipient.getRecipient();
+            String userName = recipient.getName();
             String recipientName = userMap.get(userName);
             if (recipientName != null) {
-                recipient.setRecipient(recipientName);
+                recipient.setName(recipientName);
             } else {
                 UserCriteria userCriteria = new UserCriteria();
-                userCriteria.setUsername(recipient.getRecipient());
+                userCriteria.setUsername(recipient.getName());
                 userCriteria.setPageSize(1);
                 userCriteria.setPageNumber(0);
 
@@ -318,7 +318,7 @@ public class MessageRestImpl implements MessageRest {
                 recipient.setEmail(user.getEmail());
             }
         }
-        recipient.setRecipient(userName);
+        recipient.setName(userName);
         return recipient;
     }
 }

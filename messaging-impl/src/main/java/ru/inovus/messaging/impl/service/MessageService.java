@@ -83,7 +83,7 @@ public class MessageService {
                 dsl
                         .insertInto(MESSAGE_RECIPIENT)
                         .values(RECIPIENT_ID_SEQ.nextval(),
-                                rec.getRecipient(), id, null, rec.getEmail())
+                                rec.getName(), id, null, rec.getEmail())
                         .execute();
             }
         }
@@ -151,7 +151,7 @@ public class MessageService {
                     Recipient recipient = new Recipient();
                     recipient.setMessageId(r.getMessageId());
                     recipient.setReadAt(r.getReadAt());
-                    recipient.setRecipient(r.getRecipientName());
+                    recipient.setName(r.getRecipientName());
                     recipient.setEmail(r.getRecipientSendChannelId());
                     return recipient;
                 });

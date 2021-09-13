@@ -91,7 +91,7 @@ public class MessagingEventListener {
         if (msg == null || msg.getMessage() == null || msg.getMessage().getRecipients() == null || msg.getMessage().getRecipients().isEmpty())
             return false;
         for (Recipient r : msg.getMessage().getRecipients()) {
-            if (r.getRecipient().equals(recipient) && msg.getMessage().getSystemId().equals(systemId))
+            if (r.getName().equals(recipient) && msg.getMessage().getSystemId().equals(systemId))
                 return true;
         }
         return false;
