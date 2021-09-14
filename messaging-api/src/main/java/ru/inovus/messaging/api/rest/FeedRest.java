@@ -62,4 +62,10 @@ public interface  FeedRest {
     @ApiOperation("Пометить все сообщения прочитанными")
     @ApiResponse(code = 200, message = "Все сообщения помечены прочитанными")
     void markReadAll(@PathParam("recipient") String recipient, @PathParam("systemId") String systemId);
+
+    @POST
+    @Path("/{recipient}/read/")
+    @ApiOperation("Пометить сообщение прочитанным")
+    @ApiResponse(code = 200, message = "Все сообщения помечены прочитанными")
+    void markRead(@PathParam("recipient") String recipient, UUID messageId);
 }

@@ -1,8 +1,9 @@
-package ru.inovus.messaging.impl.config;
+package ru.inovus.messaging.web.channel.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -12,6 +13,7 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 
 @Configuration
 @EnableWebSocketMessageBroker
+@PropertySource("classpath:channel.properties")
 public class WebSocketConfiguration extends AbstractSecurityWebSocketMessageBrokerConfigurer {
 
     @Value("${novus.messaging.app_prefix}")
@@ -38,11 +40,6 @@ public class WebSocketConfiguration extends AbstractSecurityWebSocketMessageBrok
         return p;
     }
 
-    @Bean
-    public MessagingEventListener messagingEventListener() {
-        return new MessagingEventListener();
-    }
-
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.setApplicationDestinationPrefixes(appPrefix);
@@ -54,3 +51,10 @@ public class WebSocketConfiguration extends AbstractSecurityWebSocketMessageBrok
         registry.addEndpoint(endPoint).setAllowedOrigins("*").withSockJS();
     }
 }
+
+
+
+
+
+
+
