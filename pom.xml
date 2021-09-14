@@ -53,7 +53,6 @@
         <module>messaging-api</module>
         <module>messaging-client</module>
         <module>messaging-impl</module>
-        <module>messaging-support-activemq</module>
         <module>messaging-support-kafka</module>
         <module>messaging-web</module>
         <module>messaging-backend</module>
@@ -111,11 +110,6 @@
             <dependency>
                 <groupId>ru.i-novus.messaging</groupId>
                 <artifactId>messaging-support-kafka</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>ru.i-novus.messaging</groupId>
-                <artifactId>messaging-support-activemq</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

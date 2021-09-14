@@ -7,7 +7,7 @@
 # Требования
 - Openjdk 11
 - PostgreSQL 11
-- Apache Kafka или ActiveMQ
+- Apache Kafka
 - N2O Security Admin 4
 - N2O Audit 2
 
@@ -31,7 +31,6 @@
 - `messaging-api` - общие интерфейсы и модели
 - `messaging-client` - java клиент для REST-сервиса уведомлений
 - `messaging-impl` - скрипты БД и REST-сервис уведомлений + websocket сервер
-- `messaging-support-activemq` - модуль для поддержки работы уведомлений через ActiveMQ
 - `messaging-support-kafka` - модуль для поддержки работы уведомлений через Kafka
 - `messaging-web` - конфигурационные файлы N2O и классы для встраивания в другие N2O приложения
 
