@@ -1,45 +1,49 @@
-package ru.inovus.messaging.impl.config;
+package ru.inovus.messaging.web.channel;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.enums.RecipientType;
+import ru.inovus.messaging.channel.api.queue.AbstractChannel;
 import ru.inovus.messaging.channel.api.queue.MqConsumer;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.api.queue.TopicMqConsumer;
-import ru.inovus.messaging.impl.MessageController;
+import ru.inovus.messaging.web.channel.controller.MessageController;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
-/**
- * Обработчик событий подписки и отключения от Messaging
- */
+@Slf4j
+@PropertySource("classpath:channel.properties")
+@Component
+public class WebChannel extends AbstractChannel {
 
-public class MessagingEventListener {
-
-    private static final Logger logger = LoggerFactory.getLogger(MessagingEventListener.class);
-
-    @Value("${novus.messaging.topic.notice}")
+    @Value("${novus.messaging.channel.web.topic}")
     private String noticeTopicName;
 
-    @Value("${novus.messaging.timeout}")
+    @Value("${messaging.message-lifetime}")
     private Integer timeout;
 
-    @Autowired
-    private MessageController messageController;
+    private final MessageController messageController;
 
-    @Autowired
-    private MqProvider mqProvider;
+    private final MqProvider mqProvider;
 
+    public WebChannel(@Value("${messaging.channel.web.queue}") String messageQueueName,
+                      @Value("${novus.messaging.status.queue}") String statusQueueName,
+                      MqProvider mqProvider,
+                      MessageController messageController) {
+        super(mqProvider, messageQueueName, statusQueueName);
+        this.messageController = messageController;
+        this.mqProvider = mqProvider;
+    }
 
     @EventListener
     public void handleSessionSubscribe(SessionSubscribeEvent event) {
@@ -59,28 +63,32 @@ public class MessagingEventListener {
         mqProvider.unsubscribe(event.getSessionId());
     }
 
-    private String getSystemId(String dest) {
-        String result = dest.replace("/user/exchange/", "");
-        return result.substring(0, result.indexOf("/"));
+    @Override
+    public void send(Message message) {
+        mqProvider.publish(message, noticeTopicName);
+    }
+
+    @Override
+    public void reportSendStatus(Message message) {
+        //todo очередь статусов
     }
 
     private void sendTo(Message message, SimpMessageHeaderAccessor headers) {
         String systemId = getSystemId(headers.getDestination());
         String recipient = headers.getUser().getName();
         if (checkRecipient(message, recipient, systemId)) {
-            if (message != null) {
-                messageController.sendFeedCount(systemId, headers.getUser());
+            if (isNotExpired(message))
+                messageController.sendPrivateMessage(message, recipient, systemId);
+            else
+                log.debug("Did not send message with id {} due to expiration {}",
+                        message.getId(), message.getSentAt());
+        } else
+            log.debug("No recipients for message");
+    }
 
-                if (isNotExpired(message)) {
-                    messageController.sendPrivateMessage(message, recipient, systemId);
-                } else {
-                    logger.debug("Did not send message with id {} due to expiration {}",
-                            message.getId(), message.getSentAt());
-                }
-            }
-        } else {
-            logger.debug("No recipients for message");
-        }
+    private String getSystemId(String dest) {
+        String result = dest.replace("/user/exchange/", "");
+        return result.substring(0, result.indexOf("/"));
     }
 
     private boolean checkRecipient(Message message, String recipient, String systemId) {
@@ -102,5 +110,4 @@ public class MessagingEventListener {
     private static boolean isNotExpired(LocalDateTime start, LocalDateTime end, Integer timeout) {
         return start == null || end == null || end.minus(timeout, ChronoUnit.SECONDS).isBefore(start);
     }
-
 }

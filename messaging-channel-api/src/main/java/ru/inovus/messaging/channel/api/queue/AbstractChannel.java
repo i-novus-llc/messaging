@@ -9,8 +9,7 @@ public abstract class AbstractChannel implements Channel {
     private MqProvider mqProvider;
     private String statusQueueName;
 
-    protected AbstractChannel(MqProvider mqProvider, String messageQueueName,
-                              String statusQueueName) {
+    protected AbstractChannel(MqProvider mqProvider, String messageQueueName, String statusQueueName) {
         this.mqProvider = mqProvider;
         this.statusQueueName = statusQueueName;
         mqProvider.subscribe(new QueueMqConsumer(messageQueueName, this::send, messageQueueName));

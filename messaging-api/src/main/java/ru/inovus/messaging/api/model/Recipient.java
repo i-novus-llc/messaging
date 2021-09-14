@@ -17,6 +17,7 @@ package ru.inovus.messaging.api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.inovus.messaging.api.model.enums.SendStatus;
 
@@ -26,6 +27,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Recipient implements Serializable {
     private LocalDateTime readAt;
@@ -35,4 +37,8 @@ public class Recipient implements Serializable {
     private SendStatus status;
     private LocalDateTime departuredAt;
     private String sendMessageError;
+
+    public Recipient(String name) {
+        this.name = name;
+    }
 }

@@ -9,42 +9,57 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>messaging-channel-email</artifactId>
+    <artifactId>messaging-channel-web</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>ru.i-novus.messaging</groupId>
-            <artifactId>messaging-api</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-mail</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>ru.i-novus.messaging</groupId>
             <artifactId>messaging-channel-api</artifactId>
         </dependency>
 
         <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-websocket</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-messaging</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security.oauth</groupId>
+            <artifactId>spring-security-oauth2</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-jwt</artifactId>
+            <version>1.0.9.RELEASE</version>
+        </dependency>
+
+        <dependency>
             <groupId>ru.i-novus.messaging</groupId>
             <artifactId>messaging-support-kafka</artifactId>
+        </dependency>
+
+        <!--TEST-->
+        <dependency>
+            <groupId>net.n2oapp.platform</groupId>
+            <artifactId>n2o-platform-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-email</artifactId>
-            <version>1.5</version>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka-test</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <profiles>
@@ -55,5 +70,4 @@
             </properties>
         </profile>
     </profiles>
-
 </project>
