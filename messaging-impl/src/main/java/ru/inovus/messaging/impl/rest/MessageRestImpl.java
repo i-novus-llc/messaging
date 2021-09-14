@@ -1,8 +1,6 @@
 package ru.inovus.messaging.impl.rest;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -13,9 +11,7 @@ import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.rest.MessageRest;
 import ru.inovus.messaging.api.rest.UserSettingRest;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
-import ru.inovus.messaging.channel.api.queue.models.MessageQO;
 import ru.inovus.messaging.impl.UserRoleProvider;
-import ru.inovus.messaging.impl.provider.ConfigurableUserRoleProvider;
 import ru.inovus.messaging.impl.service.ChannelService;
 import ru.inovus.messaging.impl.service.MessageService;
 import ru.inovus.messaging.impl.service.MessageSettingService;
@@ -27,8 +23,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @Controller
 public class MessageRestImpl implements MessageRest {
-    private static Logger logger = LoggerFactory.getLogger(ConfigurableUserRoleProvider.class);
-
     private final MessageService messageService;
     private final MessageSettingService messageSettingService;
     private final RecipientService recipientService;
@@ -153,7 +147,7 @@ public class MessageRestImpl implements MessageRest {
 
     private void send(Message message) {
         Channel channel = channelService.getChannel(message.getChannel().getId());
-        mqProvider.publish(constructMessageQO(message), channel.getQueueName());
+        mqProvider.publish(constructMessage(message), channel.getQueueName());
     }
 
     //Заполнение списков Пользователей для рассылки уведомления
@@ -312,7 +306,7 @@ public class MessageRestImpl implements MessageRest {
             userCriteria.setPageSize(1);
             List<User> users = userRoleProvider.getUsers(userCriteria).getContent();
             if (CollectionUtils.isEmpty(users)) {
-                logger.warn("User with username: {} not found in user provider", userName);
+                log.warn("User with username: {} not found in user provider", userName);
                 return null;
             } else {
                 User user = users.get(0);
@@ -323,20 +317,13 @@ public class MessageRestImpl implements MessageRest {
         return recipient;
     }
 
-    private MessageQO constructMessageQO(Message message) {
-        MessageQO messageQO = new MessageQO();
-        messageQO.setId(UUID.fromString(message.getId()));
-        messageQO.setCaption(message.getCaption());
-        messageQO.setText(message.getText());
-        messageQO.setSeverity(message.getSeverity());
-        if (message.getRecipients() != null)
-            messageQO.setRecipients(message.getRecipients().stream()
-            .map(r -> {
-                MessageQO.RecipientQO recipientQO = new MessageQO.RecipientQO();
-                recipientQO.setName(r.getName());
-                recipientQO.setEmail(r.getEmail());
-                return recipientQO;
-            }).collect(Collectors.toList()));
-        return messageQO;
+    private Message constructMessage(Message message) {
+        Message newMessage = new Message();
+        newMessage.setId(message.getId());
+        newMessage.setCaption(message.getCaption());
+        newMessage.setText(message.getText());
+        newMessage.setSeverity(message.getSeverity());
+        newMessage.setRecipients(message.getRecipients());
+        return newMessage;
     }
 }

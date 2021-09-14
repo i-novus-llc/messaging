@@ -15,24 +15,24 @@
  */
 package ru.inovus.messaging.channel.api.queue;
 
-import ru.inovus.messaging.channel.api.queue.models.QueueObject;
+import ru.inovus.messaging.api.model.Message;
 
 import java.io.Serializable;
 import java.util.function.Consumer;
 
-public class QueueMqConsumer<T extends QueueObject> implements MqConsumer<T> {
+public class QueueMqConsumer implements MqConsumer {
     private final String queueName;
-    private final Consumer<T> messageHandler;
+    private final Consumer<Message> messageHandler;
     private final Serializable consumerUniqueName;
 
-    public QueueMqConsumer(String queueName, Consumer<T> messageHandler, Serializable consumerUniqueName) {
+    public QueueMqConsumer(String queueName, Consumer<Message> messageHandler, Serializable consumerUniqueName) {
         this.queueName = queueName;
         this.messageHandler = messageHandler;
         this.consumerUniqueName = consumerUniqueName;
     }
 
     @Override
-    public Consumer<T> messageHandler() {
+    public Consumer<Message> messageHandler() {
         return messageHandler;
     }
 

@@ -2,19 +2,19 @@ package ru.inovus.messaging.mq.support.kafka;
 
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serializer;
-import ru.inovus.messaging.api.model.MessageOutbox;
+import ru.inovus.messaging.api.model.Message;
 
 import java.io.*;
 import java.util.Map;
 
-public class ObjectSerializer implements Serializer<MessageOutbox>, Deserializer<MessageOutbox> {
+public class ObjectSerializer implements Serializer<Message>, Deserializer<Message> {
 
     @Override
-    public MessageOutbox deserialize(String topic, byte[] data) {
+    public Message deserialize(String topic, byte[] data) {
         try {
             ByteArrayInputStream stream = new ByteArrayInputStream(data);
             ObjectInputStream objectInputStream = new ObjectInputStream(stream);
-            return (MessageOutbox) objectInputStream.readObject();
+            return (Message) objectInputStream.readObject();
         } catch (IOException | ClassNotFoundException e) {
             return null;
         }
@@ -26,7 +26,7 @@ public class ObjectSerializer implements Serializer<MessageOutbox>, Deserializer
     }
 
     @Override
-    public byte[] serialize(String topic, MessageOutbox data) {
+    public byte[] serialize(String topic, Message data) {
         try {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(stream);

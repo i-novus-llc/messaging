@@ -8,12 +8,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.inovus.messaging.api.criteria.RecipientCriteria;
 import ru.inovus.messaging.api.model.Recipient;
+import ru.inovus.messaging.api.model.enums.SendStatus;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecipientRecord;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static ru.inovus.messaging.impl.jooq.Tables.MESSAGE_RECIPIENT;
@@ -72,4 +70,19 @@ public class RecipientService {
         return querySortFields;
     }
 
+    /**
+     * Обновление статуса получателя уведомления
+     *
+     * @param messageId        Идентификатор сообщения
+     * @param status           Статус доставки уведомления
+     * @param sendErrorMessage Сообщение ошибки отправки уведомления
+     */
+    public void updateStatus(UUID messageId, SendStatus status, String sendErrorMessage) {
+        dsl
+                .update(MESSAGE_RECIPIENT)
+                .set(MESSAGE_RECIPIENT.STATUS, status)
+                .set(MESSAGE_RECIPIENT.SEND_MESSAGE_ERROR, sendErrorMessage)
+                .where(MESSAGE_RECIPIENT.MESSAGE_ID.eq(messageId))
+                .execute();
+    }
 }

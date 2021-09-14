@@ -15,7 +15,7 @@
  */
 package ru.inovus.messaging.channel.api.queue;
 
-import ru.inovus.messaging.channel.api.queue.models.QueueObject;
+import ru.inovus.messaging.api.model.Message;
 
 import java.io.Serializable;
 
@@ -23,7 +23,7 @@ public interface MqProvider {
 
     void subscribe(MqConsumer mqConsumer);
 
-    void publish(QueueObject queueObject, String mqDestinationName);
+    void publish(Message message, String mqDestinationName);
 
     void unsubscribe(Serializable subscriber);
 }

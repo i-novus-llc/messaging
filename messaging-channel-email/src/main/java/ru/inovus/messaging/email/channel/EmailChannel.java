@@ -8,11 +8,11 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import ru.inovus.messaging.api.model.Message;
+import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.enums.SendStatus;
 import ru.inovus.messaging.channel.api.queue.AbstractChannel;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
-import ru.inovus.messaging.channel.api.queue.models.MessageQO;
-import ru.inovus.messaging.channel.api.queue.models.MessageStatusQO;
 
 import javax.mail.internet.MimeMessage;
 import java.util.List;
@@ -37,20 +37,20 @@ public class EmailChannel extends AbstractChannel {
     }
 
 
-    public void send(MessageQO message) {
-        MessageStatusQO statusQO = new MessageStatusQO();
-        statusQO.setMessageId(message.getId());
+    public void send(Message message) {
+        Message messageStatus = new Message();
+        messageStatus.setId(message.getId());
 
         try {
-            for (MessageQO.RecipientQO recipient : message.getRecipients()) {
+            for (Recipient recipient : message.getRecipients()) {
                 if (StringUtils.isEmpty(recipient.getEmail()))
                     log.error("Message with id={} will not be sent to recipient with id={} due to an empty email address",
                             message.getId(), recipient.getName());
             }
 
             List<String> recipientsEmailList = message.getRecipients().stream()
-                    .filter(x -> !StringUtils.isEmpty(x.getEmail()))
-                    .map(MessageQO.RecipientQO::getEmail)
+                    .map(Recipient::getEmail)
+                    .filter(email -> !StringUtils.isEmpty(email))
                     .collect(Collectors.toList());
             if (!CollectionUtils.isEmpty(recipientsEmailList)) {
                 MimeMessage mail = emailSender.createMimeMessage();
@@ -60,13 +60,13 @@ public class EmailChannel extends AbstractChannel {
                 helper.setText(message.getText(), true);
                 emailSender.send(mail);
             }
-            statusQO.setStatus(SendStatus.SENT);
+            messageStatus.setStatus(SendStatus.SENT);
         } catch (Exception e) {
             log.error("MimeMessage create and send email failed! {}", e.getMessage());
-            statusQO.setStatus(SendStatus.FAILED);
-            statusQO.setErrorMessage(e.getMessage());
+            messageStatus.setStatus(SendStatus.FAILED);
+            messageStatus.setSendErrorMessage(e.getMessage());
         } finally {
-            super.reportSendStatus(statusQO);
+            super.reportSendStatus(messageStatus);
         }
     }
 }

@@ -9,7 +9,6 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import ru.inovus.messaging.api.model.Message;
-import ru.inovus.messaging.api.model.MessageOutbox;
 import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.channel.api.queue.MqConsumer;
@@ -50,7 +49,7 @@ public class MessagingEventListener {
 //            messageController.sendFeedCount(getSystemId(dest), headers.getUser());
         } else if (dest.endsWith("/message")) {
             MqConsumer consumer = new TopicMqConsumer(headers.getSessionId(), getSystemId(dest), headers.getUser().getName(),
-                    noticeTopicName, messageOutbox -> sendTo(messageOutbox, headers));
+                    noticeTopicName, message -> sendTo(message, headers));
             mqProvider.subscribe(consumer);
         }
     }
@@ -65,13 +64,12 @@ public class MessagingEventListener {
         return result.substring(0, result.indexOf("/"));
     }
 
-    private void sendTo(MessageOutbox msg, SimpMessageHeaderAccessor headers) {
+    private void sendTo(Message message, SimpMessageHeaderAccessor headers) {
         String systemId = getSystemId(headers.getDestination());
         String recipient = headers.getUser().getName();
-        if (checkRecipient(msg, recipient, systemId)) {
-            if (msg.getMessage() != null) {
+        if (checkRecipient(message, recipient, systemId)) {
+            if (message != null) {
                 messageController.sendFeedCount(systemId, headers.getUser());
-                Message message = msg.getMessage();
 
                 if (isNotExpired(message)) {
                     messageController.sendPrivateMessage(message, recipient, systemId);
@@ -85,13 +83,13 @@ public class MessagingEventListener {
         }
     }
 
-    private boolean checkRecipient(MessageOutbox msg, String recipient, String systemId) {
-        if (msg != null && msg.getMessage() != null && RecipientType.ALL.equals(msg.getMessage().getRecipientType()))
+    private boolean checkRecipient(Message message, String recipient, String systemId) {
+        if (message != null && RecipientType.ALL.equals(message.getRecipientType()))
             return true;
-        if (msg == null || msg.getMessage() == null || msg.getMessage().getRecipients() == null || msg.getMessage().getRecipients().isEmpty())
+        if (message == null || message.getRecipients() == null || message.getRecipients().isEmpty())
             return false;
-        for (Recipient r : msg.getMessage().getRecipients()) {
-            if (r.getName().equals(recipient) && msg.getMessage().getSystemId().equals(systemId))
+        for (Recipient r : message.getRecipients()) {
+            if (r.getName().equals(recipient) && message.getSystemId().equals(systemId))
                 return true;
         }
         return false;

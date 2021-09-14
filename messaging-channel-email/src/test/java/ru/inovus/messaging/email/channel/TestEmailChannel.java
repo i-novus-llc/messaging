@@ -10,7 +10,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.inovus.messaging.api.model.Message;
-import ru.inovus.messaging.api.model.MessageOutbox;
 import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 
@@ -41,9 +40,7 @@ public class TestEmailChannel {
 
     @Test
     public void testSendMessage() throws Exception {
-        MessageOutbox messageOutbox = new MessageOutbox();
         Message message = new Message();
-        messageOutbox.setMessage(message);
         message.setCaption("Test caption");
         message.setText("Message");
 
@@ -59,7 +56,7 @@ public class TestEmailChannel {
         MimeMessage mimeMessage = new MimeMessage((Session) null);
         when(mailSender.createMimeMessage()).thenReturn(mimeMessage);
         doNothing().when(mailSender).send(mimeMessage);
-        channel.send(messageOutbox);
+        channel.send(message);
 
         assertThat(mimeMessage.getSubject(), is(message.getCaption()));
         MimeMessageParser parser = new MimeMessageParser(mimeMessage);

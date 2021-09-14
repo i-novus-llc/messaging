@@ -1,14 +1,13 @@
 package ru.inovus.messaging.channel.api.queue;
 
-import ru.inovus.messaging.channel.api.queue.models.MessageQO;
-import ru.inovus.messaging.channel.api.queue.models.MessageStatusQO;
+import ru.inovus.messaging.api.model.Message;
 
 /**
  * АPI канала отправки сообщений
  */
 public interface Channel {
 
-    void send(MessageQO message);
+    void send(Message message);
 
-    void reportSendStatus(MessageStatusQO status);
+    void reportSendStatus(Message status);
 }
