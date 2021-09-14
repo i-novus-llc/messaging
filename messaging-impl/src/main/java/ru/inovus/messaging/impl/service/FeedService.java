@@ -36,7 +36,6 @@ public class FeedService {
         this.dsl = dsl;
     }
 
-
     public Page<Feed> getMessageFeed(String recipient, FeedCriteria criteria) {
         List<Condition> conditions = new ArrayList<>();
         conditions.add(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL).or(MESSAGE_RECIPIENT.ID.isNotNull()));
@@ -125,24 +124,20 @@ public class FeedService {
     }
 
     @Transactional
-    public void markRead(String recipient, UUID... messageId) {
+    public void markRead(String recipient, UUID messageId) {
         if (messageId != null) {
             LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
-            for (UUID id : messageId) {
-                int updated = dsl
-                        .update(MESSAGE_RECIPIENT)
+            int updated = dsl.update(MESSAGE_RECIPIENT)
+                    .set(MESSAGE_RECIPIENT.READ_AT, now)
+                    .where(MESSAGE_RECIPIENT.MESSAGE_ID.eq(messageId)).and(MESSAGE_RECIPIENT.RECIPIENT_NAME.eq(recipient))
+                    .execute();
+            if (updated == 0) {
+                dsl.insertInto(MESSAGE_RECIPIENT)
+                        .set(MESSAGE_RECIPIENT.ID, dsl.nextval(RECIPIENT_ID_SEQ).intValue())
                         .set(MESSAGE_RECIPIENT.READ_AT, now)
-                        .where(MESSAGE_RECIPIENT.MESSAGE_ID.eq(id)).and(MESSAGE_RECIPIENT.RECIPIENT_NAME.eq(recipient))
+                        .set(MESSAGE_RECIPIENT.MESSAGE_ID, messageId)
+                        .set(MESSAGE_RECIPIENT.RECIPIENT_NAME, recipient)
                         .execute();
-                if (updated == 0) {
-                    dsl
-                            .insertInto(MESSAGE_RECIPIENT)
-                            .set(MESSAGE_RECIPIENT.ID, dsl.nextval(RECIPIENT_ID_SEQ).intValue())
-                            .set(MESSAGE_RECIPIENT.READ_AT, now)
-                            .set(MESSAGE_RECIPIENT.MESSAGE_ID, id)
-                            .set(MESSAGE_RECIPIENT.RECIPIENT_NAME, recipient)
-                            .execute();
-                }
             }
         }
     }
@@ -180,5 +175,4 @@ public class FeedService {
         message.setReadAt(recipientRecord.getReadAt());
         return message;
     }
-
 }

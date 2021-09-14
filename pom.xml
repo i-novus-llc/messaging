@@ -53,12 +53,12 @@
         <module>messaging-api</module>
         <module>messaging-client</module>
         <module>messaging-impl</module>
-        <module>messaging-support-activemq</module>
         <module>messaging-support-kafka</module>
         <module>messaging-web</module>
         <module>messaging-backend</module>
         <module>messaging-channel-api</module>
         <module>messaging-channel-email</module>
+        <module>messaging-channel-web</module>
     </modules>
 
     <dependencyManagement>

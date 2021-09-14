@@ -1,46 +1,47 @@
-package ru.inovus.messaging.impl.config;
+package ru.inovus.messaging.web.channel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.MessageOutbox;
 import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.enums.RecipientType;
+import ru.inovus.messaging.channel.api.queue.AbstractChannel;
 import ru.inovus.messaging.channel.api.queue.MqConsumer;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.api.queue.TopicMqConsumer;
-import ru.inovus.messaging.impl.MessageController;
+import ru.inovus.messaging.web.channel.controller.MessageController;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
-/**
- * Обработчик событий подписки и отключения от Messaging
- */
+@Component
+public class MessagingChannel extends AbstractChannel {
 
-public class MessagingEventListener {
+    private static final Logger logger = LoggerFactory.getLogger(MessagingChannel.class);
 
-    private static final Logger logger = LoggerFactory.getLogger(MessagingEventListener.class);
-
-    @Value("${novus.messaging.topic.notice}")
+    @Value("${messaging.channel.web-notice-topic}")
     private String noticeTopicName;
 
-    @Value("${novus.messaging.timeout}")
+    @Value("${messaging.message-lifetime}")
     private Integer timeout;
 
-    @Autowired
-    private MessageController messageController;
+    private final MessageController messageController;
 
-    @Autowired
-    private MqProvider mqProvider;
+    private final MqProvider mqProvider;
 
+    public MessagingChannel(@Value("${messaging.channel.web-queue-name}") String queueName, MqProvider mqProvider, MessageController messageController, MqProvider countProvider) {
+        super(queueName, mqProvider);
+        this.messageController = messageController;
+        this.mqProvider = countProvider;
+    }
 
     @EventListener
     public void handleSessionSubscribe(SessionSubscribeEvent event) {
@@ -60,9 +61,14 @@ public class MessagingEventListener {
         mqProvider.unsubscribe(event.getSessionId());
     }
 
-    private String getSystemId(String dest) {
-        String result = dest.replace("/user/exchange/", "");
-        return result.substring(0, result.indexOf("/"));
+    @Override
+    public void send(MessageOutbox message) {
+        mqProvider.publish(message, noticeTopicName);
+    }
+
+    @Override
+    public void reportSendStatus() {
+        //todo очередь статусов
     }
 
     private void sendTo(MessageOutbox msg, SimpMessageHeaderAccessor headers) {
@@ -70,7 +76,6 @@ public class MessagingEventListener {
         String recipient = headers.getUser().getName();
         if (checkRecipient(msg, recipient, systemId)) {
             if (msg.getMessage() != null) {
-                messageController.sendFeedCount(systemId, headers.getUser());
                 Message message = msg.getMessage();
 
                 if (isNotExpired(message)) {
@@ -83,6 +88,11 @@ public class MessagingEventListener {
         } else {
             logger.debug("No recipients for message");
         }
+    }
+
+    private String getSystemId(String dest) {
+        String result = dest.replace("/user/exchange/", "");
+        return result.substring(0, result.indexOf("/"));
     }
 
     private boolean checkRecipient(MessageOutbox msg, String recipient, String systemId) {
@@ -104,5 +114,4 @@ public class MessagingEventListener {
     private static boolean isNotExpired(LocalDateTime start, LocalDateTime end, Integer timeout) {
         return start == null || end == null || end.minus(timeout, ChronoUnit.SECONDS).isBefore(start);
     }
-
 }
