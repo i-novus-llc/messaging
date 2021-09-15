@@ -67,7 +67,7 @@ public class KafkaMqProvider implements MqProvider {
     private Map<String, Object> getConsumerConfigs(MqConsumer topicMqConsumer) {
         Map<String, Object> consumerConfigs = properties.buildConsumerProperties();
         consumerConfigs.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        consumerConfigs.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ObjectSerializer.class);
+        consumerConfigs.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, MessageSerializer.class);
         consumerConfigs.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         String groupId = topicMqConsumer.mqName();
         if (topicMqConsumer instanceof TopicMqConsumer)

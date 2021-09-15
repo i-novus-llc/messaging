@@ -10,13 +10,13 @@ import ru.inovus.messaging.impl.service.RecipientService;
 import java.util.UUID;
 
 @Component
-public class StatusQueueListener {
+public class MessageStatusListener {
 
     private RecipientService recipientService;
 
-    public StatusQueueListener(@Value("${novus.messaging.status.queue}") String statusQueue,
-                               MqProvider mqProvider,
-                               RecipientService recipientService) {
+    public MessageStatusListener(@Value("${novus.messaging.status.queue}") String statusQueue,
+                                 MqProvider mqProvider,
+                                 RecipientService recipientService) {
         this.recipientService = recipientService;
         mqProvider.subscribe(new QueueMqConsumer(statusQueue, this::processStatus, statusQueue));
     }

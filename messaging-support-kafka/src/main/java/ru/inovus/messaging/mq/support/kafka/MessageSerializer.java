@@ -7,7 +7,7 @@ import ru.inovus.messaging.api.model.Message;
 import java.io.*;
 import java.util.Map;
 
-public class ObjectSerializer implements Serializer<Message>, Deserializer<Message> {
+public class MessageSerializer implements Serializer<Message>, Deserializer<Message> {
 
     @Override
     public Message deserialize(String topic, byte[] data) {
