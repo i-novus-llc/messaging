@@ -9,6 +9,11 @@ import ru.inovus.messaging.impl.service.RecipientService;
 
 import java.util.UUID;
 
+/**
+ * Слушатель статусов уведомлений.
+ * Необходим для получения статусов отправленных уведомлений
+ * из каналов отправки и дальнейшей их обработки.
+ */
 @Component
 public class MessageStatusListener {
 
@@ -21,6 +26,11 @@ public class MessageStatusListener {
         mqProvider.subscribe(new QueueMqConsumer(statusQueue, this::processStatus, statusQueue));
     }
 
+    /**
+     * Обработка полученного статуса
+     *
+     * @param message Сообщение с информацией о статусе уведомления
+     */
     private void processStatus(Message message) {
         recipientService.updateStatus(UUID.fromString(message.getId()), message.getStatus(), message.getSendErrorMessage());
     }

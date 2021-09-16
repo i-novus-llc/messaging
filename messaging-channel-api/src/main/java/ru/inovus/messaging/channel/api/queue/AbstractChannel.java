@@ -3,7 +3,7 @@ package ru.inovus.messaging.channel.api.queue;
 import ru.inovus.messaging.api.model.Message;
 
 /**
- * Абстрактный канал отправки сообщений
+ * Абстрактный канал отправки уведомлений
  */
 public abstract class AbstractChannel implements Channel {
     private MqProvider mqProvider;

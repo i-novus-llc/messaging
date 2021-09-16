@@ -46,6 +46,6 @@ public class Message implements Serializable {
     private String notificationType;
     private String objectId;
     private String objectType;
-    private SendStatus status;
+    private MessageStatus status;
     private String sendErrorMessage;
 }

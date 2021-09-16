@@ -15,7 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.Recipient;
-import ru.inovus.messaging.api.model.enums.SendStatus;
+import ru.inovus.messaging.api.model.enums.MessageStatus;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.api.queue.QueueMqConsumer;
 import ru.inovus.messaging.mq.support.kafka.KafkaMqProvider;
@@ -32,14 +32,15 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {EmailChannel.class},
+@SpringBootTest(
+        classes = {EmailChannel.class},
         properties = {
                 "novus.messaging.status.queue=test-status-queue",
                 "novus.messaging.channel.email.queue=test-email-queue"})
 @Import(EmbeddedKafkaTestConfiguration.class)
 @EmbeddedKafka(partitions = 1)
 @ContextConfiguration(classes = KafkaMqProvider.class)
-public class TestEmailChannel {
+public class EmailChannelTest {
 
     @Autowired
     private EmbeddedKafkaBroker embeddedKafkaBroker;
@@ -112,7 +113,7 @@ public class TestEmailChannel {
 
         assertThat(receivedStatus[0], notNullValue());
         assertThat(receivedStatus[0].getId(), is(message.getId()));
-        assertThat(receivedStatus[0].getStatus(), is(SendStatus.SENT));
+        assertThat(receivedStatus[0].getStatus(), is(MessageStatus.SENT));
     }
 
     @Test
@@ -134,7 +135,7 @@ public class TestEmailChannel {
 
         assertThat(receivedStatus[0], notNullValue());
         assertThat(receivedStatus[0].getId(), is(message.getId()));
-        assertThat(receivedStatus[0].getStatus(), is(SendStatus.FAILED));
+        assertThat(receivedStatus[0].getStatus(), is(MessageStatus.FAILED));
         assertThat(receivedStatus[0].getSendErrorMessage(), is("Subject must not be null"));
     }
 

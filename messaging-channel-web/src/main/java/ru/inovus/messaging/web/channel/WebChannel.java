@@ -21,6 +21,9 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
+/**
+ * Реализация канала отправки уведомлений через Web c использованием WebSocket
+ */
 @Slf4j
 @PropertySource("classpath:channel.properties")
 @Component

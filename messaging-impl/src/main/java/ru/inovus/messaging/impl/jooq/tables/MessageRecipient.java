@@ -23,11 +23,11 @@ import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
 import org.jooq.impl.TimestampToLocalDateTimeConverter;
 
-import ru.inovus.messaging.api.model.enums.SendStatus;
+import ru.inovus.messaging.api.model.enums.MessageStatus;
 import ru.inovus.messaging.impl.jooq.Keys;
 import ru.inovus.messaging.impl.jooq.Messaging;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecipientRecord;
-import ru.inovus.messaging.impl.util.SendStatusConverter;
+import ru.inovus.messaging.impl.util.MessageStatusConverter;
 
 
 /**
@@ -79,7 +79,7 @@ public class MessageRecipient extends TableImpl<MessageRecipientRecord> {
     /**
      * The column <code>messaging.message_recipient.status</code>. Текущий статус отправки уведомления получателю
      */
-    public final TableField<MessageRecipientRecord, SendStatus> STATUS = createField(DSL.name("status"), org.jooq.impl.SQLDataType.VARCHAR, this, "Текущий статус отправки уведомления получателю", new SendStatusConverter());
+    public final TableField<MessageRecipientRecord, MessageStatus> STATUS = createField(DSL.name("status"), org.jooq.impl.SQLDataType.VARCHAR, this, "Текущий статус отправки уведомления получателю", new MessageStatusConverter());
 
     /**
      * The column <code>messaging.message_recipient.departured_at</code>. Дата и время фактической отправки уведомления
@@ -179,7 +179,7 @@ public class MessageRecipient extends TableImpl<MessageRecipientRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Row8<Integer, UUID, LocalDateTime, String, String, SendStatus, LocalDateTime, String> fieldsRow() {
+    public Row8<Integer, UUID, LocalDateTime, String, String, MessageStatus, LocalDateTime, String> fieldsRow() {
         return (Row8) super.fieldsRow();
     }
 }

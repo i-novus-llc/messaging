@@ -1,16 +1,16 @@
 package ru.inovus.messaging.api.model.enums;
 
 /**
- * Статус доставки уведомления
+ * Статус уведомления
  */
-public enum SendStatus {
+public enum MessageStatus {
     SCHEDULED("Ожидает отправки"),
     SENT("Отправлено получателю"),
     FAILED("Ошибка отправки получателю");
 
     private String name;
 
-    SendStatus(String name) {
+    MessageStatus(String name) {
         this.name = name;
     }
 

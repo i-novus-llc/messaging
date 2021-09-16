@@ -8,7 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.inovus.messaging.api.criteria.RecipientCriteria;
 import ru.inovus.messaging.api.model.Recipient;
-import ru.inovus.messaging.api.model.enums.SendStatus;
+import ru.inovus.messaging.api.model.enums.MessageStatus;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecipientRecord;
 
 import java.util.*;
@@ -74,10 +74,10 @@ public class RecipientService {
      * Обновление статуса получателя уведомления
      *
      * @param messageId        Идентификатор сообщения
-     * @param status           Статус доставки уведомления
+     * @param status           Статус уведомления
      * @param sendErrorMessage Сообщение ошибки отправки уведомления
      */
-    public void updateStatus(UUID messageId, SendStatus status, String sendErrorMessage) {
+    public void updateStatus(UUID messageId, MessageStatus status, String sendErrorMessage) {
         dsl
                 .update(MESSAGE_RECIPIENT)
                 .set(MESSAGE_RECIPIENT.STATUS, status)

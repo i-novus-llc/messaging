@@ -10,7 +10,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.Recipient;
-import ru.inovus.messaging.api.model.enums.SendStatus;
+import ru.inovus.messaging.api.model.enums.MessageStatus;
 import ru.inovus.messaging.channel.api.queue.AbstractChannel;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Реализация канала отправки сообщений по Email
+ * Реализация канала отправки уведомлений по Email
  */
 @Slf4j
 @PropertySource("classpath:channel.properties")
@@ -60,10 +60,10 @@ public class EmailChannel extends AbstractChannel {
                 helper.setText(message.getText(), true);
                 emailSender.send(mail);
             }
-            messageStatus.setStatus(SendStatus.SENT);
+            messageStatus.setStatus(MessageStatus.SENT);
         } catch (Exception e) {
             log.error("MimeMessage create and send email failed! {}", e.getMessage());
-            messageStatus.setStatus(SendStatus.FAILED);
+            messageStatus.setStatus(MessageStatus.FAILED);
             messageStatus.setSendErrorMessage(e.getMessage());
         } finally {
             super.reportSendStatus(messageStatus);
