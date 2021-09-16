@@ -18,8 +18,8 @@ package ru.inovus.messaging.channel.api.queue;
 import java.io.Serializable;
 import java.util.function.Consumer;
 
-public interface MqConsumer<T> {
-    Consumer<T> messageHandler();
+public interface MqConsumer {
+    Consumer messageHandler();
 
     String mqName();
 
