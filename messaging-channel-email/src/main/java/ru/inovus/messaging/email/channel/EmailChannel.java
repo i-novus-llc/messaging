@@ -61,12 +61,12 @@ public class EmailChannel extends AbstractChannel {
                 emailSender.send(mail);
             }
             messageStatus.setStatus(MessageStatus.SENT);
+            sendStatus(messageStatus);
         } catch (Exception e) {
             log.error("MimeMessage create and send email failed! {}", e.getMessage());
             messageStatus.setStatus(MessageStatus.FAILED);
             messageStatus.setSendErrorMessage(e.getMessage());
-        } finally {
-            super.sendStatus(messageStatus);
+            sendStatus(messageStatus);
         }
     }
 }
