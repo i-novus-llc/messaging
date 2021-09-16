@@ -11,7 +11,7 @@ import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.enums.RecipientType;
-import ru.inovus.messaging.channel.api.queue.AbstractChannel;
+import ru.inovus.messaging.channel.api.AbstractChannel;
 import ru.inovus.messaging.channel.api.queue.MqConsumer;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.api.queue.TopicMqConsumer;
@@ -32,14 +32,14 @@ public class WebChannel extends AbstractChannel {
     @Value("${novus.messaging.channel.web.topic}")
     private String noticeTopicName;
 
-    @Value("${messaging.message-lifetime}")
+    @Value("${novus.messaging.message-lifetime}")
     private Integer timeout;
 
     private final MessageController messageController;
 
     private final MqProvider mqProvider;
 
-    public WebChannel(@Value("${messaging.channel.web.queue}") String messageQueueName,
+    public WebChannel(@Value("${novus.messaging.channel.web.queue}") String messageQueueName,
                       @Value("${novus.messaging.status.queue}") String statusQueueName,
                       MqProvider mqProvider,
                       MessageController messageController) {
@@ -71,26 +71,21 @@ public class WebChannel extends AbstractChannel {
         mqProvider.publish(message, noticeTopicName);
     }
 
-    @Override
-    public void reportSendStatus(Message message) {
-        //todo очередь статусов
-    }
-
     private void sendTo(Message message, SimpMessageHeaderAccessor headers) {
         String systemId = getSystemId(headers.getDestination());
         String recipient = headers.getUser().getName();
         if (checkRecipient(message, recipient, systemId)) {
             if (isNotExpired(message))
-                messageController.sendPrivateMessage(message, recipient, systemId);
+                messageController.sendPrivateMessage(systemId, recipient, message);
             else
-                log.debug("Did not send message with id {} due to expiration {}",
+                log.error("Did not send message with id {} due to expiration {}",
                         message.getId(), message.getSentAt());
         } else
-            log.debug("No recipients for message");
+            log.error("No recipients for message");
     }
 
     private String getSystemId(String dest) {
-        String result = dest.replace("/user/exchange/", "");
+        String result = dest.replaceFirst("/user/.*/exchange/", "");
         return result.substring(0, result.indexOf("/"));
     }
 
@@ -107,10 +102,8 @@ public class WebChannel extends AbstractChannel {
     }
 
     private boolean isNotExpired(Message msg) {
-        return isNotExpired(msg.getSentAt(), LocalDateTime.now(Clock.systemUTC()), timeout);
-    }
-
-    private static boolean isNotExpired(LocalDateTime start, LocalDateTime end, Integer timeout) {
-        return start == null || end == null || end.minus(timeout, ChronoUnit.SECONDS).isBefore(start);
+        LocalDateTime start = msg.getSentAt();
+        LocalDateTime end = LocalDateTime.now(Clock.systemUTC());
+        return start == null || end.minus(timeout, ChronoUnit.SECONDS).isBefore(start);
     }
 }

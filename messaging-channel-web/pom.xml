@@ -43,10 +43,6 @@
             <version>1.0.9.RELEASE</version>
         </dependency>
 
-        <dependency>
-            <groupId>ru.i-novus.messaging</groupId>
-            <artifactId>messaging-support-kafka</artifactId>
-        </dependency>
 
         <!--TEST-->
         <dependency>
@@ -58,6 +54,12 @@
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.i-novus.messaging</groupId>
+            <artifactId>messaging-support-kafka</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -11,7 +11,7 @@ import org.springframework.util.StringUtils;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.enums.MessageStatus;
-import ru.inovus.messaging.channel.api.queue.AbstractChannel;
+import ru.inovus.messaging.channel.api.AbstractChannel;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 
 import javax.mail.internet.MimeMessage;
@@ -66,7 +66,7 @@ public class EmailChannel extends AbstractChannel {
             messageStatus.setStatus(MessageStatus.FAILED);
             messageStatus.setSendErrorMessage(e.getMessage());
         } finally {
-            super.reportSendStatus(messageStatus);
+            super.sendStatus(messageStatus);
         }
     }
 }

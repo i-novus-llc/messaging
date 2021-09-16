@@ -15,32 +15,34 @@ import java.util.UUID;
 /**
  * Контроллер для отправки-приема сообщений ч.з. Spring MessageBroker
  */
-
 @Controller
 public class MessageController {
 
-    @Value("messaging.channel.status-queue-name")
     private String statusQueueName;
 
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     private final MqProvider mqProvider;
 
-    public MessageController(SimpMessagingTemplate simpMessagingTemplate, MqProvider mqProvider) {
-        this.simpMessagingTemplate = simpMessagingTemplate;
+    public MessageController(@Value("${novus.messaging.status.queue}") String statusQueueName,
+                             MqProvider mqProvider,
+                             SimpMessagingTemplate simpMessagingTemplate) {
+        this.statusQueueName = statusQueueName;
         this.mqProvider = mqProvider;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     @MessageMapping("/{systemId}/message.count")
     public void sendFeedCount(@DestinationVariable("systemId") String systemId,
-                              String principal, Integer feedCount) {
+                              String principal,
+                              Integer feedCount) {
         simpMessagingTemplate.convertAndSend("/user/" + principal + "/exchange/" + systemId + "/message.count", feedCount);
     }
 
     @MessageMapping("/{systemId}/message.private.{username}")
-    public void sendPrivateMessage(@Payload Message message,
+    public void sendPrivateMessage(@DestinationVariable("systemId") String systemId,
                                    @DestinationVariable("username") String username,
-                                   @DestinationVariable("systemId") String systemId) {
+                                   @Payload Message message) {
         simpMessagingTemplate.convertAndSend("/user/" + username + "/exchange/" + systemId + "/message", message);
     }
 
@@ -52,8 +54,8 @@ public class MessageController {
     }
 
     @MessageMapping("/{systemId}/message.markread")
-    public void markRead(@Payload UUID messageId,
-                         @DestinationVariable("systemId") String systemId,
+    public void markRead(@DestinationVariable("systemId") String systemId,
+                         @Payload UUID messageId,
                          Principal principal) {
 //        todo очередь статусов
 //        feedService.markRead(principal.getName(), messageIds.toArray(new UUID[0]));

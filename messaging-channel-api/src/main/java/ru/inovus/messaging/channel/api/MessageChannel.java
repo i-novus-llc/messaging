@@ -1,11 +1,11 @@
-package ru.inovus.messaging.channel.api.queue;
+package ru.inovus.messaging.channel.api;
 
 import ru.inovus.messaging.api.model.Message;
 
 /**
  * АPI канала отправки уведомлений
  */
-public interface Channel {
+public interface MessageChannel {
 
     /**
      * Отправка уведомления получателю
@@ -19,5 +19,5 @@ public interface Channel {
      *
      * @param message Сообщение с информацией о статусе уведомления
      */
-    void reportSendStatus(Message message);
+    void sendStatus(Message message);
 }
