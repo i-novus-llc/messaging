@@ -116,13 +116,8 @@
 
     </dependencies>
 
-
     <build>
         <resources>
-            <!--<resource>-->
-            <!--<directory>messaging-react/build</directory>-->
-            <!--<targetPath>META-INF/resources</targetPath>-->
-            <!--</resource>-->
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
@@ -138,6 +133,27 @@
                 <configuration>
                     <executable>true</executable>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>Copy frontend build</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>target/classes/public</outputDirectory>
+                            <overwrite>true</overwrite>
+                            <resources>
+                                <resource>
+                                    <directory>../messaging-react/build</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
 
