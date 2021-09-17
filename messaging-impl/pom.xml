@@ -208,8 +208,8 @@
                                             <types>.*</types>
                                         </forcedType>
                                         <forcedType>
-                                            <userType>ru.inovus.messaging.api.model.enums.MessageStatus</userType>
-                                            <converter>ru.inovus.messaging.impl.util.MessageStatusConverter</converter>
+                                            <userType>ru.inovus.messaging.api.model.enums.MessageStatusType</userType>
+                                            <converter>ru.inovus.messaging.impl.util.MessageStatusTypeConverter</converter>
                                             <expression>.*\.message_recipient\.status</expression>
                                             <types>.*</types>
                                         </forcedType>

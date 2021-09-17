@@ -13,11 +13,11 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.inovus.messaging.api.model.Message;
+import ru.inovus.messaging.api.model.MessageStatus;
 import ru.inovus.messaging.api.model.Recipient;
-import ru.inovus.messaging.api.model.enums.MessageStatus;
+import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.api.queue.QueueMqConsumer;
-import ru.inovus.messaging.channel.api.queue.model.QueueMessageStatus;
 import ru.inovus.messaging.mq.support.kafka.KafkaMqProvider;
 
 import javax.mail.Address;
@@ -106,9 +106,9 @@ public class EmailChannelTest {
         CountDownLatch latch = new CountDownLatch(1);
         mailSenderMimeMessage();
 
-        final QueueMessageStatus[] receivedStatus = new QueueMessageStatus[1];
+        final MessageStatus[] receivedStatus = new MessageStatus[1];
         QueueMqConsumer mqConsumer = new QueueMqConsumer(statusQueue, msg -> {
-            receivedStatus[0] = (QueueMessageStatus) msg;
+            receivedStatus[0] = (MessageStatus) msg;
             latch.countDown();
         }, statusQueue);
 
@@ -119,7 +119,7 @@ public class EmailChannelTest {
 
         assertThat(receivedStatus[0], notNullValue());
         assertThat(receivedStatus[0].getId(), is(message.getId()));
-        assertThat(receivedStatus[0].getStatus(), is(MessageStatus.SENT));
+        assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.SENT));
     }
 
     @Test
@@ -133,9 +133,9 @@ public class EmailChannelTest {
         CountDownLatch latch = new CountDownLatch(1);
         mailSenderMimeMessage();
 
-        final QueueMessageStatus[] receivedStatus = new QueueMessageStatus[1];
+        final MessageStatus[] receivedStatus = new MessageStatus[1];
         QueueMqConsumer mqConsumer = new QueueMqConsumer(statusQueue, msg -> {
-            receivedStatus[0] = (QueueMessageStatus) msg;
+            receivedStatus[0] = (MessageStatus) msg;
             latch.countDown();
         }, statusQueue);
 
@@ -146,8 +146,8 @@ public class EmailChannelTest {
 
         assertThat(receivedStatus[0], notNullValue());
         assertThat(receivedStatus[0].getId(), is(message.getId()));
-        assertThat(receivedStatus[0].getStatus(), is(MessageStatus.FAILED));
-        assertThat(receivedStatus[0].getSendErrorMessage(), is("Subject must not be null"));
+        assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.FAILED));
+        assertThat(receivedStatus[0].getErrorMessage(), is("Subject must not be null"));
     }
 
     private MimeMessage mailSenderMimeMessage() {

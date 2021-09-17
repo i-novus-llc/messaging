@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import ru.inovus.messaging.api.model.Message;
+import ru.inovus.messaging.api.model.MessageStatus;
 import ru.inovus.messaging.api.model.Recipient;
-import ru.inovus.messaging.api.model.enums.MessageStatus;
+import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.channel.api.AbstractChannel;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
-import ru.inovus.messaging.channel.api.queue.model.QueueMessageStatus;
 
 import javax.mail.internet.MimeMessage;
 import java.util.List;
@@ -39,7 +39,7 @@ public class EmailChannel extends AbstractChannel {
 
 
     public void send(Message message) {
-        QueueMessageStatus messageStatus = new QueueMessageStatus();
+        MessageStatus messageStatus = new MessageStatus();
         messageStatus.setId(message.getId());
 
         try {
@@ -61,12 +61,12 @@ public class EmailChannel extends AbstractChannel {
                 helper.setText(message.getText(), true);
                 emailSender.send(mail);
             }
-            messageStatus.setStatus(MessageStatus.SENT);
+            messageStatus.setStatus(MessageStatusType.SENT);
             sendStatus(messageStatus);
         } catch (Exception e) {
             log.error("MimeMessage create and send email failed! {}", e.getMessage());
-            messageStatus.setStatus(MessageStatus.FAILED);
-            messageStatus.setSendErrorMessage(e.getMessage());
+            messageStatus.setStatus(MessageStatusType.FAILED);
+            messageStatus.setErrorMessage(e.getMessage());
             sendStatus(messageStatus);
         }
     }
