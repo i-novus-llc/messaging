@@ -17,6 +17,7 @@ import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.enums.MessageStatus;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.api.queue.QueueMqConsumer;
+import ru.inovus.messaging.channel.api.queue.model.QueueMessageStatus;
 import ru.inovus.messaging.mq.support.kafka.KafkaMqProvider;
 
 import javax.mail.Address;
@@ -105,9 +106,9 @@ public class EmailChannelTest {
         CountDownLatch latch = new CountDownLatch(1);
         mailSenderMimeMessage();
 
-        final Message[] receivedStatus = new Message[1];
+        final QueueMessageStatus[] receivedStatus = new QueueMessageStatus[1];
         QueueMqConsumer mqConsumer = new QueueMqConsumer(statusQueue, msg -> {
-            receivedStatus[0] = msg;
+            receivedStatus[0] = (QueueMessageStatus) msg;
             latch.countDown();
         }, statusQueue);
 
@@ -132,9 +133,9 @@ public class EmailChannelTest {
         CountDownLatch latch = new CountDownLatch(1);
         mailSenderMimeMessage();
 
-        final Message[] receivedStatus = new Message[1];
+        final QueueMessageStatus[] receivedStatus = new QueueMessageStatus[1];
         QueueMqConsumer mqConsumer = new QueueMqConsumer(statusQueue, msg -> {
-            receivedStatus[0] = msg;
+            receivedStatus[0] = (QueueMessageStatus) msg;
             latch.countDown();
         }, statusQueue);
 

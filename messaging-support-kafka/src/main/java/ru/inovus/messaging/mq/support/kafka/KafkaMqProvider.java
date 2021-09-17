@@ -23,11 +23,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class KafkaMqProvider implements MqProvider {
 
     private Map<Serializable, MessageListenerContainer> containers = new ConcurrentHashMap<>();
-    private final KafkaTemplate<String, Message> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     private final KafkaProperties properties;
 
-    public KafkaMqProvider(KafkaTemplate<String, Message> kafkaTemplate,
+    public KafkaMqProvider(KafkaTemplate<String, Object> kafkaTemplate,
                            KafkaProperties properties) {
         this.kafkaTemplate = kafkaTemplate;
         this.properties = properties;
@@ -43,8 +43,8 @@ public class KafkaMqProvider implements MqProvider {
     }
 
     @Override
-    public void publish(Message message, String mqDestinationName) {
-        kafkaTemplate.send(mqDestinationName, String.valueOf(System.currentTimeMillis()), message);
+    public void publish(Object queueObject, String mqDestinationName) {
+        kafkaTemplate.send(mqDestinationName, String.valueOf(System.currentTimeMillis()), queueObject);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class KafkaMqProvider implements MqProvider {
     private Map<String, Object> getConsumerConfigs(MqConsumer topicMqConsumer) {
         Map<String, Object> consumerConfigs = properties.buildConsumerProperties();
         consumerConfigs.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        consumerConfigs.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, MessageSerializer.class);
+        consumerConfigs.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ObjectSerializer.class);
         consumerConfigs.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         String groupId = topicMqConsumer.mqName();
         if (topicMqConsumer instanceof TopicMqConsumer)

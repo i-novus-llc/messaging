@@ -10,7 +10,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
-import ru.inovus.messaging.mq.support.kafka.MessageSerializer;
+import ru.inovus.messaging.mq.support.kafka.ObjectSerializer;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,7 +26,7 @@ class EmbeddedKafkaTestConfiguration {
     public KafkaTemplate<?, ?> kafkaTemplate(EmbeddedKafkaBroker embeddedKafkaBroker) {
         Map<String, Object> configs = new HashMap<>(KafkaTestUtils.producerProps(embeddedKafkaBroker));
         ProducerFactory<?, ?> producer = new DefaultKafkaProducerFactory<>(
-                configs, new StringSerializer(), new MessageSerializer());
+                configs, new StringSerializer(), new ObjectSerializer());
         return new KafkaTemplate(producer);
     }
 

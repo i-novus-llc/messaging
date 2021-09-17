@@ -24,7 +24,7 @@
         </dependency>
         <dependency>
             <groupId>ru.i-novus.messaging</groupId>
-            <artifactId>messaging-impl</artifactId>
+            <artifactId>messaging-channel-api</artifactId>
         </dependency>
     </dependencies>
 

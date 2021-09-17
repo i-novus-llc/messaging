@@ -56,7 +56,7 @@ public class WebChannel extends AbstractChannel {
 //            messageController.sendFeedCount(getSystemId(dest), headers.getUser());
         } else if (dest.endsWith("/message")) {
             MqConsumer consumer = new TopicMqConsumer(headers.getSessionId(), getSystemId(dest), headers.getUser().getName(),
-                    noticeTopicName, message -> sendTo(message, headers));
+                    noticeTopicName, message -> sendTo((Message) message, headers));
             mqProvider.subscribe(consumer);
         }
     }

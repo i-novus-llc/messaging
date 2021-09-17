@@ -13,6 +13,7 @@ import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.enums.MessageStatus;
 import ru.inovus.messaging.channel.api.AbstractChannel;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
+import ru.inovus.messaging.channel.api.queue.model.QueueMessageStatus;
 
 import javax.mail.internet.MimeMessage;
 import java.util.List;
@@ -38,7 +39,7 @@ public class EmailChannel extends AbstractChannel {
 
 
     public void send(Message message) {
-        Message messageStatus = new Message();
+        QueueMessageStatus messageStatus = new QueueMessageStatus();
         messageStatus.setId(message.getId());
 
         try {

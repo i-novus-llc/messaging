@@ -2,9 +2,9 @@ package ru.inovus.messaging.impl.queue;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.api.queue.QueueMqConsumer;
+import ru.inovus.messaging.channel.api.queue.model.QueueMessageStatus;
 import ru.inovus.messaging.impl.service.RecipientService;
 
 import java.util.UUID;
@@ -23,15 +23,15 @@ public class MessageStatusListener {
                                  MqProvider mqProvider,
                                  RecipientService recipientService) {
         this.recipientService = recipientService;
-        mqProvider.subscribe(new QueueMqConsumer(statusQueue, this::processStatus, statusQueue));
+        mqProvider.subscribe(new QueueMqConsumer(statusQueue, status -> processStatus((QueueMessageStatus) status), statusQueue));
     }
 
     /**
      * Обработка полученного статуса
      *
-     * @param message Сообщение с информацией о статусе уведомления
+     * @param status Сообщение с информацией о статусе уведомления
      */
-    private void processStatus(Message message) {
-        recipientService.updateStatus(UUID.fromString(message.getId()), message.getStatus(), message.getSendErrorMessage());
+    private void processStatus(QueueMessageStatus status) {
+        recipientService.updateStatus(UUID.fromString(status.getId()), status.getStatus(), status.getSendErrorMessage());
     }
 }

@@ -17,7 +17,7 @@ public class FeedCountListener {
 
     public FeedCountListener(MessageController messageController, MqProvider mqProvider) {
         this.messageController = messageController;
-        mqProvider.subscribe(new QueueMqConsumer(feedCountQueue, this::sendCount, feedCountQueue));
+        mqProvider.subscribe(new QueueMqConsumer(feedCountQueue, message -> sendCount((Message) message), feedCountQueue));
     }
 
     public void sendCount(Message message) {

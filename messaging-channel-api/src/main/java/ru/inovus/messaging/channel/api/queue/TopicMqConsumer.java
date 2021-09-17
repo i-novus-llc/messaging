@@ -15,8 +15,6 @@
  */
 package ru.inovus.messaging.channel.api.queue;
 
-import ru.inovus.messaging.api.model.Message;
-
 import java.io.Serializable;
 import java.util.function.Consumer;
 
@@ -26,13 +24,14 @@ import java.util.function.Consumer;
  */
 public class TopicMqConsumer implements MqConsumer {
     private final String topicName;
-    private final Consumer<Message> messageHandler;
+    private final Consumer<Object> messageHandler;
     private final Serializable subscriber;
 
     public final String systemId;
     public final String authToken;
 
-    public TopicMqConsumer(Serializable subscriber, String systemId, String authToken, String topicName, Consumer<Message> messageHandler) {
+    public TopicMqConsumer(Serializable subscriber, String systemId, String authToken,
+                           String topicName, Consumer<Object> messageHandler) {
         this.topicName = topicName;
         this.messageHandler = messageHandler;
         this.subscriber = subscriber;
@@ -41,7 +40,7 @@ public class TopicMqConsumer implements MqConsumer {
     }
 
     @Override
-    public Consumer<Message> messageHandler() {
+    public Consumer<Object> messageHandler() {
         return messageHandler;
     }
 
