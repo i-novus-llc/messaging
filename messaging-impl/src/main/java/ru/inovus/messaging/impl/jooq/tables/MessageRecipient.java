@@ -4,30 +4,21 @@
 package ru.inovus.messaging.impl.jooq.tables;
 
 
+import org.jooq.Record;
+import org.jooq.*;
+import org.jooq.impl.DSL;
+import org.jooq.impl.TableImpl;
+import org.jooq.impl.TimestampToLocalDateTimeConverter;
+import ru.inovus.messaging.api.model.enums.MessageStatusType;
+import ru.inovus.messaging.impl.jooq.Keys;
+import ru.inovus.messaging.impl.jooq.Messaging;
+import ru.inovus.messaging.impl.jooq.tables.records.MessageRecipientRecord;
+import ru.inovus.messaging.impl.util.MessageStatusTypeConverter;
+
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Name;
-import org.jooq.Record;
-import org.jooq.Row8;
-import org.jooq.Schema;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
-import org.jooq.impl.DSL;
-import org.jooq.impl.TableImpl;
-import org.jooq.impl.TimestampToLocalDateTimeConverter;
-
-import ru.inovus.messaging.api.model.enums.MessageStatus;
-import ru.inovus.messaging.impl.jooq.Keys;
-import ru.inovus.messaging.impl.jooq.Messaging;
-import ru.inovus.messaging.impl.jooq.tables.records.MessageRecipientRecord;
-import ru.inovus.messaging.impl.util.MessageStatusConverter;
 
 
 /**
@@ -79,7 +70,7 @@ public class MessageRecipient extends TableImpl<MessageRecipientRecord> {
     /**
      * The column <code>messaging.message_recipient.status</code>. Текущий статус отправки уведомления получателю
      */
-    public final TableField<MessageRecipientRecord, MessageStatus> STATUS = createField(DSL.name("status"), org.jooq.impl.SQLDataType.VARCHAR, this, "Текущий статус отправки уведомления получателю", new MessageStatusConverter());
+    public final TableField<MessageRecipientRecord, MessageStatusType> STATUS = createField(DSL.name("status"), org.jooq.impl.SQLDataType.VARCHAR, this, "Текущий статус отправки уведомления получателю", new MessageStatusTypeConverter());
 
     /**
      * The column <code>messaging.message_recipient.departured_at</code>. Дата и время фактической отправки уведомления
@@ -179,7 +170,7 @@ public class MessageRecipient extends TableImpl<MessageRecipientRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Row8<Integer, UUID, LocalDateTime, String, String, MessageStatus, LocalDateTime, String> fieldsRow() {
+    public Row8<Integer, UUID, LocalDateTime, String, String, MessageStatusType, LocalDateTime, String> fieldsRow() {
         return (Row8) super.fieldsRow();
     }
 }

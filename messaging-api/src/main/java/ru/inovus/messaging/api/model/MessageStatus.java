@@ -1,8 +1,8 @@
-package ru.inovus.messaging.channel.api.queue.model;
+package ru.inovus.messaging.api.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import ru.inovus.messaging.api.model.enums.MessageStatus;
+import ru.inovus.messaging.api.model.enums.MessageStatusType;
 
 import java.io.Serializable;
 
@@ -12,8 +12,8 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
-public class QueueMessageStatus implements Serializable {
+public class MessageStatus implements Serializable {
     private String id;
-    private MessageStatus status;
-    private String sendErrorMessage;
+    private MessageStatusType status;
+    private String errorMessage;
 }

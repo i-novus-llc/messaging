@@ -1,9 +1,9 @@
 package ru.inovus.messaging.channel.api;
 
 import ru.inovus.messaging.api.model.Message;
+import ru.inovus.messaging.api.model.MessageStatus;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.api.queue.QueueMqConsumer;
-import ru.inovus.messaging.channel.api.queue.model.QueueMessageStatus;
 
 /**
  * Абстрактный канал отправки уведомлений
@@ -19,7 +19,7 @@ public abstract class AbstractChannel implements MessageChannel {
     }
 
     @Override
-    public void sendStatus(QueueMessageStatus status) {
+    public void sendStatus(MessageStatus status) {
         mqProvider.publish(status, statusQueueName);
     }
 }

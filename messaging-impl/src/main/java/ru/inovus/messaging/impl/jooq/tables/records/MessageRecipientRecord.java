@@ -4,24 +4,23 @@
 package ru.inovus.messaging.impl.jooq.tables.records;
 
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
 import org.jooq.Field;
 import org.jooq.Record1;
 import org.jooq.Record8;
 import org.jooq.Row8;
 import org.jooq.impl.UpdatableRecordImpl;
-
-import ru.inovus.messaging.api.model.enums.MessageStatus;
+import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.impl.jooq.tables.MessageRecipient;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 
 /**
  * Получатель уведомления
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
-public class MessageRecipientRecord extends UpdatableRecordImpl<MessageRecipientRecord> implements Record8<Integer, UUID, LocalDateTime, String, String, MessageStatus, LocalDateTime, String> {
+public class MessageRecipientRecord extends UpdatableRecordImpl<MessageRecipientRecord> implements Record8<Integer, UUID, LocalDateTime, String, String, MessageStatusType, LocalDateTime, String> {
 
     private static final long serialVersionUID = 1974734944;
 
@@ -98,15 +97,15 @@ public class MessageRecipientRecord extends UpdatableRecordImpl<MessageRecipient
     /**
      * Setter for <code>messaging.message_recipient.status</code>. Текущий статус отправки уведомления получателю
      */
-    public void setStatus(MessageStatus value) {
+    public void setStatus(MessageStatusType value) {
         set(5, value);
     }
 
     /**
      * Getter for <code>messaging.message_recipient.status</code>. Текущий статус отправки уведомления получателю
      */
-    public MessageStatus getStatus() {
-        return (MessageStatus) get(5);
+    public MessageStatusType getStatus() {
+        return (MessageStatusType) get(5);
     }
 
     /**
@@ -151,12 +150,12 @@ public class MessageRecipientRecord extends UpdatableRecordImpl<MessageRecipient
     // -------------------------------------------------------------------------
 
     @Override
-    public Row8<Integer, UUID, LocalDateTime, String, String, MessageStatus, LocalDateTime, String> fieldsRow() {
+    public Row8<Integer, UUID, LocalDateTime, String, String, MessageStatusType, LocalDateTime, String> fieldsRow() {
         return (Row8) super.fieldsRow();
     }
 
     @Override
-    public Row8<Integer, UUID, LocalDateTime, String, String, MessageStatus, LocalDateTime, String> valuesRow() {
+    public Row8<Integer, UUID, LocalDateTime, String, String, MessageStatusType, LocalDateTime, String> valuesRow() {
         return (Row8) super.valuesRow();
     }
 
@@ -186,7 +185,7 @@ public class MessageRecipientRecord extends UpdatableRecordImpl<MessageRecipient
     }
 
     @Override
-    public Field<MessageStatus> field6() {
+    public Field<MessageStatusType> field6() {
         return MessageRecipient.MESSAGE_RECIPIENT.STATUS;
     }
 
@@ -226,7 +225,7 @@ public class MessageRecipientRecord extends UpdatableRecordImpl<MessageRecipient
     }
 
     @Override
-    public MessageStatus component6() {
+    public MessageStatusType component6() {
         return getStatus();
     }
 
@@ -266,7 +265,7 @@ public class MessageRecipientRecord extends UpdatableRecordImpl<MessageRecipient
     }
 
     @Override
-    public MessageStatus value6() {
+    public MessageStatusType value6() {
         return getStatus();
     }
 
@@ -311,7 +310,7 @@ public class MessageRecipientRecord extends UpdatableRecordImpl<MessageRecipient
     }
 
     @Override
-    public MessageRecipientRecord value6(MessageStatus value) {
+    public MessageRecipientRecord value6(MessageStatusType value) {
         setStatus(value);
         return this;
     }
@@ -329,7 +328,7 @@ public class MessageRecipientRecord extends UpdatableRecordImpl<MessageRecipient
     }
 
     @Override
-    public MessageRecipientRecord values(Integer value1, UUID value2, LocalDateTime value3, String value4, String value5, MessageStatus value6, LocalDateTime value7, String value8) {
+    public MessageRecipientRecord values(Integer value1, UUID value2, LocalDateTime value3, String value4, String value5, MessageStatusType value6, LocalDateTime value7, String value8) {
         value1(value1);
         value2(value2);
         value3(value3);
@@ -355,7 +354,7 @@ public class MessageRecipientRecord extends UpdatableRecordImpl<MessageRecipient
     /**
      * Create a detached, initialised MessageRecipientRecord
      */
-    public MessageRecipientRecord(Integer id, UUID messageId, LocalDateTime readAt, String recipientName, String recipientSendChannelId, MessageStatus status, LocalDateTime departuredAt, String sendMessageError) {
+    public MessageRecipientRecord(Integer id, UUID messageId, LocalDateTime readAt, String recipientName, String recipientSendChannelId, MessageStatusType status, LocalDateTime departuredAt, String sendMessageError) {
         super(MessageRecipient.MESSAGE_RECIPIENT);
 
         set(0, id);
