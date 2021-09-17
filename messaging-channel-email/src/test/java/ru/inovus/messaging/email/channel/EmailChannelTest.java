@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ContextConfiguration;
@@ -24,12 +23,12 @@ import javax.mail.Address;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import java.util.Arrays;
+import java.util.concurrent.CountDownLatch;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(
@@ -41,9 +40,6 @@ import static org.mockito.Mockito.when;
 @EmbeddedKafka(partitions = 1)
 @ContextConfiguration(classes = KafkaMqProvider.class)
 public class EmailChannelTest {
-
-    @Autowired
-    private EmbeddedKafkaBroker embeddedKafkaBroker;
 
     @Autowired
     private MqProvider provider;
@@ -75,10 +71,14 @@ public class EmailChannelTest {
         recipient3.setEmail("email3");
         message.setRecipients(Arrays.asList(recipient1, recipient2, recipient3));
 
+        CountDownLatch latch = new CountDownLatch(1);
         MimeMessage mimeMessage = mailSenderMimeMessage();
-
+        doAnswer(a -> {
+            latch.countDown();
+            return "ignored";
+        }).when(mailSender).send(mimeMessage);
         provider.publish(message, emailQueue);
-        Thread.sleep(3000);
+        latch.await();
 
         assertThat(mimeMessage.getSubject(), is(message.getCaption()));
         MimeMessageParser parser = new MimeMessageParser(mimeMessage);
@@ -102,13 +102,18 @@ public class EmailChannelTest {
         recipient1.setEmail("email1");
         message.setRecipients(Arrays.asList(recipient1));
 
+        CountDownLatch latch = new CountDownLatch(1);
         mailSenderMimeMessage();
 
         final Message[] receivedStatus = new Message[1];
-        QueueMqConsumer mqConsumer = new QueueMqConsumer(statusQueue, msg -> receivedStatus[0] = msg, statusQueue);
+        QueueMqConsumer mqConsumer = new QueueMqConsumer(statusQueue, msg -> {
+            receivedStatus[0] = msg;
+            latch.countDown();
+        }, statusQueue);
+
         provider.subscribe(mqConsumer);
         channel.send(message);
-        Thread.sleep(3000);
+        latch.await();
         provider.unsubscribe(mqConsumer.subscriber());
 
         assertThat(receivedStatus[0], notNullValue());
@@ -124,13 +129,18 @@ public class EmailChannelTest {
         recipient1.setEmail("email1");
         message.setRecipients(Arrays.asList(recipient1));
 
+        CountDownLatch latch = new CountDownLatch(1);
         mailSenderMimeMessage();
 
         final Message[] receivedStatus = new Message[1];
-        QueueMqConsumer mqConsumer = new QueueMqConsumer(statusQueue, msg -> receivedStatus[0] = msg, statusQueue);
+        QueueMqConsumer mqConsumer = new QueueMqConsumer(statusQueue, msg -> {
+            receivedStatus[0] = msg;
+            latch.countDown();
+        }, statusQueue);
+
         provider.subscribe(mqConsumer);
         channel.send(message);
-        Thread.sleep(3000);
+        latch.await();
         provider.unsubscribe(mqConsumer.subscriber());
 
         assertThat(receivedStatus[0], notNullValue());
