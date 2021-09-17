@@ -22,6 +22,6 @@ public class FeedCountListener {
 
     public void sendCount(Message message) {
         messageController.sendFeedCount(message.getSystemId(),
-                message.getRecipients().get(0).getName(), Integer.valueOf(message.getText()));
+                message.getRecipients().get(0).getRecipientSendChannelId(), Integer.valueOf(message.getText()));
     }
 }

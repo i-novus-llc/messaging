@@ -23,7 +23,7 @@ public class RecipientService {
     private static final RecordMapper<Record, Recipient> MAPPER = rec -> {
         MessageRecipientRecord record = rec.into(MESSAGE_RECIPIENT);
         Recipient recipient = new Recipient();
-        recipient.setEmail(record.getRecipientSendChannelId());
+        recipient.setRecipientSendChannelId(record.getRecipientSendChannelId());
         recipient.setMessageId(record.getMessageId());
         recipient.setReadAt(record.getReadAt());
         recipient.setName(record.getRecipientName());

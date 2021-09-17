@@ -33,12 +33,12 @@ public class Recipient implements Serializable {
     private LocalDateTime readAt;
     private UUID messageId;
     private String name;
-    private String email;
     private MessageStatus status;
     private LocalDateTime departuredAt;
     private String sendMessageError;
+    private String recipientSendChannelId;
 
-    public Recipient(String name) {
-        this.name = name;
+    public Recipient(String recipientSendChannelId) {
+        this.recipientSendChannelId = recipientSendChannelId;
     }
 }

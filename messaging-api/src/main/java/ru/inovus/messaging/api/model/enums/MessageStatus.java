@@ -6,7 +6,8 @@ package ru.inovus.messaging.api.model.enums;
 public enum MessageStatus {
     SCHEDULED("Ожидает отправки"),
     SENT("Отправлено получателю"),
-    FAILED("Ошибка отправки получателю");
+    FAILED("Ошибка отправки получателю"),
+    READ("Прочитано");
 
     private String name;
 

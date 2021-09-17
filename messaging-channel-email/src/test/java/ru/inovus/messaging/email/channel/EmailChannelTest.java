@@ -65,11 +65,11 @@ public class EmailChannelTest {
         message.setText("Message");
 
         Recipient recipient1 = new Recipient();
-        recipient1.setEmail("email1");
+        recipient1.setRecipientSendChannelId("email1");
         Recipient recipient2 = new Recipient();
-        recipient2.setEmail("email2");
+        recipient2.setRecipientSendChannelId("email2");
         Recipient recipient3 = new Recipient();
-        recipient3.setEmail("email3");
+        recipient3.setRecipientSendChannelId("email3");
         message.setRecipients(Arrays.asList(recipient1, recipient2, recipient3));
 
         CountDownLatch latch = new CountDownLatch(1);
@@ -88,9 +88,9 @@ public class EmailChannelTest {
 
         Address[] allRecipients = mimeMessage.getAllRecipients();
         assertThat(allRecipients.length, is(message.getRecipients().size()));
-        assertThat(allRecipients[0].toString(), is(recipient1.getEmail()));
-        assertThat(allRecipients[1].toString(), is(recipient2.getEmail()));
-        assertThat(allRecipients[2].toString(), is(recipient3.getEmail()));
+        assertThat(allRecipients[0].toString(), is(recipient1.getRecipientSendChannelId()));
+        assertThat(allRecipients[1].toString(), is(recipient2.getRecipientSendChannelId()));
+        assertThat(allRecipients[2].toString(), is(recipient3.getRecipientSendChannelId()));
     }
 
     @Test
@@ -100,7 +100,7 @@ public class EmailChannelTest {
         message.setCaption("Test caption");
         message.setText("Message");
         Recipient recipient1 = new Recipient();
-        recipient1.setEmail("email1");
+        recipient1.setRecipientSendChannelId("email1");
         message.setRecipients(Arrays.asList(recipient1));
 
         CountDownLatch latch = new CountDownLatch(1);
@@ -127,7 +127,7 @@ public class EmailChannelTest {
         Message message = new Message();
         message.setId("6f711616-1617-11ec-9621-0242ac130002");
         Recipient recipient1 = new Recipient();
-        recipient1.setEmail("email1");
+        recipient1.setRecipientSendChannelId("email1");
         message.setRecipients(Arrays.asList(recipient1));
 
         CountDownLatch latch = new CountDownLatch(1);

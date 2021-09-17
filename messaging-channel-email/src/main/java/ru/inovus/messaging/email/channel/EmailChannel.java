@@ -44,13 +44,13 @@ public class EmailChannel extends AbstractChannel {
 
         try {
             for (Recipient recipient : message.getRecipients()) {
-                if (StringUtils.isEmpty(recipient.getEmail()))
+                if (StringUtils.isEmpty(recipient.getRecipientSendChannelId()))
                     log.error("Message with id={} will not be sent to recipient with id={} due to an empty email address",
-                            message.getId(), recipient.getName());
+                            message.getId(), recipient.getRecipientSendChannelId());
             }
 
             List<String> recipientsEmailList = message.getRecipients().stream()
-                    .map(Recipient::getEmail)
+                    .map(Recipient::getRecipientSendChannelId)
                     .filter(email -> !StringUtils.isEmpty(email))
                     .collect(Collectors.toList());
             if (!CollectionUtils.isEmpty(recipientsEmailList)) {

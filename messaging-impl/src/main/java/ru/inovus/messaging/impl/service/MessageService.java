@@ -88,7 +88,7 @@ public class MessageService {
                         .insertInto(MESSAGE_RECIPIENT)
                         .columns(MESSAGE_RECIPIENT.ID, MESSAGE_RECIPIENT.RECIPIENT_NAME, MESSAGE_RECIPIENT.MESSAGE_ID,
                                 MESSAGE_RECIPIENT.STATUS, MESSAGE_RECIPIENT.RECIPIENT_SEND_CHANNEL_ID)
-                        .values(dsl.nextval(RECIPIENT_ID_SEQ).intValue(), rec.getName(), id, MessageStatus.SCHEDULED, rec.getEmail())
+                        .values(dsl.nextval(RECIPIENT_ID_SEQ).intValue(), rec.getName(), id, MessageStatus.SCHEDULED, rec.getRecipientSendChannelId())
                         .execute();
             }
         }
@@ -157,7 +157,7 @@ public class MessageService {
                     recipient.setMessageId(r.getMessageId());
                     recipient.setReadAt(r.getReadAt());
                     recipient.setName(r.getRecipientName());
-                    recipient.setEmail(r.getRecipientSendChannelId());
+                    recipient.setRecipientSendChannelId(r.getRecipientSendChannelId());
                     return recipient;
                 });
         message.setRecipients(recipients);
