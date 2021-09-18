@@ -32,6 +32,6 @@ public class MessageStatusListener {
      * @param status Сообщение с информацией о статусе уведомления
      */
     private void processStatus(MessageStatus status) {
-        recipientService.updateStatus(UUID.fromString(status.getId()), status.getStatus(), status.getErrorMessage());
+        recipientService.updateStatus(UUID.fromString(status.getMessageId()), status.getStatus(), status.getErrorMessage());
     }
 }

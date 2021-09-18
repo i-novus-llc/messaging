@@ -40,7 +40,8 @@ public class EmailChannel extends AbstractChannel {
 
     public void send(Message message) {
         MessageStatus messageStatus = new MessageStatus();
-        messageStatus.setId(message.getId());
+        messageStatus.setMessageId(message.getId());
+        messageStatus.setSystemId(message.getSystemId());
 
         try {
             for (Recipient recipient : message.getRecipients()) {
