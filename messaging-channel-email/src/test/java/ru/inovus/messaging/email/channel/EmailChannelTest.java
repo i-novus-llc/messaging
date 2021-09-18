@@ -36,7 +36,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest(
         classes = {EmailChannel.class},
         properties = {
-                "novus.messaging.status.queue=test-status-queue",
+                "novus.messaging.queue.status=test-status-queue",
                 "novus.messaging.channel.email.queue=test-email-queue"})
 @Import(EmbeddedKafkaTestConfiguration.class)
 @EmbeddedKafka(partitions = 1)
@@ -49,7 +49,7 @@ public class EmailChannelTest {
     @Autowired
     private EmailChannel channel;
 
-    @Value("${novus.messaging.status.queue}")
+    @Value("${novus.messaging.queue.status}")
     private String statusQueue;
 
     @Value("${novus.messaging.channel.email.queue}")

@@ -32,7 +32,7 @@ public class WebChannel extends AbstractChannel {
     @Value("${novus.messaging.channel.web.topic}")
     private String noticeTopicName;
 
-    @Value("${novus.messaging.message-lifetime}")
+    @Value("${novus.messaging.channel.web.message-lifetime}")
     private Integer timeout;
 
     private final MessageController messageController;
@@ -40,7 +40,7 @@ public class WebChannel extends AbstractChannel {
     private final MqProvider mqProvider;
 
     public WebChannel(@Value("${novus.messaging.channel.web.queue}") String messageQueueName,
-                      @Value("${novus.messaging.status.queue}") String statusQueueName,
+                      @Value("${novus.messaging.queue.status}") String statusQueueName,
                       MqProvider mqProvider,
                       MessageController messageController) {
         super(mqProvider, messageQueueName, statusQueueName);

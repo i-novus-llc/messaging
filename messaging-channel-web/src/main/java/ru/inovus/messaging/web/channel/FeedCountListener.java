@@ -12,10 +12,9 @@ public class FeedCountListener {
 
     private MessageController messageController;
 
-    @Value("${novus.messaging.feed.queue}")
-    private String feedCountQueue;
-
-    public FeedCountListener(MessageController messageController, MqProvider mqProvider) {
+    public FeedCountListener(@Value("${novus.messaging.queue.feed-count}") String feedCountQueue,
+                             MqProvider mqProvider,
+                             MessageController messageController) {
         this.messageController = messageController;
         mqProvider.subscribe(new QueueMqConsumer(feedCountQueue, message -> sendCount((Message) message), feedCountQueue));
     }

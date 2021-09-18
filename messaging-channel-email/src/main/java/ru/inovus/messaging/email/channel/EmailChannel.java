@@ -30,7 +30,7 @@ public class EmailChannel extends AbstractChannel {
     private JavaMailSender emailSender;
 
     public EmailChannel(@Value("${novus.messaging.channel.email.queue}") String messageQueueName,
-                        @Value("${novus.messaging.status.queue}") String statusQueueName,
+                        @Value("${novus.messaging.queue.status}") String statusQueueName,
                         MqProvider mqProvider,
                         JavaMailSender emailSender) {
         super(mqProvider, messageQueueName, statusQueueName);

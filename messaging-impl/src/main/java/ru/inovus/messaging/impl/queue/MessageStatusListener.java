@@ -19,7 +19,7 @@ public class MessageStatusListener {
 
     private RecipientService recipientService;
 
-    public MessageStatusListener(@Value("${novus.messaging.status.queue}") String statusQueue,
+    public MessageStatusListener(@Value("${novus.messaging.queue.status}") String statusQueue,
                                  MqProvider mqProvider,
                                  RecipientService recipientService) {
         this.recipientService = recipientService;

@@ -24,7 +24,7 @@ public class MessageController {
 
     private final MqProvider mqProvider;
 
-    public MessageController(@Value("${novus.messaging.status.queue}") String statusQueueName,
+    public MessageController(@Value("${novus.messaging.queue.status}") String statusQueueName,
                              MqProvider mqProvider,
                              SimpMessagingTemplate simpMessagingTemplate) {
         this.statusQueueName = statusQueueName;
