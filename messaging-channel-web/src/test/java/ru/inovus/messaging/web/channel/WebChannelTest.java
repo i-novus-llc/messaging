@@ -3,8 +3,8 @@ package ru.inovus.messaging.web.channel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +42,8 @@ import ru.inovus.messaging.web.channel.configuration.WebSocketConfiguration;
 
 import java.lang.reflect.Type;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -77,7 +77,7 @@ public class WebChannelTest {
     @Value("${novus.messaging.channel.web.queue}")
     private String webQueue;
 
-    @Value("${novus.messaging.channel.web.security.token}")
+    @Value("${novus.messaging.security.token}")
     private String token;
 
     @Value("${novus.messaging.channel.web.app_prefix}")
@@ -90,16 +90,18 @@ public class WebChannelTest {
     private String privateDestPrefix;
 
     private static final String SYSTEM_ID = "system-id";
-    private static final String USERNAME = "test-user";
+    private static final String USERNAME = "lkb";
 
     @LocalServerPort
     private Integer port;
 
     private String URL;
 
-    private CompletableFuture<Object> completableFuture;
+    private CompletableFuture<Message> completableFuture;
 
     private WebSocketStompClient stompClient;
+
+    private CountDownLatch latch;
 
 
     @BeforeEach
@@ -107,22 +109,15 @@ public class WebChannelTest {
         URL = "ws://localhost:" + port + endPoint + "?access_token=" + token;
         completableFuture = new CompletableFuture<>();
 
-        List<Transport> transports = new ArrayList<>(1);
-        transports.add(new WebSocketTransport(new StandardWebSocketClient()));
-
+        List<Transport> transports = Collections.singletonList(new WebSocketTransport(new StandardWebSocketClient()));
         stompClient = new WebSocketStompClient(new SockJsClient(transports));
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
     }
 
     @Test
-    public void testSendMessageViaWebQueue() throws Exception {
+    public void testSendMessageThroughWs() throws Exception {
         // publish session subscribe event
-        UserPrincipal user = new UserPrincipal(USERNAME);
-        org.springframework.messaging.Message<byte[]> sessionMessage =
-                createMessage(SimpMessageType.CONNECT, "123", user,
-                        "/user/" + USERNAME + "/exchange/" + SYSTEM_ID + "/message");
-        SessionSubscribeEvent event = new SessionSubscribeEvent(this, sessionMessage, user);
-        publisher.publishEvent(event);
+        publisher.publishEvent(createSessionSubscribeEvent());
 
         // create message
         Message message = new Message();
@@ -130,41 +125,100 @@ public class WebChannelTest {
         message.setSeverity(Severity.ERROR);
         message.setText("Message");
         message.setSystemId(SYSTEM_ID);
-
         Recipient recipient1 = new Recipient();
         recipient1.setRecipientSendChannelId("test-user");
         Recipient recipient2 = new Recipient();
-        recipient2.setRecipientSendChannelId("test-user2");
+        recipient2.setRecipientSendChannelId(USERNAME);
         message.setRecipients(Arrays.asList(recipient1, recipient2));
 
-        // publish message to web queue and wait sending to stomp
+        // publish message to web queue and wait for sending to stomp
         StompSession stompSession = stompClient.connect(URL, new StompSessionHandlerAdapter() {
         }).get(1, SECONDS);
         stompSession.subscribe("/user" + privateDestPrefix + "/" + SYSTEM_ID + "/message", new TestReceivedMessagesHandler());
 
+        latch = new CountDownLatch(1);
         provider.publish(message, webQueue);
+        latch.await();
 
-        Object receivedMessage = completableFuture.get(10, SECONDS);
+        // expected message on client
+        Message receivedMessage = completableFuture.get();
         stompSession.disconnect();
 
-        assertThat(receivedMessage, notNullValue());
-        Assert.assertEquals("Test321", ((Message) receivedMessage).getId());
+        assertThat(receivedMessage.getCaption(), is(message.getCaption()));
+        assertThat(receivedMessage.getText(), is(message.getText()));
+        assertThat(receivedMessage.getSeverity(), is(message.getSeverity()));
     }
 
-    public void testSendMessageStatusSuccess() {
+    @Test
+    public void testSendMessageStatusSuccess() throws Exception {
+        // publish session subscribe event
+        publisher.publishEvent(createSessionSubscribeEvent());
 
+        // create message
+        Message message = new Message();
+        message.setId("6f711616-1617-11ec-9621-0242ac130003");
+        message.setSystemId(SYSTEM_ID);
+        message.setRecipients(Collections.singletonList(new Recipient(USERNAME)));
+
+        final MessageStatus[] receivedStatus = new MessageStatus[1];
+        QueueMqConsumer mqConsumer = new QueueMqConsumer(statusQueue, msg -> {
+            receivedStatus[0] = (MessageStatus) msg;
+            latch.countDown();
+        }, statusQueue);
+
+        // send message to web queue and wait for publishing to status queue
+        provider.subscribe(mqConsumer);
+        latch = new CountDownLatch(1);
+        provider.publish(message, webQueue);
+        latch.await();
+        provider.unsubscribe(mqConsumer.subscriber());
+
+        assertThat(receivedStatus[0], notNullValue());
+        assertThat(receivedStatus[0].getUsername(), is(USERNAME));
+        assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.SENT));
+        assertThat(receivedStatus[0].getMessageId(), is(message.getId()));
+        assertThat(receivedStatus[0].getSystemId(), is(SYSTEM_ID));
     }
 
-    public void testSendMessageStatusFailed() {
+    @Test
+    @Disabled
+    public void testSendMessageStatusFailed() throws Exception {
+        // publish session subscribe event
+        publisher.publishEvent(createSessionSubscribeEvent());
 
+        // create message
+        Message message = new Message();
+        message.setId("6f711616-1617-11ec-9621-0242ac130003");
+        message.setSystemId(SYSTEM_ID);
+        message.setRecipients(Collections.singletonList(new Recipient(USERNAME)));
+
+        final MessageStatus[] receivedStatus = new MessageStatus[1];
+        QueueMqConsumer mqConsumer = new QueueMqConsumer(statusQueue, msg -> {
+            receivedStatus[0] = (MessageStatus) msg;
+            latch.countDown();
+        }, statusQueue);
+
+        // send message to web queue and wait for publishing to status queue
+        provider.subscribe(mqConsumer);
+        latch = new CountDownLatch(1);
+        provider.publish(message, webQueue);
+        latch.await();
+        provider.unsubscribe(mqConsumer.subscriber());
+
+        assertThat(receivedStatus[0], notNullValue());
+        assertThat(receivedStatus[0].getUsername(), is(USERNAME));
+        assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.FAILED));
+        assertThat(receivedStatus[0].getMessageId(), is(message.getId()));
+        assertThat(receivedStatus[0].getSystemId(), is(SYSTEM_ID));
     }
 
+    @Test
     public void testMarkReadMessage() throws Exception {
         StompSession stompSession = stompClient.connect(URL, new StompSessionHandlerAdapter() {
         }).get(1, SECONDS);
         assertThat(stompSession, notNullValue());
 
-        CountDownLatch latch = new CountDownLatch(1);
+        latch = new CountDownLatch(1);
 
         final MessageStatus[] receivedStatus = new MessageStatus[1];
         QueueMqConsumer mqConsumer = new QueueMqConsumer(statusQueue, msg -> {
@@ -173,10 +227,10 @@ public class WebChannelTest {
         }, statusQueue);
 
         String messageId = "e8aa6312-c8ea-4dd6-a4a0-736f8856b348";
-        Map<String, String> payload = Map.of("username", USERNAME, "messageId", messageId);
 
+        // send message through ws and wait publishing to status queue
         provider.subscribe(mqConsumer);
-        stompSession.send(appPrefix + "/" + SYSTEM_ID + "/message.markreadall", payload);
+        stompSession.send(appPrefix + "/" + SYSTEM_ID + "/message.markread", messageId);
         latch.await();
         stompSession.disconnect();
         provider.unsubscribe(mqConsumer.subscriber());
@@ -185,7 +239,7 @@ public class WebChannelTest {
         assertThat(receivedStatus[0].getUsername(), is(USERNAME));
         assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.READ));
         assertThat(receivedStatus[0].getMessageId(), is(messageId));
-        assertThat(receivedStatus[0].getSystemId(), is("system-id"));
+        assertThat(receivedStatus[0].getSystemId(), is(SYSTEM_ID));
     }
 
     @Test
@@ -194,7 +248,7 @@ public class WebChannelTest {
         }).get(1, SECONDS);
         assertThat(stompSession, notNullValue());
 
-        CountDownLatch latch = new CountDownLatch(1);
+        latch = new CountDownLatch(1);
 
         final MessageStatus[] receivedStatus = new MessageStatus[1];
         QueueMqConsumer mqConsumer = new QueueMqConsumer(statusQueue, msg -> {
@@ -204,6 +258,7 @@ public class WebChannelTest {
 
         Map<String, String> payload = Map.of("username", USERNAME);
 
+        // send message through ws and wait publishing to status queue
         provider.subscribe(mqConsumer);
         stompSession.send(appPrefix + "/" + SYSTEM_ID + "/message.markreadall", payload);
         latch.await();
@@ -213,9 +268,17 @@ public class WebChannelTest {
         assertThat(receivedStatus[0], notNullValue());
         assertThat(receivedStatus[0].getUsername(), is(USERNAME));
         assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.READ));
-        assertThat(receivedStatus[0].getSystemId(), is("system-id"));
+        assertThat(receivedStatus[0].getSystemId(), is(SYSTEM_ID));
     }
 
+
+    private SessionSubscribeEvent createSessionSubscribeEvent() {
+        UserPrincipal user = new UserPrincipal(USERNAME);
+        org.springframework.messaging.Message<byte[]> sessionMessage =
+                createMessage(SimpMessageType.CONNECT, "123", user,
+                        "/user/" + USERNAME + "/exchange/" + SYSTEM_ID + "/message");
+        return new SessionSubscribeEvent(this, sessionMessage, user);
+    }
 
     private org.springframework.messaging.Message<byte[]> createMessage(SimpMessageType type, String sessionId,
                                                                         Principal user, String destination) {
@@ -242,7 +305,8 @@ public class WebChannelTest {
 
         @Override
         public void handleFrame(StompHeaders headers, Object payload) {
-            completableFuture.complete(payload);
+            completableFuture.complete((Message) payload);
+            latch.countDown();
         }
     }
 }

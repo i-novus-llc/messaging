@@ -85,7 +85,7 @@ public class WebChannel extends AbstractChannel {
     }
 
     private String getSystemId(String dest) {
-        String result = dest.replaceFirst("/user/.*/exchange/", "");
+        String result = dest.replaceFirst("/user/(.+/)?exchange/", "");
         return result.substring(0, result.indexOf("/"));
     }
 

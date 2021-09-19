@@ -12,8 +12,10 @@ import ru.inovus.messaging.api.model.MessageStatus;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 
+import java.security.Principal;
+
 /**
- * Контроллер для отправки/получения сообщений через Web Socket
+ * Контроллер для отправки/получения сообщений через WebSocket
  */
 @Controller
 public class MessageController {
@@ -77,14 +79,14 @@ public class MessageController {
      * Отметить прочитанными все уведомления пользователя
      *
      * @param systemId  Идентификатор системы, в которой находится пользователь
-     * @param username  Имя пользователя
+     * @param principal Информация о пользователе
      */
     @MessageMapping("/{systemId}/message.markreadall")
     public void markReadAll(@DestinationVariable("systemId") String systemId,
-                            @Payload String username) {
+                            Principal principal) {
         MessageStatus status = new MessageStatus();
         status.setSystemId(systemId);
-        status.setUsername(username);
+        status.setUsername(principal.getName());
         status.setStatus(MessageStatusType.READ);
         mqProvider.publish(status, statusQueueName);
     }
@@ -94,16 +96,16 @@ public class MessageController {
      *
      * @param systemId  Идентификатор системы, в которой находится пользователь
      * @param messageId Идентификатор сообщения
-     * @param username  Имя пользователя
+     * @param principal Информация о пользователе
      */
     @MessageMapping("/{systemId}/message.markread")
     public void markRead(@DestinationVariable("systemId") String systemId,
                          @Payload String messageId,
-                         @Payload String username) {
+                         Principal principal) {
         MessageStatus status = new MessageStatus();
         status.setSystemId(systemId);
         status.setMessageId(messageId);
-        status.setUsername(username);
+        status.setUsername(principal.getName());
         status.setStatus(MessageStatusType.READ);
         mqProvider.publish(status, statusQueueName);
     }

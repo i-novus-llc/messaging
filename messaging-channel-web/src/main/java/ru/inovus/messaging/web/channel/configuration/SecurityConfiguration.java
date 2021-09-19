@@ -1,5 +1,6 @@
 package ru.inovus.messaging.web.channel.configuration;
 
+import org.apache.cxf.rt.security.crypto.CryptoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.jwt.crypto.sign.RsaVerifier;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
@@ -29,6 +31,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.security.interfaces.RSAPublicKey;
 import java.util.*;
 
 @Configuration
@@ -120,8 +123,8 @@ public class SecurityConfiguration extends ResourceServerConfigurerAdapter {
         ((DefaultAccessTokenConverter) converter.getAccessTokenConverter())
                 .setUserTokenConverter(userAuthenticationConverter());
 
-//        RSAPublicKey publicKey = CryptoUtils.getRSAPublicKey(modulus, exponent);
-//        converter.setVerifier(new RsaVerifier(publicKey));
+        RSAPublicKey publicKey = CryptoUtils.getRSAPublicKey(modulus, exponent);
+        converter.setVerifier(new RsaVerifier(publicKey));
         return converter;
     }
 

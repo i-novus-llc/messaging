@@ -62,6 +62,13 @@
             <artifactId>messaging-support-kafka</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-security</artifactId>
+            <version>3.4.3</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <profiles>

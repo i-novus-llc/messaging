@@ -31,7 +31,7 @@ public class WebSocketConfiguration extends AbstractSecurityWebSocketMessageBrok
         return true;
     }
 
-    @Bean //ping-pong
+    @Bean
     public TaskScheduler stompHeartbeatThreadBool() {
         ThreadPoolTaskScheduler p = new ThreadPoolTaskScheduler();
         p.setPoolSize(1);

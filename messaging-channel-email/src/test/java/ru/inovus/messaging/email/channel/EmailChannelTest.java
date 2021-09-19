@@ -65,12 +65,9 @@ public class EmailChannelTest {
         message.setCaption("Test caption");
         message.setText("Message");
 
-        Recipient recipient1 = new Recipient();
-        recipient1.setRecipientSendChannelId("email1");
-        Recipient recipient2 = new Recipient();
-        recipient2.setRecipientSendChannelId("email2");
-        Recipient recipient3 = new Recipient();
-        recipient3.setRecipientSendChannelId("email3");
+        Recipient recipient1 = new Recipient("email1");
+        Recipient recipient2 = new Recipient("email2");
+        Recipient recipient3 = new Recipient("email3");
         message.setRecipients(Arrays.asList(recipient1, recipient2, recipient3));
 
         CountDownLatch latch = new CountDownLatch(1);
@@ -101,9 +98,7 @@ public class EmailChannelTest {
         message.setCaption("Test caption");
         message.setText("Message");
         message.setSystemId("system-id");
-        Recipient recipient1 = new Recipient();
-        recipient1.setRecipientSendChannelId("email1");
-        message.setRecipients(Arrays.asList(recipient1));
+        message.setRecipients(Collections.singletonList(new Recipient("email1")));
 
         CountDownLatch latch = new CountDownLatch(1);
         mailSenderMimeMessageMock();
@@ -130,9 +125,7 @@ public class EmailChannelTest {
         Message message = new Message();
         message.setId("6f711616-1617-11ec-9621-0242ac130002");
         message.setSystemId("system-id");
-        Recipient recipient1 = new Recipient();
-        recipient1.setRecipientSendChannelId("email1");
-        message.setRecipients(Collections.singletonList(recipient1));
+        message.setRecipients(Collections.singletonList(new Recipient("email1")));
 
         CountDownLatch latch = new CountDownLatch(1);
         mailSenderMimeMessageMock();
