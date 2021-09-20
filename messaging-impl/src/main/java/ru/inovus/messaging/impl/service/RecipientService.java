@@ -17,8 +17,13 @@ import java.util.stream.Collectors;
 import static org.jooq.impl.DSL.exists;
 import static ru.inovus.messaging.impl.jooq.Tables.*;
 
+/**
+ * Сервис получателей уведомлений
+ */
 @Service
 public class RecipientService {
+
+    private final DSLContext dsl;
 
     private static final RecordMapper<Record, Recipient> MAPPER = rec -> {
         MessageRecipientRecord record = rec.into(MESSAGE_RECIPIENT);
@@ -32,12 +37,17 @@ public class RecipientService {
         recipient.setErrorMessage(record.getSendMessageError());
         return recipient;
     };
-    private final DSLContext dsl;
 
     public RecipientService(DSLContext dsl) {
         this.dsl = dsl;
     }
 
+    /**
+     * Получение списка получателей уведомлений по критерию
+     *
+     * @param criteria Критерий получателей
+     * @return Список получателей уведомлений
+     */
     public Page<Recipient> getRecipients(RecipientCriteria criteria) {
         List<Condition> conditions = new ArrayList<>();
         Optional.ofNullable(criteria.getMessageId())
@@ -55,6 +65,12 @@ public class RecipientService {
         return new PageImpl<>(collection, criteria, count);
     }
 
+    /**
+     * Получение списка полей, по которым будет производиться сортировка
+     *
+     * @param sort Вариант сортировки
+     * @return Список полей, по которым будет производиться сортировка
+     */
     private Collection<SortField<?>> getSortFields(Sort sort) {
         if (sort.isEmpty())
             return new ArrayList<>();
@@ -75,6 +91,8 @@ public class RecipientService {
         List<Condition> conditions = new ArrayList<>();
         Optional.ofNullable(status.getUsername())
                 .ifPresent(username -> conditions.add(MESSAGE_RECIPIENT.RECIPIENT_SEND_CHANNEL_ID.eq(username)));
+        // change status if previous status is correct (e.g. can't change FAILED to READ)
+        conditions.add(MESSAGE_RECIPIENT.STATUS.eq(status.getStatus().getPrevStatus()));
         if (status.getMessageId() != null) {
             conditions.add(MESSAGE_RECIPIENT.MESSAGE_ID.eq(UUID.fromString(status.getMessageId())));
             conditions.add(exists(dsl.selectOne().from(MESSAGE)
