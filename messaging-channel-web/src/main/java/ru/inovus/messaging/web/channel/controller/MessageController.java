@@ -41,7 +41,6 @@ public class MessageController {
      * @param username  Имя пользователя
      * @param feedCount Количество непрочитанных сообщений
      */
-    @MessageMapping("/{systemId}/message.count")
     public void sendFeedCount(@DestinationVariable("systemId") String systemId,
                               String username,
                               Integer feedCount) {
@@ -55,7 +54,6 @@ public class MessageController {
      * @param username Имя пользователя
      * @param message  Сообщение
      */
-    @MessageMapping("/{systemId}/message.private.{username}")
     public void sendPrivateMessage(@DestinationVariable("systemId") String systemId,
                                    @DestinationVariable("username") String username,
                                    @Payload Message message) {

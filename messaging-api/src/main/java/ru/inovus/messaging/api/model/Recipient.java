@@ -35,7 +35,7 @@ public class Recipient implements Serializable {
     private String name;
     private LocalDateTime departuredAt;
     private MessageStatusType status;
-    private String sendMessageError;
+    private String errorMessage;
     private String username;
 
     public Recipient(String username) {

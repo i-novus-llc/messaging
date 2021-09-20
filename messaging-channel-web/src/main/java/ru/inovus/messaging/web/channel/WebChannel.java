@@ -52,9 +52,7 @@ public class WebChannel extends AbstractChannel {
     public void handleSessionSubscribe(SessionSubscribeEvent event) {
         SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
         String dest = headers.getDestination();
-        if (dest.endsWith("/message.count")) {
-//            messageController.sendFeedCount(getSystemId(dest), headers.getUser());
-        } else if (dest.endsWith("/message")) {
+        if (dest != null && dest.endsWith("/message")) {
             MqConsumer consumer = new TopicMqConsumer(headers.getSessionId(), getSystemId(dest), headers.getUser().getName(),
                     noticeTopicName, message -> sendTo((Message) message, headers));
             mqProvider.subscribe(consumer);

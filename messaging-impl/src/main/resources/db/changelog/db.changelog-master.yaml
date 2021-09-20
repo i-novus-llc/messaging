@@ -256,3 +256,12 @@ databaseChangeLog:
             encoding: utf8
             path: sql/MESSAGING-210.sql
             relativeToChangelogFile: true
+
+  - changeSet:
+      id: MESSAGING-212
+      author: ilebedenko
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/MESSAGING-212.sql
+            relativeToChangelogFile: true

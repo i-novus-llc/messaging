@@ -4,9 +4,9 @@ package ru.inovus.messaging.api.model.enums;
  * Статус уведомления
  */
 public enum MessageStatusType {
+    FAILED("Ошибка отправки получателю"),
     SCHEDULED("Ожидает отправки"),
     SENT("Отправлено получателю"),
-    FAILED("Ошибка отправки получателю"),
     READ("Прочитано");
 
     private String name;

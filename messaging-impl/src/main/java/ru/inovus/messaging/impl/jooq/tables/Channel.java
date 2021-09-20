@@ -4,25 +4,16 @@
 package ru.inovus.messaging.impl.jooq.tables;
 
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row3;
-import org.jooq.Schema;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
-
 import ru.inovus.messaging.impl.jooq.Keys;
 import ru.inovus.messaging.impl.jooq.Messaging;
 import ru.inovus.messaging.impl.jooq.tables.records.ChannelRecord;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -31,7 +22,7 @@ import ru.inovus.messaging.impl.jooq.tables.records.ChannelRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Channel extends TableImpl<ChannelRecord> {
 
-    private static final long serialVersionUID = -1514299877;
+    private static final long serialVersionUID = -876607164;
 
     /**
      * The reference instance of <code>messaging.channel</code>
@@ -60,6 +51,11 @@ public class Channel extends TableImpl<ChannelRecord> {
      * The column <code>messaging.channel.queue_name</code>. Наименование очереди канала
      */
     public final TableField<ChannelRecord, String> QUEUE_NAME = createField(DSL.name("queue_name"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Наименование очереди канала");
+
+    /**
+     * The column <code>messaging.channel.is_internal</code>. Признак внутрисистемного канала отправки
+     */
+    public final TableField<ChannelRecord, Boolean> IS_INTERNAL = createField(DSL.name("is_internal"), org.jooq.impl.SQLDataType.BOOLEAN, this, "Признак внутрисистемного канала отправки");
 
     /**
      * Create a <code>messaging.channel</code> table reference
@@ -136,11 +132,11 @@ public class Channel extends TableImpl<ChannelRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row3 type methods
+    // Row4 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row3<String, String, String> fieldsRow() {
-        return (Row3) super.fieldsRow();
+    public Row4<String, String, String, Boolean> fieldsRow() {
+        return (Row4) super.fieldsRow();
     }
 }

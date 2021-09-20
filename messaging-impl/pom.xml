@@ -29,6 +29,11 @@
         </dependency>
 
         <dependency>
+            <groupId>ru.i-novus.messaging</groupId>
+            <artifactId>messaging-support-kafka</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
             <artifactId>security-admin-rest-api</artifactId>
         </dependency>
@@ -105,6 +110,11 @@
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
         </dependency>
 
         <dependency>
