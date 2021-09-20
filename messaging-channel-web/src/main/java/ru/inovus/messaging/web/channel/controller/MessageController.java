@@ -9,6 +9,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.MessageStatus;
+import ru.inovus.messaging.api.model.UnreadMessageInfo;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 
@@ -41,11 +42,8 @@ public class MessageController {
      * @param username  Имя пользователя
      * @param feedCount Количество непрочитанных сообщений
      */
-    @MessageMapping("/{systemId}/message.count")
-    public void sendFeedCount(@DestinationVariable("systemId") String systemId,
-                              String username,
-                              Integer feedCount) {
-        simpMessagingTemplate.convertAndSend("/user/" + username + "/exchange/" + systemId + "/message.count", feedCount);
+    public void sendFeedCount(UnreadMessageInfo count) {
+        simpMessagingTemplate.convertAndSend("/user/" + count.getRecipientSendChannelId() + "/exchange/" + count.getSystemId() + "/message.count", count.getCount());
     }
 
     /**

@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.inovus.messaging.api.criteria.FeedCriteria;
 import ru.inovus.messaging.api.model.Component;
 import ru.inovus.messaging.api.model.Feed;
-import ru.inovus.messaging.api.model.UnreadMessagesInfo;
+import ru.inovus.messaging.api.model.UnreadMessageInfo;
 import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.impl.jooq.tables.records.ComponentRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecipientRecord;
@@ -142,7 +142,7 @@ public class FeedService {
         }
     }
 
-    public UnreadMessagesInfo getFeedCount(String recipient, String systemId) {
+    public UnreadMessageInfo getFeedCount(String recipient, String systemId) {
         Integer count = dsl
                 .selectCount()
                 .from(MESSAGE)
@@ -154,7 +154,7 @@ public class FeedService {
                                         .and(MESSAGE_RECIPIENT.RECIPIENT_NAME.eq(recipient))),
                         MESSAGE.SYSTEM_ID.eq(systemId))
                 .fetchOne().value1();
-        return new UnreadMessagesInfo(count);
+        return new UnreadMessageInfo(count, systemId, recipient);
     }
 
     private static Feed mapFeed(Record rec) {
