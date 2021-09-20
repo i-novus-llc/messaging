@@ -95,7 +95,7 @@ public class WebChannel extends AbstractChannel {
         if (message == null || message.getRecipients() == null || message.getRecipients().isEmpty())
             return false;
         for (Recipient r : message.getRecipients()) {
-            if (r.getRecipientSendChannelId().equals(recipient) && message.getSystemId().equals(systemId))
+            if (r.getUsername().equals(recipient) && message.getSystemId().equals(systemId))
                 return true;
         }
         return false;

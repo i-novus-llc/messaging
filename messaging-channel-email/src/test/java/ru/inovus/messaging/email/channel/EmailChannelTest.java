@@ -86,9 +86,9 @@ public class EmailChannelTest {
 
         Address[] allRecipients = mimeMessage.getAllRecipients();
         assertThat(allRecipients.length, is(message.getRecipients().size()));
-        assertThat(allRecipients[0].toString(), is(recipient1.getRecipientSendChannelId()));
-        assertThat(allRecipients[1].toString(), is(recipient2.getRecipientSendChannelId()));
-        assertThat(allRecipients[2].toString(), is(recipient3.getRecipientSendChannelId()));
+        assertThat(allRecipients[0].toString(), is(recipient1.getUsername()));
+        assertThat(allRecipients[1].toString(), is(recipient2.getUsername()));
+        assertThat(allRecipients[2].toString(), is(recipient3.getUsername()));
     }
 
     @Test

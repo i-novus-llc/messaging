@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +30,9 @@ import org.springframework.web.socket.sockjs.client.SockJsClient;
 import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 import ru.inovus.messaging.api.model.Message;
-import ru.inovus.messaging.api.model.MessageStatus;
 import ru.inovus.messaging.api.model.Recipient;
-import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.api.model.enums.Severity;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
-import ru.inovus.messaging.channel.api.queue.QueueMqConsumer;
 import ru.inovus.messaging.mq.support.kafka.KafkaMqProvider;
 import ru.inovus.messaging.web.channel.configuration.WebSocketConfiguration;
 
@@ -45,14 +41,12 @@ import java.security.Principal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(
@@ -66,22 +60,13 @@ public class WebChannelTest {
     private MqProvider provider;
 
     @Autowired
-    private WebChannel channel;
-
-    @Autowired
     private ApplicationEventPublisher publisher;
-
-    @Value("${novus.messaging.queue.status}")
-    private String statusQueue;
 
     @Value("${novus.messaging.channel.web.queue}")
     private String webQueue;
 
     @Value("${novus.messaging.security.token}")
     private String token;
-
-    @Value("${novus.messaging.channel.web.app_prefix}")
-    private String appPrefix;
 
     @Value("${novus.messaging.channel.web.end_point}")
     private String endPoint;
@@ -126,9 +111,9 @@ public class WebChannelTest {
         message.setText("Message");
         message.setSystemId(SYSTEM_ID);
         Recipient recipient1 = new Recipient();
-        recipient1.setRecipientSendChannelId("test-user");
+        recipient1.setUsername("test-user");
         Recipient recipient2 = new Recipient();
-        recipient2.setRecipientSendChannelId(USERNAME);
+        recipient2.setUsername(USERNAME);
         message.setRecipients(Arrays.asList(recipient1, recipient2));
 
         // publish message to web queue and wait for sending to stomp
@@ -147,128 +132,6 @@ public class WebChannelTest {
         assertThat(receivedMessage.getCaption(), is(message.getCaption()));
         assertThat(receivedMessage.getText(), is(message.getText()));
         assertThat(receivedMessage.getSeverity(), is(message.getSeverity()));
-    }
-
-    @Test
-    public void testSendMessageStatusSuccess() throws Exception {
-        // publish session subscribe event
-        publisher.publishEvent(createSessionSubscribeEvent());
-
-        // create message
-        Message message = new Message();
-        message.setId("6f711616-1617-11ec-9621-0242ac130003");
-        message.setSystemId(SYSTEM_ID);
-        message.setRecipients(Collections.singletonList(new Recipient(USERNAME)));
-
-        final MessageStatus[] receivedStatus = new MessageStatus[1];
-        QueueMqConsumer mqConsumer = new QueueMqConsumer(statusQueue, msg -> {
-            receivedStatus[0] = (MessageStatus) msg;
-            latch.countDown();
-        }, statusQueue);
-
-        // send message to web queue and wait for publishing to status queue
-        provider.subscribe(mqConsumer);
-        latch = new CountDownLatch(1);
-        provider.publish(message, webQueue);
-        latch.await();
-        provider.unsubscribe(mqConsumer.subscriber());
-
-        assertThat(receivedStatus[0], notNullValue());
-        assertThat(receivedStatus[0].getUsername(), is(USERNAME));
-        assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.SENT));
-        assertThat(receivedStatus[0].getMessageId(), is(message.getId()));
-        assertThat(receivedStatus[0].getSystemId(), is(SYSTEM_ID));
-    }
-
-    @Test
-    @Disabled
-    public void testSendMessageStatusFailed() throws Exception {
-        // publish session subscribe event
-        publisher.publishEvent(createSessionSubscribeEvent());
-
-        // create message
-        Message message = new Message();
-        message.setId("6f711616-1617-11ec-9621-0242ac130003");
-        message.setSystemId(SYSTEM_ID);
-        message.setRecipients(Collections.singletonList(new Recipient(USERNAME)));
-
-        final MessageStatus[] receivedStatus = new MessageStatus[1];
-        QueueMqConsumer mqConsumer = new QueueMqConsumer(statusQueue, msg -> {
-            receivedStatus[0] = (MessageStatus) msg;
-            latch.countDown();
-        }, statusQueue);
-
-        // send message to web queue and wait for publishing to status queue
-        provider.subscribe(mqConsumer);
-        latch = new CountDownLatch(1);
-        provider.publish(message, webQueue);
-        latch.await();
-        provider.unsubscribe(mqConsumer.subscriber());
-
-        assertThat(receivedStatus[0], notNullValue());
-        assertThat(receivedStatus[0].getUsername(), is(USERNAME));
-        assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.FAILED));
-        assertThat(receivedStatus[0].getMessageId(), is(message.getId()));
-        assertThat(receivedStatus[0].getSystemId(), is(SYSTEM_ID));
-    }
-
-    @Test
-    public void testMarkReadMessage() throws Exception {
-        StompSession stompSession = stompClient.connect(URL, new StompSessionHandlerAdapter() {
-        }).get(1, SECONDS);
-        assertThat(stompSession, notNullValue());
-
-        latch = new CountDownLatch(1);
-
-        final MessageStatus[] receivedStatus = new MessageStatus[1];
-        QueueMqConsumer mqConsumer = new QueueMqConsumer(statusQueue, msg -> {
-            receivedStatus[0] = (MessageStatus) msg;
-            latch.countDown();
-        }, statusQueue);
-
-        String messageId = "e8aa6312-c8ea-4dd6-a4a0-736f8856b348";
-
-        // send message through ws and wait publishing to status queue
-        provider.subscribe(mqConsumer);
-        stompSession.send(appPrefix + "/" + SYSTEM_ID + "/message.markread", messageId);
-        latch.await();
-        stompSession.disconnect();
-        provider.unsubscribe(mqConsumer.subscriber());
-
-        assertThat(receivedStatus[0], notNullValue());
-        assertThat(receivedStatus[0].getUsername(), is(USERNAME));
-        assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.READ));
-        assertThat(receivedStatus[0].getMessageId(), is(messageId));
-        assertThat(receivedStatus[0].getSystemId(), is(SYSTEM_ID));
-    }
-
-    @Test
-    public void testMarkReadAllMessage() throws Exception {
-        StompSession stompSession = stompClient.connect(URL, new StompSessionHandlerAdapter() {
-        }).get(1, SECONDS);
-        assertThat(stompSession, notNullValue());
-
-        latch = new CountDownLatch(1);
-
-        final MessageStatus[] receivedStatus = new MessageStatus[1];
-        QueueMqConsumer mqConsumer = new QueueMqConsumer(statusQueue, msg -> {
-            receivedStatus[0] = (MessageStatus) msg;
-            latch.countDown();
-        }, statusQueue);
-
-        Map<String, String> payload = Map.of("username", USERNAME);
-
-        // send message through ws and wait publishing to status queue
-        provider.subscribe(mqConsumer);
-        stompSession.send(appPrefix + "/" + SYSTEM_ID + "/message.markreadall", payload);
-        latch.await();
-        stompSession.disconnect();
-        provider.unsubscribe(mqConsumer.subscriber());
-
-        assertThat(receivedStatus[0], notNullValue());
-        assertThat(receivedStatus[0].getUsername(), is(USERNAME));
-        assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.READ));
-        assertThat(receivedStatus[0].getSystemId(), is(SYSTEM_ID));
     }
 
 
