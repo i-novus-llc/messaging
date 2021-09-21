@@ -133,35 +133,6 @@
             </properties>
         </profile>
         <profile>
-            <id>embedded-broker</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>org.apache.activemq</groupId>
-                    <artifactId>activemq-broker</artifactId>
-                    <scope>runtime</scope>
-                </dependency>
-                <dependency>
-                    <groupId>ru.i-novus.messaging</groupId>
-                    <artifactId>messaging-support-activemq</artifactId>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <id>activemq</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>ru.i-novus.messaging</groupId>
-                    <artifactId>messaging-support-activemq</artifactId>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
             <id>kafka</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
@@ -215,25 +186,31 @@
                                         <forcedType>
                                             <userType>ru.inovus.messaging.api.model.enums.Severity</userType>
                                             <converter>ru.inovus.messaging.impl.util.SeverityConverter</converter>
-                                            <expression>.*\.severity.*</expression>
+                                            <expression>.*\.severity</expression>
                                             <types>.*</types>
                                         </forcedType>
                                         <forcedType>
                                             <userType>ru.inovus.messaging.api.model.enums.AlertType</userType>
                                             <converter>ru.inovus.messaging.impl.util.AlertTypeConverter</converter>
-                                            <expression>.*\.alert_type.*</expression>
+                                            <expression>.*\.alert_type</expression>
                                             <types>.*</types>
                                         </forcedType>
                                         <forcedType>
                                             <userType>ru.inovus.messaging.api.model.enums.FormationType</userType>
                                             <converter>ru.inovus.messaging.impl.util.FormationTypeConverter</converter>
-                                            <expression>.*\.formation_type.*</expression>
+                                            <expression>.*\.formation_type</expression>
                                             <types>.*</types>
                                         </forcedType>
                                         <forcedType>
                                             <userType>ru.inovus.messaging.api.model.enums.RecipientType</userType>
                                             <converter>ru.inovus.messaging.impl.util.RecipientTypeConverter</converter>
-                                            <expression>.*\.recipient_type.*</expression>
+                                            <expression>.*\.recipient_type</expression>
+                                            <types>.*</types>
+                                        </forcedType>
+                                        <forcedType>
+                                            <userType>ru.inovus.messaging.api.model.enums.MessageStatusType</userType>
+                                            <converter>ru.inovus.messaging.impl.util.MessageStatusTypeConverter</converter>
+                                            <expression>.*\.message_recipient\.status</expression>
                                             <types>.*</types>
                                         </forcedType>
                                         <forcedType>

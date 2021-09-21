@@ -21,6 +21,7 @@
         <audit.version>2.3.2</audit.version>
         <jacoco.skip>true</jacoco.skip>
         <spring-kafka.version>2.6.4</spring-kafka.version>
+        <lombok.version>1.18.20</lombok.version>
     </properties>
 
     <name>Messaging</name>
@@ -48,6 +49,7 @@
     </organization>
 
     <modules>
+        <module>messaging-react</module>
         <module>messaging-admin-frontend</module>
         <module>messaging-admin-web</module>
         <module>messaging-api</module>
@@ -111,11 +113,6 @@
             <dependency>
                 <groupId>ru.i-novus.messaging</groupId>
                 <artifactId>messaging-support-kafka</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>ru.i-novus.messaging</groupId>
-                <artifactId>messaging-support-activemq</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

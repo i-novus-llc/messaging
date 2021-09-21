@@ -7,8 +7,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.inovus.messaging.api.criteria.MessageCriteria;
-import ru.inovus.messaging.api.model.*;
+import ru.inovus.messaging.api.model.Channel;
+import ru.inovus.messaging.api.model.Component;
+import ru.inovus.messaging.api.model.Message;
+import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.enums.RecipientType;
+import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.impl.jooq.tables.records.ChannelRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.ComponentRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
@@ -82,8 +86,9 @@ public class MessageService {
             for (Recipient rec : recipient) {
                 dsl
                         .insertInto(MESSAGE_RECIPIENT)
-                        .values(RECIPIENT_ID_SEQ.nextval(),
-                                rec.getRecipient(), id, null, rec.getEmail())
+                        .columns(MESSAGE_RECIPIENT.ID, MESSAGE_RECIPIENT.RECIPIENT_NAME, MESSAGE_RECIPIENT.MESSAGE_ID,
+                                MESSAGE_RECIPIENT.STATUS, MESSAGE_RECIPIENT.RECIPIENT_SEND_CHANNEL_ID)
+                        .values(dsl.nextval(RECIPIENT_ID_SEQ).intValue(), rec.getName(), id, MessageStatusType.SCHEDULED, rec.getEmail())
                         .execute();
             }
         }
@@ -151,11 +156,11 @@ public class MessageService {
                     Recipient recipient = new Recipient();
                     recipient.setMessageId(r.getMessageId());
                     recipient.setReadAt(r.getReadAt());
-                    recipient.setRecipient(r.getRecipientName());
+                    recipient.setName(r.getRecipientName());
                     recipient.setEmail(r.getRecipientSendChannelId());
                     return recipient;
                 });
         message.setRecipients(recipients);
         return message;
     }
-    }
+}

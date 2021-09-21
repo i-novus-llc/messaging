@@ -7,12 +7,13 @@ package ru.inovus.messaging.impl.jooq.tables;
 import org.jooq.Record;
 import org.jooq.*;
 import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 import org.jooq.impl.TimestampToLocalDateTimeConverter;
+import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.impl.jooq.Keys;
 import ru.inovus.messaging.impl.jooq.Messaging;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecipientRecord;
+import ru.inovus.messaging.impl.util.MessageStatusTypeConverter;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -26,7 +27,7 @@ import java.util.UUID;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class MessageRecipient extends TableImpl<MessageRecipientRecord> {
 
-    private static final long serialVersionUID = 25866362;
+    private static final long serialVersionUID = 288248487;
 
     /**
      * The reference instance of <code>messaging.message_recipient</code>
@@ -54,7 +55,7 @@ public class MessageRecipient extends TableImpl<MessageRecipientRecord> {
     /**
      * The column <code>messaging.message_recipient.read_at</code>. Дата и время прочтения уведомления
      */
-    public final TableField<MessageRecipientRecord, LocalDateTime> READ_AT = createField(DSL.name("read_at"), SQLDataType.TIMESTAMP, this, "Дата и время прочтения уведомления", new TimestampToLocalDateTimeConverter());
+    public final TableField<MessageRecipientRecord, LocalDateTime> READ_AT = createField(DSL.name("read_at"), org.jooq.impl.SQLDataType.TIMESTAMP, this, "Дата и время прочтения уведомления", new TimestampToLocalDateTimeConverter());
 
     /**
      * The column <code>messaging.message_recipient.recipient_name</code>. Имя контакта получателя
@@ -65,6 +66,21 @@ public class MessageRecipient extends TableImpl<MessageRecipientRecord> {
      * The column <code>messaging.message_recipient.recipient_send_channel_id</code>. Идентификатор получателя в формате канала доставки
      */
     public final TableField<MessageRecipientRecord, String> RECIPIENT_SEND_CHANNEL_ID = createField(DSL.name("recipient_send_channel_id"), org.jooq.impl.SQLDataType.VARCHAR, this, "Идентификатор получателя в формате канала доставки");
+
+    /**
+     * The column <code>messaging.message_recipient.status</code>. Текущий статус отправки уведомления получателю
+     */
+    public final TableField<MessageRecipientRecord, MessageStatusType> STATUS = createField(DSL.name("status"), org.jooq.impl.SQLDataType.VARCHAR, this, "Текущий статус отправки уведомления получателю", new MessageStatusTypeConverter());
+
+    /**
+     * The column <code>messaging.message_recipient.departured_at</code>. Дата и время фактической отправки уведомления
+     */
+    public final TableField<MessageRecipientRecord, LocalDateTime> DEPARTURED_AT = createField(DSL.name("departured_at"), org.jooq.impl.SQLDataType.TIMESTAMP, this, "Дата и время фактической отправки уведомления", new TimestampToLocalDateTimeConverter());
+
+    /**
+     * The column <code>messaging.message_recipient.send_message_error</code>. Сообщение ошибки отправки уведомления
+     */
+    public final TableField<MessageRecipientRecord, String> SEND_MESSAGE_ERROR = createField(DSL.name("send_message_error"), org.jooq.impl.SQLDataType.VARCHAR, this, "Сообщение ошибки отправки уведомления");
 
     /**
      * Create a <code>messaging.message_recipient</code> table reference
@@ -150,11 +166,11 @@ public class MessageRecipient extends TableImpl<MessageRecipientRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row5 type methods
+    // Row8 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row5<Integer, UUID, LocalDateTime, String, String> fieldsRow() {
-        return (Row5) super.fieldsRow();
+    public Row8<Integer, UUID, LocalDateTime, String, String, MessageStatusType, LocalDateTime, String> fieldsRow() {
+        return (Row8) super.fieldsRow();
     }
 }

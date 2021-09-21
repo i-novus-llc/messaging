@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.inovus.messaging.api.model.enums.MessageStatusType;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -29,13 +30,15 @@ import java.util.UUID;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Recipient implements Serializable {
-    private String recipient;
     private LocalDateTime readAt;
     private UUID messageId;
     private String name;
     private String email;
+    private MessageStatusType status;
+    private LocalDateTime departuredAt;
+    private String sendMessageError;
 
-    public Recipient(String recipient) {
-        this.recipient = recipient;
+    public Recipient(String name) {
+        this.name = name;
     }
 }

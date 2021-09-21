@@ -15,15 +15,13 @@
  */
 package ru.inovus.messaging.channel.api.queue;
 
-import ru.inovus.messaging.api.model.MessageOutbox;
-
 import java.io.Serializable;
 
 public interface MqProvider {
 
     void subscribe(MqConsumer mqConsumer);
 
-    void publish(MessageOutbox message, String mqDestinationName);
+    void publish(Object queueObject, String mqDestinationName);
 
     void unsubscribe(Serializable subscriber);
 }

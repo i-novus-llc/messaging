@@ -11,7 +11,6 @@ import org.springframework.kafka.listener.MessageListener;
 import org.springframework.kafka.listener.MessageListenerContainer;
 import org.springframework.stereotype.Component;
 import ru.inovus.messaging.api.model.Message;
-import ru.inovus.messaging.api.model.MessageOutbox;
 import ru.inovus.messaging.channel.api.queue.MqConsumer;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.api.queue.TopicMqConsumer;
@@ -24,11 +23,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class KafkaMqProvider implements MqProvider {
 
     private Map<Serializable, MessageListenerContainer> containers = new ConcurrentHashMap<>();
-    private final KafkaTemplate<String, MessageOutbox> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     private final KafkaProperties properties;
 
-    public KafkaMqProvider(KafkaTemplate<String, MessageOutbox> kafkaTemplate,
+    public KafkaMqProvider(KafkaTemplate<String, Object> kafkaTemplate,
                            KafkaProperties properties) {
         this.kafkaTemplate = kafkaTemplate;
         this.properties = properties;
@@ -37,15 +36,15 @@ public class KafkaMqProvider implements MqProvider {
     @Override
     public void subscribe(MqConsumer mqConsumer) {
         ContainerProperties containerProperties = new ContainerProperties(mqConsumer.mqName());
-        containerProperties.setMessageListener((MessageListener<String, MessageOutbox>)
+        containerProperties.setMessageListener((MessageListener<String, Message>)
                 data -> mqConsumer.messageHandler().accept(data.value()));
 
         containers.put(mqConsumer.subscriber(), createContainer(getConsumerConfigs(mqConsumer), containerProperties));
     }
 
     @Override
-    public void publish(MessageOutbox message, String mqDestinationName) {
-        kafkaTemplate.send(mqDestinationName, String.valueOf(System.currentTimeMillis()), message);
+    public void publish(Object queueObject, String mqDestinationName) {
+        kafkaTemplate.send(mqDestinationName, String.valueOf(System.currentTimeMillis()), queueObject);
     }
 
     @Override

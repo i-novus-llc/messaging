@@ -4,12 +4,26 @@
 package ru.inovus.messaging.impl.jooq.tables;
 
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Index;
+import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.*;
+import org.jooq.Row14;
+import org.jooq.Schema;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 import org.jooq.impl.TimestampToLocalDateTimeConverter;
+
 import ru.inovus.messaging.api.model.enums.AlertType;
 import ru.inovus.messaging.api.model.enums.FormationType;
 import ru.inovus.messaging.api.model.enums.RecipientType;
@@ -22,11 +36,6 @@ import ru.inovus.messaging.impl.util.AlertTypeConverter;
 import ru.inovus.messaging.impl.util.FormationTypeConverter;
 import ru.inovus.messaging.impl.util.RecipientTypeConverter;
 import ru.inovus.messaging.impl.util.SeverityConverter;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
 
 
 /**
@@ -78,7 +87,7 @@ public class Message extends TableImpl<MessageRecord> {
     /**
      * The column <code>messaging.message.sent_at</code>. Дата и время отправки уведомления
      */
-    public final TableField<MessageRecord, LocalDateTime> SENT_AT = createField(DSL.name("sent_at"), SQLDataType.TIMESTAMP, this, "Дата и время отправки уведомления", new TimestampToLocalDateTimeConverter());
+    public final TableField<MessageRecord, LocalDateTime> SENT_AT = createField(DSL.name("sent_at"), org.jooq.impl.SQLDataType.TIMESTAMP, this, "Дата и время отправки уведомления", new TimestampToLocalDateTimeConverter());
 
     /**
      * The column <code>messaging.message.system_id</code>. Идентификатор системы, к которой относится уведомление

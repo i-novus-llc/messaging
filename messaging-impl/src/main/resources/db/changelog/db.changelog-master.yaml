@@ -240,8 +240,6 @@ databaseChangeLog:
             encoding: utf8
             path: sql/MESSAGING-206.sql
             relativeToChangelogFile: true
-            splitStatements: true
-            stripComments: true
   - changeSet:
       id: MESSAGING-202
       author: ilebedenko
@@ -250,5 +248,11 @@ databaseChangeLog:
             encoding: utf8
             path: sql/MESSAGING-202.sql
             relativeToChangelogFile: true
-            splitStatements: true
-            stripComments: true
+  - changeSet:
+      id: MESSAGING-210
+      author: ilebedenko
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/MESSAGING-210.sql
+            relativeToChangelogFile: true
