@@ -8,14 +8,14 @@
     <parent>
         <groupId>ru.i-novus.messaging</groupId>
         <artifactId>messaging-pom</artifactId>
-        <version>3.40</version>
+        <version>3.41-SNAPSHOT</version>
     </parent>
 
     <dependencies>
         <dependency>
             <groupId>ru.i-novus.messaging</groupId>
             <artifactId>messaging-web</artifactId>
-            <version>3.40</version><!--TODO: убрать после перехода на вторую версию платформы-->
+            <version>3.41-SNAPSHOT</version><!--TODO: убрать после перехода на вторую версию платформы-->
         </dependency>
     </dependencies>
 </project>
