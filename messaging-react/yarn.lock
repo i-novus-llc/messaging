@@ -1325,6 +1325,11 @@
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.2.5.tgz#8eed982e2ee6f7f4e44c253e12962980791efd46"
   integrity sha512-6U71C2Wp7r5XtFtQzYrW5iKFT67OixrSxjI4MptCHzdSVlgabczzqLe0ZSgnub/5Kp4hSbpDB1tMytZY9pwxxA==
 
+"@fontsource/exo-2@^4.3.0":
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/@fontsource/exo-2/-/exo-2-4.5.0.tgz#4018801c9352e488b7cbf2f3537edfb4dce50b87"
+  integrity sha512-OV1cTC53FP3onTHhD6l7GALi9HFRHG9pS4NLTJ/VYoPKlYZtHXBZbVGdUQuWIddTNU3wfuzuaUDqrPO14BSzZA==
+
 "@icons/material@^0.2.4":
   version "0.2.4"
   resolved "https://registry.yarnpkg.com/@icons/material/-/material-0.2.4.tgz#e90c9f71768b3736e76d7dd6783fc6c2afa88bc8"
@@ -7289,6 +7294,11 @@ immer@^1.12.0:
   resolved "https://registry.yarnpkg.com/immer/-/immer-1.12.1.tgz#40c6e5b292c00560836c2993bda3a24379d466f5"
   integrity sha512-3fmKM6ovaqDt0CdC9daXpNi5x/YCYS3i4cwLdTVkhJdk5jrDXoPs7lCm3IqM3yhfSnz4tjjxbRG2CziQ7m8ztg==
 
+immer@^8.0.1:
+  version "8.0.4"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-8.0.4.tgz#3a21605a4e2dded852fb2afd208ad50969737b7a"
+  integrity sha512-jMfL18P+/6P6epANRvRk6q8t+3gGhqsJ9EuJ25AXE+9bNTYtssvzeYbEd0mXRYWCmmXSIbnlpz6vd6iJlmGGGQ==
+
 immutable@^3.8.1:
   version "3.8.2"
   resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.8.2.tgz#c2439951455bb39913daf281376f1530e104adf3"
@@ -9544,20 +9554,21 @@ mute-stream@0.0.7:
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
   integrity sha1-MHXOk7whuPq0PhvE2n6BFe0ee6s=
 
-n2o-auth@7.12.10:
-  version "7.12.10"
-  resolved "https://npm.i-novus.ru/n2o-auth/-/n2o-auth-7.12.10.tgz#3bd94cdbea536ac7e6939644da06334f45ed7670"
-  integrity sha512-nxitXoOUeJuJxVJaQywYx6pVSWPix86NYN8Io+zs5/o2FetZvICFVWpeVSm643beTRo1YEfyoxv28fUF0L4FAg==
+n2o-auth@7.16.13, n2o-auth@^7.16.13:
+  version "7.16.13"
+  resolved "https://registry.yarnpkg.com/n2o-auth/-/n2o-auth-7.16.13.tgz#52d162bba9a1b93cd84dd1d30ec4117454fa8c27"
+  integrity sha512-rNw4JIWxrZz+BYNAPD6B8SuU4YfjDvuBR1K0zpCZS37TQwL777ixcSy+EHKWlZl3PERClmXfJpJLw6aiqO7xPg==
   dependencies:
-    n2o-framework "^7.12.10"
+    n2o-framework "^7.16.13"
 
-n2o-framework@7.12.10:
-  version "7.12.10"
-  resolved "https://npm.i-novus.ru/n2o-framework/-/n2o-framework-7.12.10.tgz#410bbbf64a50a1b36edeeed29861dbf2e8e291a0"
-  integrity sha512-2/QlnL7AGpw3DxqTk7yXqhfmq8GbGEX2cq+CGYFtt6HUKZli5rMiNPhEHiVkvipCk0nCqySyKeog6HKTiofw4g==
+n2o-framework@7.16.13, n2o-framework@^7.16.13:
+  version "7.16.13"
+  resolved "https://registry.yarnpkg.com/n2o-framework/-/n2o-framework-7.16.13.tgz#f14a7fcce9572f92151ce7fa0dbcc5527448e17f"
+  integrity sha512-+OwQmhH6dqPt8989SB7a3j1KP+aS/+DVuhOb1DXY4T5SaxIsabsjxSQqJSshpz4pfhvkfLhq7NP3mkiDzvh4jw==
   dependencies:
     "@babel/polyfill" "^7.0.0"
     "@babel/runtime-corejs2" "^7.0.0"
+    "@fontsource/exo-2" "^4.3.0"
     "@popperjs/core" "^2.2.1"
     "@sambego/storybook-state" "^1.3.6"
     "@storybook/addon-actions" "5.0.6"
@@ -9586,99 +9597,11 @@ n2o-framework@7.12.10:
     html-to-draftjs "1.4.0"
     i18next "19.7.0"
     i18next-intervalplural-postprocessor "2.0.2"
+    immer "^8.0.1"
     invariant "^2.2.4"
     lodash "^4.17.15"
     moment "2.20.1"
-    numeral "2.0.6"
-    path-to-regexp "2.2.1"
-    prop-types "15.6.1"
-    query-string "5.1.1"
-    rc-collapse "~1.10.0"
-    rc-drawer "^3.0.2"
-    rc-slider "^8.6.11"
-    rc-switch "~1.8.0"
-    rc-table "6.4.3"
-    rc-tree-select "2.3.1"
-    react "16.14.0"
-    react-ace "5.9.0"
-    react-big-calendar "0.24.6"
-    react-copy-to-clipboard "^5.0.1"
-    react-dom "16.14.0"
-    react-draft-wysiwyg "1.13.1"
-    react-dropzone "7.0.1"
-    react-helmet "5.2.0"
-    react-hotkeys "1.0.3"
-    react-i18next "11.7.3"
-    react-onclickoutside "6.7.1"
-    react-popper "^2.1.0"
-    react-popper-tooltip "2.8.0"
-    react-redux "5.0.6"
-    react-resizable "1.7.5"
-    react-resize-detector "^5.2.0"
-    react-router-dom "4.3.1"
-    react-rte "0.16.0"
-    react-syntax-highlighter "^11.0.2"
-    react-text-mask "5.4.3"
-    react-textarea-autosize "7.0.4"
-    react-virtualized "^9.21.0"
-    reactstrap "^8.0.0"
-    recharts "^1.6.2"
-    recompose "0.30.0"
-    redux "3.6.0"
-    redux-actions "2.3.2"
-    redux-batched-actions "0.3.0"
-    redux-devtools-extension "2.13.2"
-    redux-form "7.4.2"
-    redux-logger "3.0.6"
-    redux-mock-store "1.5.1"
-    redux-saga "^1.0.5"
-    redux-thunk "2.2.0"
-    reselect "3.0.1"
-    scroll-into-view-if-needed "^2.2.26"
-    text-mask-addons "3.7.1"
-    url-parse "^1.4.7"
-    whatwg-fetch "2.0.3"
-    why-did-you-update "0.1.1"
-    xhr-mock "2.4.1"
-
-n2o-framework@^7.12.10:
-  version "7.14.0"
-  resolved "https://npm.i-novus.ru/n2o-framework/-/n2o-framework-7.14.0.tgz#9fae9eabd236c4aeed8567aa979d058a2164af54"
-  integrity sha512-cNHxJOA6WpOiQ/0zbLfARzuHmkwaLuAkNcahTActRvmgMDu/ZR1r11VEPdsVg4EDoE8SSegn2DxQt7C57CwzEw==
-  dependencies:
-    "@babel/polyfill" "^7.0.0"
-    "@babel/runtime-corejs2" "^7.0.0"
-    "@popperjs/core" "^2.2.1"
-    "@sambego/storybook-state" "^1.3.6"
-    "@storybook/addon-actions" "5.0.6"
-    "@storybook/addon-info" "5.0.6"
-    "@storybook/addon-knobs" "5.0.6"
-    "@storybook/addon-links" "5.0.6"
-    "@storybook/addon-storyshots" "5.0.6"
-    "@storybook/addons" "5.0.6"
-    "@storybook/react" "5.0.6"
-    assets-webpack-plugin "3.5.1"
-    axios "^0.19.0"
-    bootstrap "~4.3.1"
-    brace "0.11.0"
-    classnames "2.2.5"
-    connect-history-api-fallback "1.3.0"
-    connected-react-router "5.0.1"
-    copy-to-clipboard "^3.2.0"
-    cpy-cli "1.0.1"
-    deepmerge "1.5.2"
-    draft-js "0.11.7"
-    draftjs-to-html "0.8.4"
-    flat "4.1.0"
-    font-awesome "4.7.0"
-    global "4.3.2"
-    history "4.6.1"
-    html-to-draftjs "1.4.0"
-    i18next "19.7.0"
-    i18next-intervalplural-postprocessor "2.0.2"
-    invariant "^2.2.4"
-    lodash "^4.17.15"
-    moment "2.20.1"
+    n2o-auth "^7.16.13"
     numeral "2.0.6"
     path-to-regexp "2.2.1"
     print-js "1.5.0"
@@ -9732,12 +9655,12 @@ n2o-framework@^7.12.10:
     why-did-you-update "0.1.1"
     xhr-mock "2.4.1"
 
-n2o-notifications@7.12.10:
-  version "7.12.10"
-  resolved "https://npm.i-novus.ru/n2o-notifications/-/n2o-notifications-7.12.10.tgz#8687736a07262df7a66b800375b16bbe91ed4350"
-  integrity sha512-thBBOGIinzD7O2+bthluurpLOYuok0vqrxhKSNwtphxAULHtlp0NkcUWQGYZ1NtK70/66QDtxOpFqIIFdZE23w==
+n2o-notifications@7.16.13:
+  version "7.16.13"
+  resolved "https://registry.yarnpkg.com/n2o-notifications/-/n2o-notifications-7.16.13.tgz#3d66c4ec0bef4ef494a88a7415cceea972078d51"
+  integrity sha512-bS2mB4D74bP1dnfv8jXr7oRFFjx6mFv3xCFyCk3+KdYe8+M2ra+IKvU+/JCn/+ikYf5xnPzB01tHnqnS4LbcYA==
   dependencies:
-    n2o-framework "^7.12.10"
+    n2o-framework "^7.16.13"
     net "^1.0.2"
     sockjs-client "^1.3.0"
     stompjs "^2.3.3"
@@ -11374,11 +11297,6 @@ pretty-hrtime@^1.0.3:
 
 print-js@1.5.0:
   version "1.5.0"
-  resolved "https://npm.i-novus.ru/print-js/-/print-js-1.5.0.tgz#6f7e68c6d542ed5eeb535b2ad2469fc24fc9888c"
-  integrity sha512-Vy7UG2NGpNRMR1CcwoaK813tM3uUB0I4vTylxmFLXMb77gJb+6GB5aUmeasyT+CetddbmXUZsHr9BF+0VDN/fg==
-
-print-js@1.5.0:
-  version "1.5.0"
   resolved "https://registry.yarnpkg.com/print-js/-/print-js-1.5.0.tgz#6f7e68c6d542ed5eeb535b2ad2469fc24fc9888c"
   integrity sha512-Vy7UG2NGpNRMR1CcwoaK813tM3uUB0I4vTylxmFLXMb77gJb+6GB5aUmeasyT+CetddbmXUZsHr9BF+0VDN/fg==
 
@@ -12155,15 +12073,6 @@ react-overlays@^2.0.0-0:
 
 react-popper-tooltip@3.1.1:
   version "3.1.1"
-  resolved "https://registry.yarnpkg.com/react-popper-tooltip/-/react-popper-tooltip-3.1.1.tgz#329569eb7b287008f04fcbddb6370452ad3f9eac"
-  integrity sha512-EnERAnnKRptQBJyaee5GJScWNUKQPDD2ywvzZyUjst/wj5U64C8/CnSYLNEmP2hG0IJ3ZhtDxE8oDN+KOyavXQ==
-  dependencies:
-    "@babel/runtime" "^7.12.5"
-    "@popperjs/core" "^2.5.4"
-    react-popper "^2.2.4"
-
-react-popper-tooltip@3.1.1:
-  version "3.1.1"
   resolved "https://npm.i-novus.ru/react-popper-tooltip/-/react-popper-tooltip-3.1.1.tgz#329569eb7b287008f04fcbddb6370452ad3f9eac"
   integrity sha512-EnERAnnKRptQBJyaee5GJScWNUKQPDD2ywvzZyUjst/wj5U64C8/CnSYLNEmP2hG0IJ3ZhtDxE8oDN+KOyavXQ==
   dependencies:
@@ -12192,7 +12101,7 @@ react-popper@^1.3.6, react-popper@^1.3.7:
     typed-styles "^0.0.7"
     warning "^4.0.2"
 
-react-popper@^2.1.0, react-popper@^2.2.4:
+react-popper@^2.2.4:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/react-popper/-/react-popper-2.2.4.tgz#d2ad3d2474ac9f1abf93df3099d408e5aa6a2e22"
   integrity sha512-NacOu4zWupdQjVXq02XpTD3yFPSfg5a7fex0wa3uGKVkFK7UN6LvVxgcb+xYr56UCuWiNPMH20tntdVdJRwYew==
