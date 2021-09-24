@@ -20,22 +20,22 @@ import java.io.IOException;
 public class UserRoleDataProviderConfiguration {
 
     @Bean
-    @ConditionalOnProperty(value = "messaging.user-role-provider", havingValue = "configurable")
+    @ConditionalOnProperty(value = "novus.messaging.user-role-provider", havingValue = "configurable")
     public UserRoleProvider userRoleDataProvider(ResourceLoader resourceLoader,
-                                                 @Value("${messaging.mapping-file-location}") String mappingFileLocation,
-                                                 @Value("${messaging.user-provider-url}") String userUrl,
-                                                 @Value("${messaging.role-provider-url}") String roleUrl) throws IOException, JAXBException {
+                                                 @Value("${novus.messaging.mapping-file-location}") String mappingFileLocation,
+                                                 @Value("${novus.messaging.user-provider-url}") String userUrl,
+                                                 @Value("${novus.messaging.role-provider-url}") String roleUrl) throws IOException, JAXBException {
         return new ConfigurableUserRoleProvider(resourceLoader, mappingFileLocation, userUrl, roleUrl);
     }
 
     @Configuration
-    @ConditionalOnProperty(value = "messaging.user-role-provider", havingValue = "security")
+    @ConditionalOnProperty(value = "novus.messaging.user-role-provider", havingValue = "security")
     public class JaxRsProxyClientConfiguration {
 
         @Configuration
         @EnableJaxRsProxyClient(
                 classes = {UserRestService.class, RoleRestService.class},
-                address = "${messaging.user-provider-url}")
+                address = "${novus.messaging.user-provider-url}")
         public class JaxRsProxyClient {
             @Bean
             @Primary

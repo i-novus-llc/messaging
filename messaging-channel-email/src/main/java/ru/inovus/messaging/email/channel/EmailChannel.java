@@ -30,7 +30,7 @@ public class EmailChannel extends AbstractChannel {
     private JavaMailSender emailSender;
 
     public EmailChannel(@Value("${novus.messaging.channel.email.queue}") String messageQueueName,
-                        @Value("${novus.messaging.status.queue}") String statusQueueName,
+                        @Value("${novus.messaging.queue.status}") String statusQueueName,
                         MqProvider mqProvider,
                         JavaMailSender emailSender) {
         super(mqProvider, messageQueueName, statusQueueName);
@@ -40,17 +40,18 @@ public class EmailChannel extends AbstractChannel {
 
     public void send(Message message) {
         MessageStatus messageStatus = new MessageStatus();
-        messageStatus.setId(message.getId());
+        messageStatus.setMessageId(message.getId());
+        messageStatus.setSystemId(message.getSystemId());
 
         try {
             for (Recipient recipient : message.getRecipients()) {
-                if (StringUtils.isEmpty(recipient.getEmail()))
+                if (StringUtils.isEmpty(recipient.getUsername()))
                     log.error("Message with id={} will not be sent to recipient with id={} due to an empty email address",
-                            message.getId(), recipient.getName());
+                            message.getId(), recipient.getUsername());
             }
 
             List<String> recipientsEmailList = message.getRecipients().stream()
-                    .map(Recipient::getEmail)
+                    .map(Recipient::getUsername)
                     .filter(email -> !StringUtils.isEmpty(email))
                     .collect(Collectors.toList());
             if (!CollectionUtils.isEmpty(recipientsEmailList)) {

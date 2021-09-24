@@ -13,7 +13,9 @@ import java.io.Serializable;
 @Getter
 @Setter
 public class MessageStatus implements Serializable {
-    private String id;
+    private String username;
+    private String messageId;
+    private String systemId;
     private MessageStatusType status;
     private String errorMessage;
 }

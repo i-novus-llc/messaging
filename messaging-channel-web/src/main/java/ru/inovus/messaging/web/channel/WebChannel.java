@@ -32,7 +32,7 @@ public class WebChannel extends AbstractChannel {
     @Value("${novus.messaging.channel.web.topic}")
     private String noticeTopicName;
 
-    @Value("${novus.messaging.message-lifetime}")
+    @Value("${novus.messaging.channel.web.message-lifetime}")
     private Integer timeout;
 
     private final MessageController messageController;
@@ -40,7 +40,7 @@ public class WebChannel extends AbstractChannel {
     private final MqProvider mqProvider;
 
     public WebChannel(@Value("${novus.messaging.channel.web.queue}") String messageQueueName,
-                      @Value("${novus.messaging.status.queue}") String statusQueueName,
+                      @Value("${novus.messaging.queue.status}") String statusQueueName,
                       MqProvider mqProvider,
                       MessageController messageController) {
         super(mqProvider, messageQueueName, statusQueueName);
@@ -52,9 +52,7 @@ public class WebChannel extends AbstractChannel {
     public void handleSessionSubscribe(SessionSubscribeEvent event) {
         SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
         String dest = headers.getDestination();
-        if (dest.endsWith("/message.count")) {
-//            messageController.sendFeedCount(getSystemId(dest), headers.getUser());
-        } else if (dest.endsWith("/message")) {
+        if (dest != null && dest.endsWith("/message")) {
             MqConsumer consumer = new TopicMqConsumer(headers.getSessionId(), getSystemId(dest), headers.getUser().getName(),
                     noticeTopicName, message -> sendTo((Message) message, headers));
             mqProvider.subscribe(consumer);
@@ -85,7 +83,7 @@ public class WebChannel extends AbstractChannel {
     }
 
     private String getSystemId(String dest) {
-        String result = dest.replaceFirst("/user/.*/exchange/", "");
+        String result = dest.replaceFirst("/user/(.+/)?exchange/", "");
         return result.substring(0, result.indexOf("/"));
     }
 
@@ -95,7 +93,7 @@ public class WebChannel extends AbstractChannel {
         if (message == null || message.getRecipients() == null || message.getRecipients().isEmpty())
             return false;
         for (Recipient r : message.getRecipients()) {
-            if (r.getName().equals(recipient) && message.getSystemId().equals(systemId))
+            if (r.getUsername().equals(recipient) && message.getSystemId().equals(systemId))
                 return true;
         }
         return false;

@@ -7,11 +7,9 @@ import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.api.queue.QueueMqConsumer;
 import ru.inovus.messaging.impl.service.RecipientService;
 
-import java.util.UUID;
-
 /**
- * Слушатель статусов уведомлений.
- * Необходим для получения статусов отправленных уведомлений
+ * Слушатель очереди статусов уведомлений.
+ * Необходим для получения статусов уведомлений
  * из каналов отправки и дальнейшей их обработки.
  */
 @Component
@@ -19,7 +17,7 @@ public class MessageStatusListener {
 
     private RecipientService recipientService;
 
-    public MessageStatusListener(@Value("${novus.messaging.status.queue}") String statusQueue,
+    public MessageStatusListener(@Value("${novus.messaging.queue.status}") String statusQueue,
                                  MqProvider mqProvider,
                                  RecipientService recipientService) {
         this.recipientService = recipientService;
@@ -32,6 +30,6 @@ public class MessageStatusListener {
      * @param status Сообщение с информацией о статусе уведомления
      */
     private void processStatus(MessageStatus status) {
-        recipientService.updateStatus(UUID.fromString(status.getId()), status.getStatus(), status.getErrorMessage());
+        recipientService.updateStatus(status);
     }
 }

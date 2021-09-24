@@ -24,6 +24,7 @@ import javax.mail.Address;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.concurrent.CountDownLatch;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -35,7 +36,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest(
         classes = {EmailChannel.class},
         properties = {
-                "novus.messaging.status.queue=test-status-queue",
+                "novus.messaging.queue.status=test-status-queue",
                 "novus.messaging.channel.email.queue=test-email-queue"})
 @Import(EmbeddedKafkaTestConfiguration.class)
 @EmbeddedKafka(partitions = 1)
@@ -48,7 +49,7 @@ public class EmailChannelTest {
     @Autowired
     private EmailChannel channel;
 
-    @Value("${novus.messaging.status.queue}")
+    @Value("${novus.messaging.queue.status}")
     private String statusQueue;
 
     @Value("${novus.messaging.channel.email.queue}")
@@ -64,16 +65,13 @@ public class EmailChannelTest {
         message.setCaption("Test caption");
         message.setText("Message");
 
-        Recipient recipient1 = new Recipient();
-        recipient1.setEmail("email1");
-        Recipient recipient2 = new Recipient();
-        recipient2.setEmail("email2");
-        Recipient recipient3 = new Recipient();
-        recipient3.setEmail("email3");
+        Recipient recipient1 = new Recipient("email1");
+        Recipient recipient2 = new Recipient("email2");
+        Recipient recipient3 = new Recipient("email3");
         message.setRecipients(Arrays.asList(recipient1, recipient2, recipient3));
 
         CountDownLatch latch = new CountDownLatch(1);
-        MimeMessage mimeMessage = mailSenderMimeMessage();
+        MimeMessage mimeMessage = mailSenderMimeMessageMock();
         doAnswer(a -> {
             latch.countDown();
             return "ignored";
@@ -88,9 +86,9 @@ public class EmailChannelTest {
 
         Address[] allRecipients = mimeMessage.getAllRecipients();
         assertThat(allRecipients.length, is(message.getRecipients().size()));
-        assertThat(allRecipients[0].toString(), is(recipient1.getEmail()));
-        assertThat(allRecipients[1].toString(), is(recipient2.getEmail()));
-        assertThat(allRecipients[2].toString(), is(recipient3.getEmail()));
+        assertThat(allRecipients[0].toString(), is(recipient1.getUsername()));
+        assertThat(allRecipients[1].toString(), is(recipient2.getUsername()));
+        assertThat(allRecipients[2].toString(), is(recipient3.getUsername()));
     }
 
     @Test
@@ -99,12 +97,11 @@ public class EmailChannelTest {
         message.setId("6f711616-1617-11ec-9621-0242ac130003");
         message.setCaption("Test caption");
         message.setText("Message");
-        Recipient recipient1 = new Recipient();
-        recipient1.setEmail("email1");
-        message.setRecipients(Arrays.asList(recipient1));
+        message.setSystemId("system-id");
+        message.setRecipients(Collections.singletonList(new Recipient("email1")));
 
         CountDownLatch latch = new CountDownLatch(1);
-        mailSenderMimeMessage();
+        mailSenderMimeMessageMock();
 
         final MessageStatus[] receivedStatus = new MessageStatus[1];
         QueueMqConsumer mqConsumer = new QueueMqConsumer(statusQueue, msg -> {
@@ -118,20 +115,20 @@ public class EmailChannelTest {
         provider.unsubscribe(mqConsumer.subscriber());
 
         assertThat(receivedStatus[0], notNullValue());
-        assertThat(receivedStatus[0].getId(), is(message.getId()));
+        assertThat(receivedStatus[0].getMessageId(), is(message.getId()));
         assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.SENT));
+        assertThat(receivedStatus[0].getSystemId(), is("system-id"));
     }
 
     @Test
     public void testSendMessageStatusFailed() throws InterruptedException {
         Message message = new Message();
         message.setId("6f711616-1617-11ec-9621-0242ac130002");
-        Recipient recipient1 = new Recipient();
-        recipient1.setEmail("email1");
-        message.setRecipients(Arrays.asList(recipient1));
+        message.setSystemId("system-id");
+        message.setRecipients(Collections.singletonList(new Recipient("email1")));
 
         CountDownLatch latch = new CountDownLatch(1);
-        mailSenderMimeMessage();
+        mailSenderMimeMessageMock();
 
         final MessageStatus[] receivedStatus = new MessageStatus[1];
         QueueMqConsumer mqConsumer = new QueueMqConsumer(statusQueue, msg -> {
@@ -145,12 +142,13 @@ public class EmailChannelTest {
         provider.unsubscribe(mqConsumer.subscriber());
 
         assertThat(receivedStatus[0], notNullValue());
-        assertThat(receivedStatus[0].getId(), is(message.getId()));
+        assertThat(receivedStatus[0].getMessageId(), is(message.getId()));
         assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.FAILED));
         assertThat(receivedStatus[0].getErrorMessage(), is("Subject must not be null"));
+        assertThat(receivedStatus[0].getSystemId(), is("system-id"));
     }
 
-    private MimeMessage mailSenderMimeMessage() {
+    private MimeMessage mailSenderMimeMessageMock() {
         MimeMessage mimeMessage = new MimeMessage((Session) null);
         when(mailSender.createMimeMessage()).thenReturn(mimeMessage);
         doNothing().when(mailSender).send(mimeMessage);

@@ -16,14 +16,14 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 @PropertySource("classpath:channel.properties")
 public class WebSocketConfiguration extends AbstractSecurityWebSocketMessageBrokerConfigurer {
 
-    @Value("${novus.messaging.app_prefix}")
+    @Value("${novus.messaging.channel.web.app_prefix}")
     private String appPrefix = "/app";
-    @Value("${novus.messaging.end_point}")
+    @Value("${novus.messaging.channel.web.end_point}")
     private String endPoint = "/ws";
 
-    @Value("${novus.messaging.public_dest_prefix}")
+    @Value("${novus.messaging.channel.web.public_dest_prefix}")
     private String publicDestPrefix = "/topic";
-    @Value("${novus.messaging.private_dest_prefix}")
+    @Value("${novus.messaging.channel.web.private_dest_prefix}")
     private String privateDestPrefix = "/exchange";
 
     @Override
@@ -31,7 +31,7 @@ public class WebSocketConfiguration extends AbstractSecurityWebSocketMessageBrok
         return true;
     }
 
-    @Bean //ping-pong
+    @Bean
     public TaskScheduler stompHeartbeatThreadBool() {
         ThreadPoolTaskScheduler p = new ThreadPoolTaskScheduler();
         p.setPoolSize(1);

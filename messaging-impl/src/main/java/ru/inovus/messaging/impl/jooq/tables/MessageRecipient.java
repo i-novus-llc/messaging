@@ -27,7 +27,7 @@ import java.util.UUID;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class MessageRecipient extends TableImpl<MessageRecipientRecord> {
 
-    private static final long serialVersionUID = 288248487;
+    private static final long serialVersionUID = -1561288754;
 
     /**
      * The reference instance of <code>messaging.message_recipient</code>

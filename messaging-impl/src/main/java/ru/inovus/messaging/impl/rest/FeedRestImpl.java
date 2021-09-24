@@ -16,7 +16,7 @@ import java.util.UUID;
 @Controller
 public class FeedRestImpl implements FeedRest {
 
-    @Value("${novus.messaging.feed.queue}")
+    @Value("${novus.messaging.queue.feed-count}")
     private String feedCountQueue;
 
     private final FeedService feedService;
