@@ -29,6 +29,7 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 import org.springframework.web.socket.sockjs.client.SockJsClient;
 import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
+import ru.inovus.messaging.api.model.FeedCount;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.enums.Severity;
@@ -65,6 +66,9 @@ public class WebChannelTest {
     @Value("${novus.messaging.channel.web.queue}")
     private String webQueue;
 
+    @Value("${novus.messaging.queue.feed-count}")
+    private String feedCountQueue;
+
     @Value("${novus.messaging.security.token}")
     private String token;
 
@@ -82,7 +86,7 @@ public class WebChannelTest {
 
     private String URL;
 
-    private CompletableFuture<Message> completableFuture;
+    private CompletableFuture<Object> completableFuture;
 
     private WebSocketStompClient stompClient;
 
@@ -100,7 +104,7 @@ public class WebChannelTest {
     }
 
     @Test
-    public void testSendMessageThroughWs() throws Exception {
+    public void testSendMessage() throws Exception {
         // publish session subscribe event
         publisher.publishEvent(createSessionSubscribeEvent());
 
@@ -119,19 +123,40 @@ public class WebChannelTest {
         // publish message to web queue and wait for sending to stomp
         StompSession stompSession = stompClient.connect(URL, new StompSessionHandlerAdapter() {
         }).get(1, SECONDS);
-        stompSession.subscribe("/user" + privateDestPrefix + "/" + SYSTEM_ID + "/message", new TestReceivedMessagesHandler());
+        stompSession.subscribe("/user" + privateDestPrefix + "/" + SYSTEM_ID + "/message", new TestReceivedMessageHandler());
 
         latch = new CountDownLatch(1);
         mqProvider.publish(message, webQueue);
         latch.await();
 
         // expected message on client
-        Message receivedMessage = completableFuture.get();
+        Message receivedMessage = (Message) completableFuture.get();
         stompSession.disconnect();
 
         assertThat(receivedMessage.getCaption(), is(message.getCaption()));
         assertThat(receivedMessage.getText(), is(message.getText()));
         assertThat(receivedMessage.getSeverity(), is(message.getSeverity()));
+    }
+
+    @Test
+    public void testSendFeedCount() throws Exception {
+        // create feed count
+        FeedCount feedCount = new FeedCount(SYSTEM_ID, USERNAME, 5);
+
+        // publish message to feedCount queue and wait for sending to stomp
+        StompSession stompSession = stompClient.connect(URL, new StompSessionHandlerAdapter() {
+        }).get(1, SECONDS);
+        stompSession.subscribe("/user" + privateDestPrefix + "/" + SYSTEM_ID + "/message.count", new TestReceivedFeedCountHandler());
+
+        latch = new CountDownLatch(1);
+        mqProvider.publish(feedCount, feedCountQueue);
+        latch.await();
+
+        // expected message on client
+        Integer receivedFeedCount = (Integer) completableFuture.get();
+        stompSession.disconnect();
+
+        assertThat(receivedFeedCount, is(feedCount.getCount()));
     }
 
 
@@ -159,7 +184,7 @@ public class WebChannelTest {
         private String name;
     }
 
-    private class TestReceivedMessagesHandler implements StompFrameHandler {
+    private class TestReceivedMessageHandler implements StompFrameHandler {
 
         @Override
         public Type getPayloadType(StompHeaders headers) {
@@ -168,7 +193,21 @@ public class WebChannelTest {
 
         @Override
         public void handleFrame(StompHeaders headers, Object payload) {
-            completableFuture.complete((Message) payload);
+            completableFuture.complete(payload);
+            latch.countDown();
+        }
+    }
+
+    private class TestReceivedFeedCountHandler implements StompFrameHandler {
+
+        @Override
+        public Type getPayloadType(StompHeaders headers) {
+            return Integer.class;
+        }
+
+        @Override
+        public void handleFrame(StompHeaders headers, Object payload) {
+            completableFuture.complete(payload);
             latch.countDown();
         }
     }

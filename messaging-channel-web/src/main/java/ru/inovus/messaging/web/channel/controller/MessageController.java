@@ -39,9 +39,9 @@ public class MessageController {
      *
      * @param systemId  Идентификатор системы, в которой находится пользователь
      * @param username  Имя пользователя
-     * @param feedCount Количество непрочитанных сообщений
+     * @param feedCount Количество непрочитанных сообщений пользователя
      */
-    public void sendFeedCount(@DestinationVariable("systemId") String systemId,
+    public void sendFeedCount(String systemId,
                               String username,
                               Integer feedCount) {
         simpMessagingTemplate.convertAndSend("/user/" + username + "/exchange/" + systemId + "/message.count", feedCount);
@@ -54,8 +54,8 @@ public class MessageController {
      * @param username Имя пользователя
      * @param message  Сообщение
      */
-    public void sendPrivateMessage(@DestinationVariable("systemId") String systemId,
-                                   @DestinationVariable("username") String username,
+    public void sendPrivateMessage(String systemId,
+                                   String username,
                                    @Payload Message message) {
         MessageStatus status = new MessageStatus();
         status.setSystemId(systemId);
