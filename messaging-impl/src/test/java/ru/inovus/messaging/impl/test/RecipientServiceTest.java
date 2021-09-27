@@ -35,7 +35,7 @@ import static org.hamcrest.Matchers.is;
                 "novus.messaging.queue.feed-count: test-feed-count-queue"
         })
 @Import(EmbeddedKafkaTestConfiguration.class)
-@EmbeddedKafka(partitions = 1)
+@EmbeddedKafka
 @EnableEmbeddedPg
 @EnableAutoConfiguration(exclude = KafkaAutoConfiguration.class)
 public class RecipientServiceTest {
