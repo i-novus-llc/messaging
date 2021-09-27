@@ -1,4 +1,4 @@
-package ru.inovus.messaging.web.channel.configuration;
+package ru.inovus.messaging.channel.web.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

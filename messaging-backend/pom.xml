@@ -28,6 +28,18 @@
         </dependency>
 
         <dependency>
+            <groupId>ru.i-novus.messaging</groupId>
+            <artifactId>messaging-channel-email</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.i-novus.messaging</groupId>
+            <artifactId>messaging-channel-web</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-consul-config</artifactId>
         </dependency>

@@ -1,4 +1,4 @@
-package ru.inovus.messaging.web.channel;
+package ru.inovus.messaging.channel.web;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +15,7 @@ import ru.inovus.messaging.channel.api.AbstractChannel;
 import ru.inovus.messaging.channel.api.queue.MqConsumer;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.api.queue.TopicMqConsumer;
-import ru.inovus.messaging.web.channel.controller.MessageController;
+import ru.inovus.messaging.channel.web.controller.MessageController;
 
 import java.time.Clock;
 import java.time.LocalDateTime;

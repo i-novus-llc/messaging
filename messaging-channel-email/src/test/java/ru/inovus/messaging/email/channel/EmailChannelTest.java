@@ -18,6 +18,7 @@ import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.api.queue.QueueMqConsumer;
+import ru.inovus.messaging.channel.email.EmailChannel;
 import ru.inovus.messaging.mq.support.kafka.KafkaMqProvider;
 
 import javax.mail.Address;

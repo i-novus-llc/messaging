@@ -1,4 +1,4 @@
-package ru.inovus.messaging.email.channel;
+package ru.inovus.messaging.channel.email;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

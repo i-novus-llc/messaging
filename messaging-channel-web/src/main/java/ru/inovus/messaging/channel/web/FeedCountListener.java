@@ -1,11 +1,11 @@
-package ru.inovus.messaging.web.channel;
+package ru.inovus.messaging.channel.web;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.api.queue.QueueMqConsumer;
-import ru.inovus.messaging.web.channel.controller.MessageController;
+import ru.inovus.messaging.channel.web.controller.MessageController;
 
 @Component
 public class FeedCountListener {
