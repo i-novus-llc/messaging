@@ -57,7 +57,7 @@ import static org.hamcrest.Matchers.is;
 @ContextConfiguration(classes = KafkaMqProvider.class)
 public class WebChannelTest {
     @Autowired
-    private MqProvider provider;
+    private MqProvider mqProvider;
 
     @Autowired
     private ApplicationEventPublisher publisher;
@@ -122,7 +122,7 @@ public class WebChannelTest {
         stompSession.subscribe("/user" + privateDestPrefix + "/" + SYSTEM_ID + "/message", new TestReceivedMessagesHandler());
 
         latch = new CountDownLatch(1);
-        provider.publish(message, webQueue);
+        mqProvider.publish(message, webQueue);
         latch.await();
 
         // expected message on client
