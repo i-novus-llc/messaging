@@ -18,13 +18,13 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-mail</artifactId>
+            <groupId>ru.i-novus.messaging</groupId>
+            <artifactId>messaging-channel-api</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>ru.i-novus.messaging</groupId>
-            <artifactId>messaging-channel-api</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
         <!-- TEST -->

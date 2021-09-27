@@ -76,10 +76,10 @@ public class WebChannel extends AbstractChannel {
             if (isNotExpired(message))
                 messageController.sendPrivateMessage(systemId, recipient, message);
             else
-                log.error("Did not send message with id {} due to expiration {}",
+                log.info("Did not send message with id {} due to expiration {}",
                         message.getId(), message.getSentAt());
         } else
-            log.error("No recipients for message");
+            log.info("No recipients for message");
     }
 
     private String getSystemId(String dest) {
