@@ -3,6 +3,7 @@ package ru.inovus.messaging.impl.config;
 import net.n2oapp.platform.jaxrs.autoconfigure.EnableJaxRsProxyClient;
 import net.n2oapp.security.admin.rest.api.RoleRestService;
 import net.n2oapp.security.admin.rest.api.UserRestService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -35,11 +36,11 @@ public class UserRoleDataProviderConfiguration {
         @Configuration
         @EnableJaxRsProxyClient(
                 classes = {UserRestService.class, RoleRestService.class},
-                address = "${novus.messaging.user-provider-url}")
+                address = "${access.service.url}")
         public class JaxRsProxyClient {
             @Bean
-            @Primary
-            public UserRoleProvider userRoleDataProvider(UserRestService userRestService, RoleRestService roleRestService) {
+            public UserRoleProvider userRoleDataProvider(@Qualifier("userRestServiceJaxRsProxyClient") UserRestService userRestService,
+                                                         @Qualifier("roleRestServiceJaxRsProxyClient") RoleRestService roleRestService) {
                 return new SecurityAdminUserRoleProvider(userRestService, roleRestService);
             }
         }

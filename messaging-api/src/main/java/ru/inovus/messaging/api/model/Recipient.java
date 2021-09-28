@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
 
 import java.io.Serializable;
@@ -29,6 +30,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
+@ToString
 public class Recipient implements Serializable {
     private LocalDateTime readAt;
     private UUID messageId;

@@ -23,8 +23,8 @@ public class SecurityAdminUserRoleProvider implements UserRoleProvider {
 
     private RoleRestService roleRestService;
 
-    public SecurityAdminUserRoleProvider(@Qualifier("userRestServiceJaxRsProxyClient") UserRestService userRestService,
-                                         @Qualifier("roleRestServiceJaxRsProxyClient") RoleRestService roleRestService) {
+    public SecurityAdminUserRoleProvider(UserRestService userRestService,
+                                         RoleRestService roleRestService) {
         this.userRestService = userRestService;
         this.roleRestService = roleRestService;
     }

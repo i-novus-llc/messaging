@@ -18,6 +18,7 @@ package ru.inovus.messaging.api.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import ru.inovus.messaging.api.model.enums.*;
 
 import java.io.Serializable;
@@ -28,6 +29,7 @@ import java.util.Map;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
+@ToString
 public class Message implements Serializable {
     private String id;
     private String caption;
