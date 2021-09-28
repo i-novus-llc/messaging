@@ -1,4 +1,4 @@
-package ru.inovus.messaging.web.channel;
+package ru.inovus.messaging.channel.web;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -38,7 +38,6 @@ import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.api.queue.QueueMqConsumer;
-import ru.inovus.messaging.channel.web.WebChannel;
 import ru.inovus.messaging.mq.support.kafka.KafkaMqProvider;
 import ru.inovus.messaging.channel.web.configuration.WebSocketConfiguration;
 

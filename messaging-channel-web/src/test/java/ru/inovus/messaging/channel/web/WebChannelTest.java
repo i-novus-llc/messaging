@@ -1,4 +1,4 @@
-package ru.inovus.messaging.web.channel;
+package ru.inovus.messaging.channel.web;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
