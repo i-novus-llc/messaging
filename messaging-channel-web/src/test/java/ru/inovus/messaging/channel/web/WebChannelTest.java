@@ -1,4 +1,4 @@
-package ru.inovus.messaging.web.channel;
+package ru.inovus.messaging.channel.web;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,7 +35,7 @@ import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.enums.Severity;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.mq.support.kafka.KafkaMqProvider;
-import ru.inovus.messaging.web.channel.configuration.WebSocketConfiguration;
+import ru.inovus.messaging.channel.web.configuration.WebSocketConfiguration;
 
 import java.lang.reflect.Type;
 import java.security.Principal;
@@ -63,7 +63,7 @@ public class WebChannelTest {
     @Autowired
     private ApplicationEventPublisher publisher;
 
-    @Value("${novus.messaging.channel.web.queue}")
+    @Value("${novus.messaging.channel.web.queue:web-queue}")
     private String webQueue;
 
     @Value("${novus.messaging.queue.feed-count}")

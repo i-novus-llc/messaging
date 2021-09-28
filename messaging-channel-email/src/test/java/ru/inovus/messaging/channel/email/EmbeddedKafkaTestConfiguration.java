@@ -1,4 +1,4 @@
-package ru.inovus.messaging.email.channel;
+package ru.inovus.messaging.channel.email;
 
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;

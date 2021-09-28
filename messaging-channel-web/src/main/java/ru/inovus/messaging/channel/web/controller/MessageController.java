@@ -1,4 +1,4 @@
-package ru.inovus.messaging.web.channel.controller;
+package ru.inovus.messaging.channel.web.controller;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.MessagingException;

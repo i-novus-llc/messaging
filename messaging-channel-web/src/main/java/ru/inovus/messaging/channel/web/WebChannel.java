@@ -1,4 +1,4 @@
-package ru.inovus.messaging.web.channel;
+package ru.inovus.messaging.channel.web;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +15,7 @@ import ru.inovus.messaging.channel.api.AbstractChannel;
 import ru.inovus.messaging.channel.api.queue.MqConsumer;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.api.queue.TopicMqConsumer;
-import ru.inovus.messaging.web.channel.controller.MessageController;
+import ru.inovus.messaging.channel.web.controller.MessageController;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -29,17 +29,17 @@ import java.time.temporal.ChronoUnit;
 @Component
 public class WebChannel extends AbstractChannel {
 
-    @Value("${novus.messaging.channel.web.topic}")
+    @Value("${novus.messaging.channel.web.topic:web-topic}")
     private String noticeTopicName;
 
-    @Value("${novus.messaging.channel.web.message-lifetime}")
+    @Value("${novus.messaging.channel.web.message-lifetime:60}")
     private Integer timeout;
 
     private final MessageController messageController;
 
     private final MqProvider mqProvider;
 
-    public WebChannel(@Value("${novus.messaging.channel.web.queue}") String messageQueueName,
+    public WebChannel(@Value("${novus.messaging.channel.web.queue:web-queue}") String messageQueueName,
                       @Value("${novus.messaging.queue.status}") String statusQueueName,
                       MqProvider mqProvider,
                       MessageController messageController) {

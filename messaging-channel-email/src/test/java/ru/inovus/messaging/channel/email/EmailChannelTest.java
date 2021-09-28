@@ -1,4 +1,4 @@
-package ru.inovus.messaging.email.channel;
+package ru.inovus.messaging.channel.email;
 
 import org.apache.commons.mail.util.MimeMessageParser;
 import org.junit.jupiter.api.Test;
