@@ -78,7 +78,7 @@ public class WebChannelStatusTest {
     @Value("${novus.messaging.queue.status}")
     private String statusQueue;
 
-    @Value("${novus.messaging.channel.web.queue}")
+    @Value("${novus.messaging.channel.web.queue:web-queue}")
     private String webQueue;
 
     @Value("${novus.messaging.security.token}")

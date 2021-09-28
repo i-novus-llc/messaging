@@ -29,17 +29,17 @@ import java.time.temporal.ChronoUnit;
 @Component
 public class WebChannel extends AbstractChannel {
 
-    @Value("${novus.messaging.channel.web.topic}")
+    @Value("${novus.messaging.channel.web.topic:web-topic}")
     private String noticeTopicName;
 
-    @Value("${novus.messaging.channel.web.message-lifetime}")
+    @Value("${novus.messaging.channel.web.message-lifetime:60}")
     private Integer timeout;
 
     private final MessageController messageController;
 
     private final MqProvider mqProvider;
 
-    public WebChannel(@Value("${novus.messaging.channel.web.queue}") String messageQueueName,
+    public WebChannel(@Value("${novus.messaging.channel.web.queue:web-queue}") String messageQueueName,
                       @Value("${novus.messaging.queue.status}") String statusQueueName,
                       MqProvider mqProvider,
                       MessageController messageController) {

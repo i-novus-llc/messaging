@@ -62,7 +62,7 @@ public class WebChannelTest {
     @Autowired
     private ApplicationEventPublisher publisher;
 
-    @Value("${novus.messaging.channel.web.queue}")
+    @Value("${novus.messaging.channel.web.queue:web-queue}")
     private String webQueue;
 
     @Value("${novus.messaging.security.token}")
