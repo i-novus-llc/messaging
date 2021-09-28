@@ -53,7 +53,7 @@ import static org.hamcrest.Matchers.is;
 @SpringBootTest(
         classes = TestApp.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import({EmbeddedKafkaTestConfiguration.class, WebSocketConfiguration.class})
+@Import(WebSocketConfiguration.class)
 @EmbeddedKafka
 @ContextConfiguration(classes = KafkaMqProvider.class)
 public class WebChannelTest {

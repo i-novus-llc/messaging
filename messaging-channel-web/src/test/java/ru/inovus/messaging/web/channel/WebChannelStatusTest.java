@@ -59,8 +59,8 @@ import static org.mockito.Mockito.doAnswer;
 @SpringBootTest(
         classes = TestApp.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import({EmbeddedKafkaTestConfiguration.class, WebSocketConfiguration.class})
-@EmbeddedKafka(partitions = 1)
+@Import(WebSocketConfiguration.class)
+@EmbeddedKafka
 @ContextConfiguration(classes = KafkaMqProvider.class)
 public class WebChannelStatusTest {
     @Autowired

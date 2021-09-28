@@ -34,7 +34,6 @@ import static org.hamcrest.Matchers.is;
                 "spring.liquibase.change-log: classpath:/messaging-db/test-base-changelog.xml",
                 "novus.messaging.queue.feed-count: test-feed-count-queue"
         })
-@Import(EmbeddedKafkaTestConfiguration.class)
 @EmbeddedKafka
 @EnableEmbeddedPg
 @EnableAutoConfiguration(exclude = KafkaAutoConfiguration.class)
