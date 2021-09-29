@@ -34,8 +34,15 @@
         </dependency>
 
         <dependency>
+            <groupId>net.n2oapp.platform</groupId>
+            <artifactId>n2o-platform-starter-feign-client</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
             <artifactId>security-admin-rest-api</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
