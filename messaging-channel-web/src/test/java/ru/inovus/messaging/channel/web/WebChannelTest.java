@@ -34,8 +34,9 @@ import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.enums.Severity;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
-import ru.inovus.messaging.mq.support.kafka.KafkaMqProvider;
+import ru.inovus.messaging.channel.web.config.WebSecurityTestConfiguration;
 import ru.inovus.messaging.channel.web.configuration.WebSocketConfiguration;
+import ru.inovus.messaging.mq.support.kafka.KafkaMqProvider;
 
 import java.lang.reflect.Type;
 import java.security.Principal;
@@ -53,7 +54,7 @@ import static org.hamcrest.Matchers.is;
 @SpringBootTest(
         classes = TestApp.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(WebSocketConfiguration.class)
+@Import({WebSocketConfiguration.class, WebSecurityTestConfiguration.class})
 @EmbeddedKafka
 @ContextConfiguration(classes = KafkaMqProvider.class)
 public class WebChannelTest {
@@ -68,9 +69,6 @@ public class WebChannelTest {
 
     @Value("${novus.messaging.queue.feed-count}")
     private String feedCountQueue;
-
-    @Value("${novus.messaging.security.token}")
-    private String token;
 
     @Value("${novus.messaging.channel.web.end_point}")
     private String endPoint;
@@ -95,7 +93,7 @@ public class WebChannelTest {
 
     @BeforeEach
     public void init() {
-        URL = "ws://localhost:" + port + endPoint + "?access_token=" + token;
+        URL = "ws://localhost:" + port + endPoint;
         completableFuture = new CompletableFuture<>();
 
         List<Transport> transports = Collections.singletonList(new WebSocketTransport(new StandardWebSocketClient()));
