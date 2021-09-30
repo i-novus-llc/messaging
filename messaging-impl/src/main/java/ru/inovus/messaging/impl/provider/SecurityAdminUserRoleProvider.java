@@ -4,7 +4,6 @@ import net.n2oapp.security.admin.rest.api.RoleRestService;
 import net.n2oapp.security.admin.rest.api.UserRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestRoleCriteria;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.util.CollectionUtils;
@@ -19,9 +18,9 @@ import java.util.stream.Collectors;
 
 public class SecurityAdminUserRoleProvider implements UserRoleProvider {
 
-    private UserRestService userRestService;
+    private final UserRestService userRestService;
 
-    private RoleRestService roleRestService;
+    private final RoleRestService roleRestService;
 
     public SecurityAdminUserRoleProvider(UserRestService userRestService,
                                          RoleRestService roleRestService) {

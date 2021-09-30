@@ -1,17 +1,16 @@
 package ru.inovus.messaging.impl.config;
 
-import net.n2oapp.platform.jaxrs.autoconfigure.EnableJaxRsProxyClient;
-import net.n2oapp.security.admin.rest.api.RoleRestService;
-import net.n2oapp.security.admin.rest.api.UserRestService;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ResourceLoader;
 import ru.inovus.messaging.impl.UserRoleProvider;
 import ru.inovus.messaging.impl.provider.ConfigurableUserRoleProvider;
+import ru.inovus.messaging.impl.provider.RoleRestClient;
 import ru.inovus.messaging.impl.provider.SecurityAdminUserRoleProvider;
+import ru.inovus.messaging.impl.provider.UserRestClient;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -30,18 +29,13 @@ public class UserRoleDataProviderConfiguration {
 
     @Configuration
     @ConditionalOnProperty(value = "novus.messaging.user-role-provider", havingValue = "security")
-    public class JaxRsProxyClientConfiguration {
+    @EnableFeignClients(clients = {UserRestClient.class, RoleRestClient.class})
+    static public class SecurityAdminConfiguration {
 
-        @Configuration
-        @EnableJaxRsProxyClient(
-                classes = {UserRestService.class, RoleRestService.class},
-                address = "${access.service.url}")
-        public class JaxRsProxyClient {
-            @Bean
-            public UserRoleProvider userRoleDataProvider(@Qualifier("userRestServiceJaxRsProxyClient") UserRestService userRestService,
-                                                         @Qualifier("roleRestServiceJaxRsProxyClient") RoleRestService roleRestService) {
-                return new SecurityAdminUserRoleProvider(userRestService, roleRestService);
-            }
+        @Bean
+        public UserRoleProvider userRoleDataProvider(UserRestClient userRestService,
+                                                     RoleRestClient roleRestService) {
+            return new SecurityAdminUserRoleProvider(userRestService, roleRestService);
         }
     }
 }

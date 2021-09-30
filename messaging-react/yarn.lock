@@ -1176,6 +1176,11 @@
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/@fontsource/exo-2/-/exo-2-4.5.0.tgz#4018801c9352e488b7cbf2f3537edfb4dce50b87"
 
+"@fontsource/exo-2@^4.3.0":
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/@fontsource/exo-2/-/exo-2-4.5.0.tgz#4018801c9352e488b7cbf2f3537edfb4dce50b87"
+  integrity sha512-OV1cTC53FP3onTHhD6l7GALi9HFRHG9pS4NLTJ/VYoPKlYZtHXBZbVGdUQuWIddTNU3wfuzuaUDqrPO14BSzZA==
+
 "@icons/material@^0.2.4":
   version "0.2.4"
   resolved "https://registry.yarnpkg.com/@icons/material/-/material-0.2.4.tgz#e90c9f71768b3736e76d7dd6783fc6c2afa88bc8"
@@ -6380,6 +6385,11 @@ immer@^9.0.1:
   version "9.0.6"
   resolved "https://registry.yarnpkg.com/immer/-/immer-9.0.6.tgz#7a96bf2674d06c8143e327cbf73539388ddf1a73"
 
+immer@^8.0.1:
+  version "8.0.4"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-8.0.4.tgz#3a21605a4e2dded852fb2afd208ad50969737b7a"
+  integrity sha512-jMfL18P+/6P6epANRvRk6q8t+3gGhqsJ9EuJ25AXE+9bNTYtssvzeYbEd0mXRYWCmmXSIbnlpz6vd6iJlmGGGQ==
+
 immutable@^3.8.1:
   version "3.8.2"
   resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.8.2.tgz#c2439951455bb39913daf281376f1530e104adf3"
@@ -8316,112 +8326,19 @@ multicast-dns@^6.0.1:
 mute-stream@0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
+  integrity sha1-MHXOk7whuPq0PhvE2n6BFe0ee6s=
 
-n2o-auth@7.15.3:
-  version "7.15.3"
-  resolved "https://registry.yarnpkg.com/n2o-auth/-/n2o-auth-7.15.3.tgz#af0977f0d138ff50ee0907c9eff92594438a6e84"
+n2o-auth@7.16.13, n2o-auth@^7.16.13:
+  version "7.16.13"
+  resolved "https://registry.yarnpkg.com/n2o-auth/-/n2o-auth-7.16.13.tgz#52d162bba9a1b93cd84dd1d30ec4117454fa8c27"
+  integrity sha512-rNw4JIWxrZz+BYNAPD6B8SuU4YfjDvuBR1K0zpCZS37TQwL777ixcSy+EHKWlZl3PERClmXfJpJLw6aiqO7xPg==
   dependencies:
-    n2o-framework "^7.15.3"
+    n2o-framework "^7.16.13"
 
-n2o-auth@^7.17.13:
-  version "7.17.13"
-  resolved "https://registry.yarnpkg.com/n2o-auth/-/n2o-auth-7.17.13.tgz#65b5b8a47da655668992376ea6dd39e4c1161b0b"
-  dependencies:
-    n2o-framework "^7.17.13"
-
-n2o-framework@7.15.3:
-  version "7.15.3"
-  resolved "https://registry.yarnpkg.com/n2o-framework/-/n2o-framework-7.15.3.tgz#8d8d04c184ab3d48e7ee11cf25533b1c091d9e29"
-  dependencies:
-    "@babel/polyfill" "^7.0.0"
-    "@babel/runtime-corejs2" "^7.0.0"
-    "@popperjs/core" "^2.2.1"
-    "@sambego/storybook-state" "^1.3.6"
-    "@storybook/addon-actions" "5.0.6"
-    "@storybook/addon-info" "5.0.6"
-    "@storybook/addon-knobs" "5.0.6"
-    "@storybook/addon-links" "5.0.6"
-    "@storybook/addon-storyshots" "5.0.6"
-    "@storybook/addons" "5.0.6"
-    "@storybook/react" "5.0.6"
-    assets-webpack-plugin "3.5.1"
-    axios "^0.19.0"
-    bootstrap "~4.3.1"
-    brace "0.11.0"
-    classnames "2.2.5"
-    connect-history-api-fallback "1.3.0"
-    connected-react-router "5.0.1"
-    copy-to-clipboard "^3.2.0"
-    cpy-cli "1.0.1"
-    deepmerge "1.5.2"
-    draft-js "0.11.7"
-    draftjs-to-html "0.8.4"
-    flat "4.1.0"
-    font-awesome "4.7.0"
-    global "4.3.2"
-    history "4.6.1"
-    html-to-draftjs "1.4.0"
-    i18next "19.7.0"
-    i18next-intervalplural-postprocessor "2.0.2"
-    invariant "^2.2.4"
-    lodash "^4.17.15"
-    moment "2.20.1"
-    numeral "2.0.6"
-    path-to-regexp "2.2.1"
-    print-js "1.5.0"
-    prop-types "15.6.1"
-    query-string "5.1.1"
-    rc-collapse "~1.10.0"
-    rc-drawer "^3.0.2"
-    rc-slider "^8.6.11"
-    rc-switch "~1.8.0"
-    rc-table "6.4.3"
-    rc-tree-select "2.3.1"
-    react "16.14.0"
-    react-ace "5.9.0"
-    react-big-calendar "0.24.6"
-    react-copy-to-clipboard "^5.0.1"
-    react-dom "16.14.0"
-    react-draft-wysiwyg "1.13.1"
-    react-dropzone "7.0.1"
-    react-helmet "5.2.0"
-    react-hotkeys "1.0.3"
-    react-i18next "11.7.3"
-    react-onclickoutside "6.7.1"
-    react-popper "^2.2.4"
-    react-popper-tooltip "3.1.1"
-    react-redux "5.0.6"
-    react-resizable "1.7.5"
-    react-resize-detector "^5.2.0"
-    react-router-dom "4.3.1"
-    react-rte "0.16.0"
-    react-syntax-highlighter "^11.0.2"
-    react-text-mask "5.4.3"
-    react-textarea-autosize "7.0.4"
-    react-virtualized "^9.21.0"
-    reactstrap "^8.0.0"
-    recharts "^1.6.2"
-    recompose "0.30.0"
-    redux "3.6.0"
-    redux-actions "2.3.2"
-    redux-batched-actions "0.3.0"
-    redux-devtools-extension "2.13.2"
-    redux-form "7.4.2"
-    redux-logger "3.0.6"
-    redux-mock-store "1.5.1"
-    redux-saga "^1.0.5"
-    redux-thunk "2.2.0"
-    reselect "3.0.1"
-    scroll-into-view-if-needed "^2.2.26"
-    text-mask-addons "3.7.1"
-    url-parse "^1.4.7"
-    whatwg-fetch "2.0.3"
-    why-did-you-update "0.1.1"
-    xhr-mock "2.4.1"
-
-n2o-framework@^7.15.3, n2o-framework@^7.17.13:
-  version "7.17.13"
-  resolved "https://registry.yarnpkg.com/n2o-framework/-/n2o-framework-7.17.13.tgz#cb5f3f8de3e53e28c4bc4ca8b2d8cbc9f4670c24"
+n2o-framework@7.16.13, n2o-framework@^7.16.13:
+  version "7.16.13"
+  resolved "https://registry.yarnpkg.com/n2o-framework/-/n2o-framework-7.16.13.tgz#f14a7fcce9572f92151ce7fa0dbcc5527448e17f"
+  integrity sha512-+OwQmhH6dqPt8989SB7a3j1KP+aS/+DVuhOb1DXY4T5SaxIsabsjxSQqJSshpz4pfhvkfLhq7NP3mkiDzvh4jw==
   dependencies:
     "@babel/polyfill" "^7.0.0"
     "@babel/runtime-corejs2" "^7.0.0"
@@ -8455,10 +8372,11 @@ n2o-framework@^7.15.3, n2o-framework@^7.17.13:
     html-to-draftjs "1.4.0"
     i18next "19.7.0"
     i18next-intervalplural-postprocessor "2.0.2"
+    immer "^8.0.1"
     invariant "^2.2.4"
     lodash "^4.17.15"
     moment "2.20.1"
-    n2o-auth "^7.17.13"
+    n2o-auth "^7.16.13"
     numeral "2.0.6"
     path-to-regexp "2.2.1"
     print-js "1.5.0"
@@ -8512,11 +8430,12 @@ n2o-framework@^7.15.3, n2o-framework@^7.17.13:
     why-did-you-update "0.1.1"
     xhr-mock "2.4.1"
 
-n2o-notifications@7.15.3:
-  version "7.15.3"
-  resolved "https://registry.yarnpkg.com/n2o-notifications/-/n2o-notifications-7.15.3.tgz#80914ebf66d0d3ebbcef8777b5e9a68549220304"
+n2o-notifications@7.16.13:
+  version "7.16.13"
+  resolved "https://registry.yarnpkg.com/n2o-notifications/-/n2o-notifications-7.16.13.tgz#3d66c4ec0bef4ef494a88a7415cceea972078d51"
+  integrity sha512-bS2mB4D74bP1dnfv8jXr7oRFFjx6mFv3xCFyCk3+KdYe8+M2ra+IKvU+/JCn/+ikYf5xnPzB01tHnqnS4LbcYA==
   dependencies:
-    n2o-framework "^7.15.3"
+    n2o-framework "^7.16.13"
     net "^1.0.2"
     sockjs-client "^1.3.0"
     stompjs "^2.3.3"
@@ -9934,6 +9853,7 @@ pretty-format@^23.6.0:
 pretty-hrtime@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/pretty-hrtime/-/pretty-hrtime-1.0.3.tgz#b7e3ea42435a4c9b2759d99e0f201eb195802ee1"
+  integrity sha1-t+PqQkNaTJsnWdmeDyAesZWALuE=
 
 print-js@1.5.0:
   version "1.5.0"
