@@ -7,12 +7,13 @@
     <parent>
         <groupId>ru.i-novus.messaging</groupId>
         <artifactId>messaging-pom</artifactId>
-        <version>3.40-SNAPSHOT</version>
+        <version>3.42.1-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
 
     <properties>
         <jacoco.skip>false</jacoco.skip>
+        <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 
     <dependencies>
