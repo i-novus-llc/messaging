@@ -7,13 +7,11 @@ import ru.inovus.messaging.api.criteria.FeedCriteria;
 import ru.inovus.messaging.api.model.Feed;
 import ru.inovus.messaging.api.model.FeedCount;
 import ru.inovus.messaging.api.model.Message;
-import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.rest.FeedRest;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.impl.service.FeedService;
 import ru.inovus.messaging.impl.service.MessageService;
 
-import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -25,6 +23,8 @@ public class FeedRestImpl implements FeedRest {
     private final FeedService feedService;
     private final MessageService messageService;
     private final MqProvider mqProvider;
+
+    private final Integer NO_NEW_MESSAGE = 0;
 
     public FeedRestImpl(FeedService feedService, MessageService messageService, MqProvider mqProvider) {
         this.feedService = feedService;
@@ -51,11 +51,7 @@ public class FeedRestImpl implements FeedRest {
     public Feed getMessageAndRead(String recipient, UUID messageId) {
         Feed result = feedService.getMessageAndRead(messageId, recipient);
         if (result != null) {
-            Message message = new Message();
-            message.setText(getFeedCount(recipient, result.getSystemId()).getCount().toString());
-            message.setSystemId(result.getSystemId());
-            message.setRecipients(List.of(new Recipient(recipient)));
-            mqProvider.publish(message, feedCountQueue);
+            mqProvider.publish(getFeedCount(recipient, result.getSystemId()), feedCountQueue);
         }
         return result;
     }
@@ -63,11 +59,7 @@ public class FeedRestImpl implements FeedRest {
     @Override
     public void markReadAll(String recipient, String systemId) {
         feedService.markReadAll(recipient, systemId);
-        Message message = new Message();
-        message.setText("0");
-        message.setSystemId(systemId);
-        message.setRecipients(List.of(new Recipient(recipient)));
-        mqProvider.publish(message, feedCountQueue);
+        mqProvider.publish(new FeedCount(systemId, recipient, NO_NEW_MESSAGE), feedCountQueue);
     }
 
     @Override
@@ -75,9 +67,6 @@ public class FeedRestImpl implements FeedRest {
 //      todo 3 обращения к бд, как то не очень
         feedService.markRead(recipient, messageId);
         Message message = messageService.getMessage(messageId);
-        message.setText(getFeedCount(recipient, message.getSystemId()).getCount().toString());
-        message.setSystemId(message.getSystemId());
-        message.setRecipients(List.of(new Recipient(recipient)));
-        mqProvider.publish(message, feedCountQueue);
+        mqProvider.publish(getFeedCount(recipient, message.getSystemId()), feedCountQueue);
     }
 }

@@ -14,22 +14,9 @@ import ru.inovus.messaging.channel.web.controller.MessageController;
  */
 @Component
 public class FeedCountListener {
-
-    private MessageController messageController;
-
     public FeedCountListener(@Value("${novus.messaging.queue.feed-count}") String feedCountQueue,
                              MqProvider mqProvider,
                              MessageController messageController) {
-        this.messageController = messageController;
-        mqProvider.subscribe(new QueueMqConsumer(feedCountQueue, feedCount -> sendCount((FeedCount) feedCount), feedCountQueue));
-    }
-
-    /**
-     * Отправка количества непрочитанных уведомлений пользователя
-     *
-     * @param feedCount Информация о количестве непрочитанных уведомлений
-     */
-    public void sendCount(FeedCount feedCount) {
-        messageController.sendFeedCount(feedCount.getSystemId(), feedCount.getUsername(), feedCount.getCount());
+        mqProvider.subscribe(new QueueMqConsumer(feedCountQueue, feedCount -> messageController.sendFeedCount((FeedCount) feedCount), feedCountQueue));
     }
 }
