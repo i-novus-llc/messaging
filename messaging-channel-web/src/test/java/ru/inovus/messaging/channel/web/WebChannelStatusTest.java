@@ -184,10 +184,7 @@ public class WebChannelStatusTest {
 
     @Test
     public void testMarkReadMessage() throws Exception {
-        StompHeaders connectHeaders = new StompHeaders();
-        connectHeaders.add("username", USERNAME);
-        StompSession stompSession = stompClient.connect(URL, new WebSocketHttpHeaders(), connectHeaders, new StompSessionHandlerAdapter() {
-        }).get(1, SECONDS);
+        StompSession stompSession = getStompSessionWithHeaders();
         assertThat(stompSession, notNullValue());
 
         latch = new CountDownLatch(1);
@@ -216,8 +213,7 @@ public class WebChannelStatusTest {
 
     @Test
     public void testMarkReadAllMessage() throws Exception {
-        StompSession stompSession = stompClient.connect(URL, new StompSessionHandlerAdapter() {
-        }).get(1, SECONDS);
+        StompSession stompSession = getStompSessionWithHeaders();
         assertThat(stompSession, notNullValue());
 
         latch = new CountDownLatch(1);
@@ -243,6 +239,13 @@ public class WebChannelStatusTest {
         assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.READ));
     }
 
+
+    private StompSession getStompSessionWithHeaders() throws InterruptedException, java.util.concurrent.ExecutionException, java.util.concurrent.TimeoutException {
+        StompHeaders connectHeaders = new StompHeaders();
+        connectHeaders.add("username", USERNAME);
+        return stompClient.connect(URL, new WebSocketHttpHeaders(), connectHeaders, new StompSessionHandlerAdapter() {
+        }).get(1, SECONDS);
+    }
 
     private SessionSubscribeEvent createSessionSubscribeEvent() {
         UserPrincipal user = new UserPrincipal(USERNAME);

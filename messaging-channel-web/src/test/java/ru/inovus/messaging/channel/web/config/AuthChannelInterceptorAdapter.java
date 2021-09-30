@@ -22,7 +22,6 @@ public class AuthChannelInterceptorAdapter implements ChannelInterceptor {
 
         if (StompCommand.CONNECT == accessor.getCommand()) {
             final String username = accessor.getFirstNativeHeader(USERNAME_HEADER);
-
             final UsernamePasswordAuthenticationToken user =
                     new UsernamePasswordAuthenticationToken(username, null,
                             Collections.singleton((GrantedAuthority) () -> "USER"));
