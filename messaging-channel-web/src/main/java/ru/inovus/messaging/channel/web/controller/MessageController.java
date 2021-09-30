@@ -36,12 +36,13 @@ public class MessageController {
     }
 
     /**
-     * Отправка пользователю количества непрочитанных сообщений
+     * Отправка пользователю количества непрочитанных уведомлений
      *
-     * @param count Информация о непрочитанных сообщениях пользователя
+     * @param feedCount Информация о непрочитанных уведомлениях пользователя
      */
-    public void sendFeedCount(FeedCount count) {
-        simpMessagingTemplate.convertAndSend("/user/" + count.getUsername() + "/exchange/" + count.getSystemId() + "/message.count", count.getCount());
+    public void sendFeedCount(FeedCount feedCount) {
+        String destination = "/user/" + feedCount.getUsername() + "/exchange/" + feedCount.getSystemId() + "/message.feedCount";
+        simpMessagingTemplate.convertAndSend(destination, feedCount.getCount());
     }
 
     /**
@@ -59,7 +60,8 @@ public class MessageController {
         status.setMessageId(message.getId());
         status.setUsername(username);
         try {
-            simpMessagingTemplate.convertAndSend("/user/" + username + "/exchange/" + systemId + "/message", message);
+            String destination = "/user/" + username + "/exchange/" + systemId + "/message";
+            simpMessagingTemplate.convertAndSend(destination, message);
             status.setStatus(MessageStatusType.SENT);
             mqProvider.publish(status, statusQueueName);
         } catch (MessagingException e) {
