@@ -78,7 +78,7 @@ public class WebChannelTest {
     private String privateDestPrefix;
 
     private static final String SYSTEM_ID = "system-id";
-    private static final String USERNAME = "lkb";
+    private static final String USERNAME = "test-user";
 
     @LocalServerPort
     private Integer port;

@@ -41,7 +41,7 @@ public class MessageController {
      * @param feedCount Информация о непрочитанных уведомлениях пользователя
      */
     public void sendFeedCount(FeedCount feedCount) {
-        String destination = "/user/" + feedCount.getUsername() + "/exchange/" + feedCount.getSystemId() + "/message.feedCount";
+        String destination = "/user/" + feedCount.getUsername() + "/exchange/" + feedCount.getSystemId() + "/message.count";
         simpMessagingTemplate.convertAndSend(destination, feedCount.getCount());
     }
 
