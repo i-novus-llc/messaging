@@ -7,6 +7,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import ru.inovus.messaging.api.model.FeedCount;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.MessageStatus;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
@@ -37,14 +38,10 @@ public class MessageController {
     /**
      * Отправка пользователю количества непрочитанных сообщений
      *
-     * @param systemId  Идентификатор системы, в которой находится пользователь
-     * @param username  Имя пользователя
-     * @param feedCount Количество непрочитанных сообщений пользователя
+     * @param count Информация о непрочитанных сообщениях пользователя
      */
-    public void sendFeedCount(String systemId,
-                              String username,
-                              Integer feedCount) {
-        simpMessagingTemplate.convertAndSend("/user/" + username + "/exchange/" + systemId + "/message.count", feedCount);
+    public void sendFeedCount(FeedCount count) {
+        simpMessagingTemplate.convertAndSend("/user/" + count.getUsername() + "/exchange/" + count.getSystemId() + "/message.count", count.getCount());
     }
 
     /**
