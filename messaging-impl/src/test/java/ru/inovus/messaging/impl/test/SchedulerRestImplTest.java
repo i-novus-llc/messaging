@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.inovus.messaging.api.model.Sms;
 import ru.inovus.messaging.impl.rest.MessageRestImpl;
@@ -31,10 +30,11 @@ import static org.mockito.Mockito.verify;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = TestApp.class,
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
-        properties = {"spring.cloud.consul.config.enabled=false", "spring.liquibase.change-log: classpath:/messaging-db/test-base-changelog.xml",
-                "spring.liquibase.contexts=test"})
+        properties = {
+                "spring.cloud.consul.config.enabled=false",
+                "spring.liquibase.change-log: classpath:/messaging-db/test-base-changelog.xml",
+        })
 @EnableEmbeddedPg
-@TestPropertySource("classpath:rest-test.properties")
 public class SchedulerRestImplTest {
 
     @Autowired

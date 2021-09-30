@@ -8,12 +8,11 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.inovus.messaging.api.criteria.UserSettingCriteria;
-import ru.inovus.messaging.api.model.enums.AlertType;
 import ru.inovus.messaging.api.model.Channel;
 import ru.inovus.messaging.api.model.UserSetting;
+import ru.inovus.messaging.api.model.enums.AlertType;
 import ru.inovus.messaging.api.rest.UserSettingRest;
 
 import static org.junit.Assert.assertEquals;
@@ -22,15 +21,14 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(SpringRunner.class)
 @SpringBootTest(
         classes = {TestApp.class},
-        properties = {"cxf.jaxrs.client.classes-scan=true",
+        properties = {
+                "cxf.jaxrs.client.classes-scan=true",
                 "cxf.jaxrs.client.classes-scan-packages=ru.i_novus.messaging.api",
                 "spring.liquibase.change-log: classpath:/messaging-db/test-base-changelog.xml",
-                "spring.liquibase.contexts=test"
         },
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DefinePort
 @EnableEmbeddedPg
-@TestPropertySource("classpath:rest-test.properties")
 public class UserSettingServiceTest {
 
     private static final String USER_NAME = "admin";

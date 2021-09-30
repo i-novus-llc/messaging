@@ -39,12 +39,12 @@ import static org.mockito.Mockito.*;
                 "novus.messaging.queue.status=test-status-queue",
                 "novus.messaging.channel.email.queue=test-email-queue"})
 @Import(EmbeddedKafkaTestConfiguration.class)
-@EmbeddedKafka(partitions = 1)
+@EmbeddedKafka
 @ContextConfiguration(classes = KafkaMqProvider.class)
 public class EmailChannelTest {
 
     @Autowired
-    private MqProvider provider;
+    private MqProvider mqProvider;
 
     @Autowired
     private EmailChannel channel;
@@ -76,7 +76,7 @@ public class EmailChannelTest {
             latch.countDown();
             return "ignored";
         }).when(mailSender).send(mimeMessage);
-        provider.publish(message, emailQueue);
+        mqProvider.publish(message, emailQueue);
         latch.await();
 
         assertThat(mimeMessage.getSubject(), is(message.getCaption()));
@@ -109,10 +109,10 @@ public class EmailChannelTest {
             latch.countDown();
         }, statusQueue);
 
-        provider.subscribe(mqConsumer);
+        mqProvider.subscribe(mqConsumer);
         channel.send(message);
         latch.await();
-        provider.unsubscribe(mqConsumer.subscriber());
+        mqProvider.unsubscribe(mqConsumer.subscriber());
 
         assertThat(receivedStatus[0], notNullValue());
         assertThat(receivedStatus[0].getMessageId(), is(message.getId()));
@@ -136,10 +136,10 @@ public class EmailChannelTest {
             latch.countDown();
         }, statusQueue);
 
-        provider.subscribe(mqConsumer);
+        mqProvider.subscribe(mqConsumer);
         channel.send(message);
         latch.await();
-        provider.unsubscribe(mqConsumer.subscriber());
+        mqProvider.unsubscribe(mqConsumer.subscriber());
 
         assertThat(receivedStatus[0], notNullValue());
         assertThat(receivedStatus[0].getMessageId(), is(message.getId()));

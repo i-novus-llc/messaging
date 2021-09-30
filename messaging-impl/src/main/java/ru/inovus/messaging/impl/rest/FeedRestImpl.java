@@ -4,7 +4,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import ru.inovus.messaging.api.criteria.FeedCriteria;
-import ru.inovus.messaging.api.model.*;
+import ru.inovus.messaging.api.model.Feed;
+import ru.inovus.messaging.api.model.FeedCount;
+import ru.inovus.messaging.api.model.Message;
+import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.rest.FeedRest;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.impl.service.FeedService;
@@ -35,8 +38,8 @@ public class FeedRestImpl implements FeedRest {
     }
 
     @Override
-    public UnreadMessagesInfo getFeedCount(String recipient, String systemId) {
-        return feedService.getFeedCount(recipient, systemId);
+    public FeedCount getFeedCount(String username, String systemId) {
+        return feedService.getFeedCount(username, systemId);
     }
 
     @Override
