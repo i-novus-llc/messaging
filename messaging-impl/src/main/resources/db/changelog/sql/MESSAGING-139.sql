@@ -9,10 +9,10 @@ COMMENT ON COLUMN messaging.system.code IS 'Уникальный код сист
 COMMENT ON COLUMN messaging.system.name IS 'Наименование системы';
 
 ALTER TABLE messaging.message
-    DROP COLUMN system_id;
-
+    RENAME COLUMN system_id TO system_code;
 ALTER TABLE messaging.message
-    ADD COLUMN system_code VARCHAR REFERENCES messaging.system (code);
+    ADD CONSTRAINT message_system_code_fkey
+        FOREIGN KEY (system_code) REFERENCES messaging.system (code);
 COMMENT ON COLUMN messaging.message.system_code IS 'Система, к которой относится уведомление';
 
 ALTER TABLE messaging.message_setting
