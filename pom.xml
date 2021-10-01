@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ru.i-novus.messaging</groupId>
     <artifactId>messaging-pom</artifactId>
     <packaging>pom</packaging>
-    <version>3.40-SNAPSHOT</version>
+    <version>3.42.1-SNAPSHOT</version>
 
     <parent>
         <groupId>net.n2oapp.platform</groupId>
         <artifactId>n2o-boot-platform-parent</artifactId>
-        <version>4.2.6</version>
-        <relativePath />
+        <version>4.5.0</version>
+        <relativePath/>
     </parent>
 
     <properties>
-        <n2o.version>7.15.3</n2o.version>
+        <n2o.version>7.16.13</n2o.version>
         <access.version>4.20</access.version>
         <config.server.enable>false</config.server.enable>
         <audit.version>2.3.2</audit.version>

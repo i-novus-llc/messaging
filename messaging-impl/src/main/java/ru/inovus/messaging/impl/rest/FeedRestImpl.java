@@ -5,8 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import ru.inovus.messaging.api.criteria.FeedCriteria;
 import ru.inovus.messaging.api.model.Feed;
+import ru.inovus.messaging.api.model.FeedCount;
 import ru.inovus.messaging.api.model.Message;
-import ru.inovus.messaging.api.model.UnreadMessageInfo;
 import ru.inovus.messaging.api.rest.FeedRest;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.impl.service.FeedService;
@@ -24,8 +24,6 @@ public class FeedRestImpl implements FeedRest {
     private final MessageService messageService;
     private final MqProvider mqProvider;
 
-    private final Integer NO_NEW_MESSAGE = 0;
-
     public FeedRestImpl(FeedService feedService, MessageService messageService, MqProvider mqProvider) {
         this.feedService = feedService;
         this.messageService = messageService;
@@ -38,8 +36,8 @@ public class FeedRestImpl implements FeedRest {
     }
 
     @Override
-    public UnreadMessageInfo getFeedCount(String recipient, String systemId) {
-        return feedService.getFeedCount(recipient, systemId);
+    public FeedCount getFeedCount(String username, String systemId) {
+        return feedService.getFeedCount(username, systemId);
     }
 
     @Override
@@ -59,7 +57,7 @@ public class FeedRestImpl implements FeedRest {
     @Override
     public void markReadAll(String recipient, String systemId) {
         feedService.markReadAll(recipient, systemId);
-        mqProvider.publish(new UnreadMessageInfo(NO_NEW_MESSAGE, systemId, recipient), feedCountQueue);
+        mqProvider.publish(new FeedCount(systemId, recipient, 0), feedCountQueue);
     }
 
     @Override

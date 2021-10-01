@@ -1,4 +1,4 @@
-package ru.inovus.messaging.email.channel;
+package ru.inovus.messaging.channel.email;
 
 import org.apache.commons.mail.util.MimeMessageParser;
 import org.junit.jupiter.api.Test;
@@ -39,12 +39,12 @@ import static org.mockito.Mockito.*;
                 "novus.messaging.queue.status=test-status-queue",
                 "novus.messaging.channel.email.queue=test-email-queue"})
 @Import(EmbeddedKafkaTestConfiguration.class)
-@EmbeddedKafka(partitions = 1)
+@EmbeddedKafka
 @ContextConfiguration(classes = KafkaMqProvider.class)
 public class EmailChannelTest {
 
     @Autowired
-    private MqProvider provider;
+    private MqProvider mqProvider;
 
     @Autowired
     private EmailChannel channel;
@@ -76,7 +76,7 @@ public class EmailChannelTest {
             latch.countDown();
             return "ignored";
         }).when(mailSender).send(mimeMessage);
-        provider.publish(message, emailQueue);
+        mqProvider.publish(message, emailQueue);
         latch.await();
 
         assertThat(mimeMessage.getSubject(), is(message.getCaption()));
@@ -86,9 +86,9 @@ public class EmailChannelTest {
 
         Address[] allRecipients = mimeMessage.getAllRecipients();
         assertThat(allRecipients.length, is(message.getRecipients().size()));
-        assertThat(allRecipients[0].toString(), is(recipient1.getRecipientSendChannelId()));
-        assertThat(allRecipients[1].toString(), is(recipient2.getRecipientSendChannelId()));
-        assertThat(allRecipients[2].toString(), is(recipient3.getRecipientSendChannelId()));
+        assertThat(allRecipients[0].toString(), is(recipient1.getUsername()));
+        assertThat(allRecipients[1].toString(), is(recipient2.getUsername()));
+        assertThat(allRecipients[2].toString(), is(recipient3.getUsername()));
     }
 
     @Test
@@ -109,10 +109,10 @@ public class EmailChannelTest {
             latch.countDown();
         }, statusQueue);
 
-        provider.subscribe(mqConsumer);
+        mqProvider.subscribe(mqConsumer);
         channel.send(message);
         latch.await();
-        provider.unsubscribe(mqConsumer.subscriber());
+        mqProvider.unsubscribe(mqConsumer.subscriber());
 
         assertThat(receivedStatus[0], notNullValue());
         assertThat(receivedStatus[0].getMessageId(), is(message.getId()));
@@ -136,10 +136,10 @@ public class EmailChannelTest {
             latch.countDown();
         }, statusQueue);
 
-        provider.subscribe(mqConsumer);
+        mqProvider.subscribe(mqConsumer);
         channel.send(message);
         latch.await();
-        provider.unsubscribe(mqConsumer.subscriber());
+        mqProvider.unsubscribe(mqConsumer.subscriber());
 
         assertThat(receivedStatus[0], notNullValue());
         assertThat(receivedStatus[0].getMessageId(), is(message.getId()));

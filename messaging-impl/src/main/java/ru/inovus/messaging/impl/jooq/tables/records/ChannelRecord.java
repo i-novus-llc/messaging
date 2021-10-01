@@ -6,8 +6,8 @@ package ru.inovus.messaging.impl.jooq.tables.records;
 
 import org.jooq.Field;
 import org.jooq.Record1;
-import org.jooq.Record3;
-import org.jooq.Row3;
+import org.jooq.Record4;
+import org.jooq.Row4;
 import org.jooq.impl.UpdatableRecordImpl;
 
 import ru.inovus.messaging.impl.jooq.tables.Channel;
@@ -17,9 +17,9 @@ import ru.inovus.messaging.impl.jooq.tables.Channel;
  * Каналы отправки уведомлений
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
-public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements Record3<String, String, String> {
+public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements Record4<String, String, String, Boolean> {
 
-    private static final long serialVersionUID = 348679975;
+    private static final long serialVersionUID = -1117641390;
 
     /**
      * Setter for <code>messaging.channel.id</code>. Уникальный идентификатор
@@ -63,6 +63,20 @@ public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements
         return (String) get(2);
     }
 
+    /**
+     * Setter for <code>messaging.channel.is_internal</code>. Признак внутрисистемного канала отправки
+     */
+    public void setIsInternal(Boolean value) {
+        set(3, value);
+    }
+
+    /**
+     * Getter for <code>messaging.channel.is_internal</code>. Признак внутрисистемного канала отправки
+     */
+    public Boolean getIsInternal() {
+        return (Boolean) get(3);
+    }
+
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -73,17 +87,17 @@ public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements
     }
 
     // -------------------------------------------------------------------------
-    // Record3 type implementation
+    // Record4 type implementation
     // -------------------------------------------------------------------------
 
     @Override
-    public Row3<String, String, String> fieldsRow() {
-        return (Row3) super.fieldsRow();
+    public Row4<String, String, String, Boolean> fieldsRow() {
+        return (Row4) super.fieldsRow();
     }
 
     @Override
-    public Row3<String, String, String> valuesRow() {
-        return (Row3) super.valuesRow();
+    public Row4<String, String, String, Boolean> valuesRow() {
+        return (Row4) super.valuesRow();
     }
 
     @Override
@@ -102,6 +116,11 @@ public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements
     }
 
     @Override
+    public Field<Boolean> field4() {
+        return Channel.CHANNEL.IS_INTERNAL;
+    }
+
+    @Override
     public String component1() {
         return getId();
     }
@@ -117,6 +136,11 @@ public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements
     }
 
     @Override
+    public Boolean component4() {
+        return getIsInternal();
+    }
+
+    @Override
     public String value1() {
         return getId();
     }
@@ -129,6 +153,11 @@ public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements
     @Override
     public String value3() {
         return getQueueName();
+    }
+
+    @Override
+    public Boolean value4() {
+        return getIsInternal();
     }
 
     @Override
@@ -150,10 +179,17 @@ public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements
     }
 
     @Override
-    public ChannelRecord values(String value1, String value2, String value3) {
+    public ChannelRecord value4(Boolean value) {
+        setIsInternal(value);
+        return this;
+    }
+
+    @Override
+    public ChannelRecord values(String value1, String value2, String value3, Boolean value4) {
         value1(value1);
         value2(value2);
         value3(value3);
+        value4(value4);
         return this;
     }
 
@@ -171,11 +207,12 @@ public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements
     /**
      * Create a detached, initialised ChannelRecord
      */
-    public ChannelRecord(String id, String name, String queueName) {
+    public ChannelRecord(String id, String name, String queueName, Boolean isInternal) {
         super(Channel.CHANNEL);
 
         set(0, id);
         set(1, name);
         set(2, queueName);
+        set(3, isInternal);
     }
 }

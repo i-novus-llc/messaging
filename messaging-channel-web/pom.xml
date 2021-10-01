@@ -5,13 +5,18 @@
     <parent>
         <artifactId>messaging-pom</artifactId>
         <groupId>ru.i-novus.messaging</groupId>
-        <version>3.40-SNAPSHOT</version>
+        <version>3.42.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>messaging-channel-web</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>ru.i-novus.messaging</groupId>
+            <artifactId>messaging-api</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>ru.i-novus.messaging</groupId>
             <artifactId>messaging-channel-api</artifactId>
@@ -43,6 +48,13 @@
             <version>1.0.9.RELEASE</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-security</artifactId>
+            <version>3.4.3</version>
+            <scope>compile</scope>
+        </dependency>
+
 
         <!--TEST-->
         <dependency>
@@ -63,12 +75,6 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-security</artifactId>
-            <version>3.4.3</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 
     <profiles>

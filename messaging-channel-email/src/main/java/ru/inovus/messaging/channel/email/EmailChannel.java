@@ -1,4 +1,4 @@
-package ru.inovus.messaging.email.channel;
+package ru.inovus.messaging.channel.email;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -6,7 +6,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.MessageStatus;
@@ -39,35 +38,35 @@ public class EmailChannel extends AbstractChannel {
 
 
     public void send(Message message) {
+        log.info("Sending email " + message);
         MessageStatus messageStatus = new MessageStatus();
         messageStatus.setMessageId(message.getId());
         messageStatus.setSystemId(message.getSystemId());
 
-        try {
-            for (Recipient recipient : message.getRecipients()) {
-                if (StringUtils.isEmpty(recipient.getRecipientSendChannelId()))
-                    log.error("Message with id={} will not be sent to recipient with id={} due to an empty email address",
-                            message.getId(), recipient.getRecipientSendChannelId());
-            }
-
-            List<String> recipientsEmailList = message.getRecipients().stream()
-                    .map(Recipient::getRecipientSendChannelId)
-                    .filter(email -> !StringUtils.isEmpty(email))
-                    .collect(Collectors.toList());
-            if (!CollectionUtils.isEmpty(recipientsEmailList)) {
+        List<String> recipientsEmailList = message.getRecipients().stream()
+                .map(Recipient::getUsername)
+                .filter(email -> !StringUtils.isEmpty(email))
+                .collect(Collectors.toList());
+        if (!recipientsEmailList.isEmpty()) {
+            try {
                 MimeMessage mail = emailSender.createMimeMessage();
                 MimeMessageHelper helper = new MimeMessageHelper(mail, true);
                 helper.setTo(recipientsEmailList.toArray(String[]::new));
                 helper.setSubject(message.getCaption());
                 helper.setText(message.getText(), true);
+
                 emailSender.send(mail);
+                messageStatus.setStatus(MessageStatusType.SENT);
+                sendStatus(messageStatus);
+            } catch (Exception e) {
+                log.error("MimeMessage create and send email failed! {}", e.getMessage());
+                messageStatus.setStatus(MessageStatusType.FAILED);
+                messageStatus.setErrorMessage(e.getMessage());
+                sendStatus(messageStatus);
             }
-            messageStatus.setStatus(MessageStatusType.SENT);
-            sendStatus(messageStatus);
-        } catch (Exception e) {
-            log.error("MimeMessage create and send email failed! {}", e.getMessage());
+        } else {
             messageStatus.setStatus(MessageStatusType.FAILED);
-            messageStatus.setErrorMessage(e.getMessage());
+            messageStatus.setErrorMessage("There are no recipient's email addresses to send");
             sendStatus(messageStatus);
         }
     }

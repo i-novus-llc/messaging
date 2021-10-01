@@ -1,4 +1,4 @@
-package ru.inovus.messaging.web.channel.configuration;
+package ru.inovus.messaging.channel.web.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -16,15 +16,15 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 @PropertySource("classpath:channel.properties")
 public class WebSocketConfiguration extends AbstractSecurityWebSocketMessageBrokerConfigurer {
 
-    @Value("${novus.messaging.channel.web.app_prefix}")
-    private String appPrefix = "/app";
-    @Value("${novus.messaging.channel.web.end_point}")
-    private String endPoint = "/ws";
+    @Value("${novus.messaging.channel.web.app_prefix:/app}")
+    private String appPrefix;
+    @Value("${novus.messaging.channel.web.end_point:/ws}")
+    private String endPoint;
 
-    @Value("${novus.messaging.channel.web.public_dest_prefix}")
-    private String publicDestPrefix = "/topic";
-    @Value("${novus.messaging.channel.web.private_dest_prefix}")
-    private String privateDestPrefix = "/exchange";
+    @Value("${novus.messaging.channel.web.public_dest_prefix:/topic}")
+    private String publicDestPrefix;
+    @Value("${novus.messaging.channel.web.private_dest_prefix:/exchange}")
+    private String privateDestPrefix;
 
     @Override
     protected boolean sameOriginDisabled() {

@@ -2,6 +2,7 @@ package ru.inovus.messaging.mq.support.kafka;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,11 +35,13 @@ public class KafkaConfig {
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public ProducerFactory<?, ?> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public KafkaTemplate<?, ?> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
