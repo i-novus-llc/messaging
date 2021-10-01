@@ -1,24 +1,24 @@
-CREATE TABLE messaging.system
+CREATE TABLE messaging.tenant
 (
     code VARCHAR PRIMARY KEY NOT NULL,
     name VARCHAR
 );
 
-COMMENT ON TABLE messaging.system IS 'Системы';
-COMMENT ON COLUMN messaging.system.code IS 'Уникальный код системы';
-COMMENT ON COLUMN messaging.system.name IS 'Наименование системы';
+COMMENT ON TABLE messaging.tenant IS 'Тенанты';
+COMMENT ON COLUMN messaging.tenant.code IS 'Уникальный код тенанта';
+COMMENT ON COLUMN messaging.tenant.name IS 'Наименование тенанта';
 
 ALTER TABLE messaging.message
-    RENAME COLUMN system_id TO system_code;
+    RENAME COLUMN system_id TO tenant_code;
 ALTER TABLE messaging.message
-    ADD CONSTRAINT message_system_code_fkey
-        FOREIGN KEY (system_code) REFERENCES messaging.system (code);
-COMMENT ON COLUMN messaging.message.system_code IS 'Система, к которой относится уведомление';
+    ADD CONSTRAINT message_tenant_code_fkey
+        FOREIGN KEY (tenant_code) REFERENCES messaging.tenant (code);
+COMMENT ON COLUMN messaging.message.tenant_code IS 'Тенант, к которому относится уведомление';
 
 ALTER TABLE messaging.message_setting
-    ADD COLUMN system_code VARCHAR REFERENCES messaging.system (code);
-COMMENT ON COLUMN messaging.message_setting.system_code IS 'Система, к которой относится настройка';
+    ADD COLUMN tenant_code VARCHAR REFERENCES messaging.tenant (code);
+COMMENT ON COLUMN messaging.message_setting.tenant_code IS 'Тенант, к которому относится настройка';
 
 ALTER TABLE messaging.user_setting
-    ADD COLUMN system_code VARCHAR REFERENCES messaging.system (code);
-COMMENT ON COLUMN messaging.user_setting.system_code IS 'Система, к которой относится пользовательская настройка';
+    ADD COLUMN tenant_code VARCHAR REFERENCES messaging.tenant (code);
+COMMENT ON COLUMN messaging.user_setting.tenant_code IS 'Тенант, к которому относится пользовательская настройка';
