@@ -4,26 +4,11 @@
 package ru.inovus.messaging.impl.jooq.tables;
 
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Index;
-import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row14;
-import org.jooq.Schema;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
 import org.jooq.impl.TimestampToLocalDateTimeConverter;
-
 import ru.inovus.messaging.api.model.enums.AlertType;
 import ru.inovus.messaging.api.model.enums.FormationType;
 import ru.inovus.messaging.api.model.enums.RecipientType;
@@ -36,6 +21,11 @@ import ru.inovus.messaging.impl.util.AlertTypeConverter;
 import ru.inovus.messaging.impl.util.FormationTypeConverter;
 import ru.inovus.messaging.impl.util.RecipientTypeConverter;
 import ru.inovus.messaging.impl.util.SeverityConverter;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 
 /**

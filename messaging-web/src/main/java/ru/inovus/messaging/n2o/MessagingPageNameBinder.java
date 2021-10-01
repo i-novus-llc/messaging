@@ -1,7 +1,6 @@
 package ru.inovus.messaging.n2o;
 
 import net.n2oapp.criteria.dataset.DataSet;
-import net.n2oapp.framework.api.StringUtils;
 import net.n2oapp.framework.api.criteria.N2oPreparedCriteria;
 import net.n2oapp.framework.api.criteria.Restriction;
 import net.n2oapp.framework.api.data.QueryProcessor;
@@ -66,43 +65,6 @@ public class MessagingPageNameBinder implements MetadataBinder<Page>, CompiledCl
         String queryId = widget.getQueryId();
         DataSet data = queryProcessor.executeOneSizeQuery(p.getCompiled(new QueryContext(queryId)), criteria)
                 .getCollection().iterator().next();
-
-        final String title = page.getPageProperty().getTitle();
-
-        if(!StringUtils.isEmpty(title)){
-            page.getPageProperty().setTitle(StringUtils.resolveLinks(title, data));
-        }
-
-        final String htmlTitle = page.getPageProperty().getHtmlTitle();
-
-        if(!StringUtils.isEmpty(htmlTitle)){
-            page.getPageProperty().setHtmlTitle(StringUtils.resolveLinks(htmlTitle, data));
-        }
-
-        final String headerTitle = page.getPageProperty().getHeaderTitle();
-
-        if(!StringUtils.isEmpty(headerTitle)){
-            page.getPageProperty().setHeaderTitle(StringUtils.resolveLinks(headerTitle, data));
-        }
-
-        page.getBreadcrumb().forEach(c -> {
-
-            if (!StringUtils.isEmpty(c.getLabel())) {
-
-                final String label = StringUtils.resolveLinks(c.getLabel(), data);
-
-                c.setLabel(label);
-
-                if (StringUtils.isEmpty(page.getPageProperty().getHtmlTitle())) {
-                    page.getPageProperty().setHtmlTitle(label);
-                }
-
-                if (StringUtils.isEmpty(page.getPageProperty().getHeaderTitle())) {
-                    page.getPageProperty().setHeaderTitle(label);
-                }
-            }
-        });
-
         return page;
 
     }

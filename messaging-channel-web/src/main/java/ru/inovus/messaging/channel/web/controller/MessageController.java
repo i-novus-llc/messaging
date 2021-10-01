@@ -1,4 +1,4 @@
-package ru.inovus.messaging.web.channel.controller;
+package ru.inovus.messaging.channel.web.controller;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.MessagingException;
@@ -7,9 +7,9 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import ru.inovus.messaging.api.model.FeedCount;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.MessageStatus;
-import ru.inovus.messaging.api.model.UnreadMessageInfo;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 
@@ -36,14 +36,13 @@ public class MessageController {
     }
 
     /**
-     * Отправка пользователю количества непрочитанных сообщений
+     * Отправка пользователю количества непрочитанных уведомлений
      *
-     * @param systemId  Идентификатор системы, в которой находится пользователь
-     * @param username  Имя пользователя
-     * @param feedCount Количество непрочитанных сообщений
+     * @param feedCount Информация о непрочитанных уведомлениях пользователя
      */
-    public void sendFeedCount(UnreadMessageInfo count) {
-        simpMessagingTemplate.convertAndSend("/user/" + count.getRecipientSendChannelId() + "/exchange/" + count.getSystemId() + "/message.count", count.getCount());
+    public void sendFeedCount(FeedCount feedCount) {
+        String destination = "/user/" + feedCount.getUsername() + "/exchange/" + feedCount.getSystemId() + "/message.count";
+        simpMessagingTemplate.convertAndSend(destination, feedCount.getCount());
     }
 
     /**
@@ -53,16 +52,16 @@ public class MessageController {
      * @param username Имя пользователя
      * @param message  Сообщение
      */
-    @MessageMapping("/{systemId}/message.private.{username}")
-    public void sendPrivateMessage(@DestinationVariable("systemId") String systemId,
-                                   @DestinationVariable("username") String username,
+    public void sendPrivateMessage(String systemId,
+                                   String username,
                                    @Payload Message message) {
         MessageStatus status = new MessageStatus();
         status.setSystemId(systemId);
         status.setMessageId(message.getId());
         status.setUsername(username);
         try {
-            simpMessagingTemplate.convertAndSend("/user/" + username + "/exchange/" + systemId + "/message", message);
+            String destination = "/user/" + username + "/exchange/" + systemId + "/message";
+            simpMessagingTemplate.convertAndSend(destination, message);
             status.setStatus(MessageStatusType.SENT);
             mqProvider.publish(status, statusQueueName);
         } catch (MessagingException e) {

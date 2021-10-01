@@ -1,7 +1,7 @@
 package ru.inovus.messaging.api.model.enums;
 
 /**
- * Статус уведомления
+ * Тип статуса уведомления
  */
 public enum MessageStatusType {
     SCHEDULED("Ожидает отправки"),
@@ -17,5 +17,18 @@ public enum MessageStatusType {
 
     public String getName() {
         return name;
+    }
+
+    /**
+     * Возврат типа предыдущего состояния уведомления.
+     * Нужен для проверки возможности перехода от одного статуса к другому.
+     * Например, нельзя перейти от статуса FAILED к READ и т.д.
+     * @return Тип предыдущего состояния уведомления
+     */
+    public MessageStatusType getPrevStatus() {
+        return switch (this) {
+            case SCHEDULED, SENT, FAILED -> SCHEDULED;
+            case READ -> SENT;
+        };
     }
 }

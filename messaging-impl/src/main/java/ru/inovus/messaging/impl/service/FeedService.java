@@ -9,7 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.inovus.messaging.api.criteria.FeedCriteria;
 import ru.inovus.messaging.api.model.Component;
 import ru.inovus.messaging.api.model.Feed;
-import ru.inovus.messaging.api.model.UnreadMessageInfo;
+import ru.inovus.messaging.api.model.FeedCount;
+import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.impl.jooq.tables.records.ComponentRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecipientRecord;
@@ -142,19 +143,26 @@ public class FeedService {
         }
     }
 
-    public UnreadMessageInfo getFeedCount(String recipient, String systemId) {
+    /**
+     * Получение количества непрочитанных уведомлений пользователем
+     *
+     * @param username Имя пользователя
+     * @param systemId Идентификатор системы
+     * @return Количество непрочитанных уведомлений пользователем
+     */
+    public FeedCount getFeedCount(String username, String systemId) {
         Integer count = dsl
                 .selectCount()
                 .from(MESSAGE)
-                .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID)
-                        .and(MESSAGE_RECIPIENT.RECIPIENT_NAME.eq(recipient)))
+                .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID))
+                .leftJoin(CHANNEL).on(MESSAGE.CHANNEL_ID.eq(CHANNEL.ID))
                 .where(
-                        MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL).and(MESSAGE_RECIPIENT.ID.isNull())
-                                .or(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.USER).and(MESSAGE_RECIPIENT.READ_AT.isNull())
-                                        .and(MESSAGE_RECIPIENT.RECIPIENT_NAME.eq(recipient))),
-                        MESSAGE.SYSTEM_ID.eq(systemId))
+                        MESSAGE.SYSTEM_ID.eq(systemId),
+                        MESSAGE_RECIPIENT.RECIPIENT_SEND_CHANNEL_ID.eq(username),
+                        CHANNEL.IS_INTERNAL.eq(Boolean.TRUE),
+                        MESSAGE_RECIPIENT.STATUS.eq(MessageStatusType.SENT))
                 .fetchOne().value1();
-        return new UnreadMessageInfo(count, systemId, recipient);
+        return new FeedCount(systemId, username, count);
     }
 
     private static Feed mapFeed(Record rec) {

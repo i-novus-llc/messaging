@@ -87,7 +87,7 @@ public class MessageRestImpl implements MessageRest {
         Map<String, String> userMap = new HashMap<>();
 
         for (Recipient recipient : recipients) {
-            String userName = recipient.getRecipientSendChannelId();
+            String userName = recipient.getUsername();
             String recipientName = userMap.get(userName);
             if (recipientName != null) {
                 recipient.setName(recipientName);
@@ -310,7 +310,7 @@ public class MessageRestImpl implements MessageRest {
                 return null;
             } else {
                 User user = users.get(0);
-                recipient.setRecipientSendChannelId(user.getEmail());
+                recipient.setUsername(user.getEmail());
             }
         }
         recipient.setName(userName);

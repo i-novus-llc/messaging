@@ -1,22 +1,24 @@
-package ru.inovus.messaging.web.channel;
+package ru.inovus.messaging.channel.web;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Import;
 import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageType;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -24,6 +26,7 @@ import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.web.socket.WebSocketHttpHeaders;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
@@ -34,34 +37,34 @@ import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.MessageStatus;
 import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
-import ru.inovus.messaging.api.model.enums.Severity;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.api.queue.QueueMqConsumer;
+import ru.inovus.messaging.channel.web.config.WebSecurityTestConfiguration;
+import ru.inovus.messaging.channel.web.configuration.WebSocketConfiguration;
 import ru.inovus.messaging.mq.support.kafka.KafkaMqProvider;
-import ru.inovus.messaging.web.channel.configuration.WebSocketConfiguration;
 
 import java.lang.reflect.Type;
 import java.security.Principal;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(
         classes = TestApp.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import({EmbeddedKafkaTestConfiguration.class, WebSocketConfiguration.class})
-@EmbeddedKafka(partitions = 1)
+@Import({WebSocketConfiguration.class, WebSecurityTestConfiguration.class})
+@EmbeddedKafka
 @ContextConfiguration(classes = KafkaMqProvider.class)
-public class WebChannelTest {
+public class WebChannelStatusTest {
     @Autowired
     private MqProvider provider;
 
@@ -71,14 +74,14 @@ public class WebChannelTest {
     @Autowired
     private ApplicationEventPublisher publisher;
 
+    @MockBean
+    private SimpMessagingTemplate simpMessagingTemplate;
+
     @Value("${novus.messaging.queue.status}")
     private String statusQueue;
 
-    @Value("${novus.messaging.channel.web.queue}")
+    @Value("${novus.messaging.channel.web.queue:web-queue}")
     private String webQueue;
-
-    @Value("${novus.messaging.security.token}")
-    private String token;
 
     @Value("${novus.messaging.channel.web.app_prefix}")
     private String appPrefix;
@@ -90,14 +93,12 @@ public class WebChannelTest {
     private String privateDestPrefix;
 
     private static final String SYSTEM_ID = "system-id";
-    private static final String USERNAME = "lkb";
+    private static final String USERNAME = "test-user";
 
     @LocalServerPort
     private Integer port;
 
     private String URL;
-
-    private CompletableFuture<Message> completableFuture;
 
     private WebSocketStompClient stompClient;
 
@@ -106,47 +107,11 @@ public class WebChannelTest {
 
     @BeforeEach
     public void init() {
-        URL = "ws://localhost:" + port + endPoint + "?access_token=" + token;
-        completableFuture = new CompletableFuture<>();
+        URL = "ws://localhost:" + port + endPoint;
 
         List<Transport> transports = Collections.singletonList(new WebSocketTransport(new StandardWebSocketClient()));
         stompClient = new WebSocketStompClient(new SockJsClient(transports));
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
-    }
-
-    @Test
-    public void testSendMessageThroughWs() throws Exception {
-        // publish session subscribe event
-        publisher.publishEvent(createSessionSubscribeEvent());
-
-        // create message
-        Message message = new Message();
-        message.setCaption("Test caption");
-        message.setSeverity(Severity.ERROR);
-        message.setText("Message");
-        message.setSystemId(SYSTEM_ID);
-        Recipient recipient1 = new Recipient();
-        recipient1.setRecipientSendChannelId("test-user");
-        Recipient recipient2 = new Recipient();
-        recipient2.setRecipientSendChannelId(USERNAME);
-        message.setRecipients(Arrays.asList(recipient1, recipient2));
-
-        // publish message to web queue and wait for sending to stomp
-        StompSession stompSession = stompClient.connect(URL, new StompSessionHandlerAdapter() {
-        }).get(1, SECONDS);
-        stompSession.subscribe("/user" + privateDestPrefix + "/" + SYSTEM_ID + "/message", new TestReceivedMessagesHandler());
-
-        latch = new CountDownLatch(1);
-        provider.publish(message, webQueue);
-        latch.await();
-
-        // expected message on client
-        Message receivedMessage = completableFuture.get();
-        stompSession.disconnect();
-
-        assertThat(receivedMessage.getCaption(), is(message.getCaption()));
-        assertThat(receivedMessage.getText(), is(message.getText()));
-        assertThat(receivedMessage.getSeverity(), is(message.getSeverity()));
     }
 
     @Test
@@ -175,13 +140,12 @@ public class WebChannelTest {
 
         assertThat(receivedStatus[0], notNullValue());
         assertThat(receivedStatus[0].getUsername(), is(USERNAME));
-        assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.SENT));
         assertThat(receivedStatus[0].getMessageId(), is(message.getId()));
         assertThat(receivedStatus[0].getSystemId(), is(SYSTEM_ID));
+        assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.SENT));
     }
 
     @Test
-    @Disabled
     public void testSendMessageStatusFailed() throws Exception {
         // publish session subscribe event
         publisher.publishEvent(createSessionSubscribeEvent());
@@ -198,6 +162,11 @@ public class WebChannelTest {
             latch.countDown();
         }, statusQueue);
 
+        String errorMessage = "Some exception message";
+        doAnswer(a -> {
+            throw new MessagingException(errorMessage);
+        }).when(simpMessagingTemplate).convertAndSend(any(String.class), any(Object.class));
+
         // send message to web queue and wait for publishing to status queue
         provider.subscribe(mqConsumer);
         latch = new CountDownLatch(1);
@@ -207,15 +176,15 @@ public class WebChannelTest {
 
         assertThat(receivedStatus[0], notNullValue());
         assertThat(receivedStatus[0].getUsername(), is(USERNAME));
-        assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.FAILED));
         assertThat(receivedStatus[0].getMessageId(), is(message.getId()));
         assertThat(receivedStatus[0].getSystemId(), is(SYSTEM_ID));
+        assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.FAILED));
+        assertThat(receivedStatus[0].getErrorMessage(), is(errorMessage));
     }
 
     @Test
     public void testMarkReadMessage() throws Exception {
-        StompSession stompSession = stompClient.connect(URL, new StompSessionHandlerAdapter() {
-        }).get(1, SECONDS);
+        StompSession stompSession = getStompSessionWithHeaders();
         assertThat(stompSession, notNullValue());
 
         latch = new CountDownLatch(1);
@@ -237,15 +206,14 @@ public class WebChannelTest {
 
         assertThat(receivedStatus[0], notNullValue());
         assertThat(receivedStatus[0].getUsername(), is(USERNAME));
-        assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.READ));
         assertThat(receivedStatus[0].getMessageId(), is(messageId));
         assertThat(receivedStatus[0].getSystemId(), is(SYSTEM_ID));
+        assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.READ));
     }
 
     @Test
     public void testMarkReadAllMessage() throws Exception {
-        StompSession stompSession = stompClient.connect(URL, new StompSessionHandlerAdapter() {
-        }).get(1, SECONDS);
+        StompSession stompSession = getStompSessionWithHeaders();
         assertThat(stompSession, notNullValue());
 
         latch = new CountDownLatch(1);
@@ -267,10 +235,17 @@ public class WebChannelTest {
 
         assertThat(receivedStatus[0], notNullValue());
         assertThat(receivedStatus[0].getUsername(), is(USERNAME));
-        assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.READ));
         assertThat(receivedStatus[0].getSystemId(), is(SYSTEM_ID));
+        assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.READ));
     }
 
+
+    private StompSession getStompSessionWithHeaders() throws InterruptedException, java.util.concurrent.ExecutionException, java.util.concurrent.TimeoutException {
+        StompHeaders connectHeaders = new StompHeaders();
+        connectHeaders.add("username", USERNAME);
+        return stompClient.connect(URL, new WebSocketHttpHeaders(), connectHeaders, new StompSessionHandlerAdapter() {
+        }).get(1, SECONDS);
+    }
 
     private SessionSubscribeEvent createSessionSubscribeEvent() {
         UserPrincipal user = new UserPrincipal(USERNAME);
@@ -305,7 +280,6 @@ public class WebChannelTest {
 
         @Override
         public void handleFrame(StompHeaders headers, Object payload) {
-            completableFuture.complete((Message) payload);
             latch.countDown();
         }
     }

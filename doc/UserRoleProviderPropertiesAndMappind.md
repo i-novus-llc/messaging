@@ -6,14 +6,14 @@
   - Универсальный провайдер с возможностью указания маппинга полей из ответа сервиса предостовляющего информацию о пользователях и ролях, в модели для messaging.
 
 #Настройки провайдеров
-- `messaging.user-role-provider`: configurable
+- `novus.messaging.user-role-provider`: configurable
   - Выбор провайдера данных о пользователе и ролях.
   - Доступные значения configurable или security.
-- `messaging.mapping-file-location`: classpath:userRoleProviderFieldMapping.xml
+- `novus.messaging.mapping-file-location`: classpath:userRoleProviderFieldMapping.xml
   -  Путь до файла для маппинга полей в ConfigurableUserRoleProvider
-- `messaging.user-provider-url`: http://localhost:9999/api/users
+- `novus.messaging.user-provider-url`: http://localhost:9999/api/users
   - эдпоинт с которого провайдер будет забирать информацию о пользователях
-- `messaging.role-provider-url`: http://localhost:9999/api/role
+- `novus.messaging.role-provider-url`: http://localhost:9999/api/role
   - эдпоинт с которого провайдер будет забирать  информацию о ролях(не нужен в случае SecurityAdminUserRoleProvider)
 
 #Настройка маппинга в ConfigurableUserRoleProvider

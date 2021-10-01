@@ -10,7 +10,7 @@
     <parent>
         <groupId>ru.i-novus.messaging</groupId>
         <artifactId>messaging-pom</artifactId>
-        <version>3.40-SNAPSHOT</version>
+        <version>3.42.1-SNAPSHOT</version>
     </parent>
 
     <properties>
@@ -34,8 +34,20 @@
         </dependency>
 
         <dependency>
+            <groupId>ru.i-novus.messaging</groupId>
+            <artifactId>messaging-support-kafka</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.n2oapp.platform</groupId>
+            <artifactId>n2o-platform-starter-feign-client</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
             <artifactId>security-admin-rest-api</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -61,33 +73,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>net.n2oapp.criteria</groupId>
-            <artifactId>criteria-api</artifactId>
-            <version>${n2o.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-messaging</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-jwt</artifactId>
-            <version>1.0.9.RELEASE</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.security.oauth</groupId>
-            <artifactId>spring-security-oauth2</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
         </dependency>
 
         <dependency>
@@ -126,6 +111,12 @@
         <dependency>
             <groupId>ru.i-novus.messaging</groupId>
             <artifactId>messaging-client</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka-test</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
