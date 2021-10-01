@@ -24,8 +24,6 @@ public class FeedRestImpl implements FeedRest {
     private final MessageService messageService;
     private final MqProvider mqProvider;
 
-    private final Integer NO_NEW_MESSAGE = 0;
-
     public FeedRestImpl(FeedService feedService, MessageService messageService, MqProvider mqProvider) {
         this.feedService = feedService;
         this.messageService = messageService;
@@ -59,7 +57,7 @@ public class FeedRestImpl implements FeedRest {
     @Override
     public void markReadAll(String recipient, String systemId) {
         feedService.markReadAll(recipient, systemId);
-        mqProvider.publish(new FeedCount(systemId, recipient, NO_NEW_MESSAGE), feedCountQueue);
+        mqProvider.publish(new FeedCount(systemId, recipient, 0), feedCountQueue);
     }
 
     @Override

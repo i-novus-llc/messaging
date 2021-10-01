@@ -26,6 +26,7 @@ import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.web.socket.WebSocketHttpHeaders;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
@@ -38,8 +39,9 @@ import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.api.queue.QueueMqConsumer;
-import ru.inovus.messaging.mq.support.kafka.KafkaMqProvider;
+import ru.inovus.messaging.channel.web.config.WebSecurityTestConfiguration;
 import ru.inovus.messaging.channel.web.configuration.WebSocketConfiguration;
+import ru.inovus.messaging.mq.support.kafka.KafkaMqProvider;
 
 import java.lang.reflect.Type;
 import java.security.Principal;
@@ -59,7 +61,7 @@ import static org.mockito.Mockito.doAnswer;
 @SpringBootTest(
         classes = TestApp.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(WebSocketConfiguration.class)
+@Import({WebSocketConfiguration.class, WebSecurityTestConfiguration.class})
 @EmbeddedKafka
 @ContextConfiguration(classes = KafkaMqProvider.class)
 public class WebChannelStatusTest {
@@ -81,9 +83,6 @@ public class WebChannelStatusTest {
     @Value("${novus.messaging.channel.web.queue:web-queue}")
     private String webQueue;
 
-    @Value("${novus.messaging.security.token}")
-    private String token;
-
     @Value("${novus.messaging.channel.web.app_prefix}")
     private String appPrefix;
 
@@ -94,7 +93,7 @@ public class WebChannelStatusTest {
     private String privateDestPrefix;
 
     private static final String SYSTEM_ID = "system-id";
-    private static final String USERNAME = "lkb";
+    private static final String USERNAME = "test-user";
 
     @LocalServerPort
     private Integer port;
@@ -108,7 +107,7 @@ public class WebChannelStatusTest {
 
     @BeforeEach
     public void init() {
-        URL = "ws://localhost:" + port + endPoint + "?access_token=" + token;
+        URL = "ws://localhost:" + port + endPoint;
 
         List<Transport> transports = Collections.singletonList(new WebSocketTransport(new StandardWebSocketClient()));
         stompClient = new WebSocketStompClient(new SockJsClient(transports));
@@ -185,8 +184,7 @@ public class WebChannelStatusTest {
 
     @Test
     public void testMarkReadMessage() throws Exception {
-        StompSession stompSession = stompClient.connect(URL, new StompSessionHandlerAdapter() {
-        }).get(1, SECONDS);
+        StompSession stompSession = getStompSessionWithHeaders();
         assertThat(stompSession, notNullValue());
 
         latch = new CountDownLatch(1);
@@ -215,8 +213,7 @@ public class WebChannelStatusTest {
 
     @Test
     public void testMarkReadAllMessage() throws Exception {
-        StompSession stompSession = stompClient.connect(URL, new StompSessionHandlerAdapter() {
-        }).get(1, SECONDS);
+        StompSession stompSession = getStompSessionWithHeaders();
         assertThat(stompSession, notNullValue());
 
         latch = new CountDownLatch(1);
@@ -242,6 +239,13 @@ public class WebChannelStatusTest {
         assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.READ));
     }
 
+
+    private StompSession getStompSessionWithHeaders() throws InterruptedException, java.util.concurrent.ExecutionException, java.util.concurrent.TimeoutException {
+        StompHeaders connectHeaders = new StompHeaders();
+        connectHeaders.add("username", USERNAME);
+        return stompClient.connect(URL, new WebSocketHttpHeaders(), connectHeaders, new StompSessionHandlerAdapter() {
+        }).get(1, SECONDS);
+    }
 
     private SessionSubscribeEvent createSessionSubscribeEvent() {
         UserPrincipal user = new UserPrincipal(USERNAME);
