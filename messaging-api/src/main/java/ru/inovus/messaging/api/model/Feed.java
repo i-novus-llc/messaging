@@ -33,6 +33,5 @@ public class Feed implements Serializable {
     private Severity severity;
     private LocalDateTime sentAt;
     private LocalDateTime readAt;
-    private Component component;
-    private String systemId;
+    private String tenantCode;
 }

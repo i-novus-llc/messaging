@@ -122,7 +122,7 @@ public class WebChannelStatusTest {
         // create message
         Message message = new Message();
         message.setId("6f711616-1617-11ec-9621-0242ac130003");
-        message.setSystemId(SYSTEM_ID);
+        message.setTenantCode(SYSTEM_ID);
         message.setRecipients(Collections.singletonList(new Recipient(USERNAME)));
 
         final MessageStatus[] receivedStatus = new MessageStatus[1];
@@ -153,7 +153,7 @@ public class WebChannelStatusTest {
         // create message
         Message message = new Message();
         message.setId("6f711616-1617-11ec-9621-0242ac130003");
-        message.setSystemId(SYSTEM_ID);
+        message.setTenantCode(SYSTEM_ID);
         message.setRecipients(Collections.singletonList(new Recipient(USERNAME)));
 
         final MessageStatus[] receivedStatus = new MessageStatus[1];

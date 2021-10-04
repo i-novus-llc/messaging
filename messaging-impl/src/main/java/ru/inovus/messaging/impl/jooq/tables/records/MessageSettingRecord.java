@@ -3,13 +3,11 @@
  */
 package ru.inovus.messaging.impl.jooq.tables.records;
 
-
 import org.jooq.Field;
 import org.jooq.Record1;
 import org.jooq.Record11;
 import org.jooq.Row11;
 import org.jooq.impl.UpdatableRecordImpl;
-
 import ru.inovus.messaging.api.model.enums.AlertType;
 import ru.inovus.messaging.api.model.enums.FormationType;
 import ru.inovus.messaging.api.model.enums.Severity;
@@ -19,10 +17,10 @@ import ru.inovus.messaging.impl.jooq.tables.MessageSetting;
 /**
  * Шаблоны уведомлений (общесистемные настройки)
  */
-@SuppressWarnings({ "all", "unchecked", "rawtypes" })
-public class MessageSettingRecord extends UpdatableRecordImpl<MessageSettingRecord> implements Record11<Integer, String, String, Severity, AlertType, Integer, String, Boolean, FormationType, String, String> {
+@SuppressWarnings({"all", "unchecked", "rawtypes"})
+public class MessageSettingRecord extends UpdatableRecordImpl<MessageSettingRecord> implements Record11<Integer, String, String, Severity, AlertType, String, Boolean, FormationType, String, String, String> {
 
-    private static final long serialVersionUID = 53403457;
+    private static final long serialVersionUID = -1043806613;
 
     /**
      * Setter for <code>messaging.message_setting.id</code>. Уникальный идентификатор
@@ -95,86 +93,86 @@ public class MessageSettingRecord extends UpdatableRecordImpl<MessageSettingReco
     }
 
     /**
-     * Setter for <code>messaging.message_setting.component_id</code>. Идентификатор компонента (модуля, подсистемы), к которому относится уведомление
-     */
-    public void setComponentId(Integer value) {
-        set(5, value);
-    }
-
-    /**
-     * Getter for <code>messaging.message_setting.component_id</code>. Идентификатор компонента (модуля, подсистемы), к которому относится уведомление
-     */
-    public Integer getComponentId() {
-        return (Integer) get(5);
-    }
-
-    /**
      * Setter for <code>messaging.message_setting.name</code>. Наименование шаблона уведомления
      */
     public void setName(String value) {
-        set(6, value);
+        set(5, value);
     }
 
     /**
      * Getter for <code>messaging.message_setting.name</code>. Наименование шаблона уведомления
      */
     public String getName() {
-        return (String) get(6);
+        return (String) get(5);
     }
 
     /**
      * Setter for <code>messaging.message_setting.is_disabled</code>. Признак выключения уведомления
      */
     public void setIsDisabled(Boolean value) {
-        set(7, value);
+        set(6, value);
     }
 
     /**
      * Getter for <code>messaging.message_setting.is_disabled</code>. Признак выключения уведомления
      */
     public Boolean getIsDisabled() {
-        return (Boolean) get(7);
+        return (Boolean) get(6);
     }
 
     /**
      * Setter for <code>messaging.message_setting.formation_type</code>. Тип формирования уведомления
      */
     public void setFormationType(FormationType value) {
-        set(8, value);
+        set(7, value);
     }
 
     /**
      * Getter for <code>messaging.message_setting.formation_type</code>. Тип формирования уведомления
      */
     public FormationType getFormationType() {
-        return (FormationType) get(8);
+        return (FormationType) get(7);
     }
 
     /**
      * Setter for <code>messaging.message_setting.code</code>. Код шаблона уведомления
      */
     public void setCode(String value) {
-        set(9, value);
+        set(8, value);
     }
 
     /**
      * Getter for <code>messaging.message_setting.code</code>. Код шаблона уведомления
      */
     public String getCode() {
-        return (String) get(9);
+        return (String) get(8);
     }
 
     /**
      * Setter for <code>messaging.message_setting.channel_id</code>. Идентификатор канала отправки уведомления
      */
     public void setChannelId(String value) {
-        set(10, value);
+        set(9, value);
     }
 
     /**
      * Getter for <code>messaging.message_setting.channel_id</code>. Идентификатор канала отправки уведомления
      */
     public String getChannelId() {
+        return (String) get(9);
+    }
+
+    /**
+     * Setter for <code>messaging.message_setting.tenant_code</code>. Тенант, к которому относится настройка
+     */
+    public void setTenantCode(String value) {
+        set(10, value);
+    }
+
+    /**
+     * Getter for <code>messaging.message_setting.tenant_code</code>. Тенант, к которому относится настройка
+     */
+    public String getTenantCode() {
         return (String) get(10);
     }
 
@@ -192,12 +190,12 @@ public class MessageSettingRecord extends UpdatableRecordImpl<MessageSettingReco
     // -------------------------------------------------------------------------
 
     @Override
-    public Row11<Integer, String, String, Severity, AlertType, Integer, String, Boolean, FormationType, String, String> fieldsRow() {
+    public Row11<Integer, String, String, Severity, AlertType, String, Boolean, FormationType, String, String, String> fieldsRow() {
         return (Row11) super.fieldsRow();
     }
 
     @Override
-    public Row11<Integer, String, String, Severity, AlertType, Integer, String, Boolean, FormationType, String, String> valuesRow() {
+    public Row11<Integer, String, String, Severity, AlertType, String, Boolean, FormationType, String, String, String> valuesRow() {
         return (Row11) super.valuesRow();
     }
 
@@ -227,33 +225,33 @@ public class MessageSettingRecord extends UpdatableRecordImpl<MessageSettingReco
     }
 
     @Override
-    public Field<Integer> field6() {
-        return MessageSetting.MESSAGE_SETTING.COMPONENT_ID;
-    }
-
-    @Override
-    public Field<String> field7() {
+    public Field<String> field6() {
         return MessageSetting.MESSAGE_SETTING.NAME;
     }
 
     @Override
-    public Field<Boolean> field8() {
+    public Field<Boolean> field7() {
         return MessageSetting.MESSAGE_SETTING.IS_DISABLED;
     }
 
     @Override
-    public Field<FormationType> field9() {
+    public Field<FormationType> field8() {
         return MessageSetting.MESSAGE_SETTING.FORMATION_TYPE;
     }
 
     @Override
-    public Field<String> field10() {
+    public Field<String> field9() {
         return MessageSetting.MESSAGE_SETTING.CODE;
     }
 
     @Override
-    public Field<String> field11() {
+    public Field<String> field10() {
         return MessageSetting.MESSAGE_SETTING.CHANNEL_ID;
+    }
+
+    @Override
+    public Field<String> field11() {
+        return MessageSetting.MESSAGE_SETTING.TENANT_CODE;
     }
 
     @Override
@@ -282,33 +280,33 @@ public class MessageSettingRecord extends UpdatableRecordImpl<MessageSettingReco
     }
 
     @Override
-    public Integer component6() {
-        return getComponentId();
-    }
-
-    @Override
-    public String component7() {
+    public String component6() {
         return getName();
     }
 
     @Override
-    public Boolean component8() {
+    public Boolean component7() {
         return getIsDisabled();
     }
 
     @Override
-    public FormationType component9() {
+    public FormationType component8() {
         return getFormationType();
     }
 
     @Override
-    public String component10() {
+    public String component9() {
         return getCode();
     }
 
     @Override
-    public String component11() {
+    public String component10() {
         return getChannelId();
+    }
+
+    @Override
+    public String component11() {
+        return getTenantCode();
     }
 
     @Override
@@ -337,33 +335,33 @@ public class MessageSettingRecord extends UpdatableRecordImpl<MessageSettingReco
     }
 
     @Override
-    public Integer value6() {
-        return getComponentId();
-    }
-
-    @Override
-    public String value7() {
+    public String value6() {
         return getName();
     }
 
     @Override
-    public Boolean value8() {
+    public Boolean value7() {
         return getIsDisabled();
     }
 
     @Override
-    public FormationType value9() {
+    public FormationType value8() {
         return getFormationType();
     }
 
     @Override
-    public String value10() {
+    public String value9() {
         return getCode();
     }
 
     @Override
-    public String value11() {
+    public String value10() {
         return getChannelId();
+    }
+
+    @Override
+    public String value11() {
+        return getTenantCode();
     }
 
     @Override
@@ -397,43 +395,43 @@ public class MessageSettingRecord extends UpdatableRecordImpl<MessageSettingReco
     }
 
     @Override
-    public MessageSettingRecord value6(Integer value) {
-        setComponentId(value);
-        return this;
-    }
-
-    @Override
-    public MessageSettingRecord value7(String value) {
+    public MessageSettingRecord value6(String value) {
         setName(value);
         return this;
     }
 
     @Override
-    public MessageSettingRecord value8(Boolean value) {
+    public MessageSettingRecord value7(Boolean value) {
         setIsDisabled(value);
         return this;
     }
 
     @Override
-    public MessageSettingRecord value9(FormationType value) {
+    public MessageSettingRecord value8(FormationType value) {
         setFormationType(value);
         return this;
     }
 
     @Override
-    public MessageSettingRecord value10(String value) {
+    public MessageSettingRecord value9(String value) {
         setCode(value);
         return this;
     }
 
     @Override
-    public MessageSettingRecord value11(String value) {
+    public MessageSettingRecord value10(String value) {
         setChannelId(value);
         return this;
     }
 
     @Override
-    public MessageSettingRecord values(Integer value1, String value2, String value3, Severity value4, AlertType value5, Integer value6, String value7, Boolean value8, FormationType value9, String value10, String value11) {
+    public MessageSettingRecord value11(String value) {
+        setTenantCode(value);
+        return this;
+    }
+
+    @Override
+    public MessageSettingRecord values(Integer value1, String value2, String value3, Severity value4, AlertType value5, String value6, Boolean value7, FormationType value8, String value9, String value10, String value11) {
         value1(value1);
         value2(value2);
         value3(value3);
@@ -462,7 +460,7 @@ public class MessageSettingRecord extends UpdatableRecordImpl<MessageSettingReco
     /**
      * Create a detached, initialised MessageSettingRecord
      */
-    public MessageSettingRecord(Integer id, String caption, String text, Severity severity, AlertType alertType, Integer componentId, String name, Boolean isDisabled, FormationType formationType, String code, String channelId) {
+    public MessageSettingRecord(Integer id, String caption, String text, Severity severity, AlertType alertType, String name, Boolean isDisabled, FormationType formationType, String code, String channelId, String tenantCode) {
         super(MessageSetting.MESSAGE_SETTING);
 
         set(0, id);
@@ -470,11 +468,11 @@ public class MessageSettingRecord extends UpdatableRecordImpl<MessageSettingReco
         set(2, text);
         set(3, severity);
         set(4, alertType);
-        set(5, componentId);
-        set(6, name);
-        set(7, isDisabled);
-        set(8, formationType);
-        set(9, code);
-        set(10, channelId);
+        set(5, name);
+        set(6, isDisabled);
+        set(7, formationType);
+        set(8, code);
+        set(9, channelId);
+        set(10, tenantCode);
     }
 }

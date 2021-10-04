@@ -3,7 +3,6 @@
  */
 package ru.inovus.messaging.impl.jooq.tables;
 
-
 import org.jooq.Record;
 import org.jooq.*;
 import org.jooq.impl.DSL;
@@ -34,7 +33,7 @@ import java.util.UUID;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Message extends TableImpl<MessageRecord> {
 
-    private static final long serialVersionUID = 122176216;
+    private static final long serialVersionUID = -167769007;
 
     /**
      * The reference instance of <code>messaging.message</code>
@@ -80,14 +79,9 @@ public class Message extends TableImpl<MessageRecord> {
     public final TableField<MessageRecord, LocalDateTime> SENT_AT = createField(DSL.name("sent_at"), org.jooq.impl.SQLDataType.TIMESTAMP, this, "Дата и время отправки уведомления", new TimestampToLocalDateTimeConverter());
 
     /**
-     * The column <code>messaging.message.system_id</code>. Идентификатор системы, к которой относится уведомление
+     * The column <code>messaging.message.tenant_code</code>. Тенант, к которому относится уведомление
      */
-    public final TableField<MessageRecord, String> SYSTEM_ID = createField(DSL.name("system_id"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Идентификатор системы, к которой относится уведомление");
-
-    /**
-     * The column <code>messaging.message.component_id</code>. Идентификатор компонента (модуля, подсистемы), к которому относится уведомление
-     */
-    public final TableField<MessageRecord, Integer> COMPONENT_ID = createField(DSL.name("component_id"), org.jooq.impl.SQLDataType.INTEGER, this, "Идентификатор компонента (модуля, подсистемы), к которому относится уведомление");
+    public final TableField<MessageRecord, String> TENANT_CODE = createField(DSL.name("tenant_code"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Тенант, к которому относится уведомление");
 
     /**
      * The column <code>messaging.message.formation_type</code>. Тип формирования уведомления
@@ -103,16 +97,6 @@ public class Message extends TableImpl<MessageRecord> {
      * The column <code>messaging.message.notification_type</code>. Код шаблона, который был использован для формирования уведомления
      */
     public final TableField<MessageRecord, String> NOTIFICATION_TYPE = createField(DSL.name("notification_type"), org.jooq.impl.SQLDataType.VARCHAR, this, "Код шаблона, который был использован для формирования уведомления");
-
-    /**
-     * The column <code>messaging.message.object_id</code>. Идентификатор объекта, по которому было направлено уведомление
-     */
-    public final TableField<MessageRecord, String> OBJECT_ID = createField(DSL.name("object_id"), org.jooq.impl.SQLDataType.VARCHAR, this, "Идентификатор объекта, по которому было направлено уведомление");
-
-    /**
-     * The column <code>messaging.message.object_type</code>. Тип объекта, по которому было направлено уведомление
-     */
-    public final TableField<MessageRecord, String> OBJECT_TYPE = createField(DSL.name("object_type"), org.jooq.impl.SQLDataType.VARCHAR, this, "Тип объекта, по которому было направлено уведомление");
 
     /**
      * The column <code>messaging.message.channel_id</code>. Идентификатор канала отправки уведомления
@@ -174,11 +158,11 @@ public class Message extends TableImpl<MessageRecord> {
 
     @Override
     public List<ForeignKey<MessageRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<MessageRecord, ?>>asList(Keys.MESSAGE__MESSAGE_COMPONENT_ID_FKEY, Keys.MESSAGE__MESSAGE_CHANNEL_ID_CHANNEL_ID_FK);
+        return Arrays.<ForeignKey<MessageRecord, ?>>asList(Keys.MESSAGE__MESSAGE_TENANT_CODE_FKEY, Keys.MESSAGE__MESSAGE_CHANNEL_ID_CHANNEL_ID_FK);
     }
 
-    public Component component() {
-        return new Component(this, Keys.MESSAGE__MESSAGE_COMPONENT_ID_FKEY);
+    public Tenant tenant() {
+        return new Tenant(this, Keys.MESSAGE__MESSAGE_TENANT_CODE_FKEY);
     }
 
     public Channel channel() {
@@ -212,11 +196,11 @@ public class Message extends TableImpl<MessageRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row14 type methods
+    // Row11 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row14<UUID, String, String, Severity, AlertType, LocalDateTime, String, Integer, FormationType, RecipientType, String, String, String, String> fieldsRow() {
-        return (Row14) super.fieldsRow();
+    public Row11<UUID, String, String, Severity, AlertType, LocalDateTime, String, FormationType, RecipientType, String, String> fieldsRow() {
+        return (Row11) super.fieldsRow();
     }
 }

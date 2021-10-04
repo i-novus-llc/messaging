@@ -112,7 +112,7 @@ public class WebChannelTest {
         message.setCaption("Test caption");
         message.setSeverity(Severity.ERROR);
         message.setText("Message");
-        message.setSystemId(SYSTEM_ID);
+        message.setTenantCode(SYSTEM_ID);
         Recipient recipient1 = new Recipient();
         recipient1.setUsername("test-user");
         Recipient recipient2 = new Recipient();

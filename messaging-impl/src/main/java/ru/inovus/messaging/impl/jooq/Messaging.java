@@ -3,21 +3,14 @@
  */
 package ru.inovus.messaging.impl.jooq;
 
-
-import java.util.Arrays;
-import java.util.List;
-
 import org.jooq.Catalog;
 import org.jooq.Sequence;
 import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
+import ru.inovus.messaging.impl.jooq.tables.*;
 
-import ru.inovus.messaging.impl.jooq.tables.Channel;
-import ru.inovus.messaging.impl.jooq.tables.Component;
-import ru.inovus.messaging.impl.jooq.tables.Message;
-import ru.inovus.messaging.impl.jooq.tables.MessageRecipient;
-import ru.inovus.messaging.impl.jooq.tables.MessageSetting;
-import ru.inovus.messaging.impl.jooq.tables.UserSetting;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -26,7 +19,7 @@ import ru.inovus.messaging.impl.jooq.tables.UserSetting;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Messaging extends SchemaImpl {
 
-    private static final long serialVersionUID = 1599754114;
+    private static final long serialVersionUID = -362314422;
 
     /**
      * The reference instance of <code>messaging</code>
@@ -37,11 +30,6 @@ public class Messaging extends SchemaImpl {
      * Каналы отправки уведомлений
      */
     public final Channel CHANNEL = Channel.CHANNEL;
-
-    /**
-     * Компоненты системы
-     */
-    public final Component COMPONENT = Component.COMPONENT;
 
     /**
      * Уведомления
@@ -57,6 +45,11 @@ public class Messaging extends SchemaImpl {
      * Шаблоны уведомлений (общесистемные настройки)
      */
     public final MessageSetting MESSAGE_SETTING = MessageSetting.MESSAGE_SETTING;
+
+    /**
+     * Тенанты
+     */
+    public final Tenant TENANT = Tenant.TENANT;
 
     /**
      * Пользовательские настройки уведомлений
@@ -88,11 +81,11 @@ public class Messaging extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.<Table<?>>asList(
-            Channel.CHANNEL,
-            Component.COMPONENT,
-            Message.MESSAGE,
-            MessageRecipient.MESSAGE_RECIPIENT,
-            MessageSetting.MESSAGE_SETTING,
-            UserSetting.USER_SETTING);
+                Channel.CHANNEL,
+                Message.MESSAGE,
+                MessageRecipient.MESSAGE_RECIPIENT,
+                MessageSetting.MESSAGE_SETTING,
+                Tenant.TENANT,
+                UserSetting.USER_SETTING);
     }
 }

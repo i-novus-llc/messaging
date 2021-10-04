@@ -1,3 +1,16 @@
+ALTER TABLE messaging.message_setting
+    DROP COLUMN component_id;
+ALTER TABLE messaging.message
+    DROP COLUMN component_id;
+
+DROP TABLE IF EXISTS messaging.component;
+
+ALTER TABLE messaging.message
+    DROP COLUMN object_id;
+ALTER TABLE messaging.message
+    DROP COLUMN object_type;
+
+
 CREATE TABLE messaging.tenant
 (
     code VARCHAR PRIMARY KEY NOT NULL,

@@ -97,7 +97,7 @@ public class EmailChannelTest {
         message.setId("6f711616-1617-11ec-9621-0242ac130003");
         message.setCaption("Test caption");
         message.setText("Message");
-        message.setSystemId("system-id");
+        message.setTenantCode("system-id");
         message.setRecipients(Collections.singletonList(new Recipient("email1")));
 
         CountDownLatch latch = new CountDownLatch(1);
@@ -124,7 +124,7 @@ public class EmailChannelTest {
     public void testSendMessageStatusFailed() throws InterruptedException {
         Message message = new Message();
         message.setId("6f711616-1617-11ec-9621-0242ac130002");
-        message.setSystemId("system-id");
+        message.setTenantCode("system-id");
         message.setRecipients(Collections.singletonList(new Recipient("email1")));
 
         CountDownLatch latch = new CountDownLatch(1);

@@ -49,7 +49,7 @@ public class FeedRestImpl implements FeedRest {
     public Feed getMessageAndRead(String recipient, UUID messageId) {
         Feed result = feedService.getMessageAndRead(messageId, recipient);
         if (result != null) {
-            mqProvider.publish(getFeedCount(recipient, result.getSystemId()), feedCountQueue);
+            mqProvider.publish(getFeedCount(recipient, result.getTenantCode()), feedCountQueue);
         }
         return result;
     }
@@ -65,6 +65,6 @@ public class FeedRestImpl implements FeedRest {
 //      todo 3 обращения к бд, как то не очень
         feedService.markRead(recipient, messageId);
         Message message = messageService.getMessage(messageId);
-        mqProvider.publish(getFeedCount(recipient, message.getSystemId()), feedCountQueue);
+        mqProvider.publish(getFeedCount(recipient, message.getTenantCode()), feedCountQueue);
     }
 }
