@@ -1,11 +1,8 @@
 package ru.inovus.messaging.channel.email;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.MessageStatus;

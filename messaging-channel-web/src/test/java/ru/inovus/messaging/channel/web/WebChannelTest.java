@@ -9,16 +9,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.annotation.Import;
 import org.springframework.kafka.test.context.EmbeddedKafka;
-import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageType;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -41,9 +37,7 @@ import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.api.model.enums.Severity;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.api.queue.QueueMqConsumer;
-import ru.inovus.messaging.channel.web.config.WebSecurityTestConfiguration;
 import ru.inovus.messaging.channel.web.configuration.WebChannelProperties;
-import ru.inovus.messaging.channel.web.configuration.WebSocketConfiguration;
 import ru.inovus.messaging.mq.support.kafka.KafkaMqProvider;
 
 import java.lang.reflect.Type;
@@ -59,8 +53,6 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doAnswer;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(
@@ -80,8 +72,6 @@ public class WebChannelTest {
     private String feedCountQueue;
     @Autowired
     private WebChannelProperties properties;
-//    @MockBean
-//    private SimpMessagingTemplate simpMessagingTemplate;
     @Value("${novus.messaging.queue.status}")
     private String statusQueue;
 
@@ -192,43 +182,6 @@ public class WebChannelTest {
         assertThat(receivedStatus[0].getSystemId(), is(SYSTEM_ID));
         assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.SENT));
     }
-
-//    @Test
-//    public void testSendMessageStatusFailed() throws Exception {
-//        // publish session subscribe event
-//        publisher.publishEvent(createSessionSubscribeEvent());
-//
-//        // create message
-//        Message message = new Message();
-//        message.setId("6f711616-1617-11ec-9621-0242ac130003");
-//        message.setSystemId(SYSTEM_ID);
-//        message.setRecipients(Collections.singletonList(new Recipient(USERNAME)));
-//
-//        final MessageStatus[] receivedStatus = new MessageStatus[1];
-//        QueueMqConsumer mqConsumer = new QueueMqConsumer(statusQueue, msg -> {
-//            receivedStatus[0] = (MessageStatus) msg;
-//            latch.countDown();
-//        }, statusQueue);
-//
-//        String errorMessage = "Some exception message";
-//        doAnswer(a -> {
-//            throw new MessagingException(errorMessage);
-//        }).when(simpMessagingTemplate).convertAndSend(any(String.class), any(Object.class));
-//
-//        // send message to web queue and wait for publishing to status queue
-//        mqProvider.subscribe(mqConsumer);
-//        latch = new CountDownLatch(1);
-//        mqProvider.publish(message, properties.getQueue());
-//        latch.await();
-//        mqProvider.unsubscribe(mqConsumer.subscriber());
-//
-//        assertThat(receivedStatus[0], notNullValue());
-//        assertThat(receivedStatus[0].getUsername(), is(USERNAME));
-//        assertThat(receivedStatus[0].getMessageId(), is(message.getId()));
-//        assertThat(receivedStatus[0].getSystemId(), is(SYSTEM_ID));
-//        assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.FAILED));
-//        assertThat(receivedStatus[0].getErrorMessage(), is(errorMessage));
-//    }
 
     @Test
     public void testMarkReadMessage() throws Exception {

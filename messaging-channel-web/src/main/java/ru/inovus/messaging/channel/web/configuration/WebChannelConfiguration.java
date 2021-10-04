@@ -22,8 +22,8 @@ public class WebChannelConfiguration {
 
     @Bean
     WebChannel webChannel(WebChannelProperties webChannelProperties,
-                                 MqProvider mqProvider,
-                                 MessageController messageController) {
+                          MqProvider mqProvider,
+                          MessageController messageController) {
         WebChannel webChannel = new WebChannel(webChannelProperties.getQueue(), statusQueueName, mqProvider, messageController);
         webChannel.setTimeout(webChannelProperties.getMessageLifetime());
         webChannel.setNoticeTopicName(webChannelProperties.getNoticeTopicName());
@@ -32,10 +32,8 @@ public class WebChannelConfiguration {
 
     @Bean
     FeedCountListener feedCountListener(MqProvider mqProvider,
-                                               MessageController messageController) {
+                                        MessageController messageController) {
         return new FeedCountListener(feedCountQueue, mqProvider, messageController);
     }
-
-
 }
 

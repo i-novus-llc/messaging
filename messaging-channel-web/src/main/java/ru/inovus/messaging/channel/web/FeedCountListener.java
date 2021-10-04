@@ -1,7 +1,5 @@
 package ru.inovus.messaging.channel.web;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import ru.inovus.messaging.api.model.FeedCount;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.api.queue.QueueMqConsumer;
