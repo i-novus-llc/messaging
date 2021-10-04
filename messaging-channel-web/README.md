@@ -1,24 +1,24 @@
 # Канал для отправки уведомлений через Web Socket
 
 ## Настройки
-`novus.messaging.channel.web.app_prefix` - префикс пути приложения 
+- `novus.messaging.channel.web.app_prefix` - префикс пути приложения 
 (по умолчанию: `/app`)
 
-`novus.messaging.channel.web.end_point` - эндпоинт, по которому регистрируется поддержка STOMP 
+- `novus.messaging.channel.web.end_point` - эндпоинт, по которому регистрируется поддержка STOMP 
 (по умолчанию: `/ws`)
 
-`novus.messaging.channel.web.public_dest_prefix` - публичный префикс пути клиента 
+- `novus.messaging.channel.web.public_dest_prefix` - публичный префикс пути клиента 
 (по умолчанию: `/topic`)
 
-`novus.messaging.channel.web.private_dest_prefix` - приватный префикс пути клиента 
+- `novus.messaging.channel.web.private_dest_prefix` - приватный префикс пути клиента 
 (по умолчанию: `/exchange`)
 
-`novus.messaging.channel.web.message-lifetime` - время в секундах, по истечении которого
+- `novus.messaging.channel.web.message-lifetime` - время в секундах, по истечении которого
 сообщения не будут показываться, если пользователь не был подключен (по умолчанию: `60`)
 
-`novus.messaging.channel.web.queue` - имя очереди сообщений веб канала (по умолчанию: `web-queue`)
+- `novus.messaging.channel.web.queue` - имя очереди сообщений веб канала (по умолчанию: `web-queue`)
 
-`novus.messaging.channel.web.topic` - имя топика сообщений веб канала (по умолчанию: `web-notice-topic`)
+- `novus.messaging.channel.web.topic` - имя топика сообщений веб канала (по умолчанию: `web-notice-topic`)
 
 ## Формат сообщений для Web Socket
 

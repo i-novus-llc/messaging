@@ -11,9 +11,8 @@
 
 Сервис предоставляет:
 - [RESTful API](Rest.md) - для управления оповещениями
-- [WebSocket интерфейс](../messaging-channel-web/Websocket.md) - для отправки сообщений через web socket
+- [WebSocket интерфейс](../messaging-channel-web/README.md) - для отправки сообщений через web socket
 - [Свойства сервиса](Properties.md)
 - [Инструкция для DevOps](DevOps.md)
-- [Security](Security.md)
 - [Frontend](Frontend.md)
-- [Свойства для настройки провайдера пользователей и конфигурация маппинга](UserRoleProviderPropertiesAndMappind.md)
+- [Свойства для настройки провайдера пользователей и конфигурация маппинга](UserRoleProviderPropertiesAndMapping.md)

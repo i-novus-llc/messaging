@@ -1,5 +1,3 @@
-- `spring.kafka.bootstrap-servers` - URL of bootstrap-servers 
-(см. документацию кафки)
 - `novus.messaging.channel.web.message-lifetime` - время в секундах, по истечении которого
 сообщения не будут показываться, если пользователь не был подключен
 (по умолчанию 60)
