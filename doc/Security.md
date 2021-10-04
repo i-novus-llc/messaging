@@ -22,7 +22,7 @@ security.enabled: true
 Если добавить аннотацию `@EnableOAuth2Sso` в `WebSecurityConfigurerAdapter`
 (что выполняется автоматически при использовании `security-oauth2` из N2O), то spring
 добавляет request scope bean класса `OAuth2UserContext`. Из него можно достать access token.
-Его можно внедрить в вебсоккет канал через хедер `X-Auth-Token` (см. [описание websocket канала](Websocket.md).
+Его можно внедрить в вебсоккет канал через хедер `X-Auth-Token` (см. [описание websocket канала](../messaging-channel-web/Websocket.md).
 Если `security.enabled=false`, то в `X-Auth-Token` надо передать `username` (см. `NoAuthAuthenticator`).
 
 Для передачи токена в рест сервис через feign client, гуглить `feign client access token relay`.
