@@ -1,9 +1,8 @@
 package ru.inovus.messaging.channel.web.configuration;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -13,18 +12,10 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 
 @Configuration
 @EnableWebSocketMessageBroker
-@PropertySource("classpath:channel.properties")
 public class WebSocketConfiguration extends AbstractSecurityWebSocketMessageBrokerConfigurer {
 
-    @Value("${novus.messaging.channel.web.app_prefix:/app}")
-    private String appPrefix;
-    @Value("${novus.messaging.channel.web.end_point:/ws}")
-    private String endPoint;
-
-    @Value("${novus.messaging.channel.web.public_dest_prefix:/topic}")
-    private String publicDestPrefix;
-    @Value("${novus.messaging.channel.web.private_dest_prefix:/exchange}")
-    private String privateDestPrefix;
+    @Autowired
+    private WebChannelProperties properties;
 
     @Override
     protected boolean sameOriginDisabled() {
@@ -42,13 +33,13 @@ public class WebSocketConfiguration extends AbstractSecurityWebSocketMessageBrok
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.setApplicationDestinationPrefixes(appPrefix);
-        registry.enableSimpleBroker(publicDestPrefix, privateDestPrefix).setTaskScheduler(stompHeartbeatThreadBool());
+        registry.setApplicationDestinationPrefixes(properties.getAppPrefix());
+        registry.enableSimpleBroker(properties.getPublicDestPrefix(), properties.getPrivateDestPrefix()).setTaskScheduler(stompHeartbeatThreadBool());
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint(endPoint).setAllowedOrigins("*").withSockJS();
+        registry.addEndpoint(properties.getEndPoint()).setAllowedOrigins("*").withSockJS();
     }
 }
 

@@ -34,11 +34,10 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(
-        classes = {EmailChannel.class},
+        classes = {TestApp.class},
         properties = {
                 "novus.messaging.queue.status=test-status-queue",
                 "novus.messaging.channel.email.queue=test-email-queue"})
-@Import(EmbeddedKafkaTestConfiguration.class)
 @EmbeddedKafka
 @ContextConfiguration(classes = KafkaMqProvider.class)
 public class EmailChannelTest {
@@ -52,8 +51,8 @@ public class EmailChannelTest {
     @Value("${novus.messaging.queue.status}")
     private String statusQueue;
 
-    @Value("${novus.messaging.channel.email.queue}")
-    private String emailQueue;
+    @Autowired
+    private EmailChannelProperties properties;
 
     @MockBean
     private JavaMailSender mailSender;
@@ -76,7 +75,7 @@ public class EmailChannelTest {
             latch.countDown();
             return "ignored";
         }).when(mailSender).send(mimeMessage);
-        mqProvider.publish(message, emailQueue);
+        mqProvider.publish(message, properties.getQueue());
         latch.await();
 
         assertThat(mimeMessage.getSubject(), is(message.getCaption()));
