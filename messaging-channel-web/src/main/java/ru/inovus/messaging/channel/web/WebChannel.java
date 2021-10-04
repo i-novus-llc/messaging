@@ -1,5 +1,6 @@
 package ru.inovus.messaging.channel.web;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -25,22 +26,22 @@ import java.time.temporal.ChronoUnit;
  * Реализация канала отправки уведомлений через Web c использованием WebSocket
  */
 @Slf4j
-@PropertySource("classpath:channel.properties")
-@Component
 public class WebChannel extends AbstractChannel {
 
     @Value("${novus.messaging.channel.web.topic:web-topic}")
+    @Setter
     private String noticeTopicName;
 
     @Value("${novus.messaging.channel.web.message-lifetime:60}")
+    @Setter
     private Integer timeout;
 
     private final MessageController messageController;
 
     private final MqProvider mqProvider;
 
-    public WebChannel(@Value("${novus.messaging.channel.web.queue:web-queue}") String messageQueueName,
-                      @Value("${novus.messaging.queue.status}") String statusQueueName,
+    public WebChannel(String messageQueueName,
+                      String statusQueueName,
                       MqProvider mqProvider,
                       MessageController messageController) {
         super(mqProvider, messageQueueName, statusQueueName);

@@ -22,14 +22,12 @@ import java.util.stream.Collectors;
  * Реализация канала отправки уведомлений по Email
  */
 @Slf4j
-@PropertySource("classpath:channel.properties")
-@Component
 public class EmailChannel extends AbstractChannel {
 
-    private JavaMailSender emailSender;
+    private final JavaMailSender emailSender;
 
-    public EmailChannel(@Value("${novus.messaging.channel.email.queue}") String messageQueueName,
-                        @Value("${novus.messaging.queue.status}") String statusQueueName,
+    public EmailChannel(String messageQueueName,
+                        String statusQueueName,
                         MqProvider mqProvider,
                         JavaMailSender emailSender) {
         super(mqProvider, messageQueueName, statusQueueName);

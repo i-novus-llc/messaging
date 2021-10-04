@@ -9,13 +9,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Import;
 import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageType;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -32,10 +35,14 @@ import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 import ru.inovus.messaging.api.model.FeedCount;
 import ru.inovus.messaging.api.model.Message;
+import ru.inovus.messaging.api.model.MessageStatus;
 import ru.inovus.messaging.api.model.Recipient;
+import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.api.model.enums.Severity;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
+import ru.inovus.messaging.channel.api.queue.QueueMqConsumer;
 import ru.inovus.messaging.channel.web.config.WebSecurityTestConfiguration;
+import ru.inovus.messaging.channel.web.configuration.WebChannelProperties;
 import ru.inovus.messaging.channel.web.configuration.WebSocketConfiguration;
 import ru.inovus.messaging.mq.support.kafka.KafkaMqProvider;
 
@@ -44,41 +51,40 @@ import java.security.Principal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(
         classes = TestApp.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import({WebSocketConfiguration.class, WebSecurityTestConfiguration.class})
 @EmbeddedKafka
 @ContextConfiguration(classes = KafkaMqProvider.class)
 public class WebChannelTest {
-    @Autowired
-    private MqProvider mqProvider;
-
-    @Autowired
-    private ApplicationEventPublisher publisher;
-
-    @Value("${novus.messaging.channel.web.queue:web-queue}")
-    private String webQueue;
-
-    @Value("${novus.messaging.queue.feed-count}")
-    private String feedCountQueue;
-
-    @Value("${novus.messaging.channel.web.end_point}")
-    private String endPoint;
-
-    @Value("${novus.messaging.channel.web.private_dest_prefix}")
-    private String privateDestPrefix;
-
     private static final String SYSTEM_ID = "system-id";
     private static final String USERNAME = "test-user";
+
+    @Autowired
+    private MqProvider mqProvider;
+    @Autowired
+    private ApplicationEventPublisher publisher;
+    @Value("${novus.messaging.queue.feed-count}")
+    private String feedCountQueue;
+    @Autowired
+    private WebChannelProperties properties;
+//    @MockBean
+//    private SimpMessagingTemplate simpMessagingTemplate;
+    @Value("${novus.messaging.queue.status}")
+    private String statusQueue;
+
 
     @LocalServerPort
     private Integer port;
@@ -94,7 +100,7 @@ public class WebChannelTest {
 
     @BeforeEach
     public void init() {
-        URL = "ws://localhost:" + port + endPoint;
+        URL = "ws://localhost:" + port + properties.getEndPoint();
         completableFuture = new CompletableFuture<>();
 
         List<Transport> transports = Collections.singletonList(new WebSocketTransport(new StandardWebSocketClient()));
@@ -121,10 +127,10 @@ public class WebChannelTest {
 
         // publish message to web queue and wait for sending to stomp
         StompSession stompSession = getStompSessionWithHeaders();
-        stompSession.subscribe("/user" + privateDestPrefix + "/" + SYSTEM_ID + "/message", new TestReceivedMessageHandler());
+        stompSession.subscribe("/user" + properties.getPrivateDestPrefix() + "/" + SYSTEM_ID + "/message", new TestReceivedMessageHandler());
 
         latch = new CountDownLatch(1);
-        mqProvider.publish(message, webQueue);
+        mqProvider.publish(message, properties.getQueue());
         latch.await();
 
         // expected message on client
@@ -143,7 +149,7 @@ public class WebChannelTest {
 
         // publish message to feedCount queue and wait for sending to stomp
         StompSession stompSession = getStompSessionWithHeaders();
-        stompSession.subscribe("/user" + privateDestPrefix + "/" + SYSTEM_ID + "/message.count", new TestReceivedFeedCountHandler());
+        stompSession.subscribe("/user" + properties.getPrivateDestPrefix() + "/" + SYSTEM_ID + "/message.count", new TestReceivedFeedCountHandler());
 
         latch = new CountDownLatch(1);
         mqProvider.publish(feedCount, feedCountQueue);
@@ -154,6 +160,131 @@ public class WebChannelTest {
         stompSession.disconnect();
 
         assertThat(receivedFeedCount, is(feedCount.getCount()));
+    }
+
+    @Test
+    public void testSendMessageStatusSuccess() throws Exception {
+        // publish session subscribe event
+        publisher.publishEvent(createSessionSubscribeEvent());
+
+        // create message
+        Message message = new Message();
+        message.setId("6f711616-1617-11ec-9621-0242ac130003");
+        message.setSystemId(SYSTEM_ID);
+        message.setRecipients(Collections.singletonList(new Recipient(USERNAME)));
+
+        final MessageStatus[] receivedStatus = new MessageStatus[1];
+        QueueMqConsumer mqConsumer = new QueueMqConsumer(statusQueue, msg -> {
+            receivedStatus[0] = (MessageStatus) msg;
+            latch.countDown();
+        }, statusQueue);
+
+        // send message to web queue and wait for publishing to status queue
+        mqProvider.subscribe(mqConsumer);
+        latch = new CountDownLatch(1);
+        mqProvider.publish(message, properties.getQueue());
+        latch.await();
+        mqProvider.unsubscribe(mqConsumer.subscriber());
+
+        assertThat(receivedStatus[0], notNullValue());
+        assertThat(receivedStatus[0].getUsername(), is(USERNAME));
+        assertThat(receivedStatus[0].getMessageId(), is(message.getId()));
+        assertThat(receivedStatus[0].getSystemId(), is(SYSTEM_ID));
+        assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.SENT));
+    }
+
+//    @Test
+//    public void testSendMessageStatusFailed() throws Exception {
+//        // publish session subscribe event
+//        publisher.publishEvent(createSessionSubscribeEvent());
+//
+//        // create message
+//        Message message = new Message();
+//        message.setId("6f711616-1617-11ec-9621-0242ac130003");
+//        message.setSystemId(SYSTEM_ID);
+//        message.setRecipients(Collections.singletonList(new Recipient(USERNAME)));
+//
+//        final MessageStatus[] receivedStatus = new MessageStatus[1];
+//        QueueMqConsumer mqConsumer = new QueueMqConsumer(statusQueue, msg -> {
+//            receivedStatus[0] = (MessageStatus) msg;
+//            latch.countDown();
+//        }, statusQueue);
+//
+//        String errorMessage = "Some exception message";
+//        doAnswer(a -> {
+//            throw new MessagingException(errorMessage);
+//        }).when(simpMessagingTemplate).convertAndSend(any(String.class), any(Object.class));
+//
+//        // send message to web queue and wait for publishing to status queue
+//        mqProvider.subscribe(mqConsumer);
+//        latch = new CountDownLatch(1);
+//        mqProvider.publish(message, properties.getQueue());
+//        latch.await();
+//        mqProvider.unsubscribe(mqConsumer.subscriber());
+//
+//        assertThat(receivedStatus[0], notNullValue());
+//        assertThat(receivedStatus[0].getUsername(), is(USERNAME));
+//        assertThat(receivedStatus[0].getMessageId(), is(message.getId()));
+//        assertThat(receivedStatus[0].getSystemId(), is(SYSTEM_ID));
+//        assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.FAILED));
+//        assertThat(receivedStatus[0].getErrorMessage(), is(errorMessage));
+//    }
+
+    @Test
+    public void testMarkReadMessage() throws Exception {
+        StompSession stompSession = getStompSessionWithHeaders();
+        assertThat(stompSession, notNullValue());
+
+        latch = new CountDownLatch(1);
+
+        final MessageStatus[] receivedStatus = new MessageStatus[1];
+        QueueMqConsumer mqConsumer = new QueueMqConsumer(statusQueue, msg -> {
+            receivedStatus[0] = (MessageStatus) msg;
+            latch.countDown();
+        }, statusQueue);
+
+        String messageId = "e8aa6312-c8ea-4dd6-a4a0-736f8856b348";
+
+        // send message through ws and wait publishing to status queue
+        mqProvider.subscribe(mqConsumer);
+        stompSession.send(properties.getAppPrefix() + "/" + SYSTEM_ID + "/message.markread", messageId);
+        latch.await();
+        stompSession.disconnect();
+        mqProvider.unsubscribe(mqConsumer.subscriber());
+
+        assertThat(receivedStatus[0], notNullValue());
+        assertThat(receivedStatus[0].getUsername(), is(USERNAME));
+        assertThat(receivedStatus[0].getMessageId(), is(messageId));
+        assertThat(receivedStatus[0].getSystemId(), is(SYSTEM_ID));
+        assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.READ));
+    }
+
+    @Test
+    public void testMarkReadAllMessage() throws Exception {
+        StompSession stompSession = getStompSessionWithHeaders();
+        assertThat(stompSession, notNullValue());
+
+        latch = new CountDownLatch(1);
+
+        final MessageStatus[] receivedStatus = new MessageStatus[1];
+        QueueMqConsumer mqConsumer = new QueueMqConsumer(statusQueue, msg -> {
+            receivedStatus[0] = (MessageStatus) msg;
+            latch.countDown();
+        }, statusQueue);
+
+        Map<String, String> payload = Map.of("username", USERNAME);
+
+        // send message through ws and wait publishing to status queue
+        mqProvider.subscribe(mqConsumer);
+        stompSession.send(properties.getAppPrefix() + "/" + SYSTEM_ID + "/message.markreadall", payload);
+        latch.await();
+        stompSession.disconnect();
+        mqProvider.unsubscribe(mqConsumer.subscriber());
+
+        assertThat(receivedStatus[0], notNullValue());
+        assertThat(receivedStatus[0].getUsername(), is(USERNAME));
+        assertThat(receivedStatus[0].getSystemId(), is(SYSTEM_ID));
+        assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.READ));
     }
 
 
