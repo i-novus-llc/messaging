@@ -24,7 +24,10 @@ public class WebChannelConfiguration {
     WebChannel webChannel(WebChannelProperties webChannelProperties,
                                  MqProvider mqProvider,
                                  MessageController messageController) {
-        return new WebChannel(webChannelProperties.getQueue(), statusQueueName, mqProvider, messageController);
+        WebChannel webChannel = new WebChannel(webChannelProperties.getQueue(), statusQueueName, mqProvider, messageController);
+        webChannel.setTimeout(webChannelProperties.getMessageLifetime());
+        webChannel.setNoticeTopicName(webChannelProperties.getNoticeTopicName());
+        return webChannel;
     }
 
     @Bean

@@ -47,25 +47,6 @@
             <artifactId>spring-security-web</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.security.oauth</groupId>-->
-<!--            <artifactId>spring-security-oauth2</artifactId>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.security</groupId>-->
-<!--            <artifactId>spring-security-jwt</artifactId>-->
-<!--            <version>1.0.9.RELEASE</version>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>org.apache.cxf</groupId>-->
-<!--            <artifactId>cxf-rt-security</artifactId>-->
-<!--            <version>3.4.3</version>-->
-<!--            <scope>compile</scope>-->
-<!--        </dependency>-->
-
-
         <!--TEST-->
         <dependency>
             <groupId>net.n2oapp.platform</groupId>

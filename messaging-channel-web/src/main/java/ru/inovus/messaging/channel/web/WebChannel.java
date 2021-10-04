@@ -28,11 +28,9 @@ import java.time.temporal.ChronoUnit;
 @Slf4j
 public class WebChannel extends AbstractChannel {
 
-    @Value("${novus.messaging.channel.web.topic:web-topic}")
     @Setter
     private String noticeTopicName;
 
-    @Value("${novus.messaging.channel.web.message-lifetime:60}")
     @Setter
     private Integer timeout;
 

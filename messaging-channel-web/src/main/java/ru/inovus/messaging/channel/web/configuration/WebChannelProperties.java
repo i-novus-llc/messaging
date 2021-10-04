@@ -16,4 +16,5 @@ public class WebChannelProperties {
     private String publicDestPrefix = "/topic";
     private String privateDestPrefix = "/exchange";
     private Integer messageLifetime = 60;
+    private String noticeTopicName = "web-topic";
 }
