@@ -1,38 +1,53 @@
 Данный проект представляет собой реализацию сервиса для обмена сообщениями
 
 Основные функции сервиса:
-- оповещения пользователей (в том числе по электронной почте)
+- оповещения пользователей
+  * по электронной почте
+  * через web socket
 - обмен сообщениями между пользователями
 
 # Требования
 - Openjdk 11
 - PostgreSQL 11
-- Apache Kafka
+- Apache Kafka 2.6
 - N2O Security Admin 4
 - N2O Audit 2
 
-# Cтек технологий
+# Стек технологий
 - Java 11
 - JDBC
 - JMS
 - Spring Boot 2.1
 - Spring Cloud Greenwich
 - Jooq 3
-- Liquibase 3.6.2
-- N2O Platform 3
-- N2O UI Framework 7
+- Liquibase 3.8.9
+- N2O Platform 4.5
+- N2O UI Framework 7.16
 - React
 - Websockets
 
 # Структура проекта
-- `doc` - документация проекта
-- `messaging-admin-frontend` - запускаемый модуль UI для администрирования уведомлений
-- `messaging-admin-web` - конфигурационные файлы N2O для администрирования уведомлений
-- `messaging-api` - общие интерфейсы и модели
-- `messaging-client` - java клиент для REST-сервиса уведомлений
-- `messaging-impl` - скрипты БД и REST-сервис уведомлений + websocket сервер
-- `messaging-support-kafka` - модуль для поддержки работы уведомлений через Kafka
-- `messaging-web` - конфигурационные файлы N2O и классы для встраивания в другие N2O приложения
+Документация:
+- `doc` - Документация проекта
+
+UI:
+- `messaging-admin-frontend` - Запускаемый модуль UI для администрирования уведомлений (включает messaging-admin-web)
+- `messaging-admin-web` - UI для администрирования уведомлений (включает messaging-web)
+- `messaging-web` - UI для встраивания пользовательских настроек и ленты уведомлений
+- `messaging-react` - React модуль для отрисовки UI
+
+Backend:
+- `messaging-backend` - Запускаемый модуль бэкенда
+- `messaging-api` - REST интерфейсы и модели отправки данных
+- `messaging-impl` - REST сервис уведомлений + скрипты БД
+
+Брокер сообщений:
+- `messaging-support-kafka` - Модуль для поддержки работы уведомлений через Kafka
+  
+Каналы отправки:
+- `messaging-channel-api`- API каналов отправки уведомлений
+- `messaging-email-channel` - Модуль отправки уведомлений по электронной почте
+- `messaging-web-channel` - Модуль отправки уведомлений через web socket
 
 # Общая схема взаимодействия компонентов
 ![Схема](doc/scheme.png)

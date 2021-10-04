@@ -14,7 +14,7 @@
 - `novus.messaging.user-provider-url`: http://localhost:9999/api/users
   - эдпоинт с которого провайдер будет забирать информацию о пользователях
 - `novus.messaging.role-provider-url`: http://localhost:9999/api/role
-  - эдпоинт с которого провайдер будет забирать  информацию о ролях(не нужен в случае SecurityAdminUserRoleProvider)
+  - эдпоинт с которого провайдер будет забирать информацию о ролях(не нужен в случае SecurityAdminUserRoleProvider)
 
 #Настройка маппинга в ConfigurableUserRoleProvider
 
