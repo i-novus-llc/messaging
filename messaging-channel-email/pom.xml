@@ -5,7 +5,7 @@
     <parent>
         <artifactId>messaging-pom</artifactId>
         <groupId>ru.i-novus.messaging</groupId>
-        <version>3.40-SNAPSHOT</version>
+        <version>3.42.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -20,6 +20,11 @@
         <dependency>
             <groupId>ru.i-novus.messaging</groupId>
             <artifactId>messaging-channel-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
         </dependency>
 
         <dependency>

@@ -1,7 +1,8 @@
-package ru.inovus.messaging.channel.web;
+package ru.inovus.messaging.impl.test;
 
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,11 +20,8 @@ import java.util.Map;
 @Configuration
 public class EmbeddedKafkaTestConfiguration {
 
-    @Value("${spring.embedded.kafka.brokers}")
-    private String broker;
-
-
     @Bean
+    @ConditionalOnBean(EmbeddedKafkaBroker.class)
     public KafkaTemplate<?, ?> kafkaTemplate(EmbeddedKafkaBroker embeddedKafkaBroker) {
         Map<String, Object> configs = new HashMap<>(KafkaTestUtils.producerProps(embeddedKafkaBroker));
         ProducerFactory<?, ?> producer = new DefaultKafkaProducerFactory<>(
@@ -32,7 +30,8 @@ public class EmbeddedKafkaTestConfiguration {
     }
 
     @Bean
-    public KafkaProperties kafkaProperties() {
+    @ConditionalOnBean(EmbeddedKafkaBroker.class)
+    public KafkaProperties kafkaProperties(@Value("${spring.embedded.kafka.brokers}") String broker) {
         KafkaProperties kafkaProperties = new KafkaProperties();
         kafkaProperties.getConsumer().setBootstrapServers(Collections.singletonList(broker));
         return kafkaProperties;

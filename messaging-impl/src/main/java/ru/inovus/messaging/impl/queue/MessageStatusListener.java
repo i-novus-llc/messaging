@@ -27,7 +27,7 @@ public class MessageStatusListener {
     /**
      * Обработка полученного статуса
      *
-     * @param status Сообщение с информацией о статусе уведомления
+     * @param status Информация о статусе уведомления
      */
     private void processStatus(MessageStatus status) {
         recipientService.updateStatus(status);

@@ -34,17 +34,16 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(
-        classes = {EmailChannel.class},
+        classes = {TestApp.class},
         properties = {
                 "novus.messaging.queue.status=test-status-queue",
                 "novus.messaging.channel.email.queue=test-email-queue"})
-@Import(EmbeddedKafkaTestConfiguration.class)
-@EmbeddedKafka(partitions = 1)
+@EmbeddedKafka
 @ContextConfiguration(classes = KafkaMqProvider.class)
 public class EmailChannelTest {
 
     @Autowired
-    private MqProvider provider;
+    private MqProvider mqProvider;
 
     @Autowired
     private EmailChannel channel;
@@ -52,8 +51,8 @@ public class EmailChannelTest {
     @Value("${novus.messaging.queue.status}")
     private String statusQueue;
 
-    @Value("${novus.messaging.channel.email.queue}")
-    private String emailQueue;
+    @Autowired
+    private EmailChannelProperties properties;
 
     @MockBean
     private JavaMailSender mailSender;
@@ -76,7 +75,7 @@ public class EmailChannelTest {
             latch.countDown();
             return "ignored";
         }).when(mailSender).send(mimeMessage);
-        provider.publish(message, emailQueue);
+        mqProvider.publish(message, properties.getQueue());
         latch.await();
 
         assertThat(mimeMessage.getSubject(), is(message.getCaption()));
@@ -109,10 +108,10 @@ public class EmailChannelTest {
             latch.countDown();
         }, statusQueue);
 
-        provider.subscribe(mqConsumer);
+        mqProvider.subscribe(mqConsumer);
         channel.send(message);
         latch.await();
-        provider.unsubscribe(mqConsumer.subscriber());
+        mqProvider.unsubscribe(mqConsumer.subscriber());
 
         assertThat(receivedStatus[0], notNullValue());
         assertThat(receivedStatus[0].getMessageId(), is(message.getId()));
@@ -136,10 +135,10 @@ public class EmailChannelTest {
             latch.countDown();
         }, statusQueue);
 
-        provider.subscribe(mqConsumer);
+        mqProvider.subscribe(mqConsumer);
         channel.send(message);
         latch.await();
-        provider.unsubscribe(mqConsumer.subscriber());
+        mqProvider.unsubscribe(mqConsumer.subscriber());
 
         assertThat(receivedStatus[0], notNullValue());
         assertThat(receivedStatus[0].getMessageId(), is(message.getId()));

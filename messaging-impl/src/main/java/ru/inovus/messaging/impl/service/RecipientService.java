@@ -2,13 +2,19 @@ package ru.inovus.messaging.impl.service;
 
 import org.jooq.Record;
 import org.jooq.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.inovus.messaging.api.criteria.RecipientCriteria;
+import ru.inovus.messaging.api.model.FeedCount;
 import ru.inovus.messaging.api.model.MessageStatus;
 import ru.inovus.messaging.api.model.Recipient;
+import ru.inovus.messaging.api.model.enums.MessageStatusType;
+import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecipientRecord;
 
 import java.util.*;
@@ -24,6 +30,16 @@ import static ru.inovus.messaging.impl.jooq.Tables.*;
 public class RecipientService {
 
     private final DSLContext dsl;
+
+    @Autowired
+    private FeedService feedService;
+
+    @Autowired
+    private MqProvider mqProvider;
+
+    @Value("${novus.messaging.queue.feed-count}")
+    private String feedCountQueue;
+
 
     private static final RecordMapper<Record, Recipient> MAPPER = rec -> {
         MessageRecipientRecord record = rec.into(MESSAGE_RECIPIENT);
@@ -87,6 +103,7 @@ public class RecipientService {
      *
      * @param status Статус уведомления
      */
+    @Transactional
     public void updateStatus(MessageStatus status) {
         List<Condition> conditions = new ArrayList<>();
         Optional.ofNullable(status.getUsername())
@@ -112,5 +129,12 @@ public class RecipientService {
                 .set(MESSAGE_RECIPIENT.SEND_MESSAGE_ERROR, status.getErrorMessage())
                 .where(conditions)
                 .execute();
+
+        // отправка количества непрочитанных уведомлений в очередь счетчиков
+        if (status.getUsername() != null && MessageStatusType.READ.equals(status.getStatus())) {
+            FeedCount feedCount = feedService.getFeedCount(status.getUsername(), status.getSystemId());
+            mqProvider.publish(feedCount, feedCountQueue);
+        }
+
     }
 }
