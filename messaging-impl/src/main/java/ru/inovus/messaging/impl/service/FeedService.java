@@ -57,7 +57,7 @@ public class FeedService {
                 .select(MESSAGE_RECIPIENT.fields())
                 .from(MESSAGE)
                 .leftJoin(COMPONENT).on(COMPONENT.ID.eq(MESSAGE.COMPONENT_ID))
-                .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(MESSAGE_RECIPIENT.RECIPIENT_NAME.eq(recipient)))
+                .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(MESSAGE_RECIPIENT.RECIPIENT_SEND_CHANNEL_ID.eq(recipient)))
                 .where(conditions);
         int count = dsl.fetchCount(query);
         Field fieldSentAt = MESSAGE.field("sent_at");
@@ -76,9 +76,9 @@ public class FeedService {
                 .select(MESSAGE_RECIPIENT.fields())
                 .from(MESSAGE)
                 .leftJoin(COMPONENT).on(COMPONENT.ID.eq(MESSAGE.COMPONENT_ID))
-                .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(MESSAGE_RECIPIENT.RECIPIENT_NAME.eq(recipient)))
+                .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(MESSAGE_RECIPIENT.RECIPIENT_SEND_CHANNEL_ID.eq(recipient)))
                 .where(MESSAGE.ID.cast(UUID.class).eq(messageId), MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL)
-                        .or(MESSAGE_RECIPIENT.RECIPIENT_NAME.eq(recipient)))
+                        .or(MESSAGE_RECIPIENT.RECIPIENT_SEND_CHANNEL_ID.eq(recipient)))
                 .fetchOne(MAPPER);
     }
 
