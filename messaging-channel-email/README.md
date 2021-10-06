@@ -14,10 +14,10 @@
 INSERT INTO messaging.channel (id, name, queue_name, is_internal) 
        VALUES ('email', 'Email', 'email-queue', false)
 ```
-- id - уникальный код канала
-- name - имя канала, отображаемое на UI
-- queue_name - имя очереди канала (должно совпадать с настройкой `novus.messaging.channel.email.queue`)
-- is_internal - признак того, что канал является внутрисистемным 
+- `id` - уникальный код канала
+- `name` - имя канала, отображаемое на UI
+- `queue_name` - имя очереди канала (должно совпадать с настройкой `novus.messaging.channel.email.queue`)
+- `is_internal` - признак того, что канал является внутрисистемным 
 
 ## Настройки
 - `novus.messaging.channel.email.queue` - имя очереди сообщений email канала (по умолчанию: `email-queue`)

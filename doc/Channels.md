@@ -57,10 +57,10 @@ public class MyChannel extends AbstractChannel {
  INSERT INTO messaging.channel (id, name, queue_name, is_internal) 
         VALUES ('my_ch', 'My Channel', 'my-channel-queue', false)
  ```
- - id - уникальный код канала
- - name - имя канала, отображаемое на UI
- - queue_name - имя очереди канала (`my-channel-queue`)
- - is_internal - признак того, что канал является внутрисистемным 
+ - `id` - уникальный код канала
+ - `name` - имя канала, отображаемое на UI
+ - `queue_name` - имя очереди канала (`my-channel-queue`)
+ - `is_internal` - признак того, что канал является внутрисистемным 
 
 
 

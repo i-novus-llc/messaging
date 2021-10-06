@@ -14,10 +14,10 @@
 INSERT INTO messaging.channel (id, name, queue_name, is_internal) 
        VALUES ('web', 'Web', 'web-queue', true)
 ```
-- id - уникальный код канала
-- name - имя канала, отображаемое на UI
-- queue_name - имя очереди канала (должно совпадать с настройкой `novus.messaging.channel.web.queue`)
-- is_internal - признак того, что канал является внутрисистемным 
+- `id` - уникальный код канала
+- `name` - имя канала, отображаемое на UI
+- `queue_name` - имя очереди канала (должно совпадать с настройкой `novus.messaging.channel.web.queue`)
+- `is_internal` - признак того, что канал является внутрисистемным 
 
 ## Настройки
 - `novus.messaging.channel.web.app_prefix` - префикс пути приложения 
