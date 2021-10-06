@@ -3,12 +3,10 @@
  */
 package ru.inovus.messaging.impl.jooq.tables;
 
-
 import org.jooq.Record;
 import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
-import org.jooq.impl.TimestampToLocalDateTimeConverter;
 import ru.inovus.messaging.api.model.enums.AlertType;
 import ru.inovus.messaging.api.model.enums.FormationType;
 import ru.inovus.messaging.api.model.enums.RecipientType;
@@ -29,12 +27,12 @@ import java.util.UUID;
 
 
 /**
- * Уведомления
+ * Время установки статуса
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Message extends TableImpl<MessageRecord> {
 
-    private static final long serialVersionUID = 122176216;
+    private static final long serialVersionUID = 1850730950;
 
     /**
      * The reference instance of <code>messaging.message</code>
@@ -77,7 +75,7 @@ public class Message extends TableImpl<MessageRecord> {
     /**
      * The column <code>messaging.message.sent_at</code>. Дата и время отправки уведомления
      */
-    public final TableField<MessageRecord, LocalDateTime> SENT_AT = createField(DSL.name("sent_at"), org.jooq.impl.SQLDataType.TIMESTAMP, this, "Дата и время отправки уведомления", new TimestampToLocalDateTimeConverter());
+    public final TableField<MessageRecord, LocalDateTime> SENT_AT = createField(DSL.name("sent_at"), org.jooq.impl.SQLDataType.LOCALDATETIME, this, "Дата и время отправки уведомления");
 
     /**
      * The column <code>messaging.message.system_id</code>. Идентификатор системы, к которой относится уведомление
@@ -145,7 +143,7 @@ public class Message extends TableImpl<MessageRecord> {
     }
 
     private Message(Name alias, Table<MessageRecord> aliased, Field<?>[] parameters) {
-        super(alias, null, aliased, parameters, DSL.comment("Уведомления"), TableOptions.table());
+        super(alias, null, aliased, parameters, DSL.comment("Время установки статуса"), TableOptions.table());
     }
 
     public <O extends Record> Message(Table<O> child, ForeignKey<O, MessageRecord> key) {

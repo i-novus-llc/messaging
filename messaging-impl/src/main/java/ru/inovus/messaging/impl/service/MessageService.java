@@ -11,8 +11,8 @@ import ru.inovus.messaging.api.model.Channel;
 import ru.inovus.messaging.api.model.Component;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.Recipient;
-import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
+import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.impl.jooq.tables.records.ChannelRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.ComponentRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
@@ -87,8 +87,8 @@ public class MessageService {
                 dsl
                         .insertInto(MESSAGE_RECIPIENT)
                         .columns(MESSAGE_RECIPIENT.ID, MESSAGE_RECIPIENT.RECIPIENT_NAME, MESSAGE_RECIPIENT.MESSAGE_ID,
-                                MESSAGE_RECIPIENT.STATUS, MESSAGE_RECIPIENT.RECIPIENT_SEND_CHANNEL_ID)
-                        .values(dsl.nextval(RECIPIENT_ID_SEQ).intValue(), rec.getName(), id, MessageStatusType.SCHEDULED, rec.getUsername())
+                                MESSAGE_RECIPIENT.STATUS, MESSAGE_RECIPIENT.STATUS_TIME, MESSAGE_RECIPIENT.RECIPIENT_SEND_CHANNEL_ID)
+                        .values(dsl.nextval(RECIPIENT_ID_SEQ).intValue(), rec.getName(), id, MessageStatusType.SCHEDULED, LocalDateTime.now(), rec.getUsername())
                         .execute();
             }
         }
@@ -155,7 +155,7 @@ public class MessageService {
                 .fetch().map(r -> {
                     Recipient recipient = new Recipient();
                     recipient.setMessageId(r.getMessageId());
-                    recipient.setReadAt(r.getReadAt());
+                    recipient.setStatusTime(r.getStatusTime());
                     recipient.setName(r.getRecipientName());
                     recipient.setUsername(r.getRecipientSendChannelId());
                     return recipient;

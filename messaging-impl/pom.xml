@@ -204,11 +204,6 @@
                                             <expression>.*\.message_recipient\.status</expression>
                                             <types>.*</types>
                                         </forcedType>
-                                        <forcedType>
-                                            <userType>java.time.LocalDateTime</userType>
-                                            <converter>org.jooq.impl.TimestampToLocalDateTimeConverter</converter>
-                                            <expression>.*_at</expression>
-                                        </forcedType>
                                     </forcedTypes>
                                 </database>
                                 <target>

@@ -99,9 +99,9 @@ public class FeedService {
         // Update 'personal' messages
         dsl
                 .update(MESSAGE_RECIPIENT)
-                .set(MESSAGE_RECIPIENT.READ_AT, now)
+                .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
                 .set(MESSAGE_RECIPIENT.STATUS, MessageStatusType.READ)
-                .where(MESSAGE_RECIPIENT.RECIPIENT_SEND_CHANNEL_ID.eq(recipient).and(MESSAGE_RECIPIENT.READ_AT.isNull()),
+                .where(MESSAGE_RECIPIENT.RECIPIENT_SEND_CHANNEL_ID.eq(recipient).and(MESSAGE_RECIPIENT.STATUS_TIME.isNull()),
                         exists(dsl.selectOne().from(MESSAGE)
                                 .where(MESSAGE.ID.eq(MESSAGE_RECIPIENT.MESSAGE_ID),
                                         MESSAGE.SYSTEM_ID.eq(systemId))))
@@ -120,7 +120,7 @@ public class FeedService {
             dsl
                     .insertInto(MESSAGE_RECIPIENT)
                     .set(MESSAGE_RECIPIENT.ID, dsl.nextval(RECIPIENT_ID_SEQ).intValue())
-                    .set(MESSAGE_RECIPIENT.READ_AT, now)
+                    .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
                     .set(MESSAGE_RECIPIENT.STATUS, MessageStatusType.READ)
                     .set(MESSAGE_RECIPIENT.MESSAGE_ID, id)
                     .set(MESSAGE_RECIPIENT.RECIPIENT_SEND_CHANNEL_ID, recipient)
@@ -133,14 +133,14 @@ public class FeedService {
         if (messageId != null) {
             LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
             int updated = dsl.update(MESSAGE_RECIPIENT)
-                    .set(MESSAGE_RECIPIENT.READ_AT, now)
+                    .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
                     .set(MESSAGE_RECIPIENT.STATUS, MessageStatusType.READ)
                     .where(MESSAGE_RECIPIENT.MESSAGE_ID.eq(messageId)).and(MESSAGE_RECIPIENT.RECIPIENT_SEND_CHANNEL_ID.eq(recipient))
                     .execute();
             if (updated == 0) {
                 dsl.insertInto(MESSAGE_RECIPIENT)
                         .set(MESSAGE_RECIPIENT.ID, dsl.nextval(RECIPIENT_ID_SEQ).intValue())
-                        .set(MESSAGE_RECIPIENT.READ_AT, now)
+                        .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
                         .set(MESSAGE_RECIPIENT.MESSAGE_ID, messageId)
                         .set(MESSAGE_RECIPIENT.RECIPIENT_SEND_CHANNEL_ID, recipient)
                         .execute();
@@ -185,7 +185,7 @@ public class FeedService {
         if (componentRecord != null) {
             message.setComponent(new Component(componentRecord.getId(), componentRecord.getName()));
         }
-        message.setReadAt(recipientRecord.getReadAt());
+        message.setReadAt(recipientRecord.getStatusTime());
         return message;
     }
 }

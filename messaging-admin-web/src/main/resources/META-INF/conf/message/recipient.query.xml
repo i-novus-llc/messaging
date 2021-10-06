@@ -7,6 +7,10 @@
     </list>
 
     <fields>
+        <field id="id">
+            <select mapping="['id']"/>
+        </field>
+
         <field id="recipient" domain="string" name="Получатель">
             <select mapping="['name']"/>
             <filters>
@@ -25,9 +29,9 @@
             </filters>
         </field>
 
-        <field id="readAt" domain="date" name="Дата прочтения">
+        <field id="statusTime" domain="date" name="Время установки статуса">
             <select normalize="T(ru.inovus.messaging.n2o.utils.LocalDateTimeUtils).parseDateToMsk(#this)"
-                    mapping="['readAt']"/>
+                    mapping="['statusTime']"/>
         </field>
 
         <field id="email" domain="date">

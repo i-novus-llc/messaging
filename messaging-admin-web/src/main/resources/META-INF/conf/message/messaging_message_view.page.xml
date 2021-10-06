@@ -47,7 +47,7 @@
             <table query-id="recipient" depends-on="view" detail-field-id="messageId"
                    visible="{recipientType.id == 'USER'}" name="Получатели">
                 <columns>
-                    <column text-field-id="readAt"/>
+                    <column text-field-id="statusTime"/>
                     <column text-field-id="status"/>
                     <column text-field-id="name"/>
                 </columns>
