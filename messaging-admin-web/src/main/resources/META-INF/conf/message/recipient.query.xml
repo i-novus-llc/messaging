@@ -34,5 +34,8 @@
             <select mapping="['readAt']"/>
         </field>
 
+        <field id="status" name="Статус">
+            <select mapping="['status.description']"/>
+        </field>
     </fields>
 </query>

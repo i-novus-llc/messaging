@@ -100,7 +100,8 @@ public class FeedService {
         dsl
                 .update(MESSAGE_RECIPIENT)
                 .set(MESSAGE_RECIPIENT.READ_AT, now)
-                .where(MESSAGE_RECIPIENT.RECIPIENT_NAME.eq(recipient).and(MESSAGE_RECIPIENT.READ_AT.isNull()),
+                .set(MESSAGE_RECIPIENT.STATUS, MessageStatusType.READ)
+                .where(MESSAGE_RECIPIENT.RECIPIENT_SEND_CHANNEL_ID.eq(recipient).and(MESSAGE_RECIPIENT.READ_AT.isNull()),
                         exists(dsl.selectOne().from(MESSAGE)
                                 .where(MESSAGE.ID.eq(MESSAGE_RECIPIENT.MESSAGE_ID),
                                         MESSAGE.SYSTEM_ID.eq(systemId))))
@@ -113,15 +114,16 @@ public class FeedService {
                         MESSAGE.SYSTEM_ID.eq(systemId),
                         notExists(dsl.selectOne().from(MESSAGE_RECIPIENT)
                                 .where(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID),
-                                        MESSAGE_RECIPIENT.RECIPIENT_NAME.eq(recipient))))
+                                        MESSAGE_RECIPIENT.RECIPIENT_SEND_CHANNEL_ID.eq(recipient))))
                 .fetch().map(Record1::component1);
         for (UUID id : ids) {
             dsl
                     .insertInto(MESSAGE_RECIPIENT)
                     .set(MESSAGE_RECIPIENT.ID, dsl.nextval(RECIPIENT_ID_SEQ).intValue())
                     .set(MESSAGE_RECIPIENT.READ_AT, now)
+                    .set(MESSAGE_RECIPIENT.STATUS, MessageStatusType.READ)
                     .set(MESSAGE_RECIPIENT.MESSAGE_ID, id)
-                    .set(MESSAGE_RECIPIENT.RECIPIENT_NAME, recipient)
+                    .set(MESSAGE_RECIPIENT.RECIPIENT_SEND_CHANNEL_ID, recipient)
                     .execute();
         }
     }
@@ -132,14 +134,15 @@ public class FeedService {
             LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
             int updated = dsl.update(MESSAGE_RECIPIENT)
                     .set(MESSAGE_RECIPIENT.READ_AT, now)
-                    .where(MESSAGE_RECIPIENT.MESSAGE_ID.eq(messageId)).and(MESSAGE_RECIPIENT.RECIPIENT_NAME.eq(recipient))
+                    .set(MESSAGE_RECIPIENT.STATUS, MessageStatusType.READ)
+                    .where(MESSAGE_RECIPIENT.MESSAGE_ID.eq(messageId)).and(MESSAGE_RECIPIENT.RECIPIENT_SEND_CHANNEL_ID.eq(recipient))
                     .execute();
             if (updated == 0) {
                 dsl.insertInto(MESSAGE_RECIPIENT)
                         .set(MESSAGE_RECIPIENT.ID, dsl.nextval(RECIPIENT_ID_SEQ).intValue())
                         .set(MESSAGE_RECIPIENT.READ_AT, now)
                         .set(MESSAGE_RECIPIENT.MESSAGE_ID, messageId)
-                        .set(MESSAGE_RECIPIENT.RECIPIENT_NAME, recipient)
+                        .set(MESSAGE_RECIPIENT.RECIPIENT_SEND_CHANNEL_ID, recipient)
                         .execute();
             }
         }
