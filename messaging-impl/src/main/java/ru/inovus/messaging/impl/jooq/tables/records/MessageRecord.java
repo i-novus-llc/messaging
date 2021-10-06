@@ -17,13 +17,14 @@ import ru.inovus.messaging.impl.jooq.tables.Message;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+
 /**
- * Время установки статуса
+ * Уведомления
  */
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements Record14<UUID, String, String, Severity, AlertType, LocalDateTime, String, Integer, FormationType, RecipientType, String, String, String, String> {
 
-    private static final long serialVersionUID = -996384498;
+    private static final long serialVersionUID = -1484615168;
 
     /**
      * Setter for <code>messaging.message.id</code>. Уникальный идентификатор

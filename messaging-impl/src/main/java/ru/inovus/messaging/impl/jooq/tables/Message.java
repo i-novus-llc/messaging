@@ -27,12 +27,12 @@ import java.util.UUID;
 
 
 /**
- * Время установки статуса
+ * Уведомления
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Message extends TableImpl<MessageRecord> {
 
-    private static final long serialVersionUID = 1850730950;
+    private static final long serialVersionUID = 37349766;
 
     /**
      * The reference instance of <code>messaging.message</code>
@@ -143,7 +143,7 @@ public class Message extends TableImpl<MessageRecord> {
     }
 
     private Message(Name alias, Table<MessageRecord> aliased, Field<?>[] parameters) {
-        super(alias, null, aliased, parameters, DSL.comment("Время установки статуса"), TableOptions.table());
+        super(alias, null, aliased, parameters, DSL.comment("Уведомления"), TableOptions.table());
     }
 
     public <O extends Record> Message(Table<O> child, ForeignKey<O, MessageRecord> key) {

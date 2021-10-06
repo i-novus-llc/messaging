@@ -25,7 +25,7 @@ import java.util.UUID;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class MessageRecipient extends TableImpl<MessageRecipientRecord> {
 
-    private static final long serialVersionUID = 1371282684;
+    private static final long serialVersionUID = -1996330404;
 
     /**
      * The reference instance of <code>messaging.message_recipient</code>
@@ -51,9 +51,9 @@ public class MessageRecipient extends TableImpl<MessageRecipientRecord> {
     public final TableField<MessageRecipientRecord, UUID> MESSAGE_ID = createField(DSL.name("message_id"), org.jooq.impl.SQLDataType.UUID, this, "Идентификатор уведомления");
 
     /**
-     * The column <code>messaging.message_recipient.status_time</code>. Дата и время прочтения уведомления
+     * The column <code>messaging.message_recipient.status_time</code>. Время установки статуса
      */
-    public final TableField<MessageRecipientRecord, LocalDateTime> STATUS_TIME = createField(DSL.name("status_time"), org.jooq.impl.SQLDataType.LOCALDATETIME, this, "Дата и время прочтения уведомления");
+    public final TableField<MessageRecipientRecord, LocalDateTime> STATUS_TIME = createField(DSL.name("status_time"), org.jooq.impl.SQLDataType.LOCALDATETIME, this, "Время установки статуса");
 
     /**
      * The column <code>messaging.message_recipient.recipient_name</code>. Имя контакта получателя

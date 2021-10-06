@@ -14,13 +14,14 @@ import ru.inovus.messaging.impl.jooq.tables.MessageRecipient;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+
 /**
  * Получатель уведомления
  */
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class MessageRecipientRecord extends UpdatableRecordImpl<MessageRecipientRecord> implements Record8<Integer, UUID, LocalDateTime, String, String, MessageStatusType, LocalDateTime, String> {
 
-    private static final long serialVersionUID = -256472701;
+    private static final long serialVersionUID = -724174101;
 
     /**
      * Setter for <code>messaging.message_recipient.id</code>. Уникальный идентификатор
@@ -51,14 +52,14 @@ public class MessageRecipientRecord extends UpdatableRecordImpl<MessageRecipient
     }
 
     /**
-     * Setter for <code>messaging.message_recipient.status_time</code>. Дата и время прочтения уведомления
+     * Setter for <code>messaging.message_recipient.status_time</code>. Время установки статуса
      */
     public void setStatusTime(LocalDateTime value) {
         set(2, value);
     }
 
     /**
-     * Getter for <code>messaging.message_recipient.status_time</code>. Дата и время прочтения уведомления
+     * Getter for <code>messaging.message_recipient.status_time</code>. Время установки статуса
      */
     public LocalDateTime getStatusTime() {
         return (LocalDateTime) get(2);

@@ -19,7 +19,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Messaging extends SchemaImpl {
 
-    private static final long serialVersionUID = 1257220240;
+    private static final long serialVersionUID = 1599754114;
 
     /**
      * The reference instance of <code>messaging</code>
@@ -37,7 +37,7 @@ public class Messaging extends SchemaImpl {
     public final Component COMPONENT = Component.COMPONENT;
 
     /**
-     * Время установки статуса
+     * Уведомления
      */
     public final Message MESSAGE = Message.MESSAGE;
 

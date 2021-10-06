@@ -23,7 +23,7 @@ public class Tables {
     public static final Component COMPONENT = Component.COMPONENT;
 
     /**
-     * Время установки статуса
+     * Уведомления
      */
     public static final Message MESSAGE = Message.MESSAGE;
 
