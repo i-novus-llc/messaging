@@ -1,5 +1,24 @@
 # Канал для отправки уведомлений через Web Socket
 
+## Подключение
+1. Добавьте следующую зависимость
+```xml
+<dependency>
+    <groupId>ru.i-novus.messaging</groupId>
+    <artifactId>messaging-channel-web</artifactId>
+    <version>${messaging.version}</version>
+</dependency>
+```
+2. Добавьте скрипт в БД со следующей строкой:
+```roomsql
+INSERT INTO messaging.channel (id, name, queue_name, is_internal) 
+       VALUES ('web', 'Web', 'web-queue', true)
+```
+- id - уникальный код канала
+- name - имя канала, отображаемое на UI
+- queue_name - имя очереди канала (должно совпадать с настройкой `novus.messaging.channel.web.queue`)
+- is_internal - признак того, что канал является внутрисистемным 
+
 ## Настройки
 - `novus.messaging.channel.web.app_prefix` - префикс пути приложения 
 (по умолчанию: `/app`)
