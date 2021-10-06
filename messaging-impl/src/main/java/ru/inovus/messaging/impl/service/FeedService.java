@@ -40,6 +40,7 @@ public class FeedService {
     public Page<Feed> getMessageFeed(String recipient, FeedCriteria criteria) {
         List<Condition> conditions = new ArrayList<>();
         conditions.add(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL).or(MESSAGE_RECIPIENT.ID.isNotNull()));
+        conditions.add(CHANNEL.IS_INTERNAL.eq(Boolean.TRUE));
         Optional.ofNullable(criteria.getSystemId())
                 .ifPresent(systemId -> conditions.add(MESSAGE.SYSTEM_ID.eq(systemId)));
         Optional.ofNullable(criteria.getComponentId())
@@ -58,6 +59,7 @@ public class FeedService {
                 .from(MESSAGE)
                 .leftJoin(COMPONENT).on(COMPONENT.ID.eq(MESSAGE.COMPONENT_ID))
                 .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(MESSAGE_RECIPIENT.RECIPIENT_SEND_CHANNEL_ID.eq(recipient)))
+                .leftJoin(CHANNEL).on(CHANNEL.ID.eq(MESSAGE.CHANNEL_ID))
                 .where(conditions);
         int count = dsl.fetchCount(query);
         Field fieldSentAt = MESSAGE.field("sent_at");
