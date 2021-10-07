@@ -10,5 +10,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
         prefix = "novus.messaging.channel.email"
 )
 public class EmailChannelProperties {
-    private String queue;
+    private String queue = "email-queue";
 }
