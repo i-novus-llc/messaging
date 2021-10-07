@@ -16,7 +16,7 @@
                 <field id="formationType.id" mapping="['message.formationType']" default-value="HAND" domain="string"/>
                 <field id="recipientType.id" mapping="['message.recipientType']" domain="string"/>
                 <field id="systemId" mapping="['message.systemId']" domain="string" default-value="${default.system.id}"/><!--TODO default value from context or props-->
-                <field id="users" mapping="['message.recipients']" domain="object[]"/>
+                <field id="users*.username" mapping="['message.recipients*.username']"/>
             </in>
         </operation>
     </operations>

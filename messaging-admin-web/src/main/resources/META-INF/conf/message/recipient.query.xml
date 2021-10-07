@@ -34,10 +34,6 @@
                     mapping="['statusTime']"/>
         </field>
 
-        <field id="email" domain="date">
-            <select mapping="['readAt']"/>
-        </field>
-
         <field id="status" name="Статус">
             <select mapping="['status.description']"/>
         </field>
