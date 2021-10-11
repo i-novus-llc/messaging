@@ -64,9 +64,12 @@ public class EmailChannelTest {
         message.setCaption("Test caption");
         message.setText("Message");
 
-        Recipient recipient1 = new Recipient("email1");
-        Recipient recipient2 = new Recipient("email2");
-        Recipient recipient3 = new Recipient("email3");
+        Recipient recipient1 = new Recipient("username1");
+        recipient1.setEmail("email1");
+        Recipient recipient2 = new Recipient("username2");
+        recipient2.setEmail("email2");
+        Recipient recipient3 = new Recipient("username3");
+        recipient3.setEmail("email3");
         message.setRecipients(Arrays.asList(recipient1, recipient2, recipient3));
 
         CountDownLatch latch = new CountDownLatch(1);
@@ -85,9 +88,9 @@ public class EmailChannelTest {
 
         Address[] allRecipients = mimeMessage.getAllRecipients();
         assertThat(allRecipients.length, is(message.getRecipients().size()));
-        assertThat(allRecipients[0].toString(), is(recipient1.getUsername()));
-        assertThat(allRecipients[1].toString(), is(recipient2.getUsername()));
-        assertThat(allRecipients[2].toString(), is(recipient3.getUsername()));
+        assertThat(allRecipients[0].toString(), is(recipient1.getEmail()));
+        assertThat(allRecipients[1].toString(), is(recipient2.getEmail()));
+        assertThat(allRecipients[2].toString(), is(recipient3.getEmail()));
     }
 
     @Test
@@ -97,7 +100,10 @@ public class EmailChannelTest {
         message.setCaption("Test caption");
         message.setText("Message");
         message.setSystemId("system-id");
-        message.setRecipients(Collections.singletonList(new Recipient("email1")));
+        Recipient recipient = new Recipient("username1");
+        recipient.setEmail("email1");
+
+        message.setRecipients(Collections.singletonList(recipient));
 
         CountDownLatch latch = new CountDownLatch(1);
         mailSenderMimeMessageMock();
@@ -125,7 +131,10 @@ public class EmailChannelTest {
         Message message = new Message();
         message.setId("6f711616-1617-11ec-9621-0242ac130002");
         message.setSystemId("system-id");
-        message.setRecipients(Collections.singletonList(new Recipient("email1")));
+        Recipient recipient = new Recipient("username1");
+        recipient.setEmail("email1");
+
+        message.setRecipients(Collections.singletonList(recipient));
 
         CountDownLatch latch = new CountDownLatch(1);
         mailSenderMimeMessageMock();

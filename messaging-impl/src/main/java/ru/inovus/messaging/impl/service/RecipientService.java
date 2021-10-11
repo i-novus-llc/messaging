@@ -46,7 +46,7 @@ public class RecipientService {
         MessageRecipientRecord record = rec.into(MESSAGE_RECIPIENT);
         Recipient recipient = new Recipient();
         recipient.setId(record.getId());
-        recipient.setUsername(record.getRecipientSendChannelId());
+        recipient.setUsername(record.getRecipientUsername());
         recipient.setMessageId(record.getMessageId());
         recipient.setStatusTime(record.getStatusTime());
         recipient.setName(record.getRecipientName());
@@ -109,7 +109,7 @@ public class RecipientService {
     public void updateStatus(MessageStatus status) {
         List<Condition> conditions = new ArrayList<>();
         Optional.ofNullable(status.getUsername())
-                .ifPresent(username -> conditions.add(MESSAGE_RECIPIENT.RECIPIENT_SEND_CHANNEL_ID.eq(username)));
+                .ifPresent(username -> conditions.add(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username)));
         // change status if previous status is correct (e.g. can't change FAILED to READ)
         conditions.add(MESSAGE_RECIPIENT.STATUS.eq(status.getStatus().getPrevStatus()));
         if (status.getMessageId() != null) {

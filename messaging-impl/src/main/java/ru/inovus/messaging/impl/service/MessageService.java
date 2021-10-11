@@ -62,7 +62,7 @@ public class MessageService {
     }
 
     @Transactional
-    public Message createMessage(Message message, Recipient... recipient) {
+    public Message createMessage(Message message, Recipient... recipients) {
         UUID id = UUID.randomUUID();
         if (message.getSentAt() == null) {
             message.setSentAt(LocalDateTime.now(Clock.systemUTC()));
@@ -82,13 +82,13 @@ public class MessageService {
                 .returning()
                 .fetch().get(0).getId();
         message.setId(id.toString());
-        if (recipient != null && RecipientType.USER.equals(message.getRecipientType())) {
-            for (Recipient rec : recipient) {
+        if (recipients != null && RecipientType.USER.equals(message.getRecipientType())) {
+            for (Recipient recipient : recipients) {
                 dsl
                         .insertInto(MESSAGE_RECIPIENT)
                         .columns(MESSAGE_RECIPIENT.ID, MESSAGE_RECIPIENT.RECIPIENT_NAME, MESSAGE_RECIPIENT.MESSAGE_ID,
-                                MESSAGE_RECIPIENT.STATUS, MESSAGE_RECIPIENT.STATUS_TIME, MESSAGE_RECIPIENT.RECIPIENT_SEND_CHANNEL_ID)
-                        .values(dsl.nextval(RECIPIENT_ID_SEQ).intValue(), rec.getName(), id, MessageStatusType.SCHEDULED, LocalDateTime.now(), rec.getUsername())
+                                MESSAGE_RECIPIENT.STATUS, MESSAGE_RECIPIENT.STATUS_TIME, MESSAGE_RECIPIENT.RECIPIENT_USERNAME)
+                        .values(dsl.nextval(RECIPIENT_ID_SEQ).intValue(), recipient.getName(), id, MessageStatusType.SCHEDULED, LocalDateTime.now(), recipient.getUsername())
                         .execute();
             }
         }
@@ -157,7 +157,7 @@ public class MessageService {
                     recipient.setMessageId(r.getMessageId());
                     recipient.setStatusTime(r.getStatusTime());
                     recipient.setName(r.getRecipientName());
-                    recipient.setUsername(r.getRecipientSendChannelId());
+                    recipient.setUsername(r.getRecipientUsername());
                     return recipient;
                 });
         message.setRecipients(recipients);
