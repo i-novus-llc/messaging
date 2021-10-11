@@ -14,6 +14,6 @@
 - [Каналы отправки](Channels.md) - Информация о подключении каналов отправки уведомлений 
 - [Свойства сервиса](Properties.md)
 - [Инструкция для DevOps](DevOps.md)
-- [Frontend](Frontend.md)
+- [Frontend](Frontend.md) - Веб интерфейс сервиса уведомлений
 - [Свойства для настройки провайдера пользователей и конфигурация маппинга](UserRoleProviderPropertiesAndMapping.md)
-- [Миграция](Migration.md)
+- [Миграция](Migration.md) - Руководство по миграции
