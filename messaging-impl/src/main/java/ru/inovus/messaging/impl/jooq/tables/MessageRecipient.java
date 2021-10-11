@@ -3,12 +3,10 @@
  */
 package ru.inovus.messaging.impl.jooq.tables;
 
-
 import org.jooq.Record;
 import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
-import org.jooq.impl.TimestampToLocalDateTimeConverter;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.impl.jooq.Keys;
 import ru.inovus.messaging.impl.jooq.Messaging;
@@ -27,7 +25,7 @@ import java.util.UUID;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class MessageRecipient extends TableImpl<MessageRecipientRecord> {
 
-    private static final long serialVersionUID = -1561288754;
+    private static final long serialVersionUID = -1996330404;
 
     /**
      * The reference instance of <code>messaging.message_recipient</code>
@@ -53,9 +51,9 @@ public class MessageRecipient extends TableImpl<MessageRecipientRecord> {
     public final TableField<MessageRecipientRecord, UUID> MESSAGE_ID = createField(DSL.name("message_id"), org.jooq.impl.SQLDataType.UUID, this, "Идентификатор уведомления");
 
     /**
-     * The column <code>messaging.message_recipient.read_at</code>. Дата и время прочтения уведомления
+     * The column <code>messaging.message_recipient.status_time</code>. Время установки статуса
      */
-    public final TableField<MessageRecipientRecord, LocalDateTime> READ_AT = createField(DSL.name("read_at"), org.jooq.impl.SQLDataType.TIMESTAMP, this, "Дата и время прочтения уведомления", new TimestampToLocalDateTimeConverter());
+    public final TableField<MessageRecipientRecord, LocalDateTime> STATUS_TIME = createField(DSL.name("status_time"), org.jooq.impl.SQLDataType.LOCALDATETIME, this, "Время установки статуса");
 
     /**
      * The column <code>messaging.message_recipient.recipient_name</code>. Имя контакта получателя
@@ -75,7 +73,7 @@ public class MessageRecipient extends TableImpl<MessageRecipientRecord> {
     /**
      * The column <code>messaging.message_recipient.departured_at</code>. Дата и время фактической отправки уведомления
      */
-    public final TableField<MessageRecipientRecord, LocalDateTime> DEPARTURED_AT = createField(DSL.name("departured_at"), org.jooq.impl.SQLDataType.TIMESTAMP, this, "Дата и время фактической отправки уведомления", new TimestampToLocalDateTimeConverter());
+    public final TableField<MessageRecipientRecord, LocalDateTime> DEPARTURED_AT = createField(DSL.name("departured_at"), org.jooq.impl.SQLDataType.LOCALDATETIME, this, "Дата и время фактической отправки уведомления");
 
     /**
      * The column <code>messaging.message_recipient.send_message_error</code>. Сообщение ошибки отправки уведомления

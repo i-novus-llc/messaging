@@ -3,27 +3,25 @@
  */
 package ru.inovus.messaging.impl.jooq.tables.records;
 
-
-import java.time.LocalDateTime;
-import java.util.UUID;
-
 import org.jooq.Field;
 import org.jooq.Record1;
 import org.jooq.Record14;
 import org.jooq.Row14;
 import org.jooq.impl.UpdatableRecordImpl;
-
 import ru.inovus.messaging.api.model.enums.AlertType;
 import ru.inovus.messaging.api.model.enums.FormationType;
 import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.model.enums.Severity;
 import ru.inovus.messaging.impl.jooq.tables.Message;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 
 /**
  * Уведомления
  */
-@SuppressWarnings({ "all", "unchecked", "rawtypes" })
+@SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements Record14<UUID, String, String, Severity, AlertType, LocalDateTime, String, Integer, FormationType, RecipientType, String, String, String, String> {
 
     private static final long serialVersionUID = -1484615168;

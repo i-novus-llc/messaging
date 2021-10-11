@@ -32,7 +32,8 @@ import java.util.UUID;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @ToString
 public class Recipient implements Serializable {
-    private LocalDateTime readAt;
+    private Integer id;
+    private LocalDateTime statusTime;
     private UUID messageId;
     private String name;
     private LocalDateTime departuredAt;

@@ -10,7 +10,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
         prefix = "novus.messaging.channel.web"
 )
 public class WebChannelProperties {
-    private String queue;
+    private String queue = "web-queue";
     private String appPrefix = "/app";
     private String endPoint = "/ws";
     private String publicDestPrefix = "/topic";

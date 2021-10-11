@@ -3,13 +3,7 @@
  */
 package ru.inovus.messaging.impl.jooq;
 
-
-import ru.inovus.messaging.impl.jooq.tables.Channel;
-import ru.inovus.messaging.impl.jooq.tables.Component;
-import ru.inovus.messaging.impl.jooq.tables.Message;
-import ru.inovus.messaging.impl.jooq.tables.MessageRecipient;
-import ru.inovus.messaging.impl.jooq.tables.MessageSetting;
-import ru.inovus.messaging.impl.jooq.tables.UserSetting;
+import ru.inovus.messaging.impl.jooq.tables.*;
 
 
 /**
