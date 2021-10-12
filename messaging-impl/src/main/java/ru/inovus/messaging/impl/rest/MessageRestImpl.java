@@ -297,7 +297,7 @@ public class MessageRestImpl implements MessageRest {
         newMessage.setText(message.getText());
         newMessage.setSeverity(message.getSeverity());
         newMessage.setRecipients(message.getRecipients());
-        newMessage.setSystemId(message.getSystemId());
+        newMessage.setTenantCode(message.getTenantCode());
         return newMessage;
     }
 }
