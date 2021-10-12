@@ -1,4 +1,4 @@
-package ru.inovus.messaging.impl;
+package ru.inovus.messaging;
 
 import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
 import org.junit.jupiter.api.Test;

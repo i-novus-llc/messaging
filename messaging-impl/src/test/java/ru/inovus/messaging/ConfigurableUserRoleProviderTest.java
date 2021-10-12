@@ -1,4 +1,4 @@
-package ru.inovus.messaging.impl;
+package ru.inovus.messaging;
 
 import org.junit.Before;
 import org.junit.Test;
