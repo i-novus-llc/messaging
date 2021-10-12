@@ -116,11 +116,11 @@ public class RecipientService {
             conditions.add(MESSAGE_RECIPIENT.MESSAGE_ID.eq(UUID.fromString(status.getMessageId())));
             conditions.add(exists(dsl.selectOne().from(MESSAGE)
                     .where(MESSAGE.ID.eq(MESSAGE_RECIPIENT.MESSAGE_ID),
-                            MESSAGE.SYSTEM_ID.eq(status.getSystemId()))));
+                            MESSAGE.TENANT_CODE.eq(status.getSystemId()))));
         } else
             conditions.add(exists(dsl.selectOne().from(MESSAGE)
                     .where(MESSAGE.ID.eq(MESSAGE_RECIPIENT.MESSAGE_ID),
-                            MESSAGE.SYSTEM_ID.eq(status.getSystemId())
+                            MESSAGE.TENANT_CODE.eq(status.getSystemId())
                                     .andExists(dsl.selectOne().from(CHANNEL)
                                             .where(CHANNEL.ID.eq(MESSAGE.CHANNEL_ID)
                                             )))));

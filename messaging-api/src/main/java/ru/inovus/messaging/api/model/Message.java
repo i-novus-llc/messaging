@@ -19,7 +19,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ru.inovus.messaging.api.model.enums.*;
+import ru.inovus.messaging.api.model.enums.AlertType;
+import ru.inovus.messaging.api.model.enums.FormationType;
+import ru.inovus.messaging.api.model.enums.RecipientType;
+import ru.inovus.messaging.api.model.enums.Severity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -39,13 +42,10 @@ public class Message implements Serializable {
     private LocalDateTime sentAt;
     private LocalDateTime readAt;
     private Channel channel;
-    private Component component;
     private FormationType formationType;
     private RecipientType recipientType;
-    private String systemId;
+    private String tenantCode;
     private List<Recipient> recipients;
     private Map<String, String> data;
     private String notificationType;
-    private String objectId;
-    private String objectType;
 }

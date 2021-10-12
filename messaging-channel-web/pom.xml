@@ -11,6 +11,10 @@
 
     <artifactId>messaging-channel-web</artifactId>
 
+    <properties>
+        <jacoco.skip>false</jacoco.skip>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>ru.i-novus.messaging</groupId>
@@ -63,7 +67,6 @@
         <dependency>
             <groupId>ru.i-novus.messaging</groupId>
             <artifactId>messaging-support-kafka</artifactId>
-            <scope>test</scope>
         </dependency>
 
     </dependencies>

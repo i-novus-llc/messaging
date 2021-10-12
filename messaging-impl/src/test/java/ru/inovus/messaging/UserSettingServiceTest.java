@@ -1,4 +1,4 @@
-package ru.inovus.messaging.impl.test;
+package ru.inovus.messaging;
 
 import net.n2oapp.platform.test.autoconfigure.DefinePort;
 import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
@@ -35,7 +35,6 @@ public class UserSettingServiceTest {
 
     private static final Integer USER_SETTINGS_ID_1 = 1;
     private static final Integer USER_SETTINGS_ID_3 = 3;
-    private static final Integer USER_SETTINGS_COMPONENT_ID = 1;
     private static final String USER_SETTINGS_NAME = "Уведомление УЛ банка о создании нового договора";
     private static final String USER_SETTING_TEMPLATE_CODE = "LKB-PAYMENT-NTF-1";
     private static final boolean USER_SETTING_IS_DISABLED = false;
@@ -75,7 +74,6 @@ public class UserSettingServiceTest {
         UserSetting userSetting = userSettingRest.getSetting(USER_NAME, USER_SETTINGS_ID_1);
 
         assertNotNull(userSetting);
-        assertEquals(USER_SETTINGS_COMPONENT_ID, userSetting.getComponent().getId());
         assertEquals(USER_SETTINGS_NAME, userSetting.getName());
         assertEquals(USER_SETTING_TEMPLATE_CODE, userSetting.getTemplateCode());
         assertEquals(USER_SETTING_IS_DISABLED, userSetting.getDisabled());

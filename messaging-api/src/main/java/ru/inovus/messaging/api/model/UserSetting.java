@@ -34,7 +34,6 @@ public class UserSetting implements Serializable {
     private AlertType defaultAlertType;
     private AlertType alertType;
     private Channel channel;
-    private Component component;
     private String name;
     private Boolean disabled;
     private String templateCode;

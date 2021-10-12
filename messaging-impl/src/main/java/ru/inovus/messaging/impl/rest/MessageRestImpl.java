@@ -184,15 +184,12 @@ public class MessageRestImpl implements MessageRest {
         message.setAlertType(userSetting == null ? messageSetting.getAlertType() : userSetting.getAlertType());
         message.setSentAt(params.getSentAt());
         message.setChannel(userSetting == null ? messageSetting.getChannel() : userSetting.getChannel());
-        message.setComponent(messageSetting.getComponent());
         message.setFormationType(messageSetting.getFormationType());
         message.setRecipientType(RecipientType.USER);
-        message.setSystemId(params.getSystemId());
+        message.setTenantCode(params.getSystemId());
         message.setRecipients(getRecipientByUserName(userNameList));
         message.setData(null);
         message.setNotificationType(params.getTemplateCode());
-        message.setObjectId(params.getObjectId());
-        message.setObjectType(params.getObjectType());
 
         return message;
     }
@@ -300,7 +297,7 @@ public class MessageRestImpl implements MessageRest {
         newMessage.setText(message.getText());
         newMessage.setSeverity(message.getSeverity());
         newMessage.setRecipients(message.getRecipients());
-        newMessage.setSystemId(message.getSystemId());
+        newMessage.setTenantCode(message.getTenantCode());
         return newMessage;
     }
 }

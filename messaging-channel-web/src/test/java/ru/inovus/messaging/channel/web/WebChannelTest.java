@@ -61,7 +61,7 @@ import static org.hamcrest.Matchers.notNullValue;
 @EmbeddedKafka
 @ContextConfiguration(classes = KafkaMqProvider.class)
 public class WebChannelTest {
-    private static final String SYSTEM_ID = "system-id";
+    private static final String TENANT_CODE = "system-id";
     private static final String USERNAME = "test-user";
 
     @Autowired
@@ -108,7 +108,7 @@ public class WebChannelTest {
         message.setCaption("Test caption");
         message.setSeverity(Severity.ERROR);
         message.setText("Message");
-        message.setSystemId(SYSTEM_ID);
+        message.setTenantCode(TENANT_CODE);
         Recipient recipient1 = new Recipient();
         recipient1.setUsername("test-user");
         Recipient recipient2 = new Recipient();
@@ -117,7 +117,7 @@ public class WebChannelTest {
 
         // publish message to web queue and wait for sending to stomp
         StompSession stompSession = getStompSessionWithHeaders();
-        stompSession.subscribe("/user" + properties.getPrivateDestPrefix() + "/" + SYSTEM_ID + "/message", new TestReceivedMessageHandler());
+        stompSession.subscribe("/user" + properties.getPrivateDestPrefix() + "/" + TENANT_CODE + "/message", new TestReceivedMessageHandler());
 
         latch = new CountDownLatch(1);
         mqProvider.publish(message, properties.getQueue());
@@ -135,11 +135,11 @@ public class WebChannelTest {
     @Test
     public void testSendFeedCount() throws Exception {
         // create feed count
-        FeedCount feedCount = new FeedCount(SYSTEM_ID, USERNAME, 5);
+        FeedCount feedCount = new FeedCount(TENANT_CODE, USERNAME, 5);
 
         // publish message to feedCount queue and wait for sending to stomp
         StompSession stompSession = getStompSessionWithHeaders();
-        stompSession.subscribe("/user" + properties.getPrivateDestPrefix() + "/" + SYSTEM_ID + "/message.count", new TestReceivedFeedCountHandler());
+        stompSession.subscribe("/user" + properties.getPrivateDestPrefix() + "/" + TENANT_CODE + "/message.count", new TestReceivedFeedCountHandler());
 
         latch = new CountDownLatch(1);
         mqProvider.publish(feedCount, feedCountQueue);
@@ -160,7 +160,7 @@ public class WebChannelTest {
         // create message
         Message message = new Message();
         message.setId("6f711616-1617-11ec-9621-0242ac130003");
-        message.setSystemId(SYSTEM_ID);
+        message.setTenantCode(TENANT_CODE);
         message.setRecipients(Collections.singletonList(new Recipient(USERNAME)));
 
         final MessageStatus[] receivedStatus = new MessageStatus[1];
@@ -179,7 +179,7 @@ public class WebChannelTest {
         assertThat(receivedStatus[0], notNullValue());
         assertThat(receivedStatus[0].getUsername(), is(USERNAME));
         assertThat(receivedStatus[0].getMessageId(), is(message.getId()));
-        assertThat(receivedStatus[0].getSystemId(), is(SYSTEM_ID));
+        assertThat(receivedStatus[0].getSystemId(), is(TENANT_CODE));
         assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.SENT));
     }
 
@@ -200,7 +200,7 @@ public class WebChannelTest {
 
         // send message through ws and wait publishing to status queue
         mqProvider.subscribe(mqConsumer);
-        stompSession.send(properties.getAppPrefix() + "/" + SYSTEM_ID + "/message.markread", messageId);
+        stompSession.send(properties.getAppPrefix() + "/" + TENANT_CODE + "/message.markread", messageId);
         latch.await();
         stompSession.disconnect();
         mqProvider.unsubscribe(mqConsumer.subscriber());
@@ -208,7 +208,7 @@ public class WebChannelTest {
         assertThat(receivedStatus[0], notNullValue());
         assertThat(receivedStatus[0].getUsername(), is(USERNAME));
         assertThat(receivedStatus[0].getMessageId(), is(messageId));
-        assertThat(receivedStatus[0].getSystemId(), is(SYSTEM_ID));
+        assertThat(receivedStatus[0].getSystemId(), is(TENANT_CODE));
         assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.READ));
     }
 
@@ -229,14 +229,14 @@ public class WebChannelTest {
 
         // send message through ws and wait publishing to status queue
         mqProvider.subscribe(mqConsumer);
-        stompSession.send(properties.getAppPrefix() + "/" + SYSTEM_ID + "/message.markreadall", payload);
+        stompSession.send(properties.getAppPrefix() + "/" + TENANT_CODE + "/message.markreadall", payload);
         latch.await();
         stompSession.disconnect();
         mqProvider.unsubscribe(mqConsumer.subscriber());
 
         assertThat(receivedStatus[0], notNullValue());
         assertThat(receivedStatus[0].getUsername(), is(USERNAME));
-        assertThat(receivedStatus[0].getSystemId(), is(SYSTEM_ID));
+        assertThat(receivedStatus[0].getSystemId(), is(TENANT_CODE));
         assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.READ));
     }
 
@@ -252,7 +252,7 @@ public class WebChannelTest {
         UserPrincipal user = new UserPrincipal(USERNAME);
         org.springframework.messaging.Message<byte[]> sessionMessage =
                 createMessage(SimpMessageType.CONNECT, "123", user,
-                        "/user/" + USERNAME + "/exchange/" + SYSTEM_ID + "/message");
+                        "/user/" + USERNAME + "/exchange/" + TENANT_CODE + "/message");
         return new SessionSubscribeEvent(this, sessionMessage, user);
     }
 

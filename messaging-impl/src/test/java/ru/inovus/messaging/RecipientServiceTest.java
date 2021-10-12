@@ -1,4 +1,4 @@
-package ru.inovus.messaging.impl.test;
+package ru.inovus.messaging;
 
 import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
 import org.junit.jupiter.api.Test;
@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.inovus.messaging.api.criteria.RecipientCriteria;
@@ -61,7 +60,7 @@ public class RecipientServiceTest {
 
         // update recipients by systemId, username, messageId (update only one recipient)
         MessageStatus messageStatus = new MessageStatus();
-        messageStatus.setSystemId("sys1");
+        messageStatus.setSystemId("test tenant");
         messageStatus.setMessageId("a2bd666b-1684-4005-a10f-f14224f66d0a");
         messageStatus.setUsername("web1");
         messageStatus.setStatus(MessageStatusType.FAILED);
@@ -80,7 +79,7 @@ public class RecipientServiceTest {
 
         // update recipients by systemId, messageId (update all message recipients)
         messageStatus = new MessageStatus();
-        messageStatus.setSystemId("sys1");
+        messageStatus.setSystemId("test tenant");
         messageStatus.setMessageId("d1450cd1-5b93-47fe-9e44-a3800476342e");
         messageStatus.setStatus(MessageStatusType.SENT);
         service.updateStatus(messageStatus);
@@ -96,7 +95,7 @@ public class RecipientServiceTest {
         // update recipients by systemId, username (update all messages recipients by internal channel)
         // mustn't change status of not sent messages
         messageStatus = new MessageStatus();
-        messageStatus.setSystemId("sys1");
+        messageStatus.setSystemId("test tenant");
         messageStatus.setUsername("web2");
         messageStatus.setStatus(MessageStatusType.READ);
 
@@ -120,7 +119,7 @@ public class RecipientServiceTest {
         assertThat(recipients.get(3).getStatus(), is(MessageStatusType.SCHEDULED));
         assertThat(recipients.get(4).getStatus(), is(MessageStatusType.FAILED));
 
-        assertThat(feedCount[0].getSystemId(), is("sys1"));
+        assertThat(feedCount[0].getSystemId(), is("test tenant"));
         assertThat(feedCount[0].getUsername(), is("web2"));
         assertThat(feedCount[0].getCount(), is(0));
     }
