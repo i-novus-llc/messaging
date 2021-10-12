@@ -36,7 +36,7 @@ public class EmailChannel extends AbstractChannel {
         log.info("Sending email " + message);
         MessageStatus messageStatus = new MessageStatus();
         messageStatus.setMessageId(message.getId());
-        messageStatus.setSystemId(message.getTenantCode());
+        messageStatus.setTenantCode(message.getTenantCode());
 
         List<String> recipientsEmailList = message.getRecipients().stream()
                 .map(Recipient::getEmail)

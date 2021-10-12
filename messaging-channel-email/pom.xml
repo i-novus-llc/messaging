@@ -53,6 +53,7 @@
         <dependency>
             <groupId>ru.i-novus.messaging</groupId>
             <artifactId>messaging-support-kafka</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>

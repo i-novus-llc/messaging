@@ -99,7 +99,7 @@ public class EmailChannelTest {
         message.setId("6f711616-1617-11ec-9621-0242ac130003");
         message.setCaption("Test caption");
         message.setText("Message");
-        message.setTenantCode("system-id");
+        message.setTenantCode("tenant");
         Recipient recipient = new Recipient("username1");
         recipient.setEmail("email1");
 
@@ -122,7 +122,7 @@ public class EmailChannelTest {
         assertThat(receivedStatus[0], notNullValue());
         assertThat(receivedStatus[0].getMessageId(), is(message.getId()));
         assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.SENT));
-        assertThat(receivedStatus[0].getSystemId(), is("system-id"));
+        assertThat(receivedStatus[0].getTenantCode(), is("tenant"));
     }
 
     @Test
@@ -130,7 +130,7 @@ public class EmailChannelTest {
     public void testSendMessageStatusFailed() throws InterruptedException {
         Message message = new Message();
         message.setId("6f711616-1617-11ec-9621-0242ac130002");
-        message.setTenantCode("system-id");
+        message.setTenantCode("tenant");
         Recipient recipient = new Recipient("username1");
         recipient.setEmail("email1");
 
@@ -154,7 +154,7 @@ public class EmailChannelTest {
         assertThat(receivedStatus[0].getMessageId(), is(message.getId()));
         assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.FAILED));
         assertThat(receivedStatus[0].getErrorMessage(), is("Subject must not be null"));
-        assertThat(receivedStatus[0].getSystemId(), is("system-id"));
+        assertThat(receivedStatus[0].getTenantCode(), is("tenant"));
     }
 
     private MimeMessage mailSenderMimeMessageMock() {

@@ -36,8 +36,8 @@ public class FeedRestImpl implements FeedRest {
     }
 
     @Override
-    public FeedCount getFeedCount(String username, String systemId) {
-        return feedService.getFeedCount(username, systemId);
+    public FeedCount getFeedCount(String username, String tenantCode) {
+        return feedService.getFeedCount(username, tenantCode);
     }
 
     @Override
@@ -55,9 +55,9 @@ public class FeedRestImpl implements FeedRest {
     }
 
     @Override
-    public void markReadAll(String recipient, String systemId) {
-        feedService.markReadAll(recipient, systemId);
-        mqProvider.publish(new FeedCount(systemId, recipient, 0), feedCountQueue);
+    public void markReadAll(String recipient, String tenantCode) {
+        feedService.markReadAll(recipient, tenantCode);
+        mqProvider.publish(new FeedCount(tenantCode, recipient, 0), feedCountQueue);
     }
 
     @Override

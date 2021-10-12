@@ -49,7 +49,7 @@ public class WebChannel extends AbstractChannel {
         SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
         String dest = headers.getDestination();
         if (dest != null && dest.endsWith("/message") && headers.getUser() != null) {
-            MqConsumer consumer = new TopicMqConsumer(headers.getSessionId(), getSystemId(dest), headers.getUser().getName(),
+            MqConsumer consumer = new TopicMqConsumer(headers.getSessionId(), getTenantCode(dest), headers.getUser().getName(),
                     noticeTopicName, message -> sendTo((Message) message, headers));
             mqProvider.subscribe(consumer);
         }
@@ -66,11 +66,11 @@ public class WebChannel extends AbstractChannel {
     }
 
     private void sendTo(Message message, SimpMessageHeaderAccessor headers) {
-        String systemId = getSystemId(headers.getDestination());
+        String tenantCode = getTenantCode(headers.getDestination());
         String recipient = headers.getUser() != null ? headers.getUser().getName() : null;
-        if (checkRecipient(message, recipient, systemId)) {
+        if (checkRecipient(message, recipient, tenantCode)) {
             if (isNotExpired(message))
-                messageController.sendPrivateMessage(systemId, recipient, message);
+                messageController.sendPrivateMessage(tenantCode, recipient, message);
             else
                 log.info("Did not send message with id {} due to expiration {}",
                         message.getId(), message.getSentAt());
@@ -78,18 +78,18 @@ public class WebChannel extends AbstractChannel {
             log.info("No recipients for message");
     }
 
-    private String getSystemId(String dest) {
+    private String getTenantCode(String dest) {
         String result = dest.replaceFirst("/user/(.+/)?exchange/", "");
         return result.substring(0, result.indexOf("/"));
     }
 
-    private boolean checkRecipient(Message message, String recipient, String systemId) {
+    private boolean checkRecipient(Message message, String recipient, String tenantCode) {
         if (message != null && RecipientType.ALL.equals(message.getRecipientType()))
             return true;
         if (message == null || message.getRecipients() == null || message.getRecipients().isEmpty())
             return false;
         for (Recipient r : message.getRecipients()) {
-            if (r.getUsername().equals(recipient) && message.getTenantCode().equals(systemId))
+            if (r.getUsername().equals(recipient) && message.getTenantCode().equals(tenantCode))
                 return true;
         }
         return false;

@@ -34,11 +34,6 @@
         </dependency>
 
         <dependency>
-            <groupId>ru.i-novus.messaging</groupId>
-            <artifactId>messaging-support-kafka</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-starter-feign-client</artifactId>
             <optional>true</optional>

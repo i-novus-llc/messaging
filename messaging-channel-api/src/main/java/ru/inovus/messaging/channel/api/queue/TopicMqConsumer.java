@@ -27,15 +27,15 @@ public class TopicMqConsumer implements MqConsumer {
     private final Consumer<Object> messageHandler;
     private final Serializable subscriber;
 
-    public final String systemId;
+    public final String tenantCode;
     public final String authToken;
 
-    public TopicMqConsumer(Serializable subscriber, String systemId, String authToken,
+    public TopicMqConsumer(Serializable subscriber, String tenantCode, String authToken,
                            String topicName, Consumer<Object> messageHandler) {
         this.topicName = topicName;
         this.messageHandler = messageHandler;
         this.subscriber = subscriber;
-        this.systemId = systemId;
+        this.tenantCode = tenantCode;
         this.authToken = authToken;
     }
 

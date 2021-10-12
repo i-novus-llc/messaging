@@ -12,12 +12,12 @@ import java.io.Serializable;
 @Getter
 @Setter
 public class FeedCount implements Serializable {
-    private String systemId;
+    private String tenantCode;
     private String username;
     private Integer count;
 
-    public FeedCount(String systemId, String username, Integer count) {
-        this.systemId = systemId;
+    public FeedCount(String tenantCode, String username, Integer count) {
+        this.tenantCode = tenantCode;
         this.username = username;
         this.count = count;
     }

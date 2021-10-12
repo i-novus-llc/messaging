@@ -61,7 +61,7 @@ import static org.hamcrest.Matchers.notNullValue;
 @EmbeddedKafka
 @ContextConfiguration(classes = KafkaMqProvider.class)
 public class WebChannelTest {
-    private static final String TENANT_CODE = "system-id";
+    private static final String TENANT_CODE = "tenant";
     private static final String USERNAME = "test-user";
 
     @Autowired
@@ -179,7 +179,7 @@ public class WebChannelTest {
         assertThat(receivedStatus[0], notNullValue());
         assertThat(receivedStatus[0].getUsername(), is(USERNAME));
         assertThat(receivedStatus[0].getMessageId(), is(message.getId()));
-        assertThat(receivedStatus[0].getSystemId(), is(TENANT_CODE));
+        assertThat(receivedStatus[0].getTenantCode(), is(TENANT_CODE));
         assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.SENT));
     }
 
@@ -208,7 +208,7 @@ public class WebChannelTest {
         assertThat(receivedStatus[0], notNullValue());
         assertThat(receivedStatus[0].getUsername(), is(USERNAME));
         assertThat(receivedStatus[0].getMessageId(), is(messageId));
-        assertThat(receivedStatus[0].getSystemId(), is(TENANT_CODE));
+        assertThat(receivedStatus[0].getTenantCode(), is(TENANT_CODE));
         assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.READ));
     }
 
@@ -236,7 +236,7 @@ public class WebChannelTest {
 
         assertThat(receivedStatus[0], notNullValue());
         assertThat(receivedStatus[0].getUsername(), is(USERNAME));
-        assertThat(receivedStatus[0].getSystemId(), is(TENANT_CODE));
+        assertThat(receivedStatus[0].getTenantCode(), is(TENANT_CODE));
         assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.READ));
     }
 

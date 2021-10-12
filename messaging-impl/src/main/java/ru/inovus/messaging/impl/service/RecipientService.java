@@ -116,11 +116,11 @@ public class RecipientService {
             conditions.add(MESSAGE_RECIPIENT.MESSAGE_ID.eq(UUID.fromString(status.getMessageId())));
             conditions.add(exists(dsl.selectOne().from(MESSAGE)
                     .where(MESSAGE.ID.eq(MESSAGE_RECIPIENT.MESSAGE_ID),
-                            MESSAGE.TENANT_CODE.eq(status.getSystemId()))));
+                            MESSAGE.TENANT_CODE.eq(status.getTenantCode()))));
         } else
             conditions.add(exists(dsl.selectOne().from(MESSAGE)
                     .where(MESSAGE.ID.eq(MESSAGE_RECIPIENT.MESSAGE_ID),
-                            MESSAGE.TENANT_CODE.eq(status.getSystemId())
+                            MESSAGE.TENANT_CODE.eq(status.getTenantCode())
                                     .andExists(dsl.selectOne().from(CHANNEL)
                                             .where(CHANNEL.ID.eq(MESSAGE.CHANNEL_ID)
                                             )))));
@@ -135,7 +135,7 @@ public class RecipientService {
 
         // отправка количества непрочитанных уведомлений в очередь счетчиков
         if (status.getUsername() != null && MessageStatusType.READ.equals(status.getStatus())) {
-            FeedCount feedCount = feedService.getFeedCount(status.getUsername(), status.getSystemId());
+            FeedCount feedCount = feedService.getFeedCount(status.getUsername(), status.getTenantCode());
             mqProvider.publish(feedCount, feedCountQueue);
         }
 
