@@ -58,55 +58,29 @@ public class MessageRestImpl implements MessageRest {
     @Override
     public Message getMessage(UUID id) {
         Message message = messageService.getMessage(id);
-        enrichRecipientName(message.getRecipients());
+        enrichRecipient(message.getRecipients());
         return message;
     }
 
     @Override
     public Page<Recipient> getRecipients(RecipientCriteria criteria) {
         Page<Recipient> recipientPage = recipientService.getRecipients(criteria);
-        enrichRecipientName(recipientPage.getContent());
+        enrichRecipient(recipientPage.getContent());
         return recipientPage;
     }
 
     @Override
     public void sendMessage(final MessageOutbox messageOutbox) {
         if (messageOutbox.getMessage() != null) {
+            enrichRecipient(messageOutbox.getMessage().getRecipients());
             save(messageOutbox.getMessage());
             send(messageOutbox.getMessage());
         } else if (messageOutbox.getTemplateMessageOutbox() != null)
             buildAndSendMessage(messageOutbox.getTemplateMessageOutbox());
     }
 
-    private void enrichRecipientName(List<Recipient> recipients) {
-
-        if (CollectionUtils.isEmpty(recipients)) {
-            return;
-        }
-
-        Map<String, String> userMap = new HashMap<>();
-
-        for (Recipient recipient : recipients) {
-            String userName = recipient.getUsername();
-            String recipientName = userMap.get(userName);
-            if (recipientName != null) {
-                recipient.setName(recipientName);
-            } else {
-                UserCriteria userCriteria = new UserCriteria();
-                userCriteria.setUsername(userName);
-                userCriteria.setPageSize(1);
-                userCriteria.setPageNumber(0);
-
-                Page<User> userPage = userRoleProvider.getUsers(userCriteria);
-                List<User> userList = userPage.getContent();
-                if (!CollectionUtils.isEmpty(userList)) {
-                    User user = userList.get(0);
-                    recipientName = user.getFio() + " (" + user.getUsername() + ")";
-                    userMap.put(userName, recipientName);
-                    recipient.setName(recipientName);
-                }
-            }
-        }
+    private void enrichRecipient(List<Recipient> recipients) {
+        recipients.replaceAll(recipient -> getRecipientByUserName(recipient.getUsername()));
     }
 
     private void buildAndSendMessage(TemplateMessageOutbox templateMessageOutbox) {
@@ -310,7 +284,9 @@ public class MessageRestImpl implements MessageRest {
                 return null;
             } else {
                 User user = users.get(0);
-                recipient.setUsername(user.getEmail());
+                recipient.setName(user.getFio() + " (" + user.getUsername() + ")");
+                recipient.setUsername(user.getUsername());
+                recipient.setEmail(user.getEmail());
             }
         }
         recipient.setName(userName);
@@ -324,6 +300,7 @@ public class MessageRestImpl implements MessageRest {
         newMessage.setText(message.getText());
         newMessage.setSeverity(message.getSeverity());
         newMessage.setRecipients(message.getRecipients());
+        newMessage.setSystemId(message.getSystemId());
         return newMessage;
     }
 }

@@ -39,7 +39,7 @@ public class EmailChannel extends AbstractChannel {
         messageStatus.setSystemId(message.getSystemId());
 
         List<String> recipientsEmailList = message.getRecipients().stream()
-                .map(Recipient::getUsername)
+                .map(Recipient::getEmail)
                 .filter(email -> !StringUtils.isEmpty(email))
                 .collect(Collectors.toList());
         if (!recipientsEmailList.isEmpty()) {
