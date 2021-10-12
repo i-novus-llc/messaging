@@ -1,4 +1,6 @@
-#Провайдеры
+# Свойства для настройки провайдера пользователей и конфигурация маппинга
+
+## Провайдеры
 - SecurityAdminUserRoleProvider
   - для получения данных из security-admin
 
@@ -6,12 +8,12 @@
   - Универсальный провайдер с возможностью указания маппинга полей из ответа сервиса, 
   предоставляющего информацию о пользователях и ролях.
 
-#Настройки провайдеров
+## Настройки провайдеров
 - `novus.messaging.user-role-provider` - провайдер данных для получения пользователей и ролей. 
 Доступные значения `configurable` или `security`.
 (по умолчанию: `configurable`)
   
-#Настройки ConfigurableUserRoleProvider
+## Настройки ConfigurableUserRoleProvider
 - `novus.messaging.mapping-file-location` - путь до файла для маппинга полей
   (по умолчанию: `classpath:userRoleProviderFieldMapping.xml`)
 - `novus.messaging.user-provider-url` - эндпоинт, с которого провайдер будет забирать информацию о пользователях
@@ -19,7 +21,7 @@
 - `novus.messaging.role-provider-url` - эндпоинт, с которого провайдер будет забирать информацию о ролях
   (по умолчанию: `http://localhost:9999/api/role`)
 
-#Настройка маппинга в ConfigurableUserRoleProvider
+## Настройка маппинга в ConfigurableUserRoleProvider
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>

@@ -1,4 +1,5 @@
-# RESTful API
+# REST API сервиса уведомлений
+
 - Список сообщений
 ```
 GET /messages?user=1
