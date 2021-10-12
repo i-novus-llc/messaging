@@ -232,3 +232,45 @@ databaseChangeLog:
                   relativeToChangelogFile: true
                   splitStatements: true
                   stripComments: true
+  - changeSet:
+      id: MESSAGING-206
+      author: ilebedenko
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/MESSAGING-206.sql
+            relativeToChangelogFile: true
+  - changeSet:
+      id: MESSAGING-202
+      author: ilebedenko
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/MESSAGING-202.sql
+            relativeToChangelogFile: true
+  - changeSet:
+      id: MESSAGING-210
+      author: ilebedenko
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/MESSAGING-210.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: MESSAGING-212
+      author: ilebedenko
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/MESSAGING-212.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: MESSAGING-222
+      author: aarifullin
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/MESSAGING-222.sql
+            relativeToChangelogFile: true

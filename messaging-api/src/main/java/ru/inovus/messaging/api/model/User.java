@@ -9,16 +9,10 @@ import java.util.List;
 @Setter
 public class User {
     private String username;
-
     private String fio;
-
     private String email;
-
     private String surname;
-
     private String name;
-
     private String patronymic;
-
     private List<Role> roles;
 }

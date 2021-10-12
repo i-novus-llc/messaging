@@ -1,15 +1,15 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<object xmlns="http://n2oapp.net/framework/config/schema/object-3.0">
+<object xmlns="http://n2oapp.net/framework/config/schema/object-4.0">
 
     <operations>
         <operation id="readAll">
             <invocation>
                 <rest method="POST">${messaging.backend.path}/feed/{recipient}/readall/{systemId}</rest>
             </invocation>
-            <in-parameters>
-                <param id="recipient" default-value="#{username!}"/>
-                <param id="systemId" default-value="${default.system.id}"/>
-            </in-parameters>
+            <in>
+                <field id="recipient" default-value="#{username!}"/>
+                <field id="systemId" default-value="${default.system.id}"/>
+            </in>
         </operation>
     </operations>
 

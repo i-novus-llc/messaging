@@ -17,7 +17,10 @@ package ru.inovus.messaging.api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+import ru.inovus.messaging.api.model.enums.MessageStatusType;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -25,21 +28,21 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
+@ToString
 public class Recipient implements Serializable {
-
-    private static final long serialVersionUID = 4960064989162334509L;
-
-    private String recipient;
-    private LocalDateTime readAt;
+    private Integer id;
+    private LocalDateTime statusTime;
     private UUID messageId;
     private String name;
+    private LocalDateTime departuredAt;
+    private MessageStatusType status;
+    private String errorMessage;
+    private String username;
     private String email;
 
-    public Recipient() {
-    }
-
-    public Recipient(String recipient) {
-        this.recipient = recipient;
+    public Recipient(String username) {
+        this.username = username;
     }
 }

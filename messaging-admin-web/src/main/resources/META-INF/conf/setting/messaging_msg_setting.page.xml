@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-2.0">
-
-    <form name="Шаблон уведомления" id="message_setting" query-id="messaging_msg_setting">
+<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-3.0"
+             name="Шаблон уведомления">
+    <form id="message_setting" query-id="messaging_msg_setting">
         <fields>
             <row>
                 <input-text id="name" label="Наименование шаблона" required="true"/>
@@ -27,21 +27,16 @@
                         <option id="HIDDEN" name="Лента уведомлений"/>
                     </options>
                 </input-select>
-                <input-select id="infoType" label="Информирование" required="true" type="multi">
-                    <options>
-                        <option id="EMAIL" name="Электронная почта"/>
-                        <option id="NOTICE" name="Центр уведомлений"/>
-                    </options>
-                </input-select>
+                <input-select id="infoType" label="Информирование" required="true"
+                              query-id="messaging_channels"/>
                 <hidden id="formationType.id" default-value="HAND"/>
             </row>
             <row>
-                <text-area id="caption" label="Заголовок уведомления" rows="3" required="true"/>
+                <text-area id="caption" label="Заголовок уведомления" max-rows="3" required="true"/>
             </row>
             <row>
-                <text-area id="text" label="Текст уведомления" rows="5" required="true"/>
+                <text-area id="text" label="Текст уведомления" max-rows="5" required="true"/>
             </row>
         </fields>
     </form>
-
 </simple-page>

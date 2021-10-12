@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="MESSAGING-212-test" author="ilebedenko">
+        <comment>Скрипт для тестирования сервиса RecipientService.</comment>
+        <sql>
+            <!-- component -->
+            INSERT INTO messaging.component values (1, 'PAYMENT');
+            <!-- channels -->
+            INSERT INTO messaging.channel VALUES ('notice', 'notice', 'web_queue', true);
+            INSERT INTO messaging.channel VALUES ('email', 'email', 'email_queue', false);
+            <!-- messages and recipients-->
+            INSERT INTO messaging.message (id, text, severity, alert_type, system_id, formation_type, recipient_type, channel_id)
+            VALUES ('a2bd666b-1684-4005-a10f-f14224f66d0a', 'Message1', 'INFO', 'POPUP', 'sys1', 'HAND', 'USER', 'notice');
+            INSERT INTO messaging.message_recipient (id, message_id, recipient_username, status)
+            VALUES (1, 'a2bd666b-1684-4005-a10f-f14224f66d0a', 'web1', 'SCHEDULED');
+            INSERT INTO messaging.message_recipient (id, message_id, recipient_username, status)
+            VALUES (2, 'a2bd666b-1684-4005-a10f-f14224f66d0a', 'web2', 'SCHEDULED');
+
+            INSERT INTO messaging.message (id, text, severity, alert_type, system_id, formation_type, recipient_type, channel_id)
+            VALUES ('d1450cd1-5b93-47fe-9e44-a3800476342e', 'Message2', 'INFO', 'POPUP', 'sys1', 'HAND', 'USER', 'notice');
+            INSERT INTO messaging.message_recipient (id, message_id, recipient_username, status)
+            VALUES (3, 'd1450cd1-5b93-47fe-9e44-a3800476342e', 'web1', 'SCHEDULED');
+            INSERT INTO messaging.message_recipient (id, message_id, recipient_username, status)
+            VALUES (4, 'd1450cd1-5b93-47fe-9e44-a3800476342e', 'web2', 'SCHEDULED');
+
+            INSERT INTO messaging.message (id, text, severity, alert_type, system_id, formation_type, recipient_type, channel_id)
+            VALUES ('497ef832-fa00-4715-a79f-8c13cde89b09', 'Message3', 'INFO', 'POPUP', 'sys2', 'HAND', 'USER', 'email');
+            INSERT INTO messaging.message_recipient (id, message_id, recipient_username, status)
+            VALUES (5, '497ef832-fa00-4715-a79f-8c13cde89b09', 'web1', 'SCHEDULED');
+        </sql>
+    </changeSet>
+</databaseChangeLog>
+

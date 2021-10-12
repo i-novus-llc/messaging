@@ -24,7 +24,6 @@ import java.util.List;
 @Getter
 @Setter
 public class UserCriteria extends BaseMessagingCriteria {
-
     @QueryParam("username")
     private String username;
 

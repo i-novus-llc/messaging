@@ -22,7 +22,7 @@ import io.swagger.annotations.Authorization;
 import org.springframework.data.domain.Page;
 import ru.inovus.messaging.api.criteria.FeedCriteria;
 import ru.inovus.messaging.api.model.Feed;
-import ru.inovus.messaging.api.model.UnreadMessagesInfo;
+import ru.inovus.messaging.api.model.FeedCount;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -32,7 +32,7 @@ import java.util.UUID;
 @Path("/feed")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public interface  FeedRest {
+public interface FeedRest {
     @GET
     @Path("/{recipient}")
     @ApiOperation("Получение ленты уведомлений")
@@ -41,9 +41,9 @@ public interface  FeedRest {
 
     @GET
     @Path("/{recipient}/count/{systemId}")
-    @ApiOperation("Получение количества не прочитанных уведомлений")
-    @ApiResponse(code = 200, message = "Количество не прочитанных уведомлений")
-    UnreadMessagesInfo getFeedCount(@PathParam("recipient") String recipient, @PathParam("systemId") String systemId);
+    @ApiOperation("Получение количества непрочитанных уведомлений")
+    @ApiResponse(code = 200, message = "Количество непрочитанных уведомлений")
+    FeedCount getFeedCount(@PathParam("recipient") String username, @PathParam("systemId") String systemId);
 
     @GET
     @Path("/{recipient}/message/{id}")
@@ -62,4 +62,10 @@ public interface  FeedRest {
     @ApiOperation("Пометить все сообщения прочитанными")
     @ApiResponse(code = 200, message = "Все сообщения помечены прочитанными")
     void markReadAll(@PathParam("recipient") String recipient, @PathParam("systemId") String systemId);
+
+    @POST
+    @Path("/{recipient}/read/")
+    @ApiOperation("Пометить сообщение прочитанным")
+    @ApiResponse(code = 200, message = "Все сообщения помечены прочитанными")
+    void markRead(@PathParam("recipient") String recipient, UUID messageId);
 }

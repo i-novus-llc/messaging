@@ -1,23 +1,23 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<object xmlns="http://n2oapp.net/framework/config/schema/object-3.0">
+<object xmlns="http://n2oapp.net/framework/config/schema/object-4.0">
 
     <operations>
         <operation id="send">
             <invocation>
                 <rest method="POST">${messaging.backend.path}/messages</rest>
             </invocation>
-            <in-parameters>
-                <param id="caption" mapping="['message.caption']" domain="string"/>
-                <param id="text" mapping="['message.text']" domain="string"/>
-                <param id="severity.id" mapping="['message.severity']" domain="string"/>
-                <param id="alertType.id" mapping="['message.alertType']" domain="string"/>
-                <param id="infoType" mapping="['message.infoTypes']"/>
-                <param id="component.id" mapping="['message.component.id']" domain="string"/>
-                <param id="formationType.id" mapping="['message.formationType']" default-value="HAND" domain="string"/>
-                <param id="recipientType.id" mapping="['message.recipientType']" domain="string"/>
-                <param id="systemId" mapping="['message.systemId']" domain="string" default-value="${default.system.id}"/><!--TODO default value from context or props-->
-                <param id="users" mapping="['message.recipients']" domain="object[]"/>
-            </in-parameters>
+            <in>
+                <field id="caption" mapping="['message.caption']" domain="string"/>
+                <field id="text" mapping="['message.text']" domain="string"/>
+                <field id="severity.id" mapping="['message.severity']" domain="string"/>
+                <field id="alertType.id" mapping="['message.alertType']" domain="string"/>
+                <field id="infoType" mapping="['message.channel']" domain="object"/>
+                <field id="component.id" mapping="['message.component.id']" domain="string"/>
+                <field id="formationType.id" mapping="['message.formationType']" default-value="HAND" domain="string"/>
+                <field id="recipientType.id" mapping="['message.recipientType']" domain="string"/>
+                <field id="systemId" mapping="['message.systemId']" domain="string" default-value="${default.system.id}"/><!--TODO default value from context or props-->
+                <field id="users*.username" mapping="['message.recipients*.username']"/>
+            </in>
         </operation>
     </operations>
 

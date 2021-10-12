@@ -7,10 +7,14 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.inovus.messaging.api.criteria.FeedCriteria;
-import ru.inovus.messaging.api.model.*;
+import ru.inovus.messaging.api.model.Component;
+import ru.inovus.messaging.api.model.Feed;
+import ru.inovus.messaging.api.model.FeedCount;
+import ru.inovus.messaging.api.model.enums.MessageStatusType;
+import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.impl.jooq.tables.records.ComponentRecord;
+import ru.inovus.messaging.impl.jooq.tables.records.MessageRecipientRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
-import ru.inovus.messaging.impl.jooq.tables.records.RecipientRecord;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -33,11 +37,10 @@ public class FeedService {
         this.dsl = dsl;
     }
 
-
     public Page<Feed> getMessageFeed(String recipient, FeedCriteria criteria) {
         List<Condition> conditions = new ArrayList<>();
-        conditions.add(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL).or(RECIPIENT.ID.isNotNull()));
-        conditions.add(MESSAGE.SEND_NOTICE.isTrue());
+        conditions.add(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL).or(MESSAGE_RECIPIENT.ID.isNotNull()));
+        conditions.add(CHANNEL.IS_INTERNAL.eq(Boolean.TRUE));
         Optional.ofNullable(criteria.getSystemId())
                 .ifPresent(systemId -> conditions.add(MESSAGE.SYSTEM_ID.eq(systemId)));
         Optional.ofNullable(criteria.getComponentId())
@@ -52,10 +55,11 @@ public class FeedService {
         SelectConditionStep<Record> query = dsl
                 .select(MESSAGE.fields())
                 .select(COMPONENT.fields())
-                .select(RECIPIENT.fields())
+                .select(MESSAGE_RECIPIENT.fields())
                 .from(MESSAGE)
                 .leftJoin(COMPONENT).on(COMPONENT.ID.eq(MESSAGE.COMPONENT_ID))
-                .leftJoin(RECIPIENT).on(RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(RECIPIENT.RECIPIENT_.eq(recipient)))
+                .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(recipient)))
+                .leftJoin(CHANNEL).on(CHANNEL.ID.eq(MESSAGE.CHANNEL_ID))
                 .where(conditions);
         int count = dsl.fetchCount(query);
         Field fieldSentAt = MESSAGE.field("sent_at");
@@ -71,12 +75,12 @@ public class FeedService {
         return dsl
                 .select(MESSAGE.fields())
                 .select(COMPONENT.fields())
-                .select(RECIPIENT.fields())
+                .select(MESSAGE_RECIPIENT.fields())
                 .from(MESSAGE)
                 .leftJoin(COMPONENT).on(COMPONENT.ID.eq(MESSAGE.COMPONENT_ID))
-                .leftJoin(RECIPIENT).on(RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(RECIPIENT.RECIPIENT_.eq(recipient)))
+                .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(recipient)))
                 .where(MESSAGE.ID.cast(UUID.class).eq(messageId), MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL)
-                        .or(RECIPIENT.RECIPIENT_.eq(recipient)))
+                        .or(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(recipient)))
                 .fetchOne(MAPPER);
     }
 
@@ -94,11 +98,12 @@ public class FeedService {
         LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
         // Update 'personal' messages
         dsl
-                .update(RECIPIENT)
-                .set(RECIPIENT.READ_AT, now)
-                .where(RECIPIENT.RECIPIENT_.eq(recipient).and(RECIPIENT.READ_AT.isNull()),
+                .update(MESSAGE_RECIPIENT)
+                .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
+                .set(MESSAGE_RECIPIENT.STATUS, MessageStatusType.READ)
+                .where(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(recipient).and(MESSAGE_RECIPIENT.STATUS_TIME.isNull()),
                         exists(dsl.selectOne().from(MESSAGE)
-                                .where(MESSAGE.ID.eq(RECIPIENT.MESSAGE_ID),
+                                .where(MESSAGE.ID.eq(MESSAGE_RECIPIENT.MESSAGE_ID),
                                         MESSAGE.SYSTEM_ID.eq(systemId))))
                 .execute();
         // Update messages 'for all'
@@ -107,83 +112,80 @@ public class FeedService {
                 .from(MESSAGE)
                 .where(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL),
                         MESSAGE.SYSTEM_ID.eq(systemId),
-                        notExists(dsl.selectOne().from(RECIPIENT)
-                                .where(RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID),
-                                        RECIPIENT.RECIPIENT_.eq(recipient))))
+                        notExists(dsl.selectOne().from(MESSAGE_RECIPIENT)
+                                .where(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID),
+                                        MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(recipient))))
                 .fetch().map(Record1::component1);
         for (UUID id : ids) {
             dsl
-                    .insertInto(RECIPIENT)
-                    .set(RECIPIENT.ID, RECIPIENT_ID_SEQ.nextval())
-                    .set(RECIPIENT.READ_AT, now)
-                    .set(RECIPIENT.MESSAGE_ID, id)
-                    .set(RECIPIENT.RECIPIENT_, recipient)
+                    .insertInto(MESSAGE_RECIPIENT)
+                    .set(MESSAGE_RECIPIENT.ID, dsl.nextval(RECIPIENT_ID_SEQ).intValue())
+                    .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
+                    .set(MESSAGE_RECIPIENT.STATUS, MessageStatusType.READ)
+                    .set(MESSAGE_RECIPIENT.MESSAGE_ID, id)
+                    .set(MESSAGE_RECIPIENT.RECIPIENT_USERNAME, recipient)
                     .execute();
         }
     }
 
     @Transactional
-    public void markRead(String recipient, UUID... messageId) {
+    public void markRead(String recipient, UUID messageId) {
         if (messageId != null) {
             LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
-            for (UUID id : messageId) {
-                int updated = dsl
-                        .update(RECIPIENT)
-                        .set(RECIPIENT.READ_AT, now)
-                        .where(RECIPIENT.MESSAGE_ID.eq(id)).and(RECIPIENT.RECIPIENT_.eq(recipient))
+            int updated = dsl.update(MESSAGE_RECIPIENT)
+                    .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
+                    .set(MESSAGE_RECIPIENT.STATUS, MessageStatusType.READ)
+                    .where(MESSAGE_RECIPIENT.MESSAGE_ID.eq(messageId)).and(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(recipient))
+                    .execute();
+            if (updated == 0) {
+                dsl.insertInto(MESSAGE_RECIPIENT)
+                        .set(MESSAGE_RECIPIENT.ID, dsl.nextval(RECIPIENT_ID_SEQ).intValue())
+                        .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
+                        .set(MESSAGE_RECIPIENT.MESSAGE_ID, messageId)
+                        .set(MESSAGE_RECIPIENT.RECIPIENT_USERNAME, recipient)
                         .execute();
-                if (updated == 0) {
-                    dsl
-                            .insertInto(RECIPIENT)
-                            .set(RECIPIENT.ID, RECIPIENT_ID_SEQ.nextval())
-                            .set(RECIPIENT.READ_AT, now)
-                            .set(RECIPIENT.MESSAGE_ID, id)
-                            .set(RECIPIENT.RECIPIENT_, recipient)
-                            .execute();
-                }
             }
         }
     }
 
-    public UnreadMessagesInfo getFeedCount(String recipient, String systemId) {
+    /**
+     * Получение количества непрочитанных уведомлений пользователем
+     *
+     * @param username Имя пользователя
+     * @param systemId Идентификатор системы
+     * @return Количество непрочитанных уведомлений пользователем
+     */
+    public FeedCount getFeedCount(String username, String systemId) {
         Integer count = dsl
                 .selectCount()
                 .from(MESSAGE)
-                .leftJoin(RECIPIENT).on(RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(RECIPIENT.RECIPIENT_.eq(recipient)))
+                .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID))
+                .leftJoin(CHANNEL).on(MESSAGE.CHANNEL_ID.eq(CHANNEL.ID))
                 .where(
-                        MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL).and(RECIPIENT.ID.isNull())
-                                .or(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.USER).and(RECIPIENT.READ_AT.isNull())
-                                        .and(RECIPIENT.RECIPIENT_.eq(recipient))),
                         MESSAGE.SYSTEM_ID.eq(systemId),
-                        MESSAGE.SEND_NOTICE.isTrue())
+                        MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username),
+                        CHANNEL.IS_INTERNAL.eq(Boolean.TRUE),
+                        MESSAGE_RECIPIENT.STATUS.eq(MessageStatusType.SENT))
                 .fetchOne().value1();
-        return new UnreadMessagesInfo(count);
+        return new FeedCount(systemId, username, count);
     }
 
     private static Feed mapFeed(Record rec) {
         if (rec == null) return null;
         MessageRecord record = rec.into(MESSAGE);
         ComponentRecord componentRecord = rec.into(COMPONENT);
-        RecipientRecord recipientRecord = rec.into(RECIPIENT);
+        MessageRecipientRecord recipientRecord = rec.into(MESSAGE_RECIPIENT);
         Feed message = new Feed();
         message.setId(String.valueOf(record.getId()));
         message.setCaption(record.getCaption());
         message.setText(record.getText());
         message.setSeverity(record.getSeverity());
         message.setSentAt(record.getSentAt());
-        List<InfoType> infoTypes = new ArrayList<>();
-        if (record.getSendNotice() != null && record.getSendNotice()) {
-            infoTypes.add(InfoType.NOTICE);
-        }
-        if (record.getSendEmail() != null && record.getSendEmail()) {
-            infoTypes.add(InfoType.EMAIL);
-        }
         message.setSystemId(record.getSystemId());
         if (componentRecord != null) {
             message.setComponent(new Component(componentRecord.getId(), componentRecord.getName()));
         }
-        message.setReadAt(recipientRecord.getReadAt());
+        message.setReadAt(recipientRecord.getStatusTime());
         return message;
     }
-
 }

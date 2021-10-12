@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ru.i-novus.messaging</groupId>
@@ -11,7 +12,7 @@
         <groupId>net.n2oapp.platform</groupId>
         <artifactId>n2o-boot-platform-parent</artifactId>
         <version>4.5.0</version>
-        <relativePath />
+        <relativePath/>
     </parent>
 
     <properties>
@@ -21,6 +22,7 @@
         <audit.version>2.3.2</audit.version>
         <jacoco.skip>true</jacoco.skip>
         <spring-kafka.version>2.6.4</spring-kafka.version>
+        <lombok.version>1.18.20</lombok.version>
     </properties>
 
     <name>Messaging</name>
@@ -48,16 +50,17 @@
     </organization>
 
     <modules>
+        <module>messaging-react</module>
         <module>messaging-admin-frontend</module>
         <module>messaging-admin-web</module>
         <module>messaging-api</module>
-        <module>messaging-client</module>
         <module>messaging-impl</module>
-        <module>messaging-support-activemq</module>
         <module>messaging-support-kafka</module>
         <module>messaging-web</module>
         <module>messaging-backend</module>
-        <module>messaging-rest</module>
+        <module>messaging-channel-api</module>
+        <module>messaging-channel-email</module>
+        <module>messaging-channel-web</module>
     </modules>
 
     <dependencyManagement>
@@ -94,6 +97,11 @@
             </dependency>
             <dependency>
                 <groupId>ru.i-novus.messaging</groupId>
+                <artifactId>messaging-channel-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ru.i-novus.messaging</groupId>
                 <artifactId>messaging-impl</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -105,16 +113,6 @@
             <dependency>
                 <groupId>ru.i-novus.messaging</groupId>
                 <artifactId>messaging-support-kafka</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>ru.i-novus.messaging</groupId>
-                <artifactId>messaging-support-activemq</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>ru.i-novus.messaging</groupId>
-                <artifactId>messaging-client</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

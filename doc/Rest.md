@@ -1,4 +1,5 @@
-# RESTful API
+# REST API сервиса уведомлений
+
 - Список сообщений
 ```
 GET /messages?user=1
@@ -18,7 +19,10 @@ POST /messages
   "text": "Test content",
   "severity": "INFO",
   "alertType": "POPUP",
-  "infoTypes": ["NOTICE", "EMAIL"],
+  "infoType": {
+    "id": "notice",
+    "name": "Центр уведомлений"
+  },
   "recipientType": "USER",
   "systemId": "dev.1265"
   "recipients": [
@@ -40,12 +44,7 @@ BLOCKER - "Блокирующее сообщение";
 POPUP - "Всплывающее сообщение";
 HIDDEN - "Лента сообщений";
 
-Значения infoTypes:
-NOTICE - уведомление в системе,
-EMAIL - сообщение на почту
-
 Значения recipientType:
 USER - конкретным пользователям
 ALL - всем
-
 
