@@ -40,6 +40,7 @@ public class Recipient implements Serializable {
     private MessageStatusType status;
     private String errorMessage;
     private String username;
+    private String email;
 
     public Recipient(String username) {
         this.username = username;

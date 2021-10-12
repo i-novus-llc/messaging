@@ -25,7 +25,7 @@ import java.util.UUID;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class MessageRecipient extends TableImpl<MessageRecipientRecord> {
 
-    private static final long serialVersionUID = -1996330404;
+    private static final long serialVersionUID = 2024281022;
 
     /**
      * The reference instance of <code>messaging.message_recipient</code>
@@ -61,9 +61,9 @@ public class MessageRecipient extends TableImpl<MessageRecipientRecord> {
     public final TableField<MessageRecipientRecord, String> RECIPIENT_NAME = createField(DSL.name("recipient_name"), org.jooq.impl.SQLDataType.VARCHAR, this, "Имя контакта получателя");
 
     /**
-     * The column <code>messaging.message_recipient.recipient_send_channel_id</code>. Идентификатор получателя в формате канала доставки
+     * The column <code>messaging.message_recipient.recipient_username</code>. Уникальное имя пользователя из провайдера
      */
-    public final TableField<MessageRecipientRecord, String> RECIPIENT_SEND_CHANNEL_ID = createField(DSL.name("recipient_send_channel_id"), org.jooq.impl.SQLDataType.VARCHAR, this, "Идентификатор получателя в формате канала доставки");
+    public final TableField<MessageRecipientRecord, String> RECIPIENT_USERNAME = createField(DSL.name("recipient_username"), org.jooq.impl.SQLDataType.VARCHAR, this, "Уникальное имя пользователя из провайдера");
 
     /**
      * The column <code>messaging.message_recipient.status</code>. Текущий статус отправки уведомления получателю
