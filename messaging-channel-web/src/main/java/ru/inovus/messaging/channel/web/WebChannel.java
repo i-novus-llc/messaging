@@ -48,7 +48,7 @@ public class WebChannel extends AbstractChannel {
     public void handleSessionSubscribe(SessionSubscribeEvent event) {
         SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
         String dest = headers.getDestination();
-        if (dest != null && dest.endsWith("/message")) {
+        if (dest != null && dest.endsWith("/message") && headers.getUser() != null) {
             MqConsumer consumer = new TopicMqConsumer(headers.getSessionId(), getSystemId(dest), headers.getUser().getName(),
                     noticeTopicName, message -> sendTo((Message) message, headers));
             mqProvider.subscribe(consumer);
@@ -67,7 +67,7 @@ public class WebChannel extends AbstractChannel {
 
     private void sendTo(Message message, SimpMessageHeaderAccessor headers) {
         String systemId = getSystemId(headers.getDestination());
-        String recipient = headers.getUser().getName();
+        String recipient = headers.getUser() != null ? headers.getUser().getName() : null;
         if (checkRecipient(message, recipient, systemId)) {
             if (isNotExpired(message))
                 messageController.sendPrivateMessage(systemId, recipient, message);
