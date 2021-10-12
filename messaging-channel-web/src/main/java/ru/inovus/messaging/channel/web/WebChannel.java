@@ -1,11 +1,9 @@
 package ru.inovus.messaging.channel.web;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import ru.inovus.messaging.api.model.Message;
@@ -25,22 +23,20 @@ import java.time.temporal.ChronoUnit;
  * Реализация канала отправки уведомлений через Web c использованием WebSocket
  */
 @Slf4j
-@PropertySource("classpath:channel.properties")
-@Component
 public class WebChannel extends AbstractChannel {
 
-    @Value("${novus.messaging.channel.web.topic:web-topic}")
+    @Setter
     private String noticeTopicName;
 
-    @Value("${novus.messaging.channel.web.message-lifetime:60}")
+    @Setter
     private Integer timeout;
 
     private final MessageController messageController;
 
     private final MqProvider mqProvider;
 
-    public WebChannel(@Value("${novus.messaging.channel.web.queue:web-queue}") String messageQueueName,
-                      @Value("${novus.messaging.queue.status}") String statusQueueName,
+    public WebChannel(String messageQueueName,
+                      String statusQueueName,
                       MqProvider mqProvider,
                       MessageController messageController) {
         super(mqProvider, messageQueueName, statusQueueName);
@@ -52,7 +48,7 @@ public class WebChannel extends AbstractChannel {
     public void handleSessionSubscribe(SessionSubscribeEvent event) {
         SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
         String dest = headers.getDestination();
-        if (dest != null && dest.endsWith("/message")) {
+        if (dest != null && dest.endsWith("/message") && headers.getUser() != null) {
             MqConsumer consumer = new TopicMqConsumer(headers.getSessionId(), getSystemId(dest), headers.getUser().getName(),
                     noticeTopicName, message -> sendTo((Message) message, headers));
             mqProvider.subscribe(consumer);
@@ -71,7 +67,7 @@ public class WebChannel extends AbstractChannel {
 
     private void sendTo(Message message, SimpMessageHeaderAccessor headers) {
         String systemId = getSystemId(headers.getDestination());
-        String recipient = headers.getUser().getName();
+        String recipient = headers.getUser() != null ? headers.getUser().getName() : null;
         if (checkRecipient(message, recipient, systemId)) {
             if (isNotExpired(message))
                 messageController.sendPrivateMessage(systemId, recipient, message);

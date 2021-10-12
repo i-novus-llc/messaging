@@ -17,6 +17,7 @@ import ru.inovus.messaging.impl.jooq.tables.Message;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+
 /**
  * Уведомления
  */

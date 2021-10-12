@@ -9,7 +9,6 @@ import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.KafkaMessageListenerContainer;
 import org.springframework.kafka.listener.MessageListener;
 import org.springframework.kafka.listener.MessageListenerContainer;
-import org.springframework.stereotype.Component;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.channel.api.queue.MqConsumer;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
@@ -19,7 +18,6 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Component
 public class KafkaMqProvider implements MqProvider {
 
     private Map<Serializable, MessageListenerContainer> containers = new ConcurrentHashMap<>();

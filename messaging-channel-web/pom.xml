@@ -5,11 +5,15 @@
     <parent>
         <artifactId>messaging-pom</artifactId>
         <groupId>ru.i-novus.messaging</groupId>
-        <version>3.42.1-SNAPSHOT</version>
+        <version>4.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>messaging-channel-web</artifactId>
+
+    <properties>
+        <jacoco.skip>false</jacoco.skip>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -23,8 +27,18 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-websocket</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
         </dependency>
 
         <dependency>
@@ -34,27 +48,8 @@
 
         <dependency>
             <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
+            <artifactId>spring-security-web</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework.security.oauth</groupId>
-            <artifactId>spring-security-oauth2</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-jwt</artifactId>
-            <version>1.0.9.RELEASE</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-security</artifactId>
-            <version>3.4.3</version>
-            <scope>compile</scope>
-        </dependency>
-
 
         <!--TEST-->
         <dependency>

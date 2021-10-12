@@ -17,6 +17,7 @@ import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecipientRecord;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -44,9 +45,10 @@ public class RecipientService {
     private static final RecordMapper<Record, Recipient> MAPPER = rec -> {
         MessageRecipientRecord record = rec.into(MESSAGE_RECIPIENT);
         Recipient recipient = new Recipient();
-        recipient.setUsername(record.getRecipientSendChannelId());
+        recipient.setId(record.getId());
+        recipient.setUsername(record.getRecipientUsername());
         recipient.setMessageId(record.getMessageId());
-        recipient.setReadAt(record.getReadAt());
+        recipient.setStatusTime(record.getStatusTime());
         recipient.setName(record.getRecipientName());
         recipient.setStatus(record.getStatus());
         recipient.setDeparturedAt(record.getDeparturedAt());
@@ -107,7 +109,7 @@ public class RecipientService {
     public void updateStatus(MessageStatus status) {
         List<Condition> conditions = new ArrayList<>();
         Optional.ofNullable(status.getUsername())
-                .ifPresent(username -> conditions.add(MESSAGE_RECIPIENT.RECIPIENT_SEND_CHANNEL_ID.eq(username)));
+                .ifPresent(username -> conditions.add(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username)));
         // change status if previous status is correct (e.g. can't change FAILED to READ)
         conditions.add(MESSAGE_RECIPIENT.STATUS.eq(status.getStatus().getPrevStatus()));
         if (status.getMessageId() != null) {
@@ -126,6 +128,7 @@ public class RecipientService {
         dsl
                 .update(MESSAGE_RECIPIENT)
                 .set(MESSAGE_RECIPIENT.STATUS, status.getStatus())
+                .set(MESSAGE_RECIPIENT.STATUS_TIME, LocalDateTime.now())
                 .set(MESSAGE_RECIPIENT.SEND_MESSAGE_ERROR, status.getErrorMessage())
                 .where(conditions)
                 .execute();

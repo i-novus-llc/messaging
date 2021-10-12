@@ -1,4 +1,5 @@
-# RESTful API
+# REST API сервиса уведомлений
+
 - Список сообщений
 ```
 GET /messages?user=1
@@ -46,5 +47,4 @@ HIDDEN - "Лента сообщений";
 Значения recipientType:
 USER - конкретным пользователям
 ALL - всем
-
 

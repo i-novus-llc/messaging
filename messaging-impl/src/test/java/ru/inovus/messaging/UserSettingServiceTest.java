@@ -1,4 +1,4 @@
-package ru.inovus.messaging.impl.test;
+package ru.inovus.messaging;
 
 import net.n2oapp.platform.test.autoconfigure.DefinePort;
 import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;

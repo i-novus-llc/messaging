@@ -7,7 +7,6 @@ import org.jooq.Record;
 import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
-import org.jooq.impl.TimestampToLocalDateTimeConverter;
 import ru.inovus.messaging.api.model.enums.AlertType;
 import ru.inovus.messaging.api.model.enums.FormationType;
 import ru.inovus.messaging.api.model.enums.RecipientType;
@@ -76,7 +75,7 @@ public class Message extends TableImpl<MessageRecord> {
     /**
      * The column <code>messaging.message.sent_at</code>. Дата и время отправки уведомления
      */
-    public final TableField<MessageRecord, LocalDateTime> SENT_AT = createField(DSL.name("sent_at"), org.jooq.impl.SQLDataType.TIMESTAMP, this, "Дата и время отправки уведомления", new TimestampToLocalDateTimeConverter());
+    public final TableField<MessageRecord, LocalDateTime> SENT_AT = createField(DSL.name("sent_at"), org.jooq.impl.SQLDataType.LOCALDATETIME, this, "Дата и время отправки уведомления");
 
     /**
      * The column <code>messaging.message.tenant_code</code>. Тенант, к которому относится уведомление

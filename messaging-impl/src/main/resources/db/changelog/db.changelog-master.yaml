@@ -265,6 +265,14 @@ databaseChangeLog:
             path: sql/MESSAGING-212.sql
             relativeToChangelogFile: true
   - changeSet:
+      id: MESSAGING-222
+      author: aarifullin
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/MESSAGING-222.sql
+            relativeToChangelogFile: true
+  - changeSet:
       id: MESSAGING-139
       author: aarifullin
       changes:

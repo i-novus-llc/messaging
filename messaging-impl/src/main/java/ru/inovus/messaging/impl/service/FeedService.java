@@ -38,6 +38,7 @@ public class FeedService {
     public Page<Feed> getMessageFeed(String recipient, FeedCriteria criteria) {
         List<Condition> conditions = new ArrayList<>();
         conditions.add(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL).or(MESSAGE_RECIPIENT.ID.isNotNull()));
+        conditions.add(CHANNEL.IS_INTERNAL.eq(Boolean.TRUE));
         Optional.ofNullable(criteria.getTenantCode())
                 .ifPresent(tenantCode -> conditions.add(MESSAGE.TENANT_CODE.eq(tenantCode)));
         Optional.ofNullable(criteria.getSeverity())
@@ -51,7 +52,8 @@ public class FeedService {
                 .select(MESSAGE.fields())
                 .select(MESSAGE_RECIPIENT.fields())
                 .from(MESSAGE)
-                .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(MESSAGE_RECIPIENT.RECIPIENT_NAME.eq(recipient)))
+                .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(recipient)))
+                .leftJoin(CHANNEL).on(CHANNEL.ID.eq(MESSAGE.CHANNEL_ID))
                 .where(conditions);
         int count = dsl.fetchCount(query);
         Field fieldSentAt = MESSAGE.field("sent_at");
@@ -68,9 +70,9 @@ public class FeedService {
                 .select(MESSAGE.fields())
                 .select(MESSAGE_RECIPIENT.fields())
                 .from(MESSAGE)
-                .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(MESSAGE_RECIPIENT.RECIPIENT_NAME.eq(recipient)))
+                .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(recipient)))
                 .where(MESSAGE.ID.cast(UUID.class).eq(messageId), MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL)
-                        .or(MESSAGE_RECIPIENT.RECIPIENT_NAME.eq(recipient)))
+                        .or(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(recipient)))
                 .fetchOne(MAPPER);
     }
 
@@ -89,8 +91,9 @@ public class FeedService {
         // Update 'personal' messages
         dsl
                 .update(MESSAGE_RECIPIENT)
-                .set(MESSAGE_RECIPIENT.READ_AT, now)
-                .where(MESSAGE_RECIPIENT.RECIPIENT_NAME.eq(recipient).and(MESSAGE_RECIPIENT.READ_AT.isNull()),
+                .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
+                .set(MESSAGE_RECIPIENT.STATUS, MessageStatusType.READ)
+                .where(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(recipient).and(MESSAGE_RECIPIENT.STATUS_TIME.isNull()),
                         exists(dsl.selectOne().from(MESSAGE)
                                 .where(MESSAGE.ID.eq(MESSAGE_RECIPIENT.MESSAGE_ID),
                                         MESSAGE.TENANT_CODE.eq(tenantCode))))
@@ -103,15 +106,16 @@ public class FeedService {
                         MESSAGE.TENANT_CODE.eq(tenantCode),
                         notExists(dsl.selectOne().from(MESSAGE_RECIPIENT)
                                 .where(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID),
-                                        MESSAGE_RECIPIENT.RECIPIENT_NAME.eq(recipient))))
+                                        MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(recipient))))
                 .fetch().map(Record1::component1);
         for (UUID id : ids) {
             dsl
                     .insertInto(MESSAGE_RECIPIENT)
                     .set(MESSAGE_RECIPIENT.ID, dsl.nextval(RECIPIENT_ID_SEQ).intValue())
-                    .set(MESSAGE_RECIPIENT.READ_AT, now)
+                    .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
+                    .set(MESSAGE_RECIPIENT.STATUS, MessageStatusType.READ)
                     .set(MESSAGE_RECIPIENT.MESSAGE_ID, id)
-                    .set(MESSAGE_RECIPIENT.RECIPIENT_NAME, recipient)
+                    .set(MESSAGE_RECIPIENT.RECIPIENT_USERNAME, recipient)
                     .execute();
         }
     }
@@ -121,15 +125,16 @@ public class FeedService {
         if (messageId != null) {
             LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
             int updated = dsl.update(MESSAGE_RECIPIENT)
-                    .set(MESSAGE_RECIPIENT.READ_AT, now)
-                    .where(MESSAGE_RECIPIENT.MESSAGE_ID.eq(messageId)).and(MESSAGE_RECIPIENT.RECIPIENT_NAME.eq(recipient))
+                    .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
+                    .set(MESSAGE_RECIPIENT.STATUS, MessageStatusType.READ)
+                    .where(MESSAGE_RECIPIENT.MESSAGE_ID.eq(messageId)).and(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(recipient))
                     .execute();
             if (updated == 0) {
                 dsl.insertInto(MESSAGE_RECIPIENT)
                         .set(MESSAGE_RECIPIENT.ID, dsl.nextval(RECIPIENT_ID_SEQ).intValue())
-                        .set(MESSAGE_RECIPIENT.READ_AT, now)
+                        .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
                         .set(MESSAGE_RECIPIENT.MESSAGE_ID, messageId)
-                        .set(MESSAGE_RECIPIENT.RECIPIENT_NAME, recipient)
+                        .set(MESSAGE_RECIPIENT.RECIPIENT_USERNAME, recipient)
                         .execute();
             }
         }
@@ -150,7 +155,7 @@ public class FeedService {
                 .leftJoin(CHANNEL).on(MESSAGE.CHANNEL_ID.eq(CHANNEL.ID))
                 .where(
                         MESSAGE.TENANT_CODE.eq(tenantCode),
-                        MESSAGE_RECIPIENT.RECIPIENT_SEND_CHANNEL_ID.eq(username),
+                        MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username),
                         CHANNEL.IS_INTERNAL.eq(Boolean.TRUE),
                         MESSAGE_RECIPIENT.STATUS.eq(MessageStatusType.SENT))
                 .fetchOne().value1();
@@ -168,7 +173,7 @@ public class FeedService {
         message.setSeverity(record.getSeverity());
         message.setSentAt(record.getSentAt());
         message.setTenantCode(record.getTenantCode());
-        message.setReadAt(recipientRecord.getReadAt());
+        message.setReadAt(recipientRecord.getStatusTime());
         return message;
     }
 }
