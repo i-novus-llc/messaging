@@ -1,4 +1,4 @@
-package ru.inovus.messaging.impl.test;
+package ru.inovus.messaging.impl;
 
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;

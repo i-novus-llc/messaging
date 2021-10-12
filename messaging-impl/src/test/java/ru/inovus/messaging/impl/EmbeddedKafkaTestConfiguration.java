@@ -1,4 +1,4 @@
-package ru.inovus.messaging.impl.test;
+package ru.inovus.messaging.impl;
 
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
