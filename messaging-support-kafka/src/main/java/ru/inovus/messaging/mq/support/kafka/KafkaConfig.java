@@ -25,6 +25,11 @@ public class KafkaConfig {
     }
 
     @Bean
+    public KafkaMqProvider mqProvider(KafkaTemplate<String, Object> kafkaTemplate) {
+        return new KafkaMqProvider(kafkaTemplate, properties);
+    }
+
+    @Bean
     public Map<String, Object> producerConfigs() {
         Map<String, Object> props = new HashMap<>();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, properties.getBootstrapServers());

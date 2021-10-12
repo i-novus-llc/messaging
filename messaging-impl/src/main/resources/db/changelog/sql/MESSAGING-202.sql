@@ -58,20 +58,26 @@ COMMENT ON COLUMN messaging.user_setting.user_id IS 'Идентификатор 
 COMMENT ON COLUMN messaging.user_setting.msg_setting_id IS 'Идентификатор шаблона уведомления';
 COMMENT ON COLUMN messaging.user_setting.channel_id IS 'Идентификатор канала отправки уведомления';
 
-ALTER TABLE messaging.user_setting DROP CONSTRAINT user_setting_alert_type_check;
+ALTER TABLE messaging.user_setting
+    DROP CONSTRAINT user_setting_alert_type_check;
 
 -- recipient table
-ALTER TABLE messaging.recipient RENAME TO message_recipient;
-ALTER TABLE messaging.message_recipient DROP COLUMN recipient;
-ALTER TABLE messaging.message_recipient DROP COLUMN email;
-ALTER TABLE messaging.message_recipient ADD COLUMN recipient_name VARCHAR;
-ALTER TABLE messaging.message_recipient ADD COLUMN recipient_send_channel_id VARCHAR;
+ALTER TABLE messaging.recipient
+    RENAME TO message_recipient;
+ALTER TABLE messaging.message_recipient
+    DROP COLUMN recipient;
+ALTER TABLE messaging.message_recipient
+    DROP COLUMN email;
+ALTER TABLE messaging.message_recipient
+    ADD COLUMN recipient_name VARCHAR;
+ALTER TABLE messaging.message_recipient
+    ADD COLUMN recipient_username VARCHAR;
 
 COMMENT ON TABLE messaging.message_recipient IS 'Получатель уведомления';
 COMMENT ON COLUMN messaging.message_recipient.message_id IS 'Идентификатор уведомления';
 COMMENT ON COLUMN messaging.message_recipient.recipient_name IS 'Имя контакта получателя';
 COMMENT ON COLUMN messaging.message_recipient.read_at IS 'Дата и время прочтения уведомления';
-COMMENT ON COLUMN messaging.message_recipient.recipient_send_channel_id IS 'Идентификатор получателя в формате канала доставки';
+COMMENT ON COLUMN messaging.message_recipient.recipient_username IS 'Уникальное имя пользователя из провайдера';
 
 ALTER SEQUENCE IF EXISTS message_id_seq SET SCHEMA messaging;
 ALTER SEQUENCE IF EXISTS message_setting_id_seq SET SCHEMA messaging;

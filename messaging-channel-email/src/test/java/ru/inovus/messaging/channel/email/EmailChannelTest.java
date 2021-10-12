@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.inovus.messaging.api.model.Message;
@@ -34,11 +34,10 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(
-        classes = {EmailChannel.class},
+        classes = {TestApp.class},
         properties = {
                 "novus.messaging.queue.status=test-status-queue",
                 "novus.messaging.channel.email.queue=test-email-queue"})
-@Import(EmbeddedKafkaTestConfiguration.class)
 @EmbeddedKafka
 @ContextConfiguration(classes = KafkaMqProvider.class)
 public class EmailChannelTest {
@@ -52,8 +51,8 @@ public class EmailChannelTest {
     @Value("${novus.messaging.queue.status}")
     private String statusQueue;
 
-    @Value("${novus.messaging.channel.email.queue}")
-    private String emailQueue;
+    @Autowired
+    private EmailChannelProperties properties;
 
     @MockBean
     private JavaMailSender mailSender;
@@ -65,9 +64,12 @@ public class EmailChannelTest {
         message.setCaption("Test caption");
         message.setText("Message");
 
-        Recipient recipient1 = new Recipient("email1");
-        Recipient recipient2 = new Recipient("email2");
-        Recipient recipient3 = new Recipient("email3");
+        Recipient recipient1 = new Recipient("username1");
+        recipient1.setEmail("email1");
+        Recipient recipient2 = new Recipient("username2");
+        recipient2.setEmail("email2");
+        Recipient recipient3 = new Recipient("username3");
+        recipient3.setEmail("email3");
         message.setRecipients(Arrays.asList(recipient1, recipient2, recipient3));
 
         CountDownLatch latch = new CountDownLatch(1);
@@ -76,7 +78,7 @@ public class EmailChannelTest {
             latch.countDown();
             return "ignored";
         }).when(mailSender).send(mimeMessage);
-        mqProvider.publish(message, emailQueue);
+        mqProvider.publish(message, properties.getQueue());
         latch.await();
 
         assertThat(mimeMessage.getSubject(), is(message.getCaption()));
@@ -86,9 +88,9 @@ public class EmailChannelTest {
 
         Address[] allRecipients = mimeMessage.getAllRecipients();
         assertThat(allRecipients.length, is(message.getRecipients().size()));
-        assertThat(allRecipients[0].toString(), is(recipient1.getUsername()));
-        assertThat(allRecipients[1].toString(), is(recipient2.getUsername()));
-        assertThat(allRecipients[2].toString(), is(recipient3.getUsername()));
+        assertThat(allRecipients[0].toString(), is(recipient1.getEmail()));
+        assertThat(allRecipients[1].toString(), is(recipient2.getEmail()));
+        assertThat(allRecipients[2].toString(), is(recipient3.getEmail()));
     }
 
     @Test
@@ -98,7 +100,10 @@ public class EmailChannelTest {
         message.setCaption("Test caption");
         message.setText("Message");
         message.setSystemId("system-id");
-        message.setRecipients(Collections.singletonList(new Recipient("email1")));
+        Recipient recipient = new Recipient("username1");
+        recipient.setEmail("email1");
+
+        message.setRecipients(Collections.singletonList(recipient));
 
         CountDownLatch latch = new CountDownLatch(1);
         mailSenderMimeMessageMock();
@@ -121,11 +126,15 @@ public class EmailChannelTest {
     }
 
     @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     public void testSendMessageStatusFailed() throws InterruptedException {
         Message message = new Message();
         message.setId("6f711616-1617-11ec-9621-0242ac130002");
         message.setSystemId("system-id");
-        message.setRecipients(Collections.singletonList(new Recipient("email1")));
+        Recipient recipient = new Recipient("username1");
+        recipient.setEmail("email1");
+
+        message.setRecipients(Collections.singletonList(recipient));
 
         CountDownLatch latch = new CountDownLatch(1);
         mailSenderMimeMessageMock();

@@ -3,27 +3,25 @@
  */
 package ru.inovus.messaging.impl.jooq.tables.records;
 
-
-import java.time.LocalDateTime;
-import java.util.UUID;
-
 import org.jooq.Field;
 import org.jooq.Record1;
 import org.jooq.Record8;
 import org.jooq.Row8;
 import org.jooq.impl.UpdatableRecordImpl;
-
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.impl.jooq.tables.MessageRecipient;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 
 /**
  * Получатель уведомления
  */
-@SuppressWarnings({ "all", "unchecked", "rawtypes" })
+@SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class MessageRecipientRecord extends UpdatableRecordImpl<MessageRecipientRecord> implements Record8<Integer, UUID, LocalDateTime, String, String, MessageStatusType, LocalDateTime, String> {
 
-    private static final long serialVersionUID = 1267163783;
+    private static final long serialVersionUID = -330705995;
 
     /**
      * Setter for <code>messaging.message_recipient.id</code>. Уникальный идентификатор
@@ -54,16 +52,16 @@ public class MessageRecipientRecord extends UpdatableRecordImpl<MessageRecipient
     }
 
     /**
-     * Setter for <code>messaging.message_recipient.read_at</code>. Дата и время прочтения уведомления
+     * Setter for <code>messaging.message_recipient.status_time</code>. Время установки статуса
      */
-    public void setReadAt(LocalDateTime value) {
+    public void setStatusTime(LocalDateTime value) {
         set(2, value);
     }
 
     /**
-     * Getter for <code>messaging.message_recipient.read_at</code>. Дата и время прочтения уведомления
+     * Getter for <code>messaging.message_recipient.status_time</code>. Время установки статуса
      */
-    public LocalDateTime getReadAt() {
+    public LocalDateTime getStatusTime() {
         return (LocalDateTime) get(2);
     }
 
@@ -82,16 +80,16 @@ public class MessageRecipientRecord extends UpdatableRecordImpl<MessageRecipient
     }
 
     /**
-     * Setter for <code>messaging.message_recipient.recipient_send_channel_id</code>. Идентификатор получателя в формате канала доставки
+     * Setter for <code>messaging.message_recipient.recipient_username</code>. Уникальное имя пользователя из провайдера
      */
-    public void setRecipientSendChannelId(String value) {
+    public void setRecipientUsername(String value) {
         set(4, value);
     }
 
     /**
-     * Getter for <code>messaging.message_recipient.recipient_send_channel_id</code>. Идентификатор получателя в формате канала доставки
+     * Getter for <code>messaging.message_recipient.recipient_username</code>. Уникальное имя пользователя из провайдера
      */
-    public String getRecipientSendChannelId() {
+    public String getRecipientUsername() {
         return (String) get(4);
     }
 
@@ -172,7 +170,7 @@ public class MessageRecipientRecord extends UpdatableRecordImpl<MessageRecipient
 
     @Override
     public Field<LocalDateTime> field3() {
-        return MessageRecipient.MESSAGE_RECIPIENT.READ_AT;
+        return MessageRecipient.MESSAGE_RECIPIENT.STATUS_TIME;
     }
 
     @Override
@@ -182,7 +180,7 @@ public class MessageRecipientRecord extends UpdatableRecordImpl<MessageRecipient
 
     @Override
     public Field<String> field5() {
-        return MessageRecipient.MESSAGE_RECIPIENT.RECIPIENT_SEND_CHANNEL_ID;
+        return MessageRecipient.MESSAGE_RECIPIENT.RECIPIENT_USERNAME;
     }
 
     @Override
@@ -212,7 +210,7 @@ public class MessageRecipientRecord extends UpdatableRecordImpl<MessageRecipient
 
     @Override
     public LocalDateTime component3() {
-        return getReadAt();
+        return getStatusTime();
     }
 
     @Override
@@ -222,7 +220,7 @@ public class MessageRecipientRecord extends UpdatableRecordImpl<MessageRecipient
 
     @Override
     public String component5() {
-        return getRecipientSendChannelId();
+        return getRecipientUsername();
     }
 
     @Override
@@ -252,7 +250,7 @@ public class MessageRecipientRecord extends UpdatableRecordImpl<MessageRecipient
 
     @Override
     public LocalDateTime value3() {
-        return getReadAt();
+        return getStatusTime();
     }
 
     @Override
@@ -262,7 +260,7 @@ public class MessageRecipientRecord extends UpdatableRecordImpl<MessageRecipient
 
     @Override
     public String value5() {
-        return getRecipientSendChannelId();
+        return getRecipientUsername();
     }
 
     @Override
@@ -294,7 +292,7 @@ public class MessageRecipientRecord extends UpdatableRecordImpl<MessageRecipient
 
     @Override
     public MessageRecipientRecord value3(LocalDateTime value) {
-        setReadAt(value);
+        setStatusTime(value);
         return this;
     }
 
@@ -306,7 +304,7 @@ public class MessageRecipientRecord extends UpdatableRecordImpl<MessageRecipient
 
     @Override
     public MessageRecipientRecord value5(String value) {
-        setRecipientSendChannelId(value);
+        setRecipientUsername(value);
         return this;
     }
 
@@ -355,14 +353,14 @@ public class MessageRecipientRecord extends UpdatableRecordImpl<MessageRecipient
     /**
      * Create a detached, initialised MessageRecipientRecord
      */
-    public MessageRecipientRecord(Integer id, UUID messageId, LocalDateTime readAt, String recipientName, String recipientSendChannelId, MessageStatusType status, LocalDateTime departuredAt, String sendMessageError) {
+    public MessageRecipientRecord(Integer id, UUID messageId, LocalDateTime statusTime, String recipientName, String recipientUsername, MessageStatusType status, LocalDateTime departuredAt, String sendMessageError) {
         super(MessageRecipient.MESSAGE_RECIPIENT);
 
         set(0, id);
         set(1, messageId);
-        set(2, readAt);
+        set(2, statusTime);
         set(3, recipientName);
-        set(4, recipientSendChannelId);
+        set(4, recipientUsername);
         set(5, status);
         set(6, departuredAt);
         set(7, sendMessageError);

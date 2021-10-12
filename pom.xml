@@ -6,7 +6,7 @@
     <groupId>ru.i-novus.messaging</groupId>
     <artifactId>messaging-pom</artifactId>
     <packaging>pom</packaging>
-    <version>3.42.1-SNAPSHOT</version>
+    <version>4.0.0-SNAPSHOT</version>
 
     <parent>
         <groupId>net.n2oapp.platform</groupId>
@@ -54,7 +54,6 @@
         <module>messaging-admin-frontend</module>
         <module>messaging-admin-web</module>
         <module>messaging-api</module>
-        <module>messaging-client</module>
         <module>messaging-impl</module>
         <module>messaging-support-kafka</module>
         <module>messaging-web</module>
@@ -114,11 +113,6 @@
             <dependency>
                 <groupId>ru.i-novus.messaging</groupId>
                 <artifactId>messaging-support-kafka</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>ru.i-novus.messaging</groupId>
-                <artifactId>messaging-client</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

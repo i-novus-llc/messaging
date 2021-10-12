@@ -10,7 +10,7 @@
     <parent>
         <groupId>ru.i-novus.messaging</groupId>
         <artifactId>messaging-pom</artifactId>
-        <version>3.42.1-SNAPSHOT</version>
+        <version>4.0.0-SNAPSHOT</version>
     </parent>
 
     <properties>
@@ -100,12 +100,6 @@
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>ru.i-novus.messaging</groupId>
-            <artifactId>messaging-client</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -203,11 +197,6 @@
                                             <converter>ru.inovus.messaging.impl.util.MessageStatusTypeConverter</converter>
                                             <expression>.*\.message_recipient\.status</expression>
                                             <types>.*</types>
-                                        </forcedType>
-                                        <forcedType>
-                                            <userType>java.time.LocalDateTime</userType>
-                                            <converter>org.jooq.impl.TimestampToLocalDateTimeConverter</converter>
-                                            <expression>.*_at</expression>
                                         </forcedType>
                                     </forcedTypes>
                                 </database>

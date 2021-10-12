@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.web.socket.AbstractSecurit
 public class WebSocketAuthorizationTestConfiguration extends AbstractSecurityWebSocketMessageBrokerConfigurer {
     @Override
     protected void configureInbound(final MessageSecurityMetadataSourceRegistry messages) {
-        messages.anyMessage().authenticated();
+        messages.anyMessage().permitAll();
     }
 
     @Override

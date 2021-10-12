@@ -11,8 +11,8 @@ import ru.inovus.messaging.api.model.Channel;
 import ru.inovus.messaging.api.model.Component;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.Recipient;
-import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
+import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.impl.jooq.tables.records.ChannelRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.ComponentRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
@@ -62,7 +62,7 @@ public class MessageService {
     }
 
     @Transactional
-    public Message createMessage(Message message, Recipient... recipient) {
+    public Message createMessage(Message message, Recipient... recipients) {
         UUID id = UUID.randomUUID();
         if (message.getSentAt() == null) {
             message.setSentAt(LocalDateTime.now(Clock.systemUTC()));
@@ -82,13 +82,13 @@ public class MessageService {
                 .returning()
                 .fetch().get(0).getId();
         message.setId(id.toString());
-        if (recipient != null && RecipientType.USER.equals(message.getRecipientType())) {
-            for (Recipient rec : recipient) {
+        if (recipients != null && RecipientType.USER.equals(message.getRecipientType())) {
+            for (Recipient recipient : recipients) {
                 dsl
                         .insertInto(MESSAGE_RECIPIENT)
                         .columns(MESSAGE_RECIPIENT.ID, MESSAGE_RECIPIENT.RECIPIENT_NAME, MESSAGE_RECIPIENT.MESSAGE_ID,
-                                MESSAGE_RECIPIENT.STATUS, MESSAGE_RECIPIENT.RECIPIENT_SEND_CHANNEL_ID)
-                        .values(dsl.nextval(RECIPIENT_ID_SEQ).intValue(), rec.getName(), id, MessageStatusType.SCHEDULED, rec.getUsername())
+                                MESSAGE_RECIPIENT.STATUS, MESSAGE_RECIPIENT.STATUS_TIME, MESSAGE_RECIPIENT.RECIPIENT_USERNAME)
+                        .values(dsl.nextval(RECIPIENT_ID_SEQ).intValue(), recipient.getName(), id, MessageStatusType.SCHEDULED, LocalDateTime.now(), recipient.getUsername())
                         .execute();
             }
         }
@@ -155,9 +155,9 @@ public class MessageService {
                 .fetch().map(r -> {
                     Recipient recipient = new Recipient();
                     recipient.setMessageId(r.getMessageId());
-                    recipient.setReadAt(r.getReadAt());
+                    recipient.setStatusTime(r.getStatusTime());
                     recipient.setName(r.getRecipientName());
-                    recipient.setUsername(r.getRecipientSendChannelId());
+                    recipient.setUsername(r.getRecipientUsername());
                     return recipient;
                 });
         message.setRecipients(recipients);
