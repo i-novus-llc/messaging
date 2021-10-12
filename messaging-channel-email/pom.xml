@@ -11,6 +11,11 @@
 
     <artifactId>messaging-channel-email</artifactId>
 
+    <properties>
+        <jacoco.skip>false</jacoco.skip>
+    </properties>
+
+
     <dependencies>
         <dependency>
             <groupId>ru.i-novus.messaging</groupId>
