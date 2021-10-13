@@ -9,7 +9,6 @@
             <in>
                 <field id="name" mapping="['name']" required="true"/>
                 <field id="disabled" mapping="['disabled']" default-value="false"/>
-                <field id="component.id" mapping="['component.id']"/>
                 <field id="severity.id" mapping="['severity']" required="true"/>
                 <field id="alertType.id" mapping="['alertType']" required="true"/>
                 <field id="infoType" mapping="['channel']"/>
@@ -27,7 +26,6 @@
                 <field id="id" mapping="['id']"/>
                 <field id="name" mapping="['name']" required="true"/>
                 <field id="disabled" mapping="['disabled']"/>
-                <field id="component.id" mapping="['component.id']"/>
                 <field id="severity.id" mapping="['severity']" required="true"/>
                 <field id="alertType.id" mapping="['alertType']" required="true"/>
                 <field id="infoType" mapping="['channel']"/>

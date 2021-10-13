@@ -6,7 +6,6 @@
         </pre-filters>
         <fields>
             <row>
-                <input-select id="component" label="Компонент" enabled="false"/>
                 <input-select id="severity" label="Уровень важности" enabled="false">
                     <options>
                         <option id="SEVERE" name="Важный"/>

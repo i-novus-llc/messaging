@@ -4,7 +4,6 @@
     <table id="feed" query-id="messaging_feed">
         <filters>
             <row>
-                <input-select id="component" label="Компонент" query-id="messaging_component"/>
                 <input-select id="severity" label="Уровень важности">
                     <options>
                         <option id="SEVERE" name="Важный"/>
@@ -21,7 +20,6 @@
                 <!--<text format="datetime DD.MM.YYYY HH:mm"/>-->
             </column>
             <column text-field-id="severity.name" label="Важность"/>
-            <column text-field-id="component.name" label="Компонент"/>
             <column text-field-id="caption" label="Заголовок"/>
         </columns>
         <rows>
