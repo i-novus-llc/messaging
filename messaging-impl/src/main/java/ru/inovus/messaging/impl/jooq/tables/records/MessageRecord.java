@@ -5,8 +5,8 @@ package ru.inovus.messaging.impl.jooq.tables.records;
 
 import org.jooq.Field;
 import org.jooq.Record1;
-import org.jooq.Record14;
-import org.jooq.Row14;
+import org.jooq.Record11;
+import org.jooq.Row11;
 import org.jooq.impl.UpdatableRecordImpl;
 import ru.inovus.messaging.api.model.enums.AlertType;
 import ru.inovus.messaging.api.model.enums.FormationType;
@@ -22,9 +22,9 @@ import java.util.UUID;
  * Уведомления
  */
 @SuppressWarnings({"all", "unchecked", "rawtypes"})
-public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements Record14<UUID, String, String, Severity, AlertType, LocalDateTime, String, Integer, FormationType, RecipientType, String, String, String, String> {
+public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements Record11<UUID, String, String, Severity, AlertType, LocalDateTime, String, FormationType, RecipientType, String, String> {
 
-    private static final long serialVersionUID = -1484615168;
+    private static final long serialVersionUID = -2020652857;
 
     /**
      * Setter for <code>messaging.message.id</code>. Уникальный идентификатор
@@ -111,115 +111,73 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
     }
 
     /**
-     * Setter for <code>messaging.message.system_id</code>. Идентификатор системы, к которой относится уведомление
+     * Setter for <code>messaging.message.tenant_code</code>. Тенант, к которому относится уведомление
      */
-    public void setSystemId(String value) {
+    public void setTenantCode(String value) {
         set(6, value);
     }
 
     /**
-     * Getter for <code>messaging.message.system_id</code>. Идентификатор системы, к которой относится уведомление
+     * Getter for <code>messaging.message.tenant_code</code>. Тенант, к которому относится уведомление
      */
-    public String getSystemId() {
+    public String getTenantCode() {
         return (String) get(6);
-    }
-
-    /**
-     * Setter for <code>messaging.message.component_id</code>. Идентификатор компонента (модуля, подсистемы), к которому относится уведомление
-     */
-    public void setComponentId(Integer value) {
-        set(7, value);
-    }
-
-    /**
-     * Getter for <code>messaging.message.component_id</code>. Идентификатор компонента (модуля, подсистемы), к которому относится уведомление
-     */
-    public Integer getComponentId() {
-        return (Integer) get(7);
     }
 
     /**
      * Setter for <code>messaging.message.formation_type</code>. Тип формирования уведомления
      */
     public void setFormationType(FormationType value) {
-        set(8, value);
+        set(7, value);
     }
 
     /**
      * Getter for <code>messaging.message.formation_type</code>. Тип формирования уведомления
      */
     public FormationType getFormationType() {
-        return (FormationType) get(8);
+        return (FormationType) get(7);
     }
 
     /**
      * Setter for <code>messaging.message.recipient_type</code>. Тип получателя уведомления
      */
     public void setRecipientType(RecipientType value) {
-        set(9, value);
+        set(8, value);
     }
 
     /**
      * Getter for <code>messaging.message.recipient_type</code>. Тип получателя уведомления
      */
     public RecipientType getRecipientType() {
-        return (RecipientType) get(9);
+        return (RecipientType) get(8);
     }
 
     /**
      * Setter for <code>messaging.message.notification_type</code>. Код шаблона, который был использован для формирования уведомления
      */
     public void setNotificationType(String value) {
-        set(10, value);
+        set(9, value);
     }
 
     /**
      * Getter for <code>messaging.message.notification_type</code>. Код шаблона, который был использован для формирования уведомления
      */
     public String getNotificationType() {
-        return (String) get(10);
-    }
-
-    /**
-     * Setter for <code>messaging.message.object_id</code>. Идентификатор объекта, по которому было направлено уведомление
-     */
-    public void setObjectId(String value) {
-        set(11, value);
-    }
-
-    /**
-     * Getter for <code>messaging.message.object_id</code>. Идентификатор объекта, по которому было направлено уведомление
-     */
-    public String getObjectId() {
-        return (String) get(11);
-    }
-
-    /**
-     * Setter for <code>messaging.message.object_type</code>. Тип объекта, по которому было направлено уведомление
-     */
-    public void setObjectType(String value) {
-        set(12, value);
-    }
-
-    /**
-     * Getter for <code>messaging.message.object_type</code>. Тип объекта, по которому было направлено уведомление
-     */
-    public String getObjectType() {
-        return (String) get(12);
+        return (String) get(9);
     }
 
     /**
      * Setter for <code>messaging.message.channel_id</code>. Идентификатор канала отправки уведомления
      */
     public void setChannelId(String value) {
-        set(13, value);
+        set(10, value);
     }
 
     /**
      * Getter for <code>messaging.message.channel_id</code>. Идентификатор канала отправки уведомления
      */
     public String getChannelId() {
-        return (String) get(13);
+        return (String) get(10);
     }
 
     // -------------------------------------------------------------------------
@@ -232,17 +190,17 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
     }
 
     // -------------------------------------------------------------------------
-    // Record14 type implementation
+    // Record11 type implementation
     // -------------------------------------------------------------------------
 
     @Override
-    public Row14<UUID, String, String, Severity, AlertType, LocalDateTime, String, Integer, FormationType, RecipientType, String, String, String, String> fieldsRow() {
-        return (Row14) super.fieldsRow();
+    public Row11<UUID, String, String, Severity, AlertType, LocalDateTime, String, FormationType, RecipientType, String, String> fieldsRow() {
+        return (Row11) super.fieldsRow();
     }
 
     @Override
-    public Row14<UUID, String, String, Severity, AlertType, LocalDateTime, String, Integer, FormationType, RecipientType, String, String, String, String> valuesRow() {
-        return (Row14) super.valuesRow();
+    public Row11<UUID, String, String, Severity, AlertType, LocalDateTime, String, FormationType, RecipientType, String, String> valuesRow() {
+        return (Row11) super.valuesRow();
     }
 
     @Override
@@ -277,41 +235,26 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
 
     @Override
     public Field<String> field7() {
-        return Message.MESSAGE.SYSTEM_ID;
+        return Message.MESSAGE.TENANT_CODE;
     }
 
     @Override
-    public Field<Integer> field8() {
-        return Message.MESSAGE.COMPONENT_ID;
-    }
-
-    @Override
-    public Field<FormationType> field9() {
+    public Field<FormationType> field8() {
         return Message.MESSAGE.FORMATION_TYPE;
     }
 
     @Override
-    public Field<RecipientType> field10() {
+    public Field<RecipientType> field9() {
         return Message.MESSAGE.RECIPIENT_TYPE;
     }
 
     @Override
-    public Field<String> field11() {
+    public Field<String> field10() {
         return Message.MESSAGE.NOTIFICATION_TYPE;
     }
 
     @Override
-    public Field<String> field12() {
-        return Message.MESSAGE.OBJECT_ID;
-    }
-
-    @Override
-    public Field<String> field13() {
-        return Message.MESSAGE.OBJECT_TYPE;
-    }
-
-    @Override
-    public Field<String> field14() {
+    public Field<String> field11() {
         return Message.MESSAGE.CHANNEL_ID;
     }
 
@@ -347,41 +290,26 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
 
     @Override
     public String component7() {
-        return getSystemId();
+        return getTenantCode();
     }
 
     @Override
-    public Integer component8() {
-        return getComponentId();
-    }
-
-    @Override
-    public FormationType component9() {
+    public FormationType component8() {
         return getFormationType();
     }
 
     @Override
-    public RecipientType component10() {
+    public RecipientType component9() {
         return getRecipientType();
     }
 
     @Override
-    public String component11() {
+    public String component10() {
         return getNotificationType();
     }
 
     @Override
-    public String component12() {
-        return getObjectId();
-    }
-
-    @Override
-    public String component13() {
-        return getObjectType();
-    }
-
-    @Override
-    public String component14() {
+    public String component11() {
         return getChannelId();
     }
 
@@ -417,41 +345,26 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
 
     @Override
     public String value7() {
-        return getSystemId();
+        return getTenantCode();
     }
 
     @Override
-    public Integer value8() {
-        return getComponentId();
-    }
-
-    @Override
-    public FormationType value9() {
+    public FormationType value8() {
         return getFormationType();
     }
 
     @Override
-    public RecipientType value10() {
+    public RecipientType value9() {
         return getRecipientType();
     }
 
     @Override
-    public String value11() {
+    public String value10() {
         return getNotificationType();
     }
 
     @Override
-    public String value12() {
-        return getObjectId();
-    }
-
-    @Override
-    public String value13() {
-        return getObjectType();
-    }
-
-    @Override
-    public String value14() {
+    public String value11() {
         return getChannelId();
     }
 
@@ -493,54 +406,36 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
 
     @Override
     public MessageRecord value7(String value) {
-        setSystemId(value);
+        setTenantCode(value);
         return this;
     }
 
     @Override
-    public MessageRecord value8(Integer value) {
-        setComponentId(value);
-        return this;
-    }
-
-    @Override
-    public MessageRecord value9(FormationType value) {
+    public MessageRecord value8(FormationType value) {
         setFormationType(value);
         return this;
     }
 
     @Override
-    public MessageRecord value10(RecipientType value) {
+    public MessageRecord value9(RecipientType value) {
         setRecipientType(value);
         return this;
     }
 
     @Override
-    public MessageRecord value11(String value) {
+    public MessageRecord value10(String value) {
         setNotificationType(value);
         return this;
     }
 
     @Override
-    public MessageRecord value12(String value) {
-        setObjectId(value);
-        return this;
-    }
-
-    @Override
-    public MessageRecord value13(String value) {
-        setObjectType(value);
-        return this;
-    }
-
-    @Override
-    public MessageRecord value14(String value) {
+    public MessageRecord value11(String value) {
         setChannelId(value);
         return this;
     }
 
     @Override
-    public MessageRecord values(UUID value1, String value2, String value3, Severity value4, AlertType value5, LocalDateTime value6, String value7, Integer value8, FormationType value9, RecipientType value10, String value11, String value12, String value13, String value14) {
+    public MessageRecord values(UUID value1, String value2, String value3, Severity value4, AlertType value5, LocalDateTime value6, String value7, FormationType value8, RecipientType value9, String value10, String value11) {
         value1(value1);
         value2(value2);
         value3(value3);
@@ -552,9 +447,6 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
         value9(value9);
         value10(value10);
         value11(value11);
-        value12(value12);
-        value13(value13);
-        value14(value14);
         return this;
     }
 
@@ -572,7 +464,7 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
     /**
      * Create a detached, initialised MessageRecord
      */
-    public MessageRecord(UUID id, String caption, String text, Severity severity, AlertType alertType, LocalDateTime sentAt, String systemId, Integer componentId, FormationType formationType, RecipientType recipientType, String notificationType, String objectId, String objectType, String channelId) {
+    public MessageRecord(UUID id, String caption, String text, Severity severity, AlertType alertType, LocalDateTime sentAt, String tenantCode, FormationType formationType, RecipientType recipientType, String notificationType, String channelId) {
         super(Message.MESSAGE);
 
         set(0, id);
@@ -581,13 +473,10 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
         set(3, severity);
         set(4, alertType);
         set(5, sentAt);
-        set(6, systemId);
-        set(7, componentId);
-        set(8, formationType);
-        set(9, recipientType);
-        set(10, notificationType);
-        set(11, objectId);
-        set(12, objectType);
-        set(13, channelId);
+        set(6, tenantCode);
+        set(7, formationType);
+        set(8, recipientType);
+        set(9, notificationType);
+        set(10, channelId);
     }
 }

@@ -14,7 +14,6 @@ import ru.inovus.messaging.impl.jooq.tables.MessageRecipient;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-
 /**
  * Получатель уведомления
  */

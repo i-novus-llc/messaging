@@ -58,9 +58,9 @@ public class RecipientServiceTest {
         assertThat(recipients.get(3).getStatus(), is(MessageStatusType.SCHEDULED));
         assertThat(recipients.get(4).getStatus(), is(MessageStatusType.SCHEDULED));
 
-        // update recipients by systemId, username, messageId (update only one recipient)
+        // update recipients by tenantCode, username, messageId (update only one recipient)
         MessageStatus messageStatus = new MessageStatus();
-        messageStatus.setSystemId("sys1");
+        messageStatus.setTenantCode("tenant");
         messageStatus.setMessageId("a2bd666b-1684-4005-a10f-f14224f66d0a");
         messageStatus.setUsername("web1");
         messageStatus.setStatus(MessageStatusType.FAILED);
@@ -77,9 +77,9 @@ public class RecipientServiceTest {
         assertThat(recipients.get(4).getUsername(), is("web1"));
         assertThat(recipients.get(4).getErrorMessage(), is("Error"));
 
-        // update recipients by systemId, messageId (update all message recipients)
+        // update recipients by tenantCode, messageId (update all message recipients)
         messageStatus = new MessageStatus();
-        messageStatus.setSystemId("sys1");
+        messageStatus.setTenantCode("tenant");
         messageStatus.setMessageId("d1450cd1-5b93-47fe-9e44-a3800476342e");
         messageStatus.setStatus(MessageStatusType.SENT);
         service.updateStatus(messageStatus);
@@ -92,10 +92,10 @@ public class RecipientServiceTest {
         assertThat(recipients.get(3).getStatus(), is(MessageStatusType.SCHEDULED));
         assertThat(recipients.get(4).getStatus(), is(MessageStatusType.FAILED));
 
-        // update recipients by systemId, username (update all messages recipients by internal channel)
+        // update recipients by tenantCode, username (update all messages recipients by internal channel)
         // mustn't change status of not sent messages
         messageStatus = new MessageStatus();
-        messageStatus.setSystemId("sys1");
+        messageStatus.setTenantCode("tenant");
         messageStatus.setUsername("web2");
         messageStatus.setStatus(MessageStatusType.READ);
 
@@ -119,7 +119,7 @@ public class RecipientServiceTest {
         assertThat(recipients.get(3).getStatus(), is(MessageStatusType.SCHEDULED));
         assertThat(recipients.get(4).getStatus(), is(MessageStatusType.FAILED));
 
-        assertThat(feedCount[0].getSystemId(), is("sys1"));
+        assertThat(feedCount[0].getTenantCode(), is("tenant"));
         assertThat(feedCount[0].getUsername(), is("web2"));
         assertThat(feedCount[0].getCount(), is(0));
     }

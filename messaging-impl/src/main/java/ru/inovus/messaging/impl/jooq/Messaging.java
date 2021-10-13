@@ -19,7 +19,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Messaging extends SchemaImpl {
 
-    private static final long serialVersionUID = 1599754114;
+    private static final long serialVersionUID = -362314422;
 
     /**
      * The reference instance of <code>messaging</code>
@@ -30,11 +30,6 @@ public class Messaging extends SchemaImpl {
      * Каналы отправки уведомлений
      */
     public final Channel CHANNEL = Channel.CHANNEL;
-
-    /**
-     * Компоненты системы
-     */
-    public final Component COMPONENT = Component.COMPONENT;
 
     /**
      * Уведомления
@@ -50,6 +45,11 @@ public class Messaging extends SchemaImpl {
      * Шаблоны уведомлений (общесистемные настройки)
      */
     public final MessageSetting MESSAGE_SETTING = MessageSetting.MESSAGE_SETTING;
+
+    /**
+     * Тенанты
+     */
+    public final Tenant TENANT = Tenant.TENANT;
 
     /**
      * Пользовательские настройки уведомлений
@@ -81,11 +81,11 @@ public class Messaging extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.<Table<?>>asList(
-            Channel.CHANNEL,
-            Component.COMPONENT,
-            Message.MESSAGE,
-            MessageRecipient.MESSAGE_RECIPIENT,
-            MessageSetting.MESSAGE_SETTING,
-            UserSetting.USER_SETTING);
+                Channel.CHANNEL,
+                Message.MESSAGE,
+                MessageRecipient.MESSAGE_RECIPIENT,
+                MessageSetting.MESSAGE_SETTING,
+                Tenant.TENANT,
+                UserSetting.USER_SETTING);
     }
 }

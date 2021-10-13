@@ -25,12 +25,12 @@
 
         <dependency>
             <groupId>ru.i-novus.messaging</groupId>
-            <artifactId>messaging-channel-api</artifactId>
+            <artifactId>messaging-support-kafka</artifactId>
         </dependency>
 
         <dependency>
             <groupId>ru.i-novus.messaging</groupId>
-            <artifactId>messaging-support-kafka</artifactId>
+            <artifactId>messaging-channel-api</artifactId>
         </dependency>
 
         <dependency>
@@ -117,19 +117,6 @@
                 <config.server.enable>true</config.server.enable>
             </properties>
         </profile>
-        <profile>
-            <id>kafka</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>ru.i-novus.messaging</groupId>
-                    <artifactId>messaging-support-kafka</artifactId>
-                </dependency>
-            </dependencies>
-        </profile>
-
         <profile>
             <id>jooq-generate-source</id>
             <activation>

@@ -3,47 +3,44 @@
  */
 package ru.inovus.messaging.impl.jooq.tables.records;
 
-
 import org.jooq.Field;
 import org.jooq.Record1;
 import org.jooq.Record2;
 import org.jooq.Row2;
 import org.jooq.impl.UpdatableRecordImpl;
-
-import ru.inovus.messaging.impl.jooq.tables.Component;
-
+import ru.inovus.messaging.impl.jooq.tables.Tenant;
 
 /**
- * Компоненты системы
+ * Тенанты
  */
-@SuppressWarnings({ "all", "unchecked", "rawtypes" })
-public class ComponentRecord extends UpdatableRecordImpl<ComponentRecord> implements Record2<Integer, String> {
+@SuppressWarnings({"all", "unchecked", "rawtypes"})
+public class TenantRecord extends UpdatableRecordImpl<TenantRecord> implements Record2<String, String> {
 
-    private static final long serialVersionUID = 658683810;
+    private static final long serialVersionUID = 1778893056;
 
     /**
-     * Setter for <code>messaging.component.id</code>. Уникальный идентификатор
+     * Setter for <code>messaging.tenant.code</code>. Уникальный код тенанта
      */
-    public void setId(Integer value) {
+    public void setCode(String value) {
         set(0, value);
     }
 
     /**
-     * Getter for <code>messaging.component.id</code>. Уникальный идентификатор
+     * Getter for <code>messaging.tenant.code</code>. Уникальный код тенанта
      */
-    public Integer getId() {
-        return (Integer) get(0);
+    public String getCode() {
+        return (String) get(0);
     }
 
     /**
-     * Setter for <code>messaging.component.name</code>. Наименование компонента
+     * Setter for <code>messaging.tenant.name</code>. Наименование тенанта
      */
     public void setName(String value) {
         set(1, value);
     }
 
     /**
-     * Getter for <code>messaging.component.name</code>. Наименование компонента
+     * Getter for <code>messaging.tenant.name</code>. Наименование тенанта
      */
     public String getName() {
         return (String) get(1);
@@ -54,7 +51,7 @@ public class ComponentRecord extends UpdatableRecordImpl<ComponentRecord> implem
     // -------------------------------------------------------------------------
 
     @Override
-    public Record1<Integer> key() {
+    public Record1<String> key() {
         return (Record1) super.key();
     }
 
@@ -63,28 +60,28 @@ public class ComponentRecord extends UpdatableRecordImpl<ComponentRecord> implem
     // -------------------------------------------------------------------------
 
     @Override
-    public Row2<Integer, String> fieldsRow() {
+    public Row2<String, String> fieldsRow() {
         return (Row2) super.fieldsRow();
     }
 
     @Override
-    public Row2<Integer, String> valuesRow() {
+    public Row2<String, String> valuesRow() {
         return (Row2) super.valuesRow();
     }
 
     @Override
-    public Field<Integer> field1() {
-        return Component.COMPONENT.ID;
+    public Field<String> field1() {
+        return Tenant.TENANT.CODE;
     }
 
     @Override
     public Field<String> field2() {
-        return Component.COMPONENT.NAME;
+        return Tenant.TENANT.NAME;
     }
 
     @Override
-    public Integer component1() {
-        return getId();
+    public String component1() {
+        return getCode();
     }
 
     @Override
@@ -93,8 +90,8 @@ public class ComponentRecord extends UpdatableRecordImpl<ComponentRecord> implem
     }
 
     @Override
-    public Integer value1() {
-        return getId();
+    public String value1() {
+        return getCode();
     }
 
     @Override
@@ -103,19 +100,19 @@ public class ComponentRecord extends UpdatableRecordImpl<ComponentRecord> implem
     }
 
     @Override
-    public ComponentRecord value1(Integer value) {
-        setId(value);
+    public TenantRecord value1(String value) {
+        setCode(value);
         return this;
     }
 
     @Override
-    public ComponentRecord value2(String value) {
+    public TenantRecord value2(String value) {
         setName(value);
         return this;
     }
 
     @Override
-    public ComponentRecord values(Integer value1, String value2) {
+    public TenantRecord values(String value1, String value2) {
         value1(value1);
         value2(value2);
         return this;
@@ -126,19 +123,19 @@ public class ComponentRecord extends UpdatableRecordImpl<ComponentRecord> implem
     // -------------------------------------------------------------------------
 
     /**
-     * Create a detached ComponentRecord
+     * Create a detached TenantRecord
      */
-    public ComponentRecord() {
-        super(Component.COMPONENT);
+    public TenantRecord() {
+        super(Tenant.TENANT);
     }
 
     /**
-     * Create a detached, initialised ComponentRecord
+     * Create a detached, initialised TenantRecord
      */
-    public ComponentRecord(Integer id, String name) {
-        super(Component.COMPONENT);
+    public TenantRecord(String code, String name) {
+        super(Tenant.TENANT);
 
-        set(0, id);
+        set(0, code);
         set(1, name);
     }
 }

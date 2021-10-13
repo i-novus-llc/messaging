@@ -30,9 +30,6 @@ public class UserSettingCriteria extends BaseMessagingCriteria {
     @PathParam("user")
     private String user;
 
-    @QueryParam("component.id")
-    private Integer componentId;
-
     @QueryParam("severity.id")
     private Severity severity;
 
