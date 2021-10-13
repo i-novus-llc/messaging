@@ -30,6 +30,18 @@
 
         <dependency>
             <groupId>ru.i-novus.messaging</groupId>
+            <artifactId>messaging-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.i-novus.messaging</groupId>
+            <artifactId>messaging-channel-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.i-novus.messaging</groupId>
             <artifactId>messaging-channel-email</artifactId>
             <version>${project.version}</version>
         </dependency>
