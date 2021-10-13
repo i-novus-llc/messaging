@@ -72,7 +72,7 @@
             <select normalize="T(ru.inovus.messaging.n2o.utils.LocalDateTimeUtils).parseDateToMsk(#this)" mapping="['sentAt']"/>
             <filters>
                 <more filter-id="sentAt.begin" domain="localdatetime">sentAtBegin={sentAt.begin}</more>
-                <less filter-id="sentAt.end" normalize="#this.plusDays(1).minusSeconds(1)"
+                <less filter-id="sentAt.end" normalize="#this.plusDays(1).minusNanos(1)"
                       domain="localdatetime">sentAtEnd={sentAt.end}</less>
             </filters>
         </field>
