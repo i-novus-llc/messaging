@@ -22,7 +22,8 @@ public class ChannelService {
     private final RecordMapper<ChannelRecord, Channel> MAPPER = record ->
             new Channel(record.getId(), record.getName(), record.getQueueName());
 
-    public List<Channel> getChannels() {
+    public List<Channel> getChannels(String tenantCode) {
+        // TODO
         return dsl.selectFrom(CHANNEL).fetch(MAPPER);
     }
 

@@ -148,7 +148,7 @@ public class RecipientService {
 
         // отправка количества непрочитанных уведомлений в очередь счетчиков
         if (status.getUsername() != null && MessageStatusType.READ.equals(status.getStatus())) {
-            FeedCount feedCount = feedService.getFeedCount(status.getUsername(), status.getTenantCode());
+            FeedCount feedCount = feedService.getFeedCount(status.getTenantCode(), status.getUsername());
             mqProvider.publish(feedCount, feedCountQueue);
         }
     }

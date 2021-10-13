@@ -3,6 +3,14 @@
 #### 4.1.0
 
 * Прекращена поддержка компонентов системы
+* Добавлена мультитенантность
+    - `systemId` изменено на `tenantCode`
+    - Изменены эндпоинты большинства рестов
+        - `/messages` -> `/{tenantCode}/messages`
+        - `/settings` -> `/{tenantCode}/settings`
+        - `/user/{username}/settings` -> `/{tenantCode}/user/{username}/settings`
+        - `/feed` -> `/{tenantCode}/feed`
+        - `/channels` -> `/{tenantCode}/channels`
 
 
 #### 4.0.0
