@@ -64,7 +64,7 @@ public class SchedulerRestImplTest {
     @Test
     public void testInstantlySendMessage() {
         schedulerRest.createScheduledMessage(prepareTestSms());
-        verify(messageRest, times(1)).sendMessage(any());
+        verify(messageRest, times(1)).sendMessage(any(), any());
     }
 
     private Sms prepareTestSms() {

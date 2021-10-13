@@ -17,27 +17,27 @@ public class MessageSettingRestImpl implements MessageSettingRest {
     }
 
     @Override
-    public Page<MessageSetting> getSettings(MessageSettingCriteria criteria) {
-        return messageSettingService.getSettings(criteria);
+    public Page<MessageSetting> getSettings(String tenantCode, MessageSettingCriteria criteria) {
+        return messageSettingService.getSettings(tenantCode, criteria);
     }
 
     @Override
-    public void createSetting(MessageSetting messageSetting) {
-        messageSettingService.createSetting(messageSetting);
+    public void createSetting(String tenantCode, MessageSetting messageSetting) {
+        messageSettingService.createSetting(tenantCode, messageSetting);
     }
 
     @Override
-    public void updateSetting(Integer id, MessageSetting messageSetting) {
+    public void updateSetting(String tenantCode, Integer id, MessageSetting messageSetting) {
         messageSettingService.updateSetting(id, messageSetting);
     }
 
     @Override
-    public void deleteSetting(Integer id) {
+    public void deleteSetting(String tenantCode, Integer id) {
         messageSettingService.deleteSetting(id);
     }
 
     @Override
-    public MessageSetting getSetting(Integer id) {
+    public MessageSetting getSetting(String tenantCode, Integer id) {
         return messageSettingService.getSetting(id);
     }
 }

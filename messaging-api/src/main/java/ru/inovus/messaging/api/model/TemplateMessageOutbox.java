@@ -34,7 +34,5 @@ public class TemplateMessageOutbox implements Serializable {
     private List<String> userNameList;
     private List<String> permissions;
     private Map<String, Object> placeholders;
-    private String systemId;
-    private String objectId;
-    private String objectType;
+    private String tenantCode;
 }

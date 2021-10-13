@@ -10,32 +10,32 @@
             INSERT INTO messaging.message_setting VALUES (1, 'Зарегистрирован договор № %CONTRACT_NUMBER%',
             'В личном кабинете банка Единой информационной системы жилищного строительства зарегистрирован новый договор поручительства № %CONTRACT_NUMBER% от %CONTRACT_DATE%',
             'INFO', 'HIDDEN', 'Уведомление УЛ банка о создании нового договора',
-            false, 'AUTO', 'LKB-PAYMENT-NTF-1', 'email');
+            false, 'AUTO', 'LKB-PAYMENT-NTF-1', 'email', 'tenant');
 
             INSERT INTO messaging.message_setting VALUES (3, 'Предоставление сведений о выборке кредитных средств по договору № %CONTRACT_NUMBER%',
             'По договору № %CONTRACT_NUMBER% от %CONTRACT_DATE%, застройщик %DEVELOPER_FULL_NAME% доступна загрузка файла выборки кредитных средств за %REPORTING_PERIOD_FULL_NAME%.',
             'INFO', 'HIDDEN', 'Уведомление УЛ банка о необходимости предоставления выборки по договору за новый отчетный период',
-            false, 'AUTO', 'LKB-PAYMENT-NTF-3', 'email');
+            false, 'AUTO', 'LKB-PAYMENT-NTF-3', 'email', 'tenant');
 
             INSERT INTO messaging.message_setting VALUES (5, 'Начисление комиссии по договору № %CONTRACT_NUMBER%',
             'По договору № %CONTRACT_NUMBER%, застройщик %DEVELOPER_FULL_NAME% выполнено %OPERATION_NAME%. Необходимо оплатить комиссию в срок, установленный условиями договора. С суммой начисленной комиссии Вы можете ознакомиться на карточке договора',
             'INFO', 'HIDDEN', 'Уведомление УЛ банка о необходимости предоставления выборки по договору за новый отчетный период',
-            false, 'AUTO', 'LKB-PAYMENT-NTF-5', 'email');
+            false, 'AUTO', 'LKB-PAYMENT-NTF-5', 'email', 'tenant');
 
             INSERT INTO messaging.message_setting VALUES (6, 'Корректировка комиссии по договору № %CONTRACT_NUMBER%',
             'По договору № %CONTRACT_NUMBER%, застройщик %DEVELOPER_FULL_NAME% выполнена %OPERATION_NAME%. С актуальной суммой начисленной комиссии Вы можете ознакомиться на карточке договора',
             'INFO', 'HIDDEN', 'Уведомление УЛ банка о выполнении операций по корректировке комиссии по договору',
-            false, 'AUTO', 'LKB-PAYMENT-NTF-6', 'email');
+            false, 'AUTO', 'LKB-PAYMENT-NTF-6', 'email', 'tenant');
 
             INSERT INTO messaging.message_setting VALUES (7, 'Оплата комиссии по договору № %CONTRACT_NUMBER%',
             'По договору № %CONTRACT_NUMBER%, застройщик %DEVELOPER_FULL_NAME% выполнена %OPERATION_NAME%',
             'INFO', 'HIDDEN', 'Уведомление УЛ банка о выполнении операций по погашению комиссии по договору',
-            false, 'AUTO', 'LKB-PAYMENT-NTF-7', 'email');
+            false, 'AUTO', 'LKB-PAYMENT-NTF-7', 'email', 'tenant');
 
             INSERT INTO messaging.message_setting VALUES (8, 'Файл выборки по договору № %CONTRACT_NUMBER% отклонен',
             'Загруженный файл с выборкой кредитных средств за %REPORTING_PERIOD_FULL_NAME% по договору № %CONTRACT_NUMBER%, застройщик %DEVELOPER_FULL_NAME% отклонен ДОМ.РФ. Необходимо внести необходимые исправления в файл выборки кредитных средств и загрузить обновленный файл в карточке договора',
             'INFO', 'HIDDEN', 'Уведомление УЛ банка об отклонении предоставленной выборки кредитных средств',
-            true, 'AUTO', 'LKB-PAYMENT-NTF-9', 'email');
+            true, 'AUTO', 'LKB-PAYMENT-NTF-9', 'email', 'tenant');
 
         </sql>
     </changeSet>

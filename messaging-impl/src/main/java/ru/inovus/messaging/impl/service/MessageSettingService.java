@@ -53,8 +53,9 @@ public class MessageSettingService {
         this.dsl = dsl;
     }
 
-    public Page<MessageSetting> getSettings(MessageSettingCriteria criteria) {
+    public Page<MessageSetting> getSettings(String tenantCode, MessageSettingCriteria criteria) {
         List<Condition> conditions = new ArrayList<>();
+        conditions.add(MESSAGE_SETTING.TENANT_CODE.eq(tenantCode));
         Optional.ofNullable(criteria.getSeverity())
                 .ifPresent(severity -> conditions.add(MESSAGE_SETTING.SEVERITY.eq(severity)));
         Optional.ofNullable(criteria.getAlertType())
@@ -89,7 +90,7 @@ public class MessageSettingService {
     }
 
     @Transactional
-    public void createSetting(MessageSetting messageSetting) {
+    public void createSetting(String tenantCode, MessageSetting messageSetting) {
         Long id = dsl.nextval(MESSAGE_SETTING_ID_SEQ);
         dsl
                 .insertInto(MESSAGE_SETTING)
@@ -97,13 +98,13 @@ public class MessageSettingService {
                         MESSAGE_SETTING.ALERT_TYPE, MESSAGE_SETTING.SEVERITY, MESSAGE_SETTING.CHANNEL_ID,
                         MESSAGE_SETTING.FORMATION_TYPE, MESSAGE_SETTING.IS_DISABLED,
                         MESSAGE_SETTING.CAPTION, MESSAGE_SETTING.TEXT,
-                        MESSAGE_SETTING.CODE
+                        MESSAGE_SETTING.CODE, MESSAGE_SETTING.TENANT_CODE
                 )
                 .values(id.intValue(), messageSetting.getName(),
                         messageSetting.getAlertType(), messageSetting.getSeverity(),
                         messageSetting.getChannel() != null ? messageSetting.getChannel().getId() : null,
                         messageSetting.getFormationType(), messageSetting.getDisabled(), messageSetting.getCaption(), messageSetting.getText(),
-                        messageSetting.getCode())
+                        messageSetting.getCode(), tenantCode)
                 .execute();
     }
 
