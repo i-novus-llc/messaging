@@ -91,25 +91,25 @@ services:
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
 
-    kafka:
-      image: 'bitnami/kafka:2.8.1'
-      ports:
-        - '9092:9092'
-      deploy:
-        resources:
-          limits:
-            memory: 512M
-            cpus: '0.75'
-        restart_policy:
-          max_attempts: 3
-      environment:
-        - KAFKA_BROKER_ID=1
-        - KAFKA_LISTENERS=PLAINTEXT://:9092
-        - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://127.0.0.1:9092
-        - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-        - ALLOW_PLAINTEXT_LISTENER=yes
-      depends_on:
-        - zookeeper
+  kafka:
+    image: 'bitnami/kafka:2.8.1'
+    ports:
+      - '9092:9092'
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.75'
+      restart_policy:
+        max_attempts: 3
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_LISTENERS=PLAINTEXT://:9092
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://127.0.0.1:9092
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    depends_on:
+      - zookeeper
 
 volumes:
   messaging-db-data:
