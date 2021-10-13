@@ -12,7 +12,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import ru.inovus.messaging.api.criteria.UserSettingCriteria;
-import ru.inovus.messaging.api.model.Component;
 import ru.inovus.messaging.api.model.UserSetting;
 import ru.inovus.messaging.api.rest.UserSettingRest;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageSettingRecord;
@@ -24,7 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static ru.inovus.messaging.impl.jooq.Tables.*;
+import static ru.inovus.messaging.impl.jooq.Tables.MESSAGE_SETTING;
+import static ru.inovus.messaging.impl.jooq.Tables.USER_SETTING;
 
 @Controller
 public class UserSettingRestImpl implements UserSettingRest {
@@ -44,8 +44,6 @@ public class UserSettingRestImpl implements UserSettingRest {
         setting.setText(defaultSetting.getText());
         setting.setSeverity(defaultSetting.getSeverity());
         setting.setName(defaultSetting.getName());
-        setting.setComponent(defaultSetting.getComponentId() != null ?
-                new Component(defaultSetting.getComponentId(), record.into(COMPONENT).getName()) : null);
         setting.setDisabled(userSetting.getIsDisabled() != null ?
                 userSetting.getIsDisabled() : defaultSetting.getIsDisabled());
         setting.setAlertType(userSetting.getAlertType() != null ?
@@ -64,8 +62,6 @@ public class UserSettingRestImpl implements UserSettingRest {
     @Override
     public Page<UserSetting> getSettings(UserSettingCriteria criteria) {
         List<Condition> conditions = new ArrayList<>();
-        Optional.ofNullable(criteria.getComponentId())
-                .ifPresent(componentId -> conditions.add(MESSAGE_SETTING.COMPONENT_ID.eq(componentId)));
         Optional.ofNullable(criteria.getSeverity())
                 .ifPresent(severity -> conditions.add(MESSAGE_SETTING.SEVERITY.eq(severity)));
         Optional.ofNullable(criteria.getName()).filter(StringUtils::isNotBlank)
@@ -94,11 +90,9 @@ public class UserSettingRestImpl implements UserSettingRest {
         List<UserSetting> list = dsl
                 .select(MESSAGE_SETTING.fields())
                 .select(USER_SETTING.fields())
-                .select(COMPONENT.fields())
                 .from(MESSAGE_SETTING)
                 .leftJoin(USER_SETTING).on(USER_SETTING.MSG_SETTING_ID.eq(MESSAGE_SETTING.ID),
                         USER_SETTING.USER_ID.eq(criteria.getUser())) // in fact it's username
-                .leftJoin(COMPONENT).on(MESSAGE_SETTING.COMPONENT_ID.eq(COMPONENT.ID))
                 .where(conditions)
                 .limit(criteria.getPageSize())
                 .offset((int) criteria.getOffset())
@@ -121,11 +115,9 @@ public class UserSettingRestImpl implements UserSettingRest {
         Record record = dsl
                 .select(MESSAGE_SETTING.fields())
                 .select(USER_SETTING.fields())
-                .select(COMPONENT.fields())
                 .from(MESSAGE_SETTING)
                 .leftJoin(USER_SETTING).on(USER_SETTING.MSG_SETTING_ID.eq(MESSAGE_SETTING.ID),
                         USER_SETTING.USER_ID.eq(user))
-                .leftJoin(COMPONENT).on(MESSAGE_SETTING.COMPONENT_ID.eq(COMPONENT.ID))
                 .where(MESSAGE_SETTING.ID.eq(id))
                 .fetchOne();
 

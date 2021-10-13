@@ -26,7 +26,7 @@ import java.time.LocalDateTime;
 @Setter
 public class FeedCriteria extends BaseMessagingCriteria {
     @QueryParam("systemId")
-    private String systemId;
+    private String tenantCode;
 
     @QueryParam("sentAtBegin")
     private LocalDateTime sentAtBegin;
@@ -36,7 +36,4 @@ public class FeedCriteria extends BaseMessagingCriteria {
 
     @QueryParam("severity.id")
     private Severity severity;
-
-    @QueryParam("component.id")
-    private Integer componentId;
 }

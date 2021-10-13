@@ -26,7 +26,7 @@ import java.time.LocalDateTime;
 @Setter
 public class MessageCriteria extends BaseMessagingCriteria {
     @QueryParam("systemId")
-    private String systemId;
+    private String tenantCode;
 
     @QueryParam("sentAtBegin")
     private LocalDateTime sentAtBegin;

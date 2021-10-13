@@ -18,11 +18,6 @@ public class Tables {
     public static final Channel CHANNEL = Channel.CHANNEL;
 
     /**
-     * Компоненты системы
-     */
-    public static final Component COMPONENT = Component.COMPONENT;
-
-    /**
      * Уведомления
      */
     public static final Message MESSAGE = Message.MESSAGE;
@@ -36,6 +31,11 @@ public class Tables {
      * Шаблоны уведомлений (общесистемные настройки)
      */
     public static final MessageSetting MESSAGE_SETTING = MessageSetting.MESSAGE_SETTING;
+
+    /**
+     * Тенанты
+     */
+    public static final Tenant TENANT = Tenant.TENANT;
 
     /**
      * Пользовательские настройки уведомлений

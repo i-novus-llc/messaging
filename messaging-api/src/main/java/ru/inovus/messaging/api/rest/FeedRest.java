@@ -43,7 +43,7 @@ public interface FeedRest {
     @Path("/{recipient}/count/{systemId}")
     @ApiOperation("Получение количества непрочитанных уведомлений")
     @ApiResponse(code = 200, message = "Количество непрочитанных уведомлений")
-    FeedCount getFeedCount(@PathParam("recipient") String username, @PathParam("systemId") String systemId);
+    FeedCount getFeedCount(@PathParam("recipient") String username, @PathParam("systemId") String tenantCode);
 
     @GET
     @Path("/{recipient}/message/{id}")
@@ -61,7 +61,7 @@ public interface FeedRest {
     @Path("/{recipient}/readall/{systemId}")
     @ApiOperation("Пометить все сообщения прочитанными")
     @ApiResponse(code = 200, message = "Все сообщения помечены прочитанными")
-    void markReadAll(@PathParam("recipient") String recipient, @PathParam("systemId") String systemId);
+    void markReadAll(@PathParam("recipient") String recipient, @PathParam("systemId") String tenantCode);
 
     @POST
     @Path("/{recipient}/read/")
