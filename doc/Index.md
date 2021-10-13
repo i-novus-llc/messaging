@@ -13,7 +13,6 @@
 - [REST API](Rest.md)
 - [Каналы отправки](Channels.md) 
 - [Настройки сервиса](Properties.md)
-- [Инструкция для DevOps](DevOps.md)
 - [Веб интерфейс сервиса уведомлений](Frontend.md)
 - [Свойства для настройки провайдера пользователей и конфигурация маппинга](UserRoleProviderPropertiesAndMapping.md)
 - [Руководство по миграции](Migration.md)
