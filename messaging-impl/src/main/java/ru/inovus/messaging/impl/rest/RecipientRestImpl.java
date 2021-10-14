@@ -7,6 +7,8 @@ import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.rest.RecipientRest;
 import ru.inovus.messaging.impl.service.RecipientService;
 
+import java.util.ArrayList;
+
 @Controller
 public class RecipientRestImpl implements RecipientRest {
     private final RecipientService recipientService;
@@ -18,7 +20,7 @@ public class RecipientRestImpl implements RecipientRest {
     @Override
     public Page<Recipient> getRecipients(RecipientCriteria criteria) {
         Page<Recipient> recipientPage = recipientService.getRecipients(criteria);
-        recipientService.enrichRecipient(recipientPage.getContent());
+        recipientService.enrichRecipient(new ArrayList<>(recipientPage.getContent()));
         return recipientPage;
     }
 }
