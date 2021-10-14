@@ -41,7 +41,6 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final UniqueKey<ChannelRecord> CHANNEL_CODE_TENANT_CODE_KEY = UniqueKeys0.CHANNEL_CODE_TENANT_CODE_KEY;
     public static final UniqueKey<ChannelRecord> CHANNEL_PKEY = UniqueKeys0.CHANNEL_PKEY;
     public static final UniqueKey<MessageRecord> MESSAGE_PKEY = UniqueKeys0.MESSAGE_PKEY;
     public static final UniqueKey<MessageRecipientRecord> RECIPIENT_PKEY = UniqueKeys0.RECIPIENT_PKEY;
@@ -72,7 +71,6 @@ public class Keys {
     }
 
     private static class UniqueKeys0 {
-        public static final UniqueKey<ChannelRecord> CHANNEL_CODE_TENANT_CODE_KEY = Internal.createUniqueKey(Channel.CHANNEL, "channel_code_tenant_code_key", new TableField[] { Channel.CHANNEL.CODE, Channel.CHANNEL.TENANT_CODE }, true);
         public static final UniqueKey<ChannelRecord> CHANNEL_PKEY = Internal.createUniqueKey(Channel.CHANNEL, "channel_pkey", new TableField[] { Channel.CHANNEL.ID }, true);
         public static final UniqueKey<MessageRecord> MESSAGE_PKEY = Internal.createUniqueKey(Message.MESSAGE, "message_pkey", new TableField[] { Message.MESSAGE.ID }, true);
         public static final UniqueKey<MessageRecipientRecord> RECIPIENT_PKEY = Internal.createUniqueKey(MessageRecipient.MESSAGE_RECIPIENT, "recipient_pkey", new TableField[] { MessageRecipient.MESSAGE_RECIPIENT.ID }, true);

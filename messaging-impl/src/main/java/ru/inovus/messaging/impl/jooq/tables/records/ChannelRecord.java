@@ -6,8 +6,8 @@ package ru.inovus.messaging.impl.jooq.tables.records;
 
 import org.jooq.Field;
 import org.jooq.Record1;
-import org.jooq.Record6;
-import org.jooq.Row6;
+import org.jooq.Record5;
+import org.jooq.Row5;
 import org.jooq.impl.UpdatableRecordImpl;
 
 import ru.inovus.messaging.impl.jooq.tables.Channel;
@@ -17,22 +17,22 @@ import ru.inovus.messaging.impl.jooq.tables.Channel;
  * Каналы отправки уведомлений
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
-public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements Record6<String, String, String, Boolean, String, Integer> {
+public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements Record5<Integer, String, String, Boolean, String> {
 
-    private static final long serialVersionUID = -1732246950;
+    private static final long serialVersionUID = -102443028;
 
     /**
-     * Setter for <code>messaging.channel.code</code>. Уникальный идентификатор
+     * Setter for <code>messaging.channel.id</code>. Уникальный идентификатор
      */
-    public void setCode(String value) {
+    public void setId(Integer value) {
         set(0, value);
     }
 
     /**
-     * Getter for <code>messaging.channel.code</code>. Уникальный идентификатор
+     * Getter for <code>messaging.channel.id</code>. Уникальный идентификатор
      */
-    public String getCode() {
-        return (String) get(0);
+    public Integer getId() {
+        return (Integer) get(0);
     }
 
     /**
@@ -91,20 +91,6 @@ public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements
         return (String) get(4);
     }
 
-    /**
-     * Setter for <code>messaging.channel.id</code>.
-     */
-    public void setId(Integer value) {
-        set(5, value);
-    }
-
-    /**
-     * Getter for <code>messaging.channel.id</code>.
-     */
-    public Integer getId() {
-        return (Integer) get(5);
-    }
-
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -115,22 +101,22 @@ public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements
     }
 
     // -------------------------------------------------------------------------
-    // Record6 type implementation
+    // Record5 type implementation
     // -------------------------------------------------------------------------
 
     @Override
-    public Row6<String, String, String, Boolean, String, Integer> fieldsRow() {
-        return (Row6) super.fieldsRow();
+    public Row5<Integer, String, String, Boolean, String> fieldsRow() {
+        return (Row5) super.fieldsRow();
     }
 
     @Override
-    public Row6<String, String, String, Boolean, String, Integer> valuesRow() {
-        return (Row6) super.valuesRow();
+    public Row5<Integer, String, String, Boolean, String> valuesRow() {
+        return (Row5) super.valuesRow();
     }
 
     @Override
-    public Field<String> field1() {
-        return Channel.CHANNEL.CODE;
+    public Field<Integer> field1() {
+        return Channel.CHANNEL.ID;
     }
 
     @Override
@@ -154,13 +140,8 @@ public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements
     }
 
     @Override
-    public Field<Integer> field6() {
-        return Channel.CHANNEL.ID;
-    }
-
-    @Override
-    public String component1() {
-        return getCode();
+    public Integer component1() {
+        return getId();
     }
 
     @Override
@@ -184,13 +165,8 @@ public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements
     }
 
     @Override
-    public Integer component6() {
+    public Integer value1() {
         return getId();
-    }
-
-    @Override
-    public String value1() {
-        return getCode();
     }
 
     @Override
@@ -214,13 +190,8 @@ public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements
     }
 
     @Override
-    public Integer value6() {
-        return getId();
-    }
-
-    @Override
-    public ChannelRecord value1(String value) {
-        setCode(value);
+    public ChannelRecord value1(Integer value) {
+        setId(value);
         return this;
     }
 
@@ -249,19 +220,12 @@ public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements
     }
 
     @Override
-    public ChannelRecord value6(Integer value) {
-        setId(value);
-        return this;
-    }
-
-    @Override
-    public ChannelRecord values(String value1, String value2, String value3, Boolean value4, String value5, Integer value6) {
+    public ChannelRecord values(Integer value1, String value2, String value3, Boolean value4, String value5) {
         value1(value1);
         value2(value2);
         value3(value3);
         value4(value4);
         value5(value5);
-        value6(value6);
         return this;
     }
 
@@ -279,14 +243,13 @@ public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements
     /**
      * Create a detached, initialised ChannelRecord
      */
-    public ChannelRecord(String code, String name, String queueName, Boolean isInternal, String tenantCode, Integer id) {
+    public ChannelRecord(Integer id, String name, String queueName, Boolean isInternal, String tenantCode) {
         super(Channel.CHANNEL);
 
-        set(0, code);
+        set(0, id);
         set(1, name);
         set(2, queueName);
         set(3, isInternal);
         set(4, tenantCode);
-        set(5, id);
     }
 }

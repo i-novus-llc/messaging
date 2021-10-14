@@ -15,15 +15,14 @@
 2. Добавьте скрипт в БД messaging со следующей строкой:
 
 ```roomsql
-INSERT INTO messaging.channel (id, name, queue_name, is_internal, tenant_code) 
-       VALUES ('email', 'Email', 'email-queue', false, 'my_tenant')
+INSERT INTO messaging.channel (name, queue_name, is_internal, tenant_code) 
+       VALUES ('Email', 'email-queue', false, 'my_tenant')
 ```
 
-- `id` - уникальный код канала
-- `name` - имя канала, отображаемое на UI
-- `queue_name` - имя очереди канала (должно совпадать с настройкой `novus.messaging.channel.email.queue`)
-- `is_internal` - признак того, что канал является внутрисистемным
-- `my_tenant` - код тенанта, к которому относится канал
+- `name` - Имя канала, отображаемое на UI
+- `queue_name` - Имя очереди канала (должно совпадать с настройкой `novus.messaging.channel.email.queue`)
+- `is_internal` - Признак того, что канал является внутрисистемным
+- `my_tenant` - Код тенанта, к которому относится канал
 
 3. Подключите аннотацию `@EnableEmailChannel` к вашему приложению
 

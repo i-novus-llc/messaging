@@ -39,15 +39,11 @@ ALTER TABLE messaging.channel
 COMMENT ON COLUMN messaging.channel.tenant_code IS 'Тенант, к которому относится канал отправки';
 
 -- add new pk
-ALTER TABLE messaging.channel RENAME COLUMN id TO code;
-ALTER TABLE messaging.channel ADD COLUMN id INTEGER NOT NULL;
-
 ALTER TABLE messaging.message DROP CONSTRAINT message_channel_id_channel_id_fk;
 ALTER TABLE messaging.message_setting DROP CONSTRAINT message_setting_channel_id_channel_id_fk;
 ALTER TABLE messaging.user_setting DROP CONSTRAINT user_setting_channel_id_channel_id_fk;
 
-ALTER TABLE messaging.channel DROP CONSTRAINT channel_pkey;
-ALTER TABLE messaging.channel ADD CONSTRAINT channel_pkey PRIMARY KEY (id);
+ALTER TABLE messaging.channel ALTER COLUMN id TYPE INTEGER USING id::INTEGER;
 
 ALTER TABLE messaging.message ALTER COLUMN channel_id TYPE INTEGER USING channel_id::INTEGER;
 ALTER TABLE messaging.message_setting ALTER COLUMN channel_id TYPE INTEGER USING channel_id::INTEGER;
@@ -59,9 +55,6 @@ ALTER TABLE messaging.message_setting ADD CONSTRAINT message_setting_channel_id_
     FOREIGN KEY (channel_id) REFERENCES messaging.channel (id);
 ALTER TABLE messaging.user_setting ADD CONSTRAINT user_setting_channel_id_channel_id_fk
     FOREIGN KEY (channel_id) REFERENCES messaging.channel (id);
-
--- unique (code, tenant_code)
-ALTER TABLE messaging.channel ADD UNIQUE (code, tenant_code);
 
 -- component
 DROP TABLE IF EXISTS messaging.component;
