@@ -21,9 +21,7 @@ services:
 
   backend:
     environment:
-      SPRING_CLOUD_CONSUL_CONFIG_ENABLED: "true"
       SPRING_CLOUD_CONSUL_CONFIG_FORMAT: YAML
-      SPRING_APPLICATION_NAME: "messaging-backend"
       SPRING_DATASOURCE_URL: jdbc:postgresql://db/postgres
       SPRING_CLOUD_CONSUL_HOST: consul-agent.local
       SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
@@ -43,8 +41,7 @@ services:
 
   messaging-frontend:
     environment:
-      SPRING_APPLICATION_NAME: "messaging-admin-frontend"
-      SPRING_CLOUD_CONSUL_HOST: consul-agent.local
+      SPRING_CLOUD_CONSUL_CONFIG_FORMAT: YAML
       SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
       SECURITY_OAUTH2_AUTH_SERVER_URI: http://yandex.develop:8278
       SECURITY_OAUTH2_CLIENT_CLIENT_ID: frontend
