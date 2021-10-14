@@ -12,6 +12,7 @@
 Сервис предоставляет:
 - [REST API](Rest.md)
 - [Каналы отправки](Channels.md) 
+- [Мультитенантность](Multitenancy.md)
 - [Настройки сервиса](Properties.md)
 - [Веб интерфейс сервиса уведомлений](Frontend.md)
 - [Свойства для настройки провайдера пользователей и конфигурация маппинга](UserRoleProviderPropertiesAndMapping.md)

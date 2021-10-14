@@ -4,7 +4,7 @@
     <operations>
         <operation id="readAll">
             <invocation>
-                <rest method="POST">${messaging.backend.path}/${messaging.tenant-code}/feed/{recipient}/readall</rest>
+                <rest method="POST">${messaging.backend.path}/${novus.messaging.tenant-code}/feed/{recipient}/readall</rest>
             </invocation>
             <in>
                 <field id="recipient" default-value="#{username!}"/>

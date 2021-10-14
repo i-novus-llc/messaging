@@ -3,11 +3,11 @@
        object-id="messaging_feed">
 
     <list result-mapping="['content']" count-mapping="['totalElements']">
-        <rest filters-separator="&amp;">${messaging.backend.path}/${messaging.tenant-code}/feed/{username}?{filters}&amp;{sorting}&amp;size={limit}&amp;page={page}</rest>
+        <rest filters-separator="&amp;">${messaging.backend.path}/${novus.messaging.tenant-code}/feed/{username}?{filters}&amp;{sorting}&amp;size={limit}&amp;page={page}</rest>
     </list>
 
     <unique>
-        <rest>${messaging.backend.path}/${messaging.tenant-code}/feed/{username}/message/{id}/read</rest>
+        <rest>${messaging.backend.path}/${novus.messaging.tenant-code}/feed/{username}/message/{id}/read</rest>
     </unique>
 
     <fields>
