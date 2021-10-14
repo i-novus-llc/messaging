@@ -3,11 +3,13 @@
  */
 package ru.inovus.messaging.impl.jooq.tables.records;
 
+
 import org.jooq.Field;
 import org.jooq.Record1;
 import org.jooq.Record11;
 import org.jooq.Row11;
 import org.jooq.impl.UpdatableRecordImpl;
+
 import ru.inovus.messaging.api.model.enums.AlertType;
 import ru.inovus.messaging.api.model.enums.FormationType;
 import ru.inovus.messaging.api.model.enums.Severity;
@@ -17,10 +19,10 @@ import ru.inovus.messaging.impl.jooq.tables.MessageSetting;
 /**
  * Шаблоны уведомлений (общесистемные настройки)
  */
-@SuppressWarnings({"all", "unchecked", "rawtypes"})
-public class MessageSettingRecord extends UpdatableRecordImpl<MessageSettingRecord> implements Record11<Integer, String, String, Severity, AlertType, String, Boolean, FormationType, String, String, String> {
+@SuppressWarnings({ "all", "unchecked", "rawtypes" })
+public class MessageSettingRecord extends UpdatableRecordImpl<MessageSettingRecord> implements Record11<Integer, String, String, Severity, AlertType, String, Boolean, FormationType, String, Integer, String> {
 
-    private static final long serialVersionUID = -1043806613;
+    private static final long serialVersionUID = -1741575779;
 
     /**
      * Setter for <code>messaging.message_setting.id</code>. Уникальный идентификатор
@@ -151,15 +153,15 @@ public class MessageSettingRecord extends UpdatableRecordImpl<MessageSettingReco
     /**
      * Setter for <code>messaging.message_setting.channel_id</code>. Идентификатор канала отправки уведомления
      */
-    public void setChannelId(String value) {
+    public void setChannelId(Integer value) {
         set(9, value);
     }
 
     /**
      * Getter for <code>messaging.message_setting.channel_id</code>. Идентификатор канала отправки уведомления
      */
-    public String getChannelId() {
-        return (String) get(9);
+    public Integer getChannelId() {
+        return (Integer) get(9);
     }
 
     /**
@@ -190,12 +192,12 @@ public class MessageSettingRecord extends UpdatableRecordImpl<MessageSettingReco
     // -------------------------------------------------------------------------
 
     @Override
-    public Row11<Integer, String, String, Severity, AlertType, String, Boolean, FormationType, String, String, String> fieldsRow() {
+    public Row11<Integer, String, String, Severity, AlertType, String, Boolean, FormationType, String, Integer, String> fieldsRow() {
         return (Row11) super.fieldsRow();
     }
 
     @Override
-    public Row11<Integer, String, String, Severity, AlertType, String, Boolean, FormationType, String, String, String> valuesRow() {
+    public Row11<Integer, String, String, Severity, AlertType, String, Boolean, FormationType, String, Integer, String> valuesRow() {
         return (Row11) super.valuesRow();
     }
 
@@ -245,7 +247,7 @@ public class MessageSettingRecord extends UpdatableRecordImpl<MessageSettingReco
     }
 
     @Override
-    public Field<String> field10() {
+    public Field<Integer> field10() {
         return MessageSetting.MESSAGE_SETTING.CHANNEL_ID;
     }
 
@@ -300,7 +302,7 @@ public class MessageSettingRecord extends UpdatableRecordImpl<MessageSettingReco
     }
 
     @Override
-    public String component10() {
+    public Integer component10() {
         return getChannelId();
     }
 
@@ -355,7 +357,7 @@ public class MessageSettingRecord extends UpdatableRecordImpl<MessageSettingReco
     }
 
     @Override
-    public String value10() {
+    public Integer value10() {
         return getChannelId();
     }
 
@@ -419,7 +421,7 @@ public class MessageSettingRecord extends UpdatableRecordImpl<MessageSettingReco
     }
 
     @Override
-    public MessageSettingRecord value10(String value) {
+    public MessageSettingRecord value10(Integer value) {
         setChannelId(value);
         return this;
     }
@@ -431,7 +433,7 @@ public class MessageSettingRecord extends UpdatableRecordImpl<MessageSettingReco
     }
 
     @Override
-    public MessageSettingRecord values(Integer value1, String value2, String value3, Severity value4, AlertType value5, String value6, Boolean value7, FormationType value8, String value9, String value10, String value11) {
+    public MessageSettingRecord values(Integer value1, String value2, String value3, Severity value4, AlertType value5, String value6, Boolean value7, FormationType value8, String value9, Integer value10, String value11) {
         value1(value1);
         value2(value2);
         value3(value3);
@@ -460,7 +462,7 @@ public class MessageSettingRecord extends UpdatableRecordImpl<MessageSettingReco
     /**
      * Create a detached, initialised MessageSettingRecord
      */
-    public MessageSettingRecord(Integer id, String caption, String text, Severity severity, AlertType alertType, String name, Boolean isDisabled, FormationType formationType, String code, String channelId, String tenantCode) {
+    public MessageSettingRecord(Integer id, String caption, String text, Severity severity, AlertType alertType, String name, Boolean isDisabled, FormationType formationType, String code, Integer channelId, String tenantCode) {
         super(MessageSetting.MESSAGE_SETTING);
 
         set(0, id);

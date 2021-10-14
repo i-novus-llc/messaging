@@ -3,6 +3,7 @@
  */
 package ru.inovus.messaging.impl.jooq;
 
+
 import org.jooq.Catalog;
 import org.jooq.Sequence;
 import org.jooq.Table;
@@ -81,11 +82,11 @@ public class Messaging extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.<Table<?>>asList(
-                Channel.CHANNEL,
-                Message.MESSAGE,
-                MessageRecipient.MESSAGE_RECIPIENT,
-                MessageSetting.MESSAGE_SETTING,
-                Tenant.TENANT,
-                UserSetting.USER_SETTING);
+            Channel.CHANNEL,
+            Message.MESSAGE,
+            MessageRecipient.MESSAGE_RECIPIENT,
+            MessageSetting.MESSAGE_SETTING,
+            Tenant.TENANT,
+            UserSetting.USER_SETTING);
     }
 }

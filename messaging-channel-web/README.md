@@ -15,14 +15,15 @@
 2. Добавьте скрипт в БД messaging со следующей строкой:
 
 ```roomsql
-INSERT INTO messaging.channel (id, name, queue_name, is_internal) 
-       VALUES ('web', 'Web', 'web-queue', true)
+INSERT INTO messaging.channel (id, name, queue_name, is_internal, tenant_code) 
+       VALUES ('web', 'Web', 'web-queue', true, 'my_tenant')
 ```
 
 - `id` - уникальный код канала
 - `name` - имя канала, отображаемое на UI
 - `queue_name` - имя очереди канала (должно совпадать с настройкой `novus.messaging.channel.web.queue`)
 - `is_internal` - признак того, что канал является внутрисистемным
+- `my_tenant` - код тенанта, к которому относится канал
 
 3. Подключите аннотацию `@EnableWebChannel` к вашему приложению
 

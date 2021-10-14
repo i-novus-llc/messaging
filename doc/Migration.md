@@ -12,7 +12,6 @@
         - `/feed` -> `/{tenantCode}/feed`
         - `/channels` -> `/{tenantCode}/channels`
 
-
 #### 4.0.0
 
 * Прекращена поддержка ActiveMQ. Необходимо использовать Kafka.

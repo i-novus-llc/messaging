@@ -3,17 +3,20 @@
  */
 package ru.inovus.messaging.impl.jooq.tables.records;
 
+
 import org.jooq.Field;
 import org.jooq.Record1;
 import org.jooq.Record2;
 import org.jooq.Row2;
 import org.jooq.impl.UpdatableRecordImpl;
+
 import ru.inovus.messaging.impl.jooq.tables.Tenant;
+
 
 /**
  * Тенанты
  */
-@SuppressWarnings({"all", "unchecked", "rawtypes"})
+@SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class TenantRecord extends UpdatableRecordImpl<TenantRecord> implements Record2<String, String> {
 
     private static final long serialVersionUID = 1778893056;

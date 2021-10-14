@@ -20,7 +20,7 @@ public class ChannelRestImpl implements ChannelRest {
     }
 
     @Override
-    public Channel getChannel(String tenantCode, String id) {
+    public Channel getChannel(String tenantCode, Integer id) {
         return channelService.getChannel(id);
     }
 }

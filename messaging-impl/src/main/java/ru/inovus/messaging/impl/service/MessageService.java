@@ -43,7 +43,11 @@ public class MessageService {
         message.setSeverity(record.getSeverity());
         message.setSentAt(record.getSentAt());
         ChannelRecord channelRecord = rec.into(CHANNEL);
-        message.setChannel(new Channel(channelRecord.getId(), channelRecord.getName(), channelRecord.getQueueName()));
+        Channel channel = new Channel();
+        channel.setId(channelRecord.getId());
+        channel.setName(channelRecord.getName());
+        channel.setQueueName(channelRecord.getQueueName());
+        message.setChannel(channel);
         message.setFormationType(record.getFormationType());
         message.setRecipientType(record.getRecipientType());
         message.setTenantCode(record.getTenantCode());

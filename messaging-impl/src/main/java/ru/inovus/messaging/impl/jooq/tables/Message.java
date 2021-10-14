@@ -3,6 +3,7 @@
  */
 package ru.inovus.messaging.impl.jooq.tables;
 
+
 import org.jooq.Record;
 import org.jooq.*;
 import org.jooq.impl.DSL;
@@ -32,7 +33,7 @@ import java.util.UUID;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Message extends TableImpl<MessageRecord> {
 
-    private static final long serialVersionUID = -167769007;
+    private static final long serialVersionUID = -1201678096;
 
     /**
      * The reference instance of <code>messaging.message</code>
@@ -100,7 +101,7 @@ public class Message extends TableImpl<MessageRecord> {
     /**
      * The column <code>messaging.message.channel_id</code>. Идентификатор канала отправки уведомления
      */
-    public final TableField<MessageRecord, String> CHANNEL_ID = createField(DSL.name("channel_id"), org.jooq.impl.SQLDataType.VARCHAR, this, "Идентификатор канала отправки уведомления");
+    public final TableField<MessageRecord, Integer> CHANNEL_ID = createField(DSL.name("channel_id"), org.jooq.impl.SQLDataType.INTEGER, this, "Идентификатор канала отправки уведомления");
 
     /**
      * Create a <code>messaging.message</code> table reference
@@ -199,7 +200,7 @@ public class Message extends TableImpl<MessageRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Row11<UUID, String, String, Severity, AlertType, LocalDateTime, String, FormationType, RecipientType, String, String> fieldsRow() {
+    public Row11<UUID, String, String, Severity, AlertType, LocalDateTime, String, FormationType, RecipientType, String, Integer> fieldsRow() {
         return (Row11) super.fieldsRow();
     }
 }

@@ -22,6 +22,6 @@ public interface ChannelRest {
     @ApiOperation("Получение канала по идентификатору")
     @ApiResponse(code = 200, message = "Канал")
     Channel getChannel(@PathParam("tenantCode") @ApiParam(value = "Код тенанта") String tenantCode,
-                       @PathParam("id") @ApiParam(value = "Код канала") String id);
+                       @PathParam("id") @ApiParam(value = "Идентификатор канала") Integer id);
 }
 

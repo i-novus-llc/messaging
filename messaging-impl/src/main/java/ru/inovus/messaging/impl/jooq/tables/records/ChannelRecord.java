@@ -3,11 +3,13 @@
  */
 package ru.inovus.messaging.impl.jooq.tables.records;
 
+
 import org.jooq.Field;
 import org.jooq.Record1;
-import org.jooq.Record4;
-import org.jooq.Row4;
+import org.jooq.Record6;
+import org.jooq.Row6;
 import org.jooq.impl.UpdatableRecordImpl;
+
 import ru.inovus.messaging.impl.jooq.tables.Channel;
 
 
@@ -15,21 +17,21 @@ import ru.inovus.messaging.impl.jooq.tables.Channel;
  * Каналы отправки уведомлений
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
-public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements Record4<String, String, String, Boolean> {
+public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements Record6<String, String, String, Boolean, String, Integer> {
 
-    private static final long serialVersionUID = -1117641390;
+    private static final long serialVersionUID = -1732246950;
 
     /**
-     * Setter for <code>messaging.channel.id</code>. Уникальный идентификатор
+     * Setter for <code>messaging.channel.code</code>. Уникальный идентификатор
      */
-    public void setId(String value) {
+    public void setCode(String value) {
         set(0, value);
     }
 
     /**
-     * Getter for <code>messaging.channel.id</code>. Уникальный идентификатор
+     * Getter for <code>messaging.channel.code</code>. Уникальный идентификатор
      */
-    public String getId() {
+    public String getCode() {
         return (String) get(0);
     }
 
@@ -75,32 +77,60 @@ public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements
         return (Boolean) get(3);
     }
 
+    /**
+     * Setter for <code>messaging.channel.tenant_code</code>. Тенант, к которому относится канал отправки
+     */
+    public void setTenantCode(String value) {
+        set(4, value);
+    }
+
+    /**
+     * Getter for <code>messaging.channel.tenant_code</code>. Тенант, к которому относится канал отправки
+     */
+    public String getTenantCode() {
+        return (String) get(4);
+    }
+
+    /**
+     * Setter for <code>messaging.channel.id</code>.
+     */
+    public void setId(Integer value) {
+        set(5, value);
+    }
+
+    /**
+     * Getter for <code>messaging.channel.id</code>.
+     */
+    public Integer getId() {
+        return (Integer) get(5);
+    }
+
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
 
     @Override
-    public Record1<String> key() {
+    public Record1<Integer> key() {
         return (Record1) super.key();
     }
 
     // -------------------------------------------------------------------------
-    // Record4 type implementation
+    // Record6 type implementation
     // -------------------------------------------------------------------------
 
     @Override
-    public Row4<String, String, String, Boolean> fieldsRow() {
-        return (Row4) super.fieldsRow();
+    public Row6<String, String, String, Boolean, String, Integer> fieldsRow() {
+        return (Row6) super.fieldsRow();
     }
 
     @Override
-    public Row4<String, String, String, Boolean> valuesRow() {
-        return (Row4) super.valuesRow();
+    public Row6<String, String, String, Boolean, String, Integer> valuesRow() {
+        return (Row6) super.valuesRow();
     }
 
     @Override
     public Field<String> field1() {
-        return Channel.CHANNEL.ID;
+        return Channel.CHANNEL.CODE;
     }
 
     @Override
@@ -119,8 +149,18 @@ public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements
     }
 
     @Override
+    public Field<String> field5() {
+        return Channel.CHANNEL.TENANT_CODE;
+    }
+
+    @Override
+    public Field<Integer> field6() {
+        return Channel.CHANNEL.ID;
+    }
+
+    @Override
     public String component1() {
-        return getId();
+        return getCode();
     }
 
     @Override
@@ -139,8 +179,18 @@ public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements
     }
 
     @Override
-    public String value1() {
+    public String component5() {
+        return getTenantCode();
+    }
+
+    @Override
+    public Integer component6() {
         return getId();
+    }
+
+    @Override
+    public String value1() {
+        return getCode();
     }
 
     @Override
@@ -159,8 +209,18 @@ public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements
     }
 
     @Override
+    public String value5() {
+        return getTenantCode();
+    }
+
+    @Override
+    public Integer value6() {
+        return getId();
+    }
+
+    @Override
     public ChannelRecord value1(String value) {
-        setId(value);
+        setCode(value);
         return this;
     }
 
@@ -183,11 +243,25 @@ public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements
     }
 
     @Override
-    public ChannelRecord values(String value1, String value2, String value3, Boolean value4) {
+    public ChannelRecord value5(String value) {
+        setTenantCode(value);
+        return this;
+    }
+
+    @Override
+    public ChannelRecord value6(Integer value) {
+        setId(value);
+        return this;
+    }
+
+    @Override
+    public ChannelRecord values(String value1, String value2, String value3, Boolean value4, String value5, Integer value6) {
         value1(value1);
         value2(value2);
         value3(value3);
         value4(value4);
+        value5(value5);
+        value6(value6);
         return this;
     }
 
@@ -205,12 +279,14 @@ public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements
     /**
      * Create a detached, initialised ChannelRecord
      */
-    public ChannelRecord(String id, String name, String queueName, Boolean isInternal) {
+    public ChannelRecord(String code, String name, String queueName, Boolean isInternal, String tenantCode, Integer id) {
         super(Channel.CHANNEL);
 
-        set(0, id);
+        set(0, code);
         set(1, name);
         set(2, queueName);
         set(3, isInternal);
+        set(4, tenantCode);
+        set(5, id);
     }
 }

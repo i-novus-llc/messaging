@@ -37,7 +37,7 @@ public class UserSettingCriteria extends BaseMessagingCriteria {
     private AlertType alertType;
 
     @QueryParam("infoType.id")
-    private String channelId;
+    private Integer channelId;
 
     @QueryParam("name")
     private String name;

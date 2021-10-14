@@ -3,6 +3,7 @@
  */
 package ru.inovus.messaging.impl.jooq.tables.records;
 
+
 import org.jooq.Field;
 import org.jooq.Record1;
 import org.jooq.Record11;
@@ -21,10 +22,10 @@ import java.util.UUID;
 /**
  * Уведомления
  */
-@SuppressWarnings({"all", "unchecked", "rawtypes"})
-public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements Record11<UUID, String, String, Severity, AlertType, LocalDateTime, String, FormationType, RecipientType, String, String> {
+@SuppressWarnings({ "all", "unchecked", "rawtypes" })
+public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements Record11<UUID, String, String, Severity, AlertType, LocalDateTime, String, FormationType, RecipientType, String, Integer> {
 
-    private static final long serialVersionUID = -2020652857;
+    private static final long serialVersionUID = 1093856845;
 
     /**
      * Setter for <code>messaging.message.id</code>. Уникальный идентификатор
@@ -169,15 +170,15 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
     /**
      * Setter for <code>messaging.message.channel_id</code>. Идентификатор канала отправки уведомления
      */
-    public void setChannelId(String value) {
+    public void setChannelId(Integer value) {
         set(10, value);
     }
 
     /**
      * Getter for <code>messaging.message.channel_id</code>. Идентификатор канала отправки уведомления
      */
-    public String getChannelId() {
-        return (String) get(10);
+    public Integer getChannelId() {
+        return (Integer) get(10);
     }
 
     // -------------------------------------------------------------------------
@@ -194,12 +195,12 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
     // -------------------------------------------------------------------------
 
     @Override
-    public Row11<UUID, String, String, Severity, AlertType, LocalDateTime, String, FormationType, RecipientType, String, String> fieldsRow() {
+    public Row11<UUID, String, String, Severity, AlertType, LocalDateTime, String, FormationType, RecipientType, String, Integer> fieldsRow() {
         return (Row11) super.fieldsRow();
     }
 
     @Override
-    public Row11<UUID, String, String, Severity, AlertType, LocalDateTime, String, FormationType, RecipientType, String, String> valuesRow() {
+    public Row11<UUID, String, String, Severity, AlertType, LocalDateTime, String, FormationType, RecipientType, String, Integer> valuesRow() {
         return (Row11) super.valuesRow();
     }
 
@@ -254,7 +255,7 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
     }
 
     @Override
-    public Field<String> field11() {
+    public Field<Integer> field11() {
         return Message.MESSAGE.CHANNEL_ID;
     }
 
@@ -309,7 +310,7 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
     }
 
     @Override
-    public String component11() {
+    public Integer component11() {
         return getChannelId();
     }
 
@@ -364,7 +365,7 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
     }
 
     @Override
-    public String value11() {
+    public Integer value11() {
         return getChannelId();
     }
 
@@ -429,13 +430,13 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
     }
 
     @Override
-    public MessageRecord value11(String value) {
+    public MessageRecord value11(Integer value) {
         setChannelId(value);
         return this;
     }
 
     @Override
-    public MessageRecord values(UUID value1, String value2, String value3, Severity value4, AlertType value5, LocalDateTime value6, String value7, FormationType value8, RecipientType value9, String value10, String value11) {
+    public MessageRecord values(UUID value1, String value2, String value3, Severity value4, AlertType value5, LocalDateTime value6, String value7, FormationType value8, RecipientType value9, String value10, Integer value11) {
         value1(value1);
         value2(value2);
         value3(value3);
@@ -464,7 +465,7 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
     /**
      * Create a detached, initialised MessageRecord
      */
-    public MessageRecord(UUID id, String caption, String text, Severity severity, AlertType alertType, LocalDateTime sentAt, String tenantCode, FormationType formationType, RecipientType recipientType, String notificationType, String channelId) {
+    public MessageRecord(UUID id, String caption, String text, Severity severity, AlertType alertType, LocalDateTime sentAt, String tenantCode, FormationType formationType, RecipientType recipientType, String notificationType, Integer channelId) {
         super(Message.MESSAGE);
 
         set(0, id);

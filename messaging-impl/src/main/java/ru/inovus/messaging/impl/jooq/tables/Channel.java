@@ -3,6 +3,7 @@
  */
 package ru.inovus.messaging.impl.jooq.tables;
 
+
 import org.jooq.Record;
 import org.jooq.*;
 import org.jooq.impl.DSL;
@@ -21,7 +22,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Channel extends TableImpl<ChannelRecord> {
 
-    private static final long serialVersionUID = -876607164;
+    private static final long serialVersionUID = 340945173;
 
     /**
      * The reference instance of <code>messaging.channel</code>
@@ -37,9 +38,9 @@ public class Channel extends TableImpl<ChannelRecord> {
     }
 
     /**
-     * The column <code>messaging.channel.id</code>. Уникальный идентификатор
+     * The column <code>messaging.channel.code</code>. Уникальный идентификатор
      */
-    public final TableField<ChannelRecord, String> ID = createField(DSL.name("id"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Уникальный идентификатор");
+    public final TableField<ChannelRecord, String> CODE = createField(DSL.name("code"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Уникальный идентификатор");
 
     /**
      * The column <code>messaging.channel.name</code>. Наименование канала
@@ -55,6 +56,16 @@ public class Channel extends TableImpl<ChannelRecord> {
      * The column <code>messaging.channel.is_internal</code>. Признак внутрисистемного канала отправки
      */
     public final TableField<ChannelRecord, Boolean> IS_INTERNAL = createField(DSL.name("is_internal"), org.jooq.impl.SQLDataType.BOOLEAN, this, "Признак внутрисистемного канала отправки");
+
+    /**
+     * The column <code>messaging.channel.tenant_code</code>. Тенант, к которому относится канал отправки
+     */
+    public final TableField<ChannelRecord, String> TENANT_CODE = createField(DSL.name("tenant_code"), org.jooq.impl.SQLDataType.VARCHAR, this, "Тенант, к которому относится канал отправки");
+
+    /**
+     * The column <code>messaging.channel.id</code>.
+     */
+    public final TableField<ChannelRecord, Integer> ID = createField(DSL.name("id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * Create a <code>messaging.channel</code> table reference
@@ -101,7 +112,16 @@ public class Channel extends TableImpl<ChannelRecord> {
 
     @Override
     public List<UniqueKey<ChannelRecord>> getKeys() {
-        return Arrays.<UniqueKey<ChannelRecord>>asList(Keys.CHANNEL_PKEY);
+        return Arrays.<UniqueKey<ChannelRecord>>asList(Keys.CHANNEL_CODE_TENANT_CODE_KEY, Keys.CHANNEL_PKEY);
+    }
+
+    @Override
+    public List<ForeignKey<ChannelRecord, ?>> getReferences() {
+        return Arrays.<ForeignKey<ChannelRecord, ?>>asList(Keys.CHANNEL__CHANNEL_TENANT_CODE_FKEY);
+    }
+
+    public Tenant tenant() {
+        return new Tenant(this, Keys.CHANNEL__CHANNEL_TENANT_CODE_FKEY);
     }
 
     @Override
@@ -131,11 +151,11 @@ public class Channel extends TableImpl<ChannelRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row4 type methods
+    // Row6 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row4<String, String, String, Boolean> fieldsRow() {
-        return (Row4) super.fieldsRow();
+    public Row6<String, String, String, Boolean, String, Integer> fieldsRow() {
+        return (Row6) super.fieldsRow();
     }
 }

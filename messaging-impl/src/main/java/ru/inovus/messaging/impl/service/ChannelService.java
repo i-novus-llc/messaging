@@ -23,11 +23,10 @@ public class ChannelService {
             new Channel(record.getId(), record.getName(), record.getQueueName());
 
     public List<Channel> getChannels(String tenantCode) {
-        // TODO
-        return dsl.selectFrom(CHANNEL).fetch(MAPPER);
+        return dsl.selectFrom(CHANNEL).where(CHANNEL.TENANT_CODE.eq(tenantCode)).fetch(MAPPER);
     }
 
-    public Channel getChannel(String id) {
+    public Channel getChannel(Integer id) {
         return dsl.selectFrom(CHANNEL).where(CHANNEL.ID.eq(id)).fetchOne(MAPPER);
     }
 }

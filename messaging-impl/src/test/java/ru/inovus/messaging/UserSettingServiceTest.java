@@ -83,7 +83,7 @@ public class UserSettingServiceTest {
         assertEquals(USER_SETTING_DEFAULT_ALERT_TYPE, userSetting.getDefaultAlertType().name());
         assertEquals(USER_SETTING_DEFAULT_ALERT_TYPE, userSetting.getAlertType().name());
 
-        assertEquals(USER_SETTING_IS_SEND_EMAIL, userSetting.getChannel().getId());
+        assertEquals(USER_SETTING_IS_SEND_EMAIL, userSetting.getChannel().getName());
     }
 
     @Test
@@ -91,7 +91,7 @@ public class UserSettingServiceTest {
         UserSetting setting = new UserSetting();
         setting.setDisabled(true);
         setting.setAlertType(AlertType.BLOCKER);
-        setting.setChannel(new Channel(USER_SETTING_IS_SEND_NOTICE, "Центр уведомлений", USER_SETTING_IS_SEND_NOTICE));
+        setting.setChannel(new Channel(1, "Центр уведомлений", USER_SETTING_IS_SEND_NOTICE));
 
         //Создаем уже непосредственно пользовательскую настройку, для пользователя 'admin' и для шаблона уведомления с иде-ром 1,
         userSettingRest.updateSetting(TENANT_CODE, USER_NAME, USER_SETTINGS_ID_3, setting);
@@ -107,6 +107,6 @@ public class UserSettingServiceTest {
         assertEquals(USER_SETTING_ALERT_TYPE, userSetting.getAlertType().name());
 
         //В настройках пользователя способ отправки на почту
-        assertEquals(USER_SETTING_IS_SEND_NOTICE, userSetting.getChannel().getId());
+        assertEquals(USER_SETTING_IS_SEND_NOTICE, userSetting.getChannel().getName());
     }
 }

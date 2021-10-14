@@ -36,5 +36,5 @@ public class MessageCriteria extends BaseMessagingCriteria {
     private Severity severity;
 
     @QueryParam("infoType.id")
-    private String channelId;
+    private Integer channelId;
 }

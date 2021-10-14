@@ -3,6 +3,7 @@
  */
 package ru.inovus.messaging.impl.jooq.tables;
 
+
 import org.jooq.Record;
 import org.jooq.*;
 import org.jooq.impl.DSL;

@@ -42,7 +42,7 @@
         <field id="infoType" domain="object">
             <select mapping="['channel']"/>
             <filters>
-                <eq filter-id="infoType.id" domain="string">channel.id={infoType.id}</eq>
+                <eq filter-id="infoType.id">channel.id={infoType.id}</eq>
             </filters>
         </field>
         <field id="formationType.id" domain="string">

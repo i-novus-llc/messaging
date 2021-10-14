@@ -3,21 +3,24 @@
  */
 package ru.inovus.messaging.impl.jooq.tables.records;
 
+
 import org.jooq.Field;
 import org.jooq.Record1;
 import org.jooq.Record7;
 import org.jooq.Row7;
 import org.jooq.impl.UpdatableRecordImpl;
+
 import ru.inovus.messaging.api.model.enums.AlertType;
 import ru.inovus.messaging.impl.jooq.tables.UserSetting;
+
 
 /**
  * Пользовательские настройки уведомлений
  */
-@SuppressWarnings({"all", "unchecked", "rawtypes"})
-public class UserSettingRecord extends UpdatableRecordImpl<UserSettingRecord> implements Record7<Integer, AlertType, Boolean, String, Integer, String, String> {
+@SuppressWarnings({ "all", "unchecked", "rawtypes" })
+public class UserSettingRecord extends UpdatableRecordImpl<UserSettingRecord> implements Record7<Integer, AlertType, Boolean, String, Integer, Integer, String> {
 
-    private static final long serialVersionUID = 591945709;
+    private static final long serialVersionUID = 102060533;
 
     /**
      * Setter for <code>messaging.user_setting.id</code>. Уникальный идентификатор
@@ -92,15 +95,15 @@ public class UserSettingRecord extends UpdatableRecordImpl<UserSettingRecord> im
     /**
      * Setter for <code>messaging.user_setting.channel_id</code>. Идентификатор канала отправки уведомления
      */
-    public void setChannelId(String value) {
+    public void setChannelId(Integer value) {
         set(5, value);
     }
 
     /**
      * Getter for <code>messaging.user_setting.channel_id</code>. Идентификатор канала отправки уведомления
      */
-    public String getChannelId() {
-        return (String) get(5);
+    public Integer getChannelId() {
+        return (Integer) get(5);
     }
 
     /**
@@ -131,12 +134,12 @@ public class UserSettingRecord extends UpdatableRecordImpl<UserSettingRecord> im
     // -------------------------------------------------------------------------
 
     @Override
-    public Row7<Integer, AlertType, Boolean, String, Integer, String, String> fieldsRow() {
+    public Row7<Integer, AlertType, Boolean, String, Integer, Integer, String> fieldsRow() {
         return (Row7) super.fieldsRow();
     }
 
     @Override
-    public Row7<Integer, AlertType, Boolean, String, Integer, String, String> valuesRow() {
+    public Row7<Integer, AlertType, Boolean, String, Integer, Integer, String> valuesRow() {
         return (Row7) super.valuesRow();
     }
 
@@ -166,7 +169,7 @@ public class UserSettingRecord extends UpdatableRecordImpl<UserSettingRecord> im
     }
 
     @Override
-    public Field<String> field6() {
+    public Field<Integer> field6() {
         return UserSetting.USER_SETTING.CHANNEL_ID;
     }
 
@@ -201,7 +204,7 @@ public class UserSettingRecord extends UpdatableRecordImpl<UserSettingRecord> im
     }
 
     @Override
-    public String component6() {
+    public Integer component6() {
         return getChannelId();
     }
 
@@ -236,7 +239,7 @@ public class UserSettingRecord extends UpdatableRecordImpl<UserSettingRecord> im
     }
 
     @Override
-    public String value6() {
+    public Integer value6() {
         return getChannelId();
     }
 
@@ -276,7 +279,7 @@ public class UserSettingRecord extends UpdatableRecordImpl<UserSettingRecord> im
     }
 
     @Override
-    public UserSettingRecord value6(String value) {
+    public UserSettingRecord value6(Integer value) {
         setChannelId(value);
         return this;
     }
@@ -288,7 +291,7 @@ public class UserSettingRecord extends UpdatableRecordImpl<UserSettingRecord> im
     }
 
     @Override
-    public UserSettingRecord values(Integer value1, AlertType value2, Boolean value3, String value4, Integer value5, String value6, String value7) {
+    public UserSettingRecord values(Integer value1, AlertType value2, Boolean value3, String value4, Integer value5, Integer value6, String value7) {
         value1(value1);
         value2(value2);
         value3(value3);
@@ -313,7 +316,7 @@ public class UserSettingRecord extends UpdatableRecordImpl<UserSettingRecord> im
     /**
      * Create a detached, initialised UserSettingRecord
      */
-    public UserSettingRecord(Integer id, AlertType alertType, Boolean isDisabled, String userId, Integer msgSettingId, String channelId, String tenantCode) {
+    public UserSettingRecord(Integer id, AlertType alertType, Boolean isDisabled, String userId, Integer msgSettingId, Integer channelId, String tenantCode) {
         super(UserSetting.USER_SETTING);
 
         set(0, id);
