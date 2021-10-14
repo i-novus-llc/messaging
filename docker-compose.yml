@@ -19,7 +19,7 @@ services:
         constraints:
         - node.labels.type == db
 
-  backend:
+  messaging-backend:
     environment:
       SPRING_CLOUD_CONSUL_CONFIG_FORMAT: YAML
       SPRING_DATASOURCE_URL: jdbc:postgresql://db/postgres
