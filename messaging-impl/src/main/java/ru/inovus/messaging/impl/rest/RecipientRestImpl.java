@@ -18,8 +18,8 @@ public class RecipientRestImpl implements RecipientRest {
     }
 
     @Override
-    public Page<Recipient> getRecipients(RecipientCriteria criteria) {
-        Page<Recipient> recipientPage = recipientService.getRecipients(criteria);
+    public Page<Recipient> getRecipients(String tenantCode, RecipientCriteria criteria) {
+        Page<Recipient> recipientPage = recipientService.getRecipients(tenantCode, criteria);
         recipientService.enrichRecipient(new ArrayList<>(recipientPage.getContent()));
         return recipientPage;
     }
