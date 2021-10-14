@@ -75,7 +75,6 @@ services:
       restart_policy:
         max_attempts: 3
     depends_on:
-      -
       - messaging-frontend
 
   zookeeper:
