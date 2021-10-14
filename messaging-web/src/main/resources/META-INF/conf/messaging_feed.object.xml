@@ -4,11 +4,10 @@
     <operations>
         <operation id="readAll">
             <invocation>
-                <rest method="POST">${messaging.backend.path}/feed/{recipient}/readall/{systemId}</rest>
+                <rest method="POST">${messaging.backend.path}/${messaging.tenant-code}/feed/{recipient}/readall</rest>
             </invocation>
             <in>
                 <field id="recipient" default-value="#{username!}"/>
-                <field id="systemId" default-value="${default.system.id}"/>
             </in>
         </operation>
     </operations>

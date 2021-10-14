@@ -4,7 +4,7 @@
     <operations>
         <operation id="update">
             <invocation>
-                <rest method="PUT">${messaging.backend.path}/user/{username}/settings/{id}</rest>
+                <rest method="PUT">${messaging.backend.path}/${messaging.tenant-code}/user/{username}/settings/{id}</rest>
             </invocation>
             <in>
                 <field id="id" mapping="['id']"/>

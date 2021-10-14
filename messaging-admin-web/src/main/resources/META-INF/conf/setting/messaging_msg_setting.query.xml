@@ -3,11 +3,11 @@
        object-id="messaging_msg_setting">
 
     <list result-mapping="['content']" count-mapping="['totalElements']">
-        <rest filters-separator="&amp;">${messaging.backend.path}/settings?{filters}&amp;{sorting}&amp;size={limit}&amp;page={page}</rest>
+        <rest filters-separator="&amp;">${messaging.backend.path}/${messaging.tenant-code}/settings?{filters}&amp;{sorting}&amp;size={limit}&amp;page={page}</rest>
     </list>
 
     <unique>
-        <rest>${messaging.backend.path}/settings/{id}</rest>
+        <rest>${messaging.backend.path}/${messaging.tenant-code}/settings/{id}</rest>
     </unique>
 
     <fields>
@@ -25,7 +25,7 @@
             </filters>
         </field>
         <field id="severity.name" domain="string">
-            <select mapping="['severityName']"/>
+            <select mapping="['severity.name']"/>
             <sorting>sort=severity,{severity.nameDirection}</sorting>
         </field>
 

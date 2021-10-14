@@ -3,11 +3,11 @@
        object-id="messaging_message">
 
     <list result-mapping="['content']" count-mapping="['totalElements']">
-        <rest filters-separator="&amp;">${messaging.backend.path}/messages?{filters}&amp;{sorting}&amp;size={limit}&amp;page={page}</rest>
+        <rest filters-separator="&amp;">${messaging.backend.path}/${messaging.tenant-code}/messages?{filters}&amp;{sorting}&amp;size={limit}&amp;page={page}</rest>
     </list>
 
     <unique>
-        <rest>${messaging.backend.path}/messages/{id}</rest>
+        <rest>${messaging.backend.path}/${messaging.tenant-code}/messages/{id}</rest>
     </unique>
 
     <fields>
@@ -25,7 +25,7 @@
             </filters>
         </field>
         <field id="severity.name" domain="string">
-            <select mapping="['severityName']"/>
+            <select mapping="['severity.name']"/>
         </field>
 
         <field id="infoType" domain="object">
@@ -69,13 +69,6 @@
 
         <field id="sentAtFormatted" domain="date">
             <select normalize="T(ru.inovus.messaging.n2o.utils.LocalDateTimeUtils).parseDateToMsk(#this)" mapping="['sentAt']"/>
-        </field>
-
-        <field id="systemId">
-            <select mapping="['systemId']"/>
-            <filters>
-                <eq filter-id="systemId" default-value="${default.system.id}">systemId={systemId}</eq><!--TODO: default-value from context-->
-            </filters>
         </field>
 
         <field id="users" domain="object">

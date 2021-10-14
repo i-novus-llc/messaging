@@ -3,11 +3,11 @@
        object-id="messaging_feed">
 
     <list result-mapping="['content']" count-mapping="['totalElements']">
-        <rest filters-separator="&amp;">${messaging.backend.path}/feed/{username}?{filters}&amp;{sorting}&amp;size={limit}&amp;page={page}</rest>
+        <rest filters-separator="&amp;">${messaging.backend.path}/${messaging.tenant-code}/feed/{username}?{filters}&amp;{sorting}&amp;size={limit}&amp;page={page}</rest>
     </list>
 
     <unique>
-        <rest>${messaging.backend.path}/feed/{username}/message/{id}/read</rest>
+        <rest>${messaging.backend.path}/${messaging.tenant-code}/feed/{username}/message/{id}/read</rest>
     </unique>
 
     <fields>
@@ -54,13 +54,6 @@
 
         <field id="isRead" domain="boolean">
             <select mapping="#this['readAt'] == null ? false : true"/>
-        </field>
-
-        <field id="systemId">
-            <select/>
-            <filters>
-                <eq filter-id="systemId" default-value="${default.system.id}">systemId={systemId}</eq><!--TODO: default-value from context-->
-            </filters>
         </field>
 
         <field id="username" domain="string">
