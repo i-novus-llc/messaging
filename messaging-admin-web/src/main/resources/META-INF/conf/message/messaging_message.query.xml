@@ -39,14 +39,14 @@
             <select mapping="['recipientType']"/>
         </field>
         <field id="recipientType.name">
-            <select mapping="['recipientTypeName']"/>
+            <select mapping="['recipientType.name']"/>
         </field>
 
         <field id="alertType.id">
             <select mapping="['alertType']"/>
         </field>
         <field id="alertType.name">
-            <select mapping="['alertTypeName']"/>
+            <select mapping="['alertType.name']"/>
         </field>
 
 

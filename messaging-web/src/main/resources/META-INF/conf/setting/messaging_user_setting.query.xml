@@ -25,14 +25,14 @@
             </filters>
         </field>
         <field id="severity.name" domain="string">
-            <select mapping="['severityName']"/>
+            <select mapping="['severity.name']"/>
         </field>
 
         <field id="defaultAlertType.id" domain="string">
             <select mapping="['defaultAlertType']"/>
         </field>
         <field id="defaultAlertType.name" domain="string">
-            <select mapping="['defaultAlertTypeName']"/>
+            <select mapping="['defaultAlertType.name']"/>
         </field>
 
         <field id="alertType.id" domain="string">
@@ -42,7 +42,7 @@
             </filters>
         </field>
         <field id="alertType.name" domain="string">
-            <select mapping="['alertTypeName']"/>
+            <select mapping="['alertType.name']"/>
         </field>
 
         <field id="infoType" domain="object">

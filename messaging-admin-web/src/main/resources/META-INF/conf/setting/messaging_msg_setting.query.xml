@@ -36,7 +36,7 @@
             </filters>
         </field>
         <field id="alertType.name" domain="string">
-            <select mapping="['alertTypeName']"/>
+            <select mapping="['alertType.name']"/>
         </field>
 
         <field id="infoType" domain="object">
@@ -52,7 +52,7 @@
             </filters>
         </field>
         <field id="formationType.name" domain="string">
-            <select mapping="['formationTypeName']"/>
+            <select mapping="['formationType.name']"/>
         </field>
 
         <field id="name" domain="string" name="Наименование шаблона">

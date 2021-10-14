@@ -112,7 +112,7 @@ public class MessageRestImpl implements MessageRest {
 
     private void send(Message message) {
         Channel channel = channelService.getChannel(message.getChannel().getId());
-//        mqProvider.publish(constructMessage(message), channel.getQueueName());
+        mqProvider.publish(constructMessage(message), channel.getQueueName());
     }
 
     //Заполнение списков Пользователей для рассылки уведомления
