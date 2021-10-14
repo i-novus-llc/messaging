@@ -35,12 +35,11 @@ public class FeedService {
         this.dsl = dsl;
     }
 
-    public Page<Feed> getMessageFeed(String recipient, FeedCriteria criteria) {
+    public Page<Feed> getMessageFeed(String tenantCode, String username, FeedCriteria criteria) {
         List<Condition> conditions = new ArrayList<>();
         conditions.add(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL).or(MESSAGE_RECIPIENT.ID.isNotNull()));
         conditions.add(CHANNEL.IS_INTERNAL.eq(Boolean.TRUE));
-        Optional.ofNullable(criteria.getTenantCode())
-                .ifPresent(tenantCode -> conditions.add(MESSAGE.TENANT_CODE.eq(tenantCode)));
+        conditions.add(MESSAGE.TENANT_CODE.eq(tenantCode));
         Optional.ofNullable(criteria.getSeverity())
                 .ifPresent(severity -> conditions.add(MESSAGE.SEVERITY.eq(severity)));
         Optional.ofNullable(criteria.getSentAtBegin())
@@ -52,7 +51,7 @@ public class FeedService {
                 .select(MESSAGE.fields())
                 .select(MESSAGE_RECIPIENT.fields())
                 .from(MESSAGE)
-                .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(recipient)))
+                .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username)))
                 .leftJoin(CHANNEL).on(CHANNEL.ID.eq(MESSAGE.CHANNEL_ID))
                 .where(conditions);
         int count = dsl.fetchCount(query);
@@ -65,35 +64,35 @@ public class FeedService {
         return new PageImpl<>(collection, criteria, count);
     }
 
-    public Feed getMessage(UUID messageId, String recipient) {
+    public Feed getMessage(UUID messageId, String username) {
         return dsl
                 .select(MESSAGE.fields())
                 .select(MESSAGE_RECIPIENT.fields())
                 .from(MESSAGE)
-                .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(recipient)))
+                .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username)))
                 .where(MESSAGE.ID.cast(UUID.class).eq(messageId), MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL)
-                        .or(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(recipient)))
+                        .or(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username)))
                 .fetchOne(MAPPER);
     }
 
     @Transactional
-    public Feed getMessageAndRead(UUID messageId, String recipient) {
-        Feed result = getMessage(messageId, recipient);
+    public Feed getMessageAndRead(UUID messageId, String username) {
+        Feed result = getMessage(messageId, username);
         if (result != null) {
-            markRead(recipient, messageId);
+            markRead(username, messageId);
         }
         return result;
     }
 
     @Transactional
-    public void markReadAll(String recipient, String tenantCode) {
+    public void markReadAll(String tenantCode, String username) {
         LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
         // Update 'personal' messages
         dsl
                 .update(MESSAGE_RECIPIENT)
                 .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
                 .set(MESSAGE_RECIPIENT.STATUS, MessageStatusType.READ)
-                .where(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(recipient).and(MESSAGE_RECIPIENT.STATUS_TIME.isNull()),
+                .where(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username),
                         exists(dsl.selectOne().from(MESSAGE)
                                 .where(MESSAGE.ID.eq(MESSAGE_RECIPIENT.MESSAGE_ID),
                                         MESSAGE.TENANT_CODE.eq(tenantCode))))
@@ -106,35 +105,35 @@ public class FeedService {
                         MESSAGE.TENANT_CODE.eq(tenantCode),
                         notExists(dsl.selectOne().from(MESSAGE_RECIPIENT)
                                 .where(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID),
-                                        MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(recipient))))
+                                        MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username))))
                 .fetch().map(Record1::component1);
         for (UUID id : ids) {
             dsl
                     .insertInto(MESSAGE_RECIPIENT)
                     .set(MESSAGE_RECIPIENT.ID, dsl.nextval(RECIPIENT_ID_SEQ).intValue())
-                    .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
                     .set(MESSAGE_RECIPIENT.STATUS, MessageStatusType.READ)
+                    .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
                     .set(MESSAGE_RECIPIENT.MESSAGE_ID, id)
-                    .set(MESSAGE_RECIPIENT.RECIPIENT_USERNAME, recipient)
+                    .set(MESSAGE_RECIPIENT.RECIPIENT_USERNAME, username)
                     .execute();
         }
     }
 
     @Transactional
-    public void markRead(String recipient, UUID messageId) {
+    public void markRead(String username, UUID messageId) {
         if (messageId != null) {
             LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
             int updated = dsl.update(MESSAGE_RECIPIENT)
                     .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
                     .set(MESSAGE_RECIPIENT.STATUS, MessageStatusType.READ)
-                    .where(MESSAGE_RECIPIENT.MESSAGE_ID.eq(messageId)).and(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(recipient))
+                    .where(MESSAGE_RECIPIENT.MESSAGE_ID.eq(messageId)).and(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username))
                     .execute();
             if (updated == 0) {
                 dsl.insertInto(MESSAGE_RECIPIENT)
                         .set(MESSAGE_RECIPIENT.ID, dsl.nextval(RECIPIENT_ID_SEQ).intValue())
                         .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
                         .set(MESSAGE_RECIPIENT.MESSAGE_ID, messageId)
-                        .set(MESSAGE_RECIPIENT.RECIPIENT_USERNAME, recipient)
+                        .set(MESSAGE_RECIPIENT.RECIPIENT_USERNAME, username)
                         .execute();
             }
         }
@@ -143,11 +142,11 @@ public class FeedService {
     /**
      * Получение количества непрочитанных уведомлений пользователем
      *
-     * @param username   Имя пользователя
      * @param tenantCode Идентификатор системы
+     * @param username   Имя пользователя
      * @return Количество непрочитанных уведомлений пользователем
      */
-    public FeedCount getFeedCount(String username, String tenantCode) {
+    public FeedCount getFeedCount(String tenantCode, String username) {
         Integer count = dsl
                 .selectCount()
                 .from(MESSAGE)

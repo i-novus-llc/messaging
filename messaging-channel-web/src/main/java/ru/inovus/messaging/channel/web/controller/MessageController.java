@@ -78,8 +78,8 @@ public class MessageController {
      * @param tenantCode Идентификатор системы, в которой находится пользователь
      * @param principal  Информация о пользователе
      */
-    @MessageMapping("/{systemId}/message.markreadall")
-    public void markReadAll(@DestinationVariable("systemId") String tenantCode,
+    @MessageMapping("/{tenantCode}/message.markreadall")
+    public void markReadAll(@DestinationVariable("tenantCode") String tenantCode,
                             Principal principal) {
         MessageStatus status = new MessageStatus();
         status.setTenantCode(tenantCode);
@@ -95,8 +95,8 @@ public class MessageController {
      * @param messageId  Идентификатор сообщения
      * @param principal  Информация о пользователе
      */
-    @MessageMapping("/{systemId}/message.markread")
-    public void markRead(@DestinationVariable("systemId") String tenantCode,
+    @MessageMapping("/{tenantCode}/message.markread")
+    public void markRead(@DestinationVariable("tenantCode") String tenantCode,
                          @Payload String messageId,
                          Principal principal) {
         MessageStatus status = new MessageStatus();

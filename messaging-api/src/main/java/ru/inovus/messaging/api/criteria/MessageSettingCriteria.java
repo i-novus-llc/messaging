@@ -27,8 +27,6 @@ import javax.ws.rs.QueryParam;
 @Getter
 @Setter
 public class MessageSettingCriteria extends BaseMessagingCriteria {
-    @QueryParam("component.id")
-    private Integer componentId;
 
     @QueryParam("severity.id")
     private Severity severity;

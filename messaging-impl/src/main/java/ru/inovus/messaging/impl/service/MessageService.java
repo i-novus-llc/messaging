@@ -86,7 +86,7 @@ public class MessageService {
         return message;
     }
 
-    public Page<Message> getMessages(MessageCriteria criteria) {
+    public Page<Message> getMessages(String tenantCode, MessageCriteria criteria) {
         LocalDateTime sentAtBeginDateTime = null;
         LocalDateTime sentAtEndDateTime = null;
 
@@ -98,8 +98,7 @@ public class MessageService {
         }
 
         List<Condition> conditions = new ArrayList<>();
-        Optional.ofNullable(criteria.getTenantCode())
-                .ifPresent(tenantCode -> conditions.add(MESSAGE.TENANT_CODE.eq(tenantCode)));
+        conditions.add(MESSAGE.TENANT_CODE.eq(tenantCode));
         Optional.ofNullable(criteria.getSeverity())
                 .ifPresent(severity -> conditions.add(MESSAGE.SEVERITY.eq(severity)));
         Optional.ofNullable(criteria.getChannelId())
