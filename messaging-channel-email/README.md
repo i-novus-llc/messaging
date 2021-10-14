@@ -22,7 +22,7 @@ INSERT INTO messaging.channel (name, queue_name, is_internal, tenant_code)
 - `name` - Имя канала, отображаемое на UI
 - `queue_name` - Имя очереди канала (должно совпадать с настройкой `novus.messaging.channel.email.queue`)
 - `is_internal` - Признак того, что канал является внутрисистемным
-- `my_tenant` - Код тенанта, к которому относится канал
+- `my_tenant` - Код тенанта, к которому относится канал (по умолчанию использовать `default`)
 
 3. Подключите аннотацию `@EnableEmailChannel` к вашему приложению
 

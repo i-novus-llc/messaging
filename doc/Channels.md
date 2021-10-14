@@ -76,7 +76,7 @@ public class MyChannel extends AbstractChannel {
 - `name` - Имя канала, отображаемое на UI
 - `queue_name` - Имя очереди канала (`my-channel-queue`)
 - `is_internal` - Признак того, что канал является внутрисистемным
-- `my_tenant` - Код тенанта, к которому относится канал
+- `my_tenant` - Код тенанта, к которому относится канал (по умолчанию использовать `default`)
 
 
 

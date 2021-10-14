@@ -9,6 +9,8 @@ COMMENT ON TABLE messaging.tenant IS 'Тенанты';
 COMMENT ON COLUMN messaging.tenant.code IS 'Уникальный код тенанта';
 COMMENT ON COLUMN messaging.tenant.name IS 'Наименование тенанта';
 
+INSERT INTO messaging.tenant (code, name) VALUES ('default', 'Система по умолчанию');
+
 -- message
 ALTER TABLE messaging.message
     RENAME COLUMN system_id TO tenant_code;
@@ -37,6 +39,9 @@ COMMENT ON COLUMN messaging.user_setting.tenant_code IS 'Тенант, к кот
 ALTER TABLE messaging.channel
     ADD COLUMN tenant_code VARCHAR REFERENCES messaging.tenant (code);
 COMMENT ON COLUMN messaging.channel.tenant_code IS 'Тенант, к которому относится канал отправки';
+
+CREATE SEQUENCE IF NOT EXISTS messaging.channel_id_seq OWNED BY messaging.channel.id;
+ALTER TABLE messaging.channel ALTER COLUMN id SET DEFAULT nextval('messaging.channel_id_seq');
 
 -- add new pk
 ALTER TABLE messaging.message DROP CONSTRAINT message_channel_id_channel_id_fk;
