@@ -23,7 +23,6 @@ services:
     environment:
       SPRING_CLOUD_CONSUL_CONFIG_FORMAT: YAML
       SPRING_DATASOURCE_URL: jdbc:postgresql://db/postgres
-      SPRING_CLOUD_CONSUL_HOST: consul-agent.local
       SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
       JAVA_OPTS: -Xmx200m
       SERVER_PORT: 8080
