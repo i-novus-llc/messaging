@@ -47,11 +47,11 @@ services:
       SECURITY_OAUTH2_CLIENT_CLIENT_ID: frontend
       SECURITY_OAUTH2_CLIENT_CLIENT_SECRET: ca12a678-b275-499b-a778-750bad4d0a77
       ACCESS_SERVICE_URL: http://yandex.develop:8278/api
-      MESSAGING_BACKEND_PATH: http://backend:8080/api
+      MESSAGING_BACKEND_PATH: http://messaging-backend:8080/api
       MESSAGING_USER_ADMIN_URL: http://yandex.develop:8277
       JAVA_OPTS: -Xmx200m
     depends_on:
-    - backend
+    - messaging-backend
     ports:
     - "8111:8080"
     deploy:
