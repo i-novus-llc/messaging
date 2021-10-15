@@ -36,7 +36,7 @@
         </field>
 
         <field id="recipientType.id">
-            <select mapping="['recipientType']"/>
+            <select mapping="['recipientType.id']"/>
         </field>
         <field id="recipientType.name">
             <select mapping="['recipientType.name']"/>

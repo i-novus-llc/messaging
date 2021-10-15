@@ -31,4 +31,8 @@ public enum RecipientType {
     public String getName() {
         return name;
     }
+
+    public String getId() {
+        return name();
+    }
 }
