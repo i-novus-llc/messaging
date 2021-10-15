@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.isNull;
 import static org.jooq.impl.DSL.exists;
 import static ru.inovus.messaging.impl.jooq.Tables.*;
 
@@ -166,7 +167,14 @@ public class RecipientService {
      * @param recipients Список получателей уведомлений
      */
     public void enrichRecipient(List<Recipient> recipients) {
-        recipients.replaceAll(recipient -> getRecipientByUsername(recipient.getUsername()));
+        recipients.forEach(recipient -> {
+            Recipient providerRecipient = getRecipientByUsername(recipient.getUsername());
+            if (isNull(providerRecipient))
+                return;
+            recipient.setName(providerRecipient.getName());
+            recipient.setEmail(providerRecipient.getEmail());
+        });
+
     }
 
     /**
@@ -198,12 +206,11 @@ public class RecipientService {
                 return null;
             } else {
                 User user = users.get(0);
-                recipient.setName(user.getFio() + " (" + user.getUsername() + ")");
+                recipient.setName(user.getFio() + " (" + username + ")");
                 recipient.setUsername(user.getUsername());
                 recipient.setEmail(user.getEmail());
             }
         }
-        recipient.setName(username);
         return recipient;
     }
 }
