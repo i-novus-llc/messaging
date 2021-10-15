@@ -110,12 +110,6 @@
 
     <profiles>
         <profile>
-            <id>production</id>
-            <properties>
-                <config.server.enable>true</config.server.enable>
-            </properties>
-        </profile>
-        <profile>
             <id>jooq-generate-source</id>
             <activation>
                 <activeByDefault>false</activeByDefault>

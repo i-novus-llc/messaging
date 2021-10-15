@@ -1,6 +1,6 @@
 spring:
   application:
-    name: messaging
+    name: ${project.artifactId}
   cloud:
     consul:
       config:
