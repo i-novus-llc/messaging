@@ -22,7 +22,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Channel extends TableImpl<ChannelRecord> {
 
-    private static final long serialVersionUID = -2027983701;
+    private static final long serialVersionUID = -719919734;
 
     /**
      * The reference instance of <code>messaging.channel</code>
@@ -40,7 +40,7 @@ public class Channel extends TableImpl<ChannelRecord> {
     /**
      * The column <code>messaging.channel.id</code>. Уникальный идентификатор
      */
-    public final TableField<ChannelRecord, Integer> ID = createField(DSL.name("id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "Уникальный идентификатор");
+    public final TableField<ChannelRecord, Integer> ID = createField(DSL.name("id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaultValue(org.jooq.impl.DSL.field("nextval('messaging.channel_id_seq'::regclass)", org.jooq.impl.SQLDataType.INTEGER)), this, "Уникальный идентификатор");
 
     /**
      * The column <code>messaging.channel.name</code>. Наименование канала
@@ -98,6 +98,11 @@ public class Channel extends TableImpl<ChannelRecord> {
     @Override
     public Schema getSchema() {
         return Messaging.MESSAGING;
+    }
+
+    @Override
+    public Identity<ChannelRecord, Integer> getIdentity() {
+        return Keys.IDENTITY_CHANNEL;
     }
 
     @Override

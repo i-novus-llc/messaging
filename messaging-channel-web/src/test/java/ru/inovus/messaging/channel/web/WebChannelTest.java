@@ -35,7 +35,6 @@ import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.MessageStatus;
 import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
-import ru.inovus.messaging.api.model.enums.Severity;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.api.queue.QueueMqConsumer;
 import ru.inovus.messaging.channel.web.configuration.WebChannelProperties;
@@ -107,7 +106,6 @@ public class WebChannelTest {
         // create message
         Message message = new Message();
         message.setCaption("Test caption");
-        message.setSeverity(Severity.ERROR);
         message.setText("Message");
         message.setTenantCode(TENANT_CODE);
         Recipient recipient1 = new Recipient();
@@ -130,7 +128,6 @@ public class WebChannelTest {
 
         assertThat(receivedMessage.getCaption(), is(message.getCaption()));
         assertThat(receivedMessage.getText(), is(message.getText()));
-        assertThat(receivedMessage.getSeverity(), is(message.getSeverity()));
     }
 
     @Test

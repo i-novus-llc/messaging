@@ -15,6 +15,11 @@ import org.jooq.impl.Internal;
 public class Sequences {
 
     /**
+     * The sequence <code>messaging.channel_id_seq</code>
+     */
+    public static final Sequence<Long> CHANNEL_ID_SEQ = Internal.createSequence("channel_id_seq", Messaging.MESSAGING, org.jooq.impl.SQLDataType.BIGINT.nullable(false), null, null, null, null, false, null);
+
+    /**
      * The sequence <code>messaging.message_id_seq</code>
      */
     public static final Sequence<Long> MESSAGE_ID_SEQ = Internal.createSequence("message_id_seq", Messaging.MESSAGING, org.jooq.impl.SQLDataType.BIGINT.nullable(false), null, null, null, null, false, null);

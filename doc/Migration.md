@@ -11,6 +11,7 @@
         - `/user/{username}/settings` -> `/{tenantCode}/user/{username}/settings`
         - `/feed` -> `/{tenantCode}/feed`
         - `/channels` -> `/{tenantCode}/channels`
+        - `/recipients` -> `/{tenantCode}/recipients`
 
 #### 4.0.0
 

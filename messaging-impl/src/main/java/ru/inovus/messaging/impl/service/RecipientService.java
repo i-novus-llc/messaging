@@ -75,16 +75,23 @@ public class RecipientService {
     /**
      * Получение списка получателей уведомлений по критерию
      *
-     * @param criteria Критерий получателей
+     * @param tenantCode Код тенанта
+     * @param criteria   Критерий получателей
      * @return Список получателей уведомлений
      */
-    public Page<Recipient> getRecipients(RecipientCriteria criteria) {
+    public Page<Recipient> getRecipients(String tenantCode, RecipientCriteria criteria) {
+        if (criteria.getMessageId() == null)
+            return new PageImpl<>(Collections.emptyList());
+
         List<Condition> conditions = new ArrayList<>();
+        conditions.add(MESSAGE.TENANT_CODE.eq(tenantCode));
         Optional.ofNullable(criteria.getMessageId())
                 .ifPresent(messageId -> conditions.add(MESSAGE_RECIPIENT.MESSAGE_ID.eq(messageId)));
+
         SelectConditionStep<Record> query = dsl
                 .select(MESSAGE_RECIPIENT.fields())
                 .from(MESSAGE_RECIPIENT)
+                .leftJoin(MESSAGE).on(MESSAGE.ID.eq(MESSAGE_RECIPIENT.MESSAGE_ID))
                 .where(conditions);
         int count = dsl.fetchCount(query);
         List<Recipient> collection = query

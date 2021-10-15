@@ -4,7 +4,7 @@
     <operations>
         <operation id="create">
             <invocation>
-                <rest method="POST">${messaging.backend.path}/${messaging.tenant-code}/settings</rest>
+                <rest method="POST">${messaging.backend.path}/${novus.messaging.tenant-code}/settings</rest>
             </invocation>
             <in>
                 <field id="name" mapping="['name']" required="true"/>
@@ -20,7 +20,7 @@
         </operation>
         <operation id="update">
             <invocation>
-                <rest method="PUT">${messaging.backend.path}/${messaging.tenant-code}/settings/{id}</rest>
+                <rest method="PUT">${messaging.backend.path}/${novus.messaging.tenant-code}/settings/{id}</rest>
             </invocation>
             <in>
                 <field id="id" mapping="['id']"/>
@@ -37,7 +37,7 @@
         </operation>
         <operation id="delete" confirm="true">
             <invocation>
-                <rest method="DELETE">${messaging.backend.path}/${messaging.tenant-code}/settings/{id}</rest>
+                <rest method="DELETE">${messaging.backend.path}/${novus.messaging.tenant-code}/settings/{id}</rest>
             </invocation>
             <in>
                 <field id="id" mapping="['id']"/>
