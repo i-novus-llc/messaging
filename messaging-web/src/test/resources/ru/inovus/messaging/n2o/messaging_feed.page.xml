@@ -6,7 +6,6 @@
                 <!--<text format="datetime DD.MM.YYYY HH:mm"/>-->
             </column>
             <column text-field-id="severity.name" label="Важность"/>
-            <column text-field-id="component.name" label="Компонент"/>
             <column text-field-id="caption" label="Заголовок"/>
         </columns>
         <rows>

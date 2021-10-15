@@ -3,6 +3,7 @@
  */
 package ru.inovus.messaging.impl.jooq.tables;
 
+
 import org.jooq.Record;
 import org.jooq.*;
 import org.jooq.impl.DSL;
@@ -14,10 +15,11 @@ import ru.inovus.messaging.impl.jooq.tables.records.TenantRecord;
 import java.util.Arrays;
 import java.util.List;
 
+
 /**
  * Тенанты
  */
-@SuppressWarnings({"all", "unchecked", "rawtypes"})
+@SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tenant extends TableImpl<TenantRecord> {
 
     private static final long serialVersionUID = -248045846;

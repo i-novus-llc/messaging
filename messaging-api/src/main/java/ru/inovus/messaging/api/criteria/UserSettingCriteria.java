@@ -28,7 +28,7 @@ import javax.ws.rs.QueryParam;
 @Setter
 public class UserSettingCriteria extends BaseMessagingCriteria {
     @PathParam("user")
-    private String user;
+    private String username;
 
     @QueryParam("severity.id")
     private Severity severity;
@@ -37,7 +37,7 @@ public class UserSettingCriteria extends BaseMessagingCriteria {
     private AlertType alertType;
 
     @QueryParam("infoType.id")
-    private String channelId;
+    private Integer channelId;
 
     @QueryParam("name")
     private String name;

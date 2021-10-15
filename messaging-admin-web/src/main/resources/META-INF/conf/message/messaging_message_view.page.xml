@@ -10,11 +10,6 @@
                 <fields>
                     <set>
                         <row>
-                            <input-select id="component"
-                                          label="Компонент"
-                                          query-id="messaging_component"
-                                          enabled="false">
-                            </input-select>
                             <input-select id="severity" label="Уровень важности" enabled="false">
                                 <options>
                                     <option id="SEVERE" name="Важный"/>
@@ -43,16 +38,13 @@
                 </fields>
             </form>
         </region>
-        <line place="bottom">
-            <table query-id="recipient" depends-on="view" detail-field-id="messageId"
-                   visible="{recipientType.id == 'USER'}" name="Получатели">
-                <columns>
-                    <column text-field-id="statusTime"/>
-                    <column text-field-id="status"/>
-                    <column text-field-id="name"/>
-                </columns>
-            </table>
-        </line>
+        <table query-id="recipient" depends-on="view" detail-field-id="messageId"
+               visible="{recipientType.id == 'USER'}" name="Получатели">
+            <columns>
+                <column text-field-id="statusTime"/>
+                <column text-field-id="status"/>
+                <column text-field-id="name"/>
+            </columns>
+        </table>
     </regions>
-
 </page>

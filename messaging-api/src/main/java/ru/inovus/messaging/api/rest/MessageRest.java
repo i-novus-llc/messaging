@@ -15,45 +15,37 @@
  */
 package ru.inovus.messaging.api.rest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.Authorization;
+import io.swagger.annotations.*;
 import org.springframework.data.domain.Page;
 import ru.inovus.messaging.api.criteria.MessageCriteria;
-import ru.inovus.messaging.api.criteria.RecipientCriteria;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.MessageOutbox;
-import ru.inovus.messaging.api.model.Recipient;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.UUID;
 
 @Api(value = "Уведомления", authorizations = @Authorization(value = "oauth2"))
-@Path("/messages")
+@Path("/{tenantCode}/messages")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public interface MessageRest {
     @GET
-    @ApiOperation("Получение страницы сообщений по критериям поиска")
+    @ApiOperation("Получение страницы уведомлений по критериям поиска")
     @ApiResponse(code = 200, message = "Страница сообщений")
-    Page<Message> getMessages(@BeanParam MessageCriteria criteria);
+    Page<Message> getMessages(@PathParam("tenantCode") @ApiParam(value = "Код тенанта") String tenantCode,
+                              @BeanParam @ApiParam(value = "Критерии уведомлений") MessageCriteria criteria);
 
     @GET
     @Path("/{id}")
-    @ApiOperation("Получение сообщения по идентификатору")
-    @ApiResponse(code = 200, message = "Сообщение")
-    Message getMessage(@PathParam("id") UUID id);
-
-    @GET
-    @Path("/recipients")
-    @ApiOperation("Получение получателей")
-    @ApiResponse(code = 200, message = "Список получателей")
-    Page<Recipient> getRecipients(@BeanParam RecipientCriteria criteria);
+    @ApiOperation("Получение уведомления по идентификатору")
+    @ApiResponse(code = 200, message = "Уведомление")
+    Message getMessage(@PathParam("tenantCode") @ApiParam(value = "Код тенанта") String tenantCode,
+                       @PathParam("id") @ApiParam(value = "Идентификатор уведомления") UUID id);
 
     @POST
-    @ApiOperation("Отправка сообщения")
-    @ApiResponse(code = 200, message = "Сообщение поставлено в очередь")
-    void sendMessage(MessageOutbox message);
+    @ApiOperation("Отправка уведомления")
+    @ApiResponse(code = 200, message = "Уведомление поставлено в очередь на отправку")
+    void sendMessage(@PathParam("tenantCode") @ApiParam(value = "Код тенанта") String tenantCode,
+                     @ApiParam(value = "Уведомление") MessageOutbox message);
 }

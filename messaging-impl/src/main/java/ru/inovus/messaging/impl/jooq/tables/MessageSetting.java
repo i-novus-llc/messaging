@@ -3,6 +3,7 @@
  */
 package ru.inovus.messaging.impl.jooq.tables;
 
+
 import org.jooq.Record;
 import org.jooq.*;
 import org.jooq.impl.DSL;
@@ -21,13 +22,14 @@ import ru.inovus.messaging.impl.util.SeverityConverter;
 import java.util.Arrays;
 import java.util.List;
 
+
 /**
  * Шаблоны уведомлений (общесистемные настройки)
  */
-@SuppressWarnings({"all", "unchecked", "rawtypes"})
+@SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class MessageSetting extends TableImpl<MessageSettingRecord> {
 
-    private static final long serialVersionUID = -266742998;
+    private static final long serialVersionUID = 1071572689;
 
     /**
      * The reference instance of <code>messaging.message_setting</code>
@@ -90,7 +92,7 @@ public class MessageSetting extends TableImpl<MessageSettingRecord> {
     /**
      * The column <code>messaging.message_setting.channel_id</code>. Идентификатор канала отправки уведомления
      */
-    public final TableField<MessageSettingRecord, String> CHANNEL_ID = createField(DSL.name("channel_id"), org.jooq.impl.SQLDataType.VARCHAR, this, "Идентификатор канала отправки уведомления");
+    public final TableField<MessageSettingRecord, Integer> CHANNEL_ID = createField(DSL.name("channel_id"), org.jooq.impl.SQLDataType.INTEGER, this, "Идентификатор канала отправки уведомления");
 
     /**
      * The column <code>messaging.message_setting.tenant_code</code>. Тенант, к которому относится настройка
@@ -194,7 +196,7 @@ public class MessageSetting extends TableImpl<MessageSettingRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Row11<Integer, String, String, Severity, AlertType, String, Boolean, FormationType, String, String, String> fieldsRow() {
+    public Row11<Integer, String, String, Severity, AlertType, String, Boolean, FormationType, String, Integer, String> fieldsRow() {
         return (Row11) super.fieldsRow();
     }
 }

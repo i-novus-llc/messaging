@@ -7,8 +7,6 @@
                 <table id="message_list" query-id="messaging_message">
                     <filters>
                         <row>
-                            <input-select id="component" label="Компонент" query-id="messaging_component"
-                                          label-field-id="name" search-field-id="name"/>
                             <input-select id="severity" label="Уровень важности">
                                 <options>
                                     <option id="SEVERE" name="Важный"/>
@@ -23,7 +21,6 @@
                     </filters>
                     <columns>
                         <column text-field-id="sentAt" label="Дата отправки"/>
-                        <column text-field-id="component.name" label="Компонент"/>
                         <column text-field-id="caption" label="Заголовок"/>
                         <column text-field-id="severity.name" label="Уровень важности"/>
                         <column text-field-id="infoType.name" label="Информирование"/>

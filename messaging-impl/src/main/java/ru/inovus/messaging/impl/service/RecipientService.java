@@ -1,5 +1,6 @@
 package ru.inovus.messaging.impl.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.Record;
 import org.jooq.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +10,16 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import ru.inovus.messaging.api.criteria.RecipientCriteria;
+import ru.inovus.messaging.api.criteria.UserCriteria;
 import ru.inovus.messaging.api.model.FeedCount;
 import ru.inovus.messaging.api.model.MessageStatus;
 import ru.inovus.messaging.api.model.Recipient;
+import ru.inovus.messaging.api.model.User;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
+import ru.inovus.messaging.impl.UserRoleProvider;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecipientRecord;
 
 import java.time.LocalDateTime;
@@ -28,6 +33,7 @@ import static ru.inovus.messaging.impl.jooq.Tables.*;
  * Сервис получателей уведомлений
  */
 @Service
+@Slf4j
 public class RecipientService {
 
     private final DSLContext dsl;
@@ -38,8 +44,14 @@ public class RecipientService {
     @Autowired
     private MqProvider mqProvider;
 
+    @Autowired
+    private UserRoleProvider userRoleProvider;
+
     @Value("${novus.messaging.queue.feed-count}")
     private String feedCountQueue;
+
+    @Value("${sec.admin.rest.enable}")
+    private boolean securityAdminRestEnable;
 
 
     private static final RecordMapper<Record, Recipient> MAPPER = rec -> {
@@ -63,16 +75,23 @@ public class RecipientService {
     /**
      * Получение списка получателей уведомлений по критерию
      *
-     * @param criteria Критерий получателей
+     * @param tenantCode Код тенанта
+     * @param criteria   Критерий получателей
      * @return Список получателей уведомлений
      */
-    public Page<Recipient> getRecipients(RecipientCriteria criteria) {
+    public Page<Recipient> getRecipients(String tenantCode, RecipientCriteria criteria) {
+        if (criteria.getMessageId() == null)
+            return new PageImpl<>(Collections.emptyList());
+
         List<Condition> conditions = new ArrayList<>();
+        conditions.add(MESSAGE.TENANT_CODE.eq(tenantCode));
         Optional.ofNullable(criteria.getMessageId())
                 .ifPresent(messageId -> conditions.add(MESSAGE_RECIPIENT.MESSAGE_ID.eq(messageId)));
+
         SelectConditionStep<Record> query = dsl
                 .select(MESSAGE_RECIPIENT.fields())
                 .from(MESSAGE_RECIPIENT)
+                .leftJoin(MESSAGE).on(MESSAGE.ID.eq(MESSAGE_RECIPIENT.MESSAGE_ID))
                 .where(conditions);
         int count = dsl.fetchCount(query);
         List<Recipient> collection = query
@@ -110,7 +129,8 @@ public class RecipientService {
         List<Condition> conditions = new ArrayList<>();
         Optional.ofNullable(status.getUsername())
                 .ifPresent(username -> conditions.add(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username)));
-        // change status if previous status is correct (e.g. can't change FAILED to READ)
+        // изменение статуса, если переход к нему возможен после предыдущего статуса
+        // например, нельзя перейти от статуса FAILED к статусу READ
         conditions.add(MESSAGE_RECIPIENT.STATUS.eq(status.getStatus().getPrevStatus()));
         if (status.getMessageId() != null) {
             conditions.add(MESSAGE_RECIPIENT.MESSAGE_ID.eq(UUID.fromString(status.getMessageId())));
@@ -135,9 +155,55 @@ public class RecipientService {
 
         // отправка количества непрочитанных уведомлений в очередь счетчиков
         if (status.getUsername() != null && MessageStatusType.READ.equals(status.getStatus())) {
-            FeedCount feedCount = feedService.getFeedCount(status.getUsername(), status.getTenantCode());
+            FeedCount feedCount = feedService.getFeedCount(status.getTenantCode(), status.getUsername());
             mqProvider.publish(feedCount, feedCountQueue);
         }
+    }
 
+    /**
+     * Обогащение получателей уведомлений
+     *
+     * @param recipients Список получателей уведомлений
+     */
+    public void enrichRecipient(List<Recipient> recipients) {
+        recipients.replaceAll(recipient -> getRecipientByUsername(recipient.getUsername()));
+    }
+
+    /**
+     * Построение списка получателей уведомлений по списку имен пользователей
+     *
+     * @param usernameList Список имен пользователей
+     * @return Список получателей уведомлений
+     */
+    public List<Recipient> getRecipientsByUsername(List<String> usernameList) {
+        return usernameList.stream().map(this::getRecipientByUsername).filter(Objects::nonNull).collect(Collectors.toList());
+    }
+
+    /**
+     * Получение получателя уведомления по имени пользователя
+     *
+     * @param username Имя пользователя
+     * @return Получатель уведомления
+     */
+    private Recipient getRecipientByUsername(String username) {
+        Recipient recipient = new Recipient();
+        if (securityAdminRestEnable) {
+            UserCriteria userCriteria = new UserCriteria();
+            userCriteria.setUsername(username);
+            userCriteria.setPageNumber(0);
+            userCriteria.setPageSize(1);
+            List<ru.inovus.messaging.api.model.User> users = userRoleProvider.getUsers(userCriteria).getContent();
+            if (CollectionUtils.isEmpty(users)) {
+                log.warn("User with username: {} not found in user provider", username);
+                return null;
+            } else {
+                User user = users.get(0);
+                recipient.setName(user.getFio() + " (" + user.getUsername() + ")");
+                recipient.setUsername(user.getUsername());
+                recipient.setEmail(user.getEmail());
+            }
+        }
+        recipient.setName(username);
+        return recipient;
     }
 }

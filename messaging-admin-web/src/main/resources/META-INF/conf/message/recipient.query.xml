@@ -3,7 +3,7 @@
        object-id="messaging_message">
 
     <list result-mapping="['content']" count-mapping="['totalElements']">
-        <rest filters-separator="&amp;">${messaging.backend.path}/messages/recipients?{filters}&amp;{sorting}&amp;size={limit}&amp;page={page}</rest>
+        <rest filters-separator="&amp;">${messaging.backend.path}/${novus.messaging.tenant-code}/recipients?{filters}&amp;{sorting}&amp;size={limit}&amp;page={page}</rest>
     </list>
 
     <fields>
@@ -11,15 +11,11 @@
             <select mapping="['id']"/>
         </field>
 
-        <field id="recipient" domain="string" name="Получатель">
+        <field id="name" domain="string" name="Получатель">
             <select mapping="['name']"/>
             <filters>
                 <eq filter-id="recipient">name={recipient}</eq>
             </filters>
-        </field>
-
-        <field id="name" domain="string" name="Получатель">
-            <select mapping="['name']"/>
         </field>
 
         <field id="messageId" domain="string">

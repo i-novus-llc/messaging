@@ -15,10 +15,7 @@
  */
 package ru.inovus.messaging.api.rest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.Authorization;
+import io.swagger.annotations.*;
 import org.springframework.data.domain.Page;
 import ru.inovus.messaging.api.criteria.UserSettingCriteria;
 import ru.inovus.messaging.api.model.UserSetting;
@@ -26,25 +23,31 @@ import ru.inovus.messaging.api.model.UserSetting;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
-@Api(value = "Настройки пользователя", authorizations = @Authorization(value = "oauth2"))
-@Path("/user/{user}/settings")
+@Api(value = "Настройки пользователей", authorizations = @Authorization(value = "oauth2"))
+@Path("/{tenantCode}/user/{username}/settings")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public interface UserSettingRest {
     @GET
     @ApiOperation("Получение страницы пользовательских настроек по критериям поиска")
     @ApiResponse(code = 200, message = "Страница пользовательских настроек")
-    Page<UserSetting> getSettings(@BeanParam UserSettingCriteria criteria);
+    Page<UserSetting> getSettings(@PathParam("tenantCode") @ApiParam(value = "Код тенанта") String tenantCode,
+                                  @BeanParam @ApiParam(value = "Критерии пользовательских настроек") UserSettingCriteria criteria);
 
     @GET
     @Path("/{id}")
     @ApiOperation("Получение пользовательской настройки по идентификатору")
     @ApiResponse(code = 200, message = "Пользовательская настройка")
-    UserSetting getSetting(@PathParam("user") String user, @PathParam("id") Integer id);
+    UserSetting getSetting(@PathParam("tenantCode") @ApiParam(value = "Код тенанта") String tenantCode,
+                           @PathParam("username") @ApiParam(value = "Имя пользователя") String username,
+                           @PathParam("id") @ApiParam(value = "Идентификатор пользовательской настройки") Integer id);
 
     @PUT
     @Path("/{id}")
     @ApiOperation("Изменение пользовательской настройки")
     @ApiResponse(code = 200, message = "Пользовательская настройка успешно изменена")
-    void updateSetting(@PathParam("user") String user, @PathParam("id") Integer id, UserSetting messageSetting);
+    void updateSetting(@PathParam("tenantCode") @ApiParam(value = "Код тенанта") String tenantCode,
+                       @PathParam("username") @ApiParam(value = "Имя пользователя") String username,
+                       @PathParam("id") @ApiParam(value = "Идентификатор пользовательской настройки") Integer id,
+                       @ApiParam(value = "Пользовательская настройка") UserSetting messageSetting);
 }

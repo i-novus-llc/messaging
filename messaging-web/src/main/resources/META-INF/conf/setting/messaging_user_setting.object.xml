@@ -4,14 +4,14 @@
     <operations>
         <operation id="update">
             <invocation>
-                <rest method="PUT">${messaging.backend.path}/user/{user}/settings/{id}</rest>
+                <rest method="PUT">${messaging.backend.path}/${novus.messaging.tenant-code}/user/{username}/settings/{id}</rest>
             </invocation>
             <in>
                 <field id="id" mapping="['id']"/>
                 <field id="alertType.id" mapping="['alertType']"/>
                 <field id="infoType" mapping="['channel']"/>
                 <field id="disabled" mapping="['disabled']"/>
-                <field id="user" default-value="#{username!}" mapping="['user']"/>
+                <field id="username" default-value="#{username!}" mapping="['username']"/>
             </in>
         </operation>
     </operations>

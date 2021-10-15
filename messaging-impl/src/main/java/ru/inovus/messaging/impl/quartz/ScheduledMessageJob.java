@@ -21,7 +21,7 @@ public class ScheduledMessageJob implements Job {
             MessageRestImpl messageService = (MessageRestImpl) context.getScheduler().getContext().get("messageService");
             MessageOutbox messageOutbox = new ObjectMapper().
                     readValue((String) context.getJobDetail().getJobDataMap().get("sms"), MessageOutbox.class);
-            messageService.sendMessage(messageOutbox);
+            messageService.sendMessage(messageOutbox.getMessage().getTenantCode(), messageOutbox);
         } catch (SchedulerException schedulerException) {
             throw new JobExecutionException(schedulerException);
         } catch (JsonProcessingException e) {

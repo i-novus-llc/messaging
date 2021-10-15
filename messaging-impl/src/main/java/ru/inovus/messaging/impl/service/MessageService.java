@@ -43,7 +43,11 @@ public class MessageService {
         message.setSeverity(record.getSeverity());
         message.setSentAt(record.getSentAt());
         ChannelRecord channelRecord = rec.into(CHANNEL);
-        message.setChannel(new Channel(channelRecord.getId(), channelRecord.getName(), channelRecord.getQueueName()));
+        Channel channel = new Channel();
+        channel.setId(channelRecord.getId());
+        channel.setName(channelRecord.getName());
+        channel.setQueueName(channelRecord.getQueueName());
+        message.setChannel(channel);
         message.setFormationType(record.getFormationType());
         message.setRecipientType(record.getRecipientType());
         message.setTenantCode(record.getTenantCode());
@@ -86,7 +90,7 @@ public class MessageService {
         return message;
     }
 
-    public Page<Message> getMessages(MessageCriteria criteria) {
+    public Page<Message> getMessages(String tenantCode, MessageCriteria criteria) {
         LocalDateTime sentAtBeginDateTime = null;
         LocalDateTime sentAtEndDateTime = null;
 
@@ -98,8 +102,7 @@ public class MessageService {
         }
 
         List<Condition> conditions = new ArrayList<>();
-        Optional.ofNullable(criteria.getTenantCode())
-                .ifPresent(tenantCode -> conditions.add(MESSAGE.TENANT_CODE.eq(tenantCode)));
+        conditions.add(MESSAGE.TENANT_CODE.eq(tenantCode));
         Optional.ofNullable(criteria.getSeverity())
                 .ifPresent(severity -> conditions.add(MESSAGE.SEVERITY.eq(severity)));
         Optional.ofNullable(criteria.getChannelId())

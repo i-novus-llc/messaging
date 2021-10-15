@@ -15,6 +15,9 @@
  */
 package ru.inovus.messaging.api.model.enums;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum AlertType {
     BLOCKER("Блокирующее сообщение"),
     POPUP("Всплывающее сообщение"),

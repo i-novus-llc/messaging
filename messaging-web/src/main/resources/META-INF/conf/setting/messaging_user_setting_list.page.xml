@@ -4,8 +4,6 @@
     <table id="message_setting_list" query-id="messaging_user_setting">
         <filters>
             <row>
-                <input-select id="component" label="Компонент" query-id="messaging_component"
-                              label-field-id="name" search-field-id="name"/>
                 <input-select id="severity" label="Уровень важности">
                     <options>
                         <option id="SEVERE" name="Важный"/>
@@ -36,7 +34,6 @@
             </row>
         </filters>
         <columns>
-            <column text-field-id="component.name" label="Компонент"/>
             <column text-field-id="name" label="Событие"/>
             <column text-field-id="severity.name" label="Уровень важности"/>
             <column text-field-id="defaultAlertType.name" label="Способ отображения по умолчанию"/>
