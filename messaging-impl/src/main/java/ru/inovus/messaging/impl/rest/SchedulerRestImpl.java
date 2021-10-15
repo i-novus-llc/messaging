@@ -50,7 +50,7 @@ public class SchedulerRestImpl implements SchedulerRest {
         messageOutbox.setTemplateMessageOutbox(templateMessageOutbox);
 
         if (isNull(sms.getTimeToSend())) {
-            messageService.sendMessage(messageOutbox);
+            messageService.sendMessage(templateMessageOutbox.getTenantCode(), messageOutbox);
         } else {
             Trigger trigger = TriggerBuilder.newTrigger().startAt(convertToDate(sms.getTimeToSend())).build();
 

@@ -3,6 +3,7 @@
  */
 package ru.inovus.messaging.impl.jooq;
 
+
 import org.jooq.Catalog;
 import org.jooq.Sequence;
 import org.jooq.Table;
@@ -19,7 +20,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Messaging extends SchemaImpl {
 
-    private static final long serialVersionUID = 1599754114;
+    private static final long serialVersionUID = 2105825497;
 
     /**
      * The reference instance of <code>messaging</code>
@@ -30,11 +31,6 @@ public class Messaging extends SchemaImpl {
      * Каналы отправки уведомлений
      */
     public final Channel CHANNEL = Channel.CHANNEL;
-
-    /**
-     * Компоненты системы
-     */
-    public final Component COMPONENT = Component.COMPONENT;
 
     /**
      * Уведомления
@@ -50,6 +46,11 @@ public class Messaging extends SchemaImpl {
      * Шаблоны уведомлений (общесистемные настройки)
      */
     public final MessageSetting MESSAGE_SETTING = MessageSetting.MESSAGE_SETTING;
+
+    /**
+     * Тенанты
+     */
+    public final Tenant TENANT = Tenant.TENANT;
 
     /**
      * Пользовательские настройки уведомлений
@@ -72,6 +73,7 @@ public class Messaging extends SchemaImpl {
     @Override
     public final List<Sequence<?>> getSequences() {
         return Arrays.<Sequence<?>>asList(
+            Sequences.CHANNEL_ID_SEQ,
             Sequences.MESSAGE_ID_SEQ,
             Sequences.MESSAGE_SETTING_ID_SEQ,
             Sequences.RECIPIENT_ID_SEQ,
@@ -82,10 +84,10 @@ public class Messaging extends SchemaImpl {
     public final List<Table<?>> getTables() {
         return Arrays.<Table<?>>asList(
             Channel.CHANNEL,
-            Component.COMPONENT,
             Message.MESSAGE,
             MessageRecipient.MESSAGE_RECIPIENT,
             MessageSetting.MESSAGE_SETTING,
+            Tenant.TENANT,
             UserSetting.USER_SETTING);
     }
 }

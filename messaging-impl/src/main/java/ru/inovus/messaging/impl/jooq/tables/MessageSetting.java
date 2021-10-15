@@ -4,23 +4,10 @@
 package ru.inovus.messaging.impl.jooq.tables;
 
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Index;
-import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row11;
-import org.jooq.Schema;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
-
 import ru.inovus.messaging.api.model.enums.AlertType;
 import ru.inovus.messaging.api.model.enums.FormationType;
 import ru.inovus.messaging.api.model.enums.Severity;
@@ -32,6 +19,9 @@ import ru.inovus.messaging.impl.util.AlertTypeConverter;
 import ru.inovus.messaging.impl.util.FormationTypeConverter;
 import ru.inovus.messaging.impl.util.SeverityConverter;
 
+import java.util.Arrays;
+import java.util.List;
+
 
 /**
  * Шаблоны уведомлений (общесистемные настройки)
@@ -39,7 +29,7 @@ import ru.inovus.messaging.impl.util.SeverityConverter;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class MessageSetting extends TableImpl<MessageSettingRecord> {
 
-    private static final long serialVersionUID = 1068731507;
+    private static final long serialVersionUID = 1071572689;
 
     /**
      * The reference instance of <code>messaging.message_setting</code>
@@ -80,11 +70,6 @@ public class MessageSetting extends TableImpl<MessageSettingRecord> {
     public final TableField<MessageSettingRecord, AlertType> ALERT_TYPE = createField(DSL.name("alert_type"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Способ отображения уведомления", new AlertTypeConverter());
 
     /**
-     * The column <code>messaging.message_setting.component_id</code>. Идентификатор компонента (модуля, подсистемы), к которому относится уведомление
-     */
-    public final TableField<MessageSettingRecord, Integer> COMPONENT_ID = createField(DSL.name("component_id"), org.jooq.impl.SQLDataType.INTEGER, this, "Идентификатор компонента (модуля, подсистемы), к которому относится уведомление");
-
-    /**
      * The column <code>messaging.message_setting.name</code>. Наименование шаблона уведомления
      */
     public final TableField<MessageSettingRecord, String> NAME = createField(DSL.name("name"), org.jooq.impl.SQLDataType.VARCHAR, this, "Наименование шаблона уведомления");
@@ -107,7 +92,12 @@ public class MessageSetting extends TableImpl<MessageSettingRecord> {
     /**
      * The column <code>messaging.message_setting.channel_id</code>. Идентификатор канала отправки уведомления
      */
-    public final TableField<MessageSettingRecord, String> CHANNEL_ID = createField(DSL.name("channel_id"), org.jooq.impl.SQLDataType.VARCHAR, this, "Идентификатор канала отправки уведомления");
+    public final TableField<MessageSettingRecord, Integer> CHANNEL_ID = createField(DSL.name("channel_id"), org.jooq.impl.SQLDataType.INTEGER, this, "Идентификатор канала отправки уведомления");
+
+    /**
+     * The column <code>messaging.message_setting.tenant_code</code>. Тенант, к которому относится настройка
+     */
+    public final TableField<MessageSettingRecord, String> TENANT_CODE = createField(DSL.name("tenant_code"), org.jooq.impl.SQLDataType.VARCHAR, this, "Тенант, к которому относится настройка");
 
     /**
      * Create a <code>messaging.message_setting</code> table reference
@@ -164,15 +154,15 @@ public class MessageSetting extends TableImpl<MessageSettingRecord> {
 
     @Override
     public List<ForeignKey<MessageSettingRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<MessageSettingRecord, ?>>asList(Keys.MESSAGE_SETTING__MESSAGE_SETTING_COMPONENT_ID_FKEY, Keys.MESSAGE_SETTING__MESSAGE_SETTING_CHANNEL_ID_CHANNEL_ID_FK);
-    }
-
-    public Component component() {
-        return new Component(this, Keys.MESSAGE_SETTING__MESSAGE_SETTING_COMPONENT_ID_FKEY);
+        return Arrays.<ForeignKey<MessageSettingRecord, ?>>asList(Keys.MESSAGE_SETTING__MESSAGE_SETTING_CHANNEL_ID_CHANNEL_ID_FK, Keys.MESSAGE_SETTING__MESSAGE_SETTING_TENANT_CODE_FKEY);
     }
 
     public Channel channel() {
         return new Channel(this, Keys.MESSAGE_SETTING__MESSAGE_SETTING_CHANNEL_ID_CHANNEL_ID_FK);
+    }
+
+    public Tenant tenant() {
+        return new Tenant(this, Keys.MESSAGE_SETTING__MESSAGE_SETTING_TENANT_CODE_FKEY);
     }
 
     @Override
@@ -206,7 +196,7 @@ public class MessageSetting extends TableImpl<MessageSettingRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Row11<Integer, String, String, Severity, AlertType, Integer, String, Boolean, FormationType, String, String> fieldsRow() {
+    public Row11<Integer, String, String, Severity, AlertType, String, Boolean, FormationType, String, Integer, String> fieldsRow() {
         return (Row11) super.fieldsRow();
     }
 }

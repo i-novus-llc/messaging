@@ -46,56 +46,56 @@ public class RecipientServiceTest {
     @Value("${novus.messaging.queue.feed-count}")
     private String feedCountQueue;
 
+    private static final String TENANT_CODE = "tenant";
+
     @Test
     public void testUpdateStatus() throws InterruptedException {
         RecipientCriteria criteria = new RecipientCriteria();
+        criteria.setMessageId(UUID.fromString("a2bd666b-1684-4005-a10f-f14224f66d0a"));
 
-        List<Recipient> recipients = service.getRecipients(criteria).getContent();
-        assertThat(recipients.size(), is(5));
+        List<Recipient> recipients = service.getRecipients(TENANT_CODE, criteria).getContent();
+        assertThat(recipients.size(), is(2));
         assertThat(recipients.get(0).getStatus(), is(MessageStatusType.SCHEDULED));
         assertThat(recipients.get(1).getStatus(), is(MessageStatusType.SCHEDULED));
-        assertThat(recipients.get(2).getStatus(), is(MessageStatusType.SCHEDULED));
-        assertThat(recipients.get(3).getStatus(), is(MessageStatusType.SCHEDULED));
-        assertThat(recipients.get(4).getStatus(), is(MessageStatusType.SCHEDULED));
 
-        // update recipients by systemId, username, messageId (update only one recipient)
+        // update recipients by tenantCode, username, messageId (update only one recipient)
         MessageStatus messageStatus = new MessageStatus();
-        messageStatus.setSystemId("sys1");
+        messageStatus.setTenantCode("tenant");
         messageStatus.setMessageId("a2bd666b-1684-4005-a10f-f14224f66d0a");
         messageStatus.setUsername("web1");
         messageStatus.setStatus(MessageStatusType.FAILED);
         messageStatus.setErrorMessage("Error");
         service.updateStatus(messageStatus);
 
-        recipients = service.getRecipients(criteria).getContent();
-        assertThat(recipients.size(), is(5));
+        recipients = service.getRecipients(TENANT_CODE, criteria).getContent();
+        assertThat(recipients.size(), is(2));
+        assertThat(recipients.get(0).getStatus(), is(MessageStatusType.SCHEDULED));
+        assertThat(recipients.get(1).getMessageId(), is(UUID.fromString("a2bd666b-1684-4005-a10f-f14224f66d0a")));
+        assertThat(recipients.get(1).getUsername(), is("web1"));
+        assertThat(recipients.get(1).getErrorMessage(), is("Error"));
+
+        // update recipients by tenantCode, messageId (update all message recipients)
+        criteria.setMessageId(UUID.fromString("d1450cd1-5b93-47fe-9e44-a3800476342e"));
+        recipients = service.getRecipients(TENANT_CODE, criteria).getContent();
+        assertThat(recipients.size(), is(2));
         assertThat(recipients.get(0).getStatus(), is(MessageStatusType.SCHEDULED));
         assertThat(recipients.get(1).getStatus(), is(MessageStatusType.SCHEDULED));
-        assertThat(recipients.get(2).getStatus(), is(MessageStatusType.SCHEDULED));
-        assertThat(recipients.get(3).getStatus(), is(MessageStatusType.SCHEDULED));
-        assertThat(recipients.get(4).getMessageId(), is(UUID.fromString("a2bd666b-1684-4005-a10f-f14224f66d0a")));
-        assertThat(recipients.get(4).getUsername(), is("web1"));
-        assertThat(recipients.get(4).getErrorMessage(), is("Error"));
 
-        // update recipients by systemId, messageId (update all message recipients)
         messageStatus = new MessageStatus();
-        messageStatus.setSystemId("sys1");
+        messageStatus.setTenantCode(TENANT_CODE);
         messageStatus.setMessageId("d1450cd1-5b93-47fe-9e44-a3800476342e");
         messageStatus.setStatus(MessageStatusType.SENT);
         service.updateStatus(messageStatus);
 
-        recipients = service.getRecipients(criteria).getContent();
-        assertThat(recipients.size(), is(5));
-        assertThat(recipients.get(0).getStatus(), is(MessageStatusType.SCHEDULED));
+        recipients = service.getRecipients(TENANT_CODE, criteria).getContent();
+        assertThat(recipients.size(), is(2));
+        assertThat(recipients.get(0).getStatus(), is(MessageStatusType.SENT));
         assertThat(recipients.get(1).getStatus(), is(MessageStatusType.SENT));
-        assertThat(recipients.get(2).getStatus(), is(MessageStatusType.SENT));
-        assertThat(recipients.get(3).getStatus(), is(MessageStatusType.SCHEDULED));
-        assertThat(recipients.get(4).getStatus(), is(MessageStatusType.FAILED));
 
-        // update recipients by systemId, username (update all messages recipients by internal channel)
+        // update recipients by tenantCode, username (update all messages recipients by internal channel)
         // mustn't change status of not sent messages
         messageStatus = new MessageStatus();
-        messageStatus.setSystemId("sys1");
+        messageStatus.setTenantCode(TENANT_CODE);
         messageStatus.setUsername("web2");
         messageStatus.setStatus(MessageStatusType.READ);
 
@@ -111,15 +111,19 @@ public class RecipientServiceTest {
         service.updateStatus(messageStatus);
         latch.await();
 
-        recipients = service.getRecipients(criteria).getContent();
-        assertThat(recipients.size(), is(5));
-        assertThat(recipients.get(0).getStatus(), is(MessageStatusType.SCHEDULED));
-        assertThat(recipients.get(1).getStatus(), is(MessageStatusType.READ));
-        assertThat(recipients.get(2).getStatus(), is(MessageStatusType.SENT));
-        assertThat(recipients.get(3).getStatus(), is(MessageStatusType.SCHEDULED));
-        assertThat(recipients.get(4).getStatus(), is(MessageStatusType.FAILED));
+        criteria.setMessageId(UUID.fromString("a2bd666b-1684-4005-a10f-f14224f66d0a"));
+        recipients = service.getRecipients(TENANT_CODE, criteria).getContent();
+        assertThat(recipients.size(), is(2));
+        // shouldn't change FAILED -> READ
+        assertThat(recipients.get(1).getStatus(), is(MessageStatusType.FAILED));
 
-        assertThat(feedCount[0].getSystemId(), is("sys1"));
+        criteria.setMessageId(UUID.fromString("d1450cd1-5b93-47fe-9e44-a3800476342e"));
+        recipients = service.getRecipients(TENANT_CODE, criteria).getContent();
+        assertThat(recipients.size(), is(2));
+        // should change SENT -> READ
+        assertThat(recipients.get(0).getStatus(), is(MessageStatusType.READ));
+
+        assertThat(feedCount[0].getTenantCode(), is(TENANT_CODE));
         assertThat(feedCount[0].getUsername(), is("web2"));
         assertThat(feedCount[0].getCount(), is(0));
     }

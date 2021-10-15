@@ -16,7 +16,7 @@ import java.io.Serializable;
 @ApiModel("Тип канала отправки уведомлений")
 public class Channel implements Serializable {
     @ApiModelProperty("Идентификатор канала")
-    private String id;
+    private Integer id;
     @ApiModelProperty("Наименование канала")
     private String name;
     @ApiModelProperty("Наименование очереди канала")

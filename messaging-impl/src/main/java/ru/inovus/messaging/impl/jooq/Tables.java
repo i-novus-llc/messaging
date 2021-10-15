@@ -3,7 +3,13 @@
  */
 package ru.inovus.messaging.impl.jooq;
 
-import ru.inovus.messaging.impl.jooq.tables.*;
+
+import ru.inovus.messaging.impl.jooq.tables.Channel;
+import ru.inovus.messaging.impl.jooq.tables.Message;
+import ru.inovus.messaging.impl.jooq.tables.MessageRecipient;
+import ru.inovus.messaging.impl.jooq.tables.MessageSetting;
+import ru.inovus.messaging.impl.jooq.tables.Tenant;
+import ru.inovus.messaging.impl.jooq.tables.UserSetting;
 
 
 /**
@@ -16,11 +22,6 @@ public class Tables {
      * Каналы отправки уведомлений
      */
     public static final Channel CHANNEL = Channel.CHANNEL;
-
-    /**
-     * Компоненты системы
-     */
-    public static final Component COMPONENT = Component.COMPONENT;
 
     /**
      * Уведомления
@@ -36,6 +37,11 @@ public class Tables {
      * Шаблоны уведомлений (общесистемные настройки)
      */
     public static final MessageSetting MESSAGE_SETTING = MessageSetting.MESSAGE_SETTING;
+
+    /**
+     * Тенанты
+     */
+    public static final Tenant TENANT = Tenant.TENANT;
 
     /**
      * Пользовательские настройки уведомлений

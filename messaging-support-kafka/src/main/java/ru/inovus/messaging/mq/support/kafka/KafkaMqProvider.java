@@ -69,7 +69,7 @@ public class KafkaMqProvider implements MqProvider {
         consumerConfigs.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         String groupId = topicMqConsumer.mqName();
         if (topicMqConsumer instanceof TopicMqConsumer)
-            groupId += "." + ((TopicMqConsumer) topicMqConsumer).systemId + "." + ((TopicMqConsumer) topicMqConsumer).authToken;
+            groupId += "." + ((TopicMqConsumer) topicMqConsumer).tenantCode + "." + ((TopicMqConsumer) topicMqConsumer).authToken;
         consumerConfigs.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
 
         return consumerConfigs;

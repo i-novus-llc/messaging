@@ -8,13 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.inovus.messaging.api.criteria.MessageCriteria;
 import ru.inovus.messaging.api.model.Channel;
-import ru.inovus.messaging.api.model.Component;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.impl.jooq.tables.records.ChannelRecord;
-import ru.inovus.messaging.impl.jooq.tables.records.ComponentRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
 import ru.inovus.messaging.impl.util.DateTimeUtil;
 
@@ -37,7 +35,6 @@ public class MessageService {
 
     private static final RecordMapper<Record, Message> MAPPER = rec -> {
         MessageRecord record = rec.into(MESSAGE);
-        ComponentRecord componentRecord = rec.into(COMPONENT);
         Message message = new Message();
         message.setId(String.valueOf(record.getId()));
         message.setCaption(record.getCaption());
@@ -46,13 +43,14 @@ public class MessageService {
         message.setSeverity(record.getSeverity());
         message.setSentAt(record.getSentAt());
         ChannelRecord channelRecord = rec.into(CHANNEL);
-        message.setChannel(new Channel(channelRecord.getId(), channelRecord.getName(), channelRecord.getQueueName()));
+        Channel channel = new Channel();
+        channel.setId(channelRecord.getId());
+        channel.setName(channelRecord.getName());
+        channel.setQueueName(channelRecord.getQueueName());
+        message.setChannel(channel);
         message.setFormationType(record.getFormationType());
         message.setRecipientType(record.getRecipientType());
-        message.setSystemId(record.getSystemId());
-        if (componentRecord != null) {
-            message.setComponent(new Component(componentRecord.getId(), componentRecord.getName()));
-        }
+        message.setTenantCode(record.getTenantCode());
         return message;
     };
     private final DSLContext dsl;
@@ -70,14 +68,11 @@ public class MessageService {
         dsl
                 .insertInto(MESSAGE)
                 .columns(MESSAGE.ID, MESSAGE.CAPTION, MESSAGE.TEXT, MESSAGE.SEVERITY, MESSAGE.ALERT_TYPE,
-                        MESSAGE.SENT_AT, MESSAGE.SYSTEM_ID, MESSAGE.COMPONENT_ID,
-                        MESSAGE.FORMATION_TYPE, MESSAGE.RECIPIENT_TYPE, MESSAGE.NOTIFICATION_TYPE, MESSAGE.OBJECT_ID,
-                        MESSAGE.OBJECT_TYPE, MESSAGE.CHANNEL_ID)
+                        MESSAGE.SENT_AT, MESSAGE.TENANT_CODE,
+                        MESSAGE.FORMATION_TYPE, MESSAGE.RECIPIENT_TYPE, MESSAGE.NOTIFICATION_TYPE, MESSAGE.CHANNEL_ID)
                 .values(id, message.getCaption(), message.getText(), message.getSeverity(), message.getAlertType(),
-                        message.getSentAt(), message.getSystemId(),
-                        message.getComponent() != null ? message.getComponent().getId() : null,
-                        message.getFormationType(), message.getRecipientType(), message.getNotificationType(), message.getObjectId(),
-                        message.getObjectType(),
+                        message.getSentAt(), message.getTenantCode(),
+                        message.getFormationType(), message.getRecipientType(), message.getNotificationType(),
                         message.getChannel() != null ? message.getChannel().getId() : null)
                 .returning()
                 .fetch().get(0).getId();
@@ -95,7 +90,7 @@ public class MessageService {
         return message;
     }
 
-    public Page<Message> getMessages(MessageCriteria criteria) {
+    public Page<Message> getMessages(String tenantCode, MessageCriteria criteria) {
         LocalDateTime sentAtBeginDateTime = null;
         LocalDateTime sentAtEndDateTime = null;
 
@@ -107,10 +102,7 @@ public class MessageService {
         }
 
         List<Condition> conditions = new ArrayList<>();
-        Optional.ofNullable(criteria.getSystemId())
-                .ifPresent(systemId -> conditions.add(MESSAGE.SYSTEM_ID.eq(systemId)));
-        Optional.ofNullable(criteria.getComponentId())
-                .ifPresent(componentId -> conditions.add(MESSAGE.COMPONENT_ID.eq(componentId)));
+        conditions.add(MESSAGE.TENANT_CODE.eq(tenantCode));
         Optional.ofNullable(criteria.getSeverity())
                 .ifPresent(severity -> conditions.add(MESSAGE.SEVERITY.eq(severity)));
         Optional.ofNullable(criteria.getChannelId())
@@ -123,10 +115,8 @@ public class MessageService {
                 .ifPresent(end -> conditions.add(MESSAGE.SENT_AT.lessOrEqual(end)));
         SelectConditionStep<Record> query = dsl
                 .select(MESSAGE.fields())
-                .select(COMPONENT.fields())
                 .select(CHANNEL.fields())
                 .from(MESSAGE)
-                .leftJoin(COMPONENT).on(COMPONENT.ID.eq(MESSAGE.COMPONENT_ID))
                 .leftJoin(CHANNEL).on(CHANNEL.ID.eq(MESSAGE.CHANNEL_ID))
                 .where(conditions);
         int count = dsl.fetchCount(query);
@@ -142,10 +132,8 @@ public class MessageService {
     public Message getMessage(UUID messageId) {
         Message message = dsl
                 .select(MESSAGE.fields())
-                .select(COMPONENT.fields())
                 .select(CHANNEL.fields())
                 .from(MESSAGE)
-                .leftJoin(COMPONENT).on(COMPONENT.ID.eq(MESSAGE.COMPONENT_ID))
                 .leftJoin(CHANNEL).on(CHANNEL.ID.eq(MESSAGE.CHANNEL_ID))
                 .where(MESSAGE.ID.cast(UUID.class).eq(messageId))
                 .fetchOne(MAPPER);

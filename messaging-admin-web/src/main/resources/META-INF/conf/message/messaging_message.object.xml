@@ -4,7 +4,7 @@
     <operations>
         <operation id="send">
             <invocation>
-                <rest method="POST">${messaging.backend.path}/messages</rest>
+                <rest method="POST">${messaging.backend.path}/${novus.messaging.tenant-code}/messages</rest>
             </invocation>
             <in>
                 <field id="caption" mapping="['message.caption']" domain="string"/>
@@ -12,10 +12,8 @@
                 <field id="severity.id" mapping="['message.severity']" domain="string"/>
                 <field id="alertType.id" mapping="['message.alertType']" domain="string"/>
                 <field id="infoType" mapping="['message.channel']" domain="object"/>
-                <field id="component.id" mapping="['message.component.id']" domain="string"/>
                 <field id="formationType.id" mapping="['message.formationType']" default-value="HAND" domain="string"/>
                 <field id="recipientType.id" mapping="['message.recipientType']" domain="string"/>
-                <field id="systemId" mapping="['message.systemId']" domain="string" default-value="${default.system.id}"/><!--TODO default value from context or props-->
                 <field id="users*.username" mapping="['message.recipients*.username']"/>
             </in>
         </operation>

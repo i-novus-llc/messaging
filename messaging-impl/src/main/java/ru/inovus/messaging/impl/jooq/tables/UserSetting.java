@@ -4,30 +4,19 @@
 package ru.inovus.messaging.impl.jooq.tables;
 
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Identity;
-import org.jooq.Index;
-import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row6;
-import org.jooq.Schema;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
-
 import ru.inovus.messaging.api.model.enums.AlertType;
 import ru.inovus.messaging.impl.jooq.Indexes;
 import ru.inovus.messaging.impl.jooq.Keys;
 import ru.inovus.messaging.impl.jooq.Messaging;
 import ru.inovus.messaging.impl.jooq.tables.records.UserSettingRecord;
 import ru.inovus.messaging.impl.util.AlertTypeConverter;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -36,7 +25,7 @@ import ru.inovus.messaging.impl.util.AlertTypeConverter;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserSetting extends TableImpl<UserSettingRecord> {
 
-    private static final long serialVersionUID = 1912798765;
+    private static final long serialVersionUID = 545892285;
 
     /**
      * The reference instance of <code>messaging.user_setting</code>
@@ -79,7 +68,12 @@ public class UserSetting extends TableImpl<UserSettingRecord> {
     /**
      * The column <code>messaging.user_setting.channel_id</code>. Идентификатор канала отправки уведомления
      */
-    public final TableField<UserSettingRecord, String> CHANNEL_ID = createField(DSL.name("channel_id"), org.jooq.impl.SQLDataType.VARCHAR, this, "Идентификатор канала отправки уведомления");
+    public final TableField<UserSettingRecord, Integer> CHANNEL_ID = createField(DSL.name("channel_id"), org.jooq.impl.SQLDataType.INTEGER, this, "Идентификатор канала отправки уведомления");
+
+    /**
+     * The column <code>messaging.user_setting.tenant_code</code>. Тенант, к которому относится пользовательская настройка
+     */
+    public final TableField<UserSettingRecord, String> TENANT_CODE = createField(DSL.name("tenant_code"), org.jooq.impl.SQLDataType.VARCHAR, this, "Тенант, к которому относится пользовательская настройка");
 
     /**
      * Create a <code>messaging.user_setting</code> table reference
@@ -141,7 +135,7 @@ public class UserSetting extends TableImpl<UserSettingRecord> {
 
     @Override
     public List<ForeignKey<UserSettingRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<UserSettingRecord, ?>>asList(Keys.USER_SETTING__USER_SETTING_MSG_SETTINGS_ID_MESSAGE_SETTING_ID_FK, Keys.USER_SETTING__USER_SETTING_CHANNEL_ID_CHANNEL_ID_FK);
+        return Arrays.<ForeignKey<UserSettingRecord, ?>>asList(Keys.USER_SETTING__USER_SETTING_MSG_SETTINGS_ID_MESSAGE_SETTING_ID_FK, Keys.USER_SETTING__USER_SETTING_CHANNEL_ID_CHANNEL_ID_FK, Keys.USER_SETTING__USER_SETTING_TENANT_CODE_FKEY);
     }
 
     public MessageSetting messageSetting() {
@@ -150,6 +144,10 @@ public class UserSetting extends TableImpl<UserSettingRecord> {
 
     public Channel channel() {
         return new Channel(this, Keys.USER_SETTING__USER_SETTING_CHANNEL_ID_CHANNEL_ID_FK);
+    }
+
+    public Tenant tenant() {
+        return new Tenant(this, Keys.USER_SETTING__USER_SETTING_TENANT_CODE_FKEY);
     }
 
     @Override
@@ -179,11 +177,11 @@ public class UserSetting extends TableImpl<UserSettingRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row6 type methods
+    // Row7 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row6<Integer, AlertType, Boolean, String, Integer, String> fieldsRow() {
-        return (Row6) super.fieldsRow();
+    public Row7<Integer, AlertType, Boolean, String, Integer, Integer, String> fieldsRow() {
+        return (Row7) super.fieldsRow();
     }
 }

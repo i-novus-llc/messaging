@@ -1,11 +1,13 @@
 package ru.inovus.messaging.impl.rest;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
-import ru.inovus.messaging.api.criteria.*;
+import ru.inovus.messaging.api.criteria.MessageCriteria;
+import ru.inovus.messaging.api.criteria.RoleCriteria;
+import ru.inovus.messaging.api.criteria.UserCriteria;
+import ru.inovus.messaging.api.criteria.UserSettingCriteria;
 import ru.inovus.messaging.api.model.*;
 import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.rest.MessageRest;
@@ -28,7 +30,6 @@ public class MessageRestImpl implements MessageRest {
     private final RecipientService recipientService;
     private final ChannelService channelService;
     private final MqProvider mqProvider;
-    private final boolean securityAdminRestEnable;
     private final UserSettingRest userSettingRest;
     private final UserRoleProvider userRoleProvider;
 
@@ -36,7 +37,6 @@ public class MessageRestImpl implements MessageRest {
                            MessageSettingService messageSettingService,
                            RecipientService recipientService,
                            ChannelService channelService,
-                           @Value("${sec.admin.rest.enable}") boolean securityAdminRestEnable,
                            MqProvider mqProvider,
                            UserRoleProvider userRoleProvider,
                            UserSettingRest userSettingRest) {
@@ -45,42 +45,33 @@ public class MessageRestImpl implements MessageRest {
         this.recipientService = recipientService;
         this.channelService = channelService;
         this.mqProvider = mqProvider;
-        this.securityAdminRestEnable = securityAdminRestEnable;
         this.userRoleProvider = userRoleProvider;
         this.userSettingRest = userSettingRest;
     }
 
     @Override
-    public Page<Message> getMessages(MessageCriteria criteria) {
-        return messageService.getMessages(criteria);
+    public Page<Message> getMessages(String tenantCode, MessageCriteria criteria) {
+        return messageService.getMessages(tenantCode, criteria);
     }
 
     @Override
-    public Message getMessage(UUID id) {
+    public Message getMessage(String tenantCode, UUID id) {
         Message message = messageService.getMessage(id);
-        enrichRecipient(message.getRecipients());
+        recipientService.enrichRecipient(message.getRecipients());
         return message;
     }
 
     @Override
-    public Page<Recipient> getRecipients(RecipientCriteria criteria) {
-        Page<Recipient> recipientPage = recipientService.getRecipients(criteria);
-        enrichRecipient(recipientPage.getContent());
-        return recipientPage;
-    }
-
-    @Override
-    public void sendMessage(final MessageOutbox messageOutbox) {
+    public void sendMessage(String tenantCode, final MessageOutbox messageOutbox) {
         if (messageOutbox.getMessage() != null) {
-            enrichRecipient(messageOutbox.getMessage().getRecipients());
+            messageOutbox.getMessage().setTenantCode(tenantCode);
+            recipientService.enrichRecipient(messageOutbox.getMessage().getRecipients());
             save(messageOutbox.getMessage());
             send(messageOutbox.getMessage());
-        } else if (messageOutbox.getTemplateMessageOutbox() != null)
+        } else if (messageOutbox.getTemplateMessageOutbox() != null) {
+            messageOutbox.getTemplateMessageOutbox().setTenantCode(tenantCode);
             buildAndSendMessage(messageOutbox.getTemplateMessageOutbox());
-    }
-
-    private void enrichRecipient(List<Recipient> recipients) {
-        recipients.replaceAll(recipient -> getRecipientByUserName(recipient.getUsername()));
+        }
     }
 
     private void buildAndSendMessage(TemplateMessageOutbox templateMessageOutbox) {
@@ -169,9 +160,10 @@ public class MessageRestImpl implements MessageRest {
     private UserSetting getUserSetting(TemplateMessageOutbox templateMessageOutbox, String userName) {
         UserSettingCriteria criteria = new UserSettingCriteria();
         criteria.setPageSize(1);
-        criteria.setUser(userName);
+        criteria.setUsername(userName);
         criteria.setTemplateCode(templateMessageOutbox.getTemplateCode());
-        List<UserSetting> userSettingList = userSettingRest.getSettings(criteria).getContent();
+        List<UserSetting> userSettingList =
+                userSettingRest.getSettings(templateMessageOutbox.getTenantCode(), criteria).getContent();
         return userSettingList.get(0);
     }
 
@@ -184,15 +176,12 @@ public class MessageRestImpl implements MessageRest {
         message.setAlertType(userSetting == null ? messageSetting.getAlertType() : userSetting.getAlertType());
         message.setSentAt(params.getSentAt());
         message.setChannel(userSetting == null ? messageSetting.getChannel() : userSetting.getChannel());
-        message.setComponent(messageSetting.getComponent());
         message.setFormationType(messageSetting.getFormationType());
         message.setRecipientType(RecipientType.USER);
-        message.setSystemId(params.getSystemId());
-        message.setRecipients(getRecipientByUserName(userNameList));
+        message.setTenantCode(params.getTenantCode());
+        message.setRecipients(recipientService.getRecipientsByUsername(userNameList));
         message.setData(null);
         message.setNotificationType(params.getTemplateCode());
-        message.setObjectId(params.getObjectId());
-        message.setObjectType(params.getObjectType());
 
         return message;
     }
@@ -265,34 +254,6 @@ public class MessageRestImpl implements MessageRest {
         return roles;
     }
 
-    //Построение списка Получателей уведомления по списку userName Пользователей
-    private List<Recipient> getRecipientByUserName(List<String> userNameList) {
-        return userNameList.stream().map(this::getRecipientByUserName).filter(Objects::nonNull).collect(Collectors.toList());
-    }
-
-    //Построение Получателя уведомления по userName Пользователя
-    private Recipient getRecipientByUserName(String userName) {
-        Recipient recipient = new Recipient();
-        if (securityAdminRestEnable) {
-            UserCriteria userCriteria = new UserCriteria();
-            userCriteria.setUsername(userName);
-            userCriteria.setPageNumber(0);
-            userCriteria.setPageSize(1);
-            List<User> users = userRoleProvider.getUsers(userCriteria).getContent();
-            if (CollectionUtils.isEmpty(users)) {
-                log.warn("User with username: {} not found in user provider", userName);
-                return null;
-            } else {
-                User user = users.get(0);
-                recipient.setName(user.getFio() + " (" + user.getUsername() + ")");
-                recipient.setUsername(user.getUsername());
-                recipient.setEmail(user.getEmail());
-            }
-        }
-        recipient.setName(userName);
-        return recipient;
-    }
-
     private Message constructMessage(Message message) {
         Message newMessage = new Message();
         newMessage.setId(message.getId());
@@ -300,7 +261,7 @@ public class MessageRestImpl implements MessageRest {
         newMessage.setText(message.getText());
         newMessage.setSeverity(message.getSeverity());
         newMessage.setRecipients(message.getRecipients());
-        newMessage.setSystemId(message.getSystemId());
+        newMessage.setTenantCode(message.getTenantCode());
         return newMessage;
     }
 }

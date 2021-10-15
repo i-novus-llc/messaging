@@ -19,11 +19,9 @@ services:
         constraints:
         - node.labels.type == db
 
-  backend:
+  messaging-backend:
     environment:
-      SPRING_CLOUD_CONSUL_CONFIG_ENABLED: "true"
       SPRING_CLOUD_CONSUL_CONFIG_FORMAT: YAML
-      SPRING_APPLICATION_NAME: "messaging-backend"
       SPRING_DATASOURCE_URL: jdbc:postgresql://db/postgres
       SPRING_CLOUD_CONSUL_HOST: consul-agent.local
       SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
@@ -43,18 +41,17 @@ services:
 
   messaging-frontend:
     environment:
-      SPRING_APPLICATION_NAME: "messaging-admin-frontend"
-      SPRING_CLOUD_CONSUL_HOST: consul-agent.local
+      SPRING_CLOUD_CONSUL_CONFIG_FORMAT: YAML
       SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
       SECURITY_OAUTH2_AUTH_SERVER_URI: http://yandex.develop:8278
       SECURITY_OAUTH2_CLIENT_CLIENT_ID: frontend
       SECURITY_OAUTH2_CLIENT_CLIENT_SECRET: ca12a678-b275-499b-a778-750bad4d0a77
       ACCESS_SERVICE_URL: http://yandex.develop:8278/api
-      MESSAGING_BACKEND_PATH: http://backend:8080/api
+      MESSAGING_BACKEND_PATH: http://messaging-backend:8080/api
       MESSAGING_USER_ADMIN_URL: http://yandex.develop:8277
       JAVA_OPTS: -Xmx200m
     depends_on:
-    - backend
+    - messaging-backend
     ports:
     - "8111:8080"
     deploy:

@@ -37,7 +37,6 @@ public class MessageSetting implements Serializable {
     private AlertType alertType;
     private Channel channel;
     private FormationType formationType;
-    private Component component;
     private String name;
     private Boolean disabled;
     private String code;

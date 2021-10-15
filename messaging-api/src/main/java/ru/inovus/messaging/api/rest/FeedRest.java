@@ -15,10 +15,7 @@
  */
 package ru.inovus.messaging.api.rest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.Authorization;
+import io.swagger.annotations.*;
 import org.springframework.data.domain.Page;
 import ru.inovus.messaging.api.criteria.FeedCriteria;
 import ru.inovus.messaging.api.model.Feed;
@@ -29,43 +26,53 @@ import javax.ws.rs.core.MediaType;
 import java.util.UUID;
 
 @Api(value = "Лента уведомлений", authorizations = @Authorization(value = "oauth2"))
-@Path("/feed")
+@Path("/{tenantCode}/feed")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public interface FeedRest {
     @GET
-    @Path("/{recipient}")
-    @ApiOperation("Получение ленты уведомлений")
+    @Path("/{username}")
+    @ApiOperation("Получение ленты уведомлений по критериям поиска")
     @ApiResponse(code = 200, message = "Страница сообщений")
-    Page<Feed> getMessageFeed(@PathParam("recipient") String recipient, @BeanParam FeedCriteria criteria);
+    Page<Feed> getMessageFeed(@PathParam("tenantCode") @ApiParam(value = "Код тенанта") String tenantCode,
+                              @PathParam("username") @ApiParam(value = "Имя пользователя") String username,
+                              @BeanParam @ApiParam(value = "Критерии ленты уведомлений") FeedCriteria criteria);
 
     @GET
-    @Path("/{recipient}/count/{systemId}")
+    @Path("/{username}/count")
     @ApiOperation("Получение количества непрочитанных уведомлений")
     @ApiResponse(code = 200, message = "Количество непрочитанных уведомлений")
-    FeedCount getFeedCount(@PathParam("recipient") String username, @PathParam("systemId") String systemId);
+    FeedCount getFeedCount(@PathParam("tenantCode") @ApiParam(value = "Код тенанта") String tenantCode,
+                           @PathParam("username") @ApiParam(value = "Имя пользователя") String username);
 
     @GET
-    @Path("/{recipient}/message/{id}")
+    @Path("/{username}/message/{id}")
     @ApiOperation("Получение сообщения по идентификатору")
     @ApiResponse(code = 200, message = "Сообщение")
-    Feed getMessage(@PathParam("recipient") String recipient, @PathParam("id") UUID id);
+    Feed getMessage(@PathParam("tenantCode") @ApiParam(value = "Код тенанта") String tenantCode,
+                    @PathParam("username") @ApiParam(value = "Имя пользователя") String username,
+                    @PathParam("id") @ApiParam(value = "Идентификатор сообщения") UUID id);
 
     @GET
-    @Path("/{recipient}/message/{id}/read")
+    @Path("/{username}/message/{id}/read")
     @ApiOperation("Получение сообщения по идентификатору и фиксирование даты прочтения")
     @ApiResponse(code = 200, message = "Сообщение")
-    Feed getMessageAndRead(@PathParam("recipient") String recipient, @PathParam("id") UUID id);
+    Feed getMessageAndRead(@PathParam("tenantCode") @ApiParam(value = "Код тенанта") String tenantCode,
+                           @PathParam("username") @ApiParam(value = "Имя пользователя") String username,
+                           @PathParam("id") @ApiParam(value = "Идентификатор сообщения") UUID id);
 
     @POST
-    @Path("/{recipient}/readall/{systemId}")
+    @Path("/{username}/readall")
     @ApiOperation("Пометить все сообщения прочитанными")
     @ApiResponse(code = 200, message = "Все сообщения помечены прочитанными")
-    void markReadAll(@PathParam("recipient") String recipient, @PathParam("systemId") String systemId);
+    void markReadAll(@PathParam("tenantCode") @ApiParam(value = "Код тенанта") String tenantCode,
+                     @PathParam("username") @ApiParam(value = "Имя пользователя") String username);
 
     @POST
-    @Path("/{recipient}/read/")
+    @Path("/{username}/read/")
     @ApiOperation("Пометить сообщение прочитанным")
     @ApiResponse(code = 200, message = "Все сообщения помечены прочитанными")
-    void markRead(@PathParam("recipient") String recipient, UUID messageId);
+    void markRead(@PathParam("tenantCode") @ApiParam(value = "Код тенанта") String tenantCode,
+                  @PathParam("username") @ApiParam(value = "Имя пользователя") String username,
+                  @ApiParam(value = "Идентификатор сообщения") UUID messageId);
 }

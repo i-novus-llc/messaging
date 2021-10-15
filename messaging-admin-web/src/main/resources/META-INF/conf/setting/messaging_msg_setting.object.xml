@@ -4,12 +4,11 @@
     <operations>
         <operation id="create">
             <invocation>
-                <rest method="POST">${messaging.backend.path}/settings</rest>
+                <rest method="POST">${messaging.backend.path}/${novus.messaging.tenant-code}/settings</rest>
             </invocation>
             <in>
                 <field id="name" mapping="['name']" required="true"/>
                 <field id="disabled" mapping="['disabled']" default-value="false"/>
-                <field id="component.id" mapping="['component.id']"/>
                 <field id="severity.id" mapping="['severity']" required="true"/>
                 <field id="alertType.id" mapping="['alertType']" required="true"/>
                 <field id="infoType" mapping="['channel']"/>
@@ -21,13 +20,12 @@
         </operation>
         <operation id="update">
             <invocation>
-                <rest method="PUT">${messaging.backend.path}/settings/{id}</rest>
+                <rest method="PUT">${messaging.backend.path}/${novus.messaging.tenant-code}/settings/{id}</rest>
             </invocation>
             <in>
                 <field id="id" mapping="['id']"/>
                 <field id="name" mapping="['name']" required="true"/>
                 <field id="disabled" mapping="['disabled']"/>
-                <field id="component.id" mapping="['component.id']"/>
                 <field id="severity.id" mapping="['severity']" required="true"/>
                 <field id="alertType.id" mapping="['alertType']" required="true"/>
                 <field id="infoType" mapping="['channel']"/>
@@ -39,7 +37,7 @@
         </operation>
         <operation id="delete" confirm="true">
             <invocation>
-                <rest method="DELETE">${messaging.backend.path}/settings/{id}</rest>
+                <rest method="DELETE">${messaging.backend.path}/${novus.messaging.tenant-code}/settings/{id}</rest>
             </invocation>
             <in>
                 <field id="id" mapping="['id']"/>

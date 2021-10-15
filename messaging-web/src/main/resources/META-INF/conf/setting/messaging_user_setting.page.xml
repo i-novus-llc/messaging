@@ -6,9 +6,6 @@
             <set>
                 <row>
                     <input-text id="name" label="Наименование шаблона" enabled="false"/>
-                </row>
-                <row>
-                    <input-select id="component" label="Компонент" query-id="messaging_component" enabled="false"/>
                     <input-select id="severity" label="Уровень важности" enabled="false">
                         <options>
                             <option id="SEVERE" name="Важный"/>

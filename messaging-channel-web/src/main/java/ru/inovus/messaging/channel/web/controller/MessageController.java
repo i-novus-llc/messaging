@@ -41,26 +41,26 @@ public class MessageController {
      * @param feedCount Информация о непрочитанных уведомлениях пользователя
      */
     public void sendFeedCount(FeedCount feedCount) {
-        String destination = "/user/" + feedCount.getUsername() + "/exchange/" + feedCount.getSystemId() + "/message.count";
+        String destination = "/user/" + feedCount.getUsername() + "/exchange/" + feedCount.getTenantCode() + "/message.count";
         simpMessagingTemplate.convertAndSend(destination, feedCount.getCount());
     }
 
     /**
      * Отправка уведомления пользователю
      *
-     * @param systemId Идентификатор системы, в которой находится пользователь
-     * @param username Имя пользователя
-     * @param message  Сообщение
+     * @param tenantCode Идентификатор системы, в которой находится пользователь
+     * @param username   Имя пользователя
+     * @param message    Сообщение
      */
-    public void sendPrivateMessage(String systemId,
+    public void sendPrivateMessage(String tenantCode,
                                    String username,
                                    @Payload Message message) {
         MessageStatus status = new MessageStatus();
-        status.setSystemId(systemId);
+        status.setTenantCode(tenantCode);
         status.setMessageId(message.getId());
         status.setUsername(username);
         try {
-            String destination = "/user/" + username + "/exchange/" + systemId + "/message";
+            String destination = "/user/" + username + "/exchange/" + tenantCode + "/message";
             simpMessagingTemplate.convertAndSend(destination, message);
             status.setStatus(MessageStatusType.SENT);
             mqProvider.publish(status, statusQueueName);
@@ -75,14 +75,14 @@ public class MessageController {
     /**
      * Отметить прочитанными все уведомления пользователя
      *
-     * @param systemId  Идентификатор системы, в которой находится пользователь
-     * @param principal Информация о пользователе
+     * @param tenantCode Идентификатор системы, в которой находится пользователь
+     * @param principal  Информация о пользователе
      */
-    @MessageMapping("/{systemId}/message.markreadall")
-    public void markReadAll(@DestinationVariable("systemId") String systemId,
+    @MessageMapping("/{tenantCode}/message.markreadall")
+    public void markReadAll(@DestinationVariable("tenantCode") String tenantCode,
                             Principal principal) {
         MessageStatus status = new MessageStatus();
-        status.setSystemId(systemId);
+        status.setTenantCode(tenantCode);
         status.setUsername(principal.getName());
         status.setStatus(MessageStatusType.READ);
         mqProvider.publish(status, statusQueueName);
@@ -91,16 +91,16 @@ public class MessageController {
     /**
      * Отметить уведомление, прочитанным пользователем
      *
-     * @param systemId  Идентификатор системы, в которой находится пользователь
-     * @param messageId Идентификатор сообщения
-     * @param principal Информация о пользователе
+     * @param tenantCode Идентификатор системы, в которой находится пользователь
+     * @param messageId  Идентификатор сообщения
+     * @param principal  Информация о пользователе
      */
-    @MessageMapping("/{systemId}/message.markread")
-    public void markRead(@DestinationVariable("systemId") String systemId,
+    @MessageMapping("/{tenantCode}/message.markread")
+    public void markRead(@DestinationVariable("tenantCode") String tenantCode,
                          @Payload String messageId,
                          Principal principal) {
         MessageStatus status = new MessageStatus();
-        status.setSystemId(systemId);
+        status.setTenantCode(tenantCode);
         status.setMessageId(messageId);
         status.setUsername(principal.getName());
         status.setStatus(MessageStatusType.READ);

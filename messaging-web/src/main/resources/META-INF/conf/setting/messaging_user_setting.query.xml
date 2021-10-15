@@ -3,11 +3,11 @@
        object-id="messaging_user_setting">
 
     <list result-mapping="['content']" count-mapping="['totalElements']">
-        <rest filters-separator="&amp;">${messaging.backend.path}/user/{username}/settings?{filters}&amp;{sorting}&amp;size={limit}&amp;page={page}</rest>
+        <rest filters-separator="&amp;">${messaging.backend.path}/${novus.messaging.tenant-code}/user/{username}/settings?{filters}&amp;{sorting}&amp;size={limit}&amp;page={page}</rest>
     </list>
 
     <unique>
-        <rest>${messaging.backend.path}/user/{username}/settings/{id}</rest>
+        <rest>${messaging.backend.path}/${novus.messaging.tenant-code}/user/{username}/settings/{id}</rest>
     </unique>
 
     <fields>
@@ -18,16 +18,6 @@
             </filters>
         </field>
 
-        <field id="component.id" domain="integer">
-            <select mapping="['component.id']"/>
-            <filters>
-                <eq filter-id="component.id">component.id={component.id}</eq>
-            </filters>
-        </field>
-        <field id="component.name" domain="string">
-            <select/>
-        </field>
-
         <field id="severity.id" domain="string">
             <select mapping="['severity']"/>
             <filters>
@@ -35,14 +25,14 @@
             </filters>
         </field>
         <field id="severity.name" domain="string">
-            <select mapping="['severityName']"/>
+            <select mapping="['severity.name']"/>
         </field>
 
         <field id="defaultAlertType.id" domain="string">
             <select mapping="['defaultAlertType']"/>
         </field>
         <field id="defaultAlertType.name" domain="string">
-            <select mapping="['defaultAlertTypeName']"/>
+            <select mapping="['defaultAlertType.name']"/>
         </field>
 
         <field id="alertType.id" domain="string">
@@ -52,13 +42,13 @@
             </filters>
         </field>
         <field id="alertType.name" domain="string">
-            <select mapping="['alertTypeName']"/>
+            <select mapping="['alertType.name']"/>
         </field>
 
         <field id="infoType" domain="object">
             <select mapping="['channel']"/>
             <filters>
-                <eq filter-id="infoType.id" domain="string">channel.id={infoType.id}</eq>
+                <eq filter-id="infoType.id">channel.id={infoType.id}</eq>
             </filters>
         </field>
 

@@ -4,10 +4,6 @@
     <filters>
         <row>
             <col>
-                <input-select id="component" label="Компонент" query-id="messaging_component"
-                              label-field-id="name" search-field-id="name"/>
-            </col>
-            <col>
                 <input-select id="severity" label="Уровень важности">
                     <options>
                         <option id="SEVERE" name="Важный"/>
@@ -58,7 +54,6 @@
         <!--</set>-->
     </filters>
     <columns>
-        <column text-field-id="component.name" label="Компонент"/>
         <column text-field-id="name" label="Наименование шаблона"/>
         <column text-field-id="code" label="Код шаблона"/>
         <column text-field-id="severity.name" label="Уровень важности" sorting-direction="desc"/>

@@ -35,7 +35,6 @@ public class UserSettingServiceTest {
 
     private static final Integer USER_SETTINGS_ID_1 = 1;
     private static final Integer USER_SETTINGS_ID_3 = 3;
-    private static final Integer USER_SETTINGS_COMPONENT_ID = 1;
     private static final String USER_SETTINGS_NAME = "Уведомление УЛ банка о создании нового договора";
     private static final String USER_SETTING_TEMPLATE_CODE = "LKB-PAYMENT-NTF-1";
     private static final boolean USER_SETTING_IS_DISABLED = false;
@@ -44,6 +43,8 @@ public class UserSettingServiceTest {
     private static final String USER_SETTING_IS_SEND_EMAIL = "email";
 
     private static final String USER_SETTING_ALERT_TYPE = "BLOCKER";
+
+    private static final String TENANT_CODE = "tenant";
 
     private UserSettingRest userSettingRest;
 
@@ -60,8 +61,8 @@ public class UserSettingServiceTest {
     public void getUserSettingsTest() {
         UserSettingCriteria cr = new UserSettingCriteria();
         cr.setPageSize(100);
-        cr.setUser(USER_NAME);
-        Page<UserSetting> userSettings = userSettingRest.getSettings(cr);
+        cr.setUsername(USER_NAME);
+        Page<UserSetting> userSettings = userSettingRest.getSettings(TENANT_CODE, cr);
 
         assertNotNull(userSettings);
         userSettings.stream().map(UserSetting::getDisabled).forEach(Assert::assertFalse);
@@ -72,10 +73,9 @@ public class UserSettingServiceTest {
      */
     @Test
     public void getUserSettingTest() {
-        UserSetting userSetting = userSettingRest.getSetting(USER_NAME, USER_SETTINGS_ID_1);
+        UserSetting userSetting = userSettingRest.getSetting(TENANT_CODE, USER_NAME, USER_SETTINGS_ID_1);
 
         assertNotNull(userSetting);
-        assertEquals(USER_SETTINGS_COMPONENT_ID, userSetting.getComponent().getId());
         assertEquals(USER_SETTINGS_NAME, userSetting.getName());
         assertEquals(USER_SETTING_TEMPLATE_CODE, userSetting.getTemplateCode());
         assertEquals(USER_SETTING_IS_DISABLED, userSetting.getDisabled());
@@ -83,7 +83,7 @@ public class UserSettingServiceTest {
         assertEquals(USER_SETTING_DEFAULT_ALERT_TYPE, userSetting.getDefaultAlertType().name());
         assertEquals(USER_SETTING_DEFAULT_ALERT_TYPE, userSetting.getAlertType().name());
 
-        assertEquals(USER_SETTING_IS_SEND_EMAIL, userSetting.getChannel().getId());
+        assertEquals(USER_SETTING_IS_SEND_EMAIL, userSetting.getChannel().getName());
     }
 
     @Test
@@ -91,13 +91,13 @@ public class UserSettingServiceTest {
         UserSetting setting = new UserSetting();
         setting.setDisabled(true);
         setting.setAlertType(AlertType.BLOCKER);
-        setting.setChannel(new Channel(USER_SETTING_IS_SEND_NOTICE, "Центр уведомлений", USER_SETTING_IS_SEND_NOTICE));
+        setting.setChannel(new Channel(1, "Центр уведомлений", USER_SETTING_IS_SEND_NOTICE));
 
         //Создаем уже непосредственно пользовательскую настройку, для пользователя 'admin' и для шаблона уведомления с иде-ром 1,
-        userSettingRest.updateSetting(USER_NAME, USER_SETTINGS_ID_3, setting);
+        userSettingRest.updateSetting(TENANT_CODE, USER_NAME, USER_SETTINGS_ID_3, setting);
 
         //Получаем пользовательскую для пользователя 'admin' и для шаблона уведомления с иде-ром 1, с внесенными изменениями
-        UserSetting userSetting = userSettingRest.getSetting(USER_NAME, USER_SETTINGS_ID_3);
+        UserSetting userSetting = userSettingRest.getSetting(TENANT_CODE, USER_NAME, USER_SETTINGS_ID_3);
         assertNotNull(userSetting);
         assertEquals(true, userSetting.getDisabled());
 
@@ -107,6 +107,6 @@ public class UserSettingServiceTest {
         assertEquals(USER_SETTING_ALERT_TYPE, userSetting.getAlertType().name());
 
         //В настройках пользователя способ отправки на почту
-        assertEquals(USER_SETTING_IS_SEND_NOTICE, userSetting.getChannel().getId());
+        assertEquals(USER_SETTING_IS_SEND_NOTICE, userSetting.getChannel().getName());
     }
 }

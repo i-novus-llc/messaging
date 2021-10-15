@@ -25,8 +25,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class MessageCriteria extends BaseMessagingCriteria {
-    @QueryParam("systemId")
-    private String systemId;
 
     @QueryParam("sentAtBegin")
     private LocalDateTime sentAtBegin;
@@ -38,8 +36,5 @@ public class MessageCriteria extends BaseMessagingCriteria {
     private Severity severity;
 
     @QueryParam("infoType.id")
-    private String channelId;
-
-    @QueryParam("component.id")
-    private Integer componentId;
+    private Integer channelId;
 }
