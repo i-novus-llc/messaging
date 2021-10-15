@@ -20,7 +20,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Messaging extends SchemaImpl {
 
-    private static final long serialVersionUID = -362314422;
+    private static final long serialVersionUID = 2105825497;
 
     /**
      * The reference instance of <code>messaging</code>
@@ -73,6 +73,7 @@ public class Messaging extends SchemaImpl {
     @Override
     public final List<Sequence<?>> getSequences() {
         return Arrays.<Sequence<?>>asList(
+            Sequences.CHANNEL_ID_SEQ,
             Sequences.MESSAGE_ID_SEQ,
             Sequences.MESSAGE_SETTING_ID_SEQ,
             Sequences.RECIPIENT_ID_SEQ,

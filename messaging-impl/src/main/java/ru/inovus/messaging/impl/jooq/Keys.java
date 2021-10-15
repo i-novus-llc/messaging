@@ -35,6 +35,7 @@ public class Keys {
     // IDENTITY definitions
     // -------------------------------------------------------------------------
 
+    public static final Identity<ChannelRecord, Integer> IDENTITY_CHANNEL = Identities0.IDENTITY_CHANNEL;
     public static final Identity<UserSettingRecord, Integer> IDENTITY_USER_SETTING = Identities0.IDENTITY_USER_SETTING;
 
     // -------------------------------------------------------------------------
@@ -67,6 +68,7 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     private static class Identities0 {
+        public static Identity<ChannelRecord, Integer> IDENTITY_CHANNEL = Internal.createIdentity(Channel.CHANNEL, Channel.CHANNEL.ID);
         public static Identity<UserSettingRecord, Integer> IDENTITY_USER_SETTING = Internal.createIdentity(UserSetting.USER_SETTING, UserSetting.USER_SETTING.ID);
     }
 
