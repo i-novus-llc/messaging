@@ -10,7 +10,6 @@ import ru.inovus.messaging.api.criteria.FeedCriteria;
 import ru.inovus.messaging.api.model.Feed;
 import ru.inovus.messaging.api.model.FeedCount;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
-import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecipientRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
 
@@ -22,7 +21,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.jooq.impl.DSL.exists;
-import static org.jooq.impl.DSL.notExists;
 import static ru.inovus.messaging.impl.jooq.Sequences.RECIPIENT_ID_SEQ;
 import static ru.inovus.messaging.impl.jooq.Tables.*;
 
@@ -37,7 +35,7 @@ public class FeedService {
 
     public Page<Feed> getMessageFeed(String tenantCode, String username, FeedCriteria criteria) {
         List<Condition> conditions = new ArrayList<>();
-        conditions.add(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL).or(MESSAGE_RECIPIENT.ID.isNotNull()));
+        conditions.add(MESSAGE_RECIPIENT.ID.isNotNull());
         conditions.add(CHANNEL.IS_INTERNAL.eq(Boolean.TRUE));
         conditions.add(MESSAGE.TENANT_CODE.eq(tenantCode));
         Optional.ofNullable(criteria.getSeverity())
@@ -70,8 +68,7 @@ public class FeedService {
                 .select(MESSAGE_RECIPIENT.fields())
                 .from(MESSAGE)
                 .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username)))
-                .where(MESSAGE.ID.cast(UUID.class).eq(messageId), MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL)
-                        .or(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username)))
+                .where(MESSAGE.ID.cast(UUID.class).eq(messageId), MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username))
                 .fetchOne(MAPPER);
     }
 
@@ -97,26 +94,6 @@ public class FeedService {
                                 .where(MESSAGE.ID.eq(MESSAGE_RECIPIENT.MESSAGE_ID),
                                         MESSAGE.TENANT_CODE.eq(tenantCode))))
                 .execute();
-        // Update messages 'for all'
-        List<UUID> ids = dsl
-                .select(MESSAGE.ID)
-                .from(MESSAGE)
-                .where(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL),
-                        MESSAGE.TENANT_CODE.eq(tenantCode),
-                        notExists(dsl.selectOne().from(MESSAGE_RECIPIENT)
-                                .where(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID),
-                                        MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username))))
-                .fetch().map(Record1::component1);
-        for (UUID id : ids) {
-            dsl
-                    .insertInto(MESSAGE_RECIPIENT)
-                    .set(MESSAGE_RECIPIENT.ID, dsl.nextval(RECIPIENT_ID_SEQ).intValue())
-                    .set(MESSAGE_RECIPIENT.STATUS, MessageStatusType.READ)
-                    .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
-                    .set(MESSAGE_RECIPIENT.MESSAGE_ID, id)
-                    .set(MESSAGE_RECIPIENT.RECIPIENT_USERNAME, username)
-                    .execute();
-        }
     }
 
     @Transactional

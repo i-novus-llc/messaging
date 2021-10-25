@@ -1,5 +1,21 @@
 # Руководство по миграции
 
+#### 4.1.1
+
+* Следующие настройки больше не используются
+
+```
+novus.messaging.role-provider-url
+```
+
+* Следующие настройки были переименованы
+
+```    
+ - `novus.messaging.user-role-provider` -> `novus.messaging.recipient-provider.type`
+ - `novus.messaging.user-provider-url` -> `novus.messaging.recipient-provider.url`
+ - `novus.messaging.security-admin-url` -> `novus.messaging.recipient-provider.url`
+```
+
 #### 4.1.0
 
 * Прекращена поддержка компонентов системы
@@ -16,7 +32,8 @@
 #### 4.0.0
 
 * Прекращена поддержка ActiveMQ. Необходимо использовать Kafka.
-* Следующие настройки больше не используются 
+* Следующие настройки больше не используются
+
 ```
 activemq.broker-url
 novus.messaging.redelivery-policy.<очередь>`
@@ -28,28 +45,29 @@ novus.messaging.redelivery-policy.<очередь>.back-off-multiplier
 novus.messaging.auth-header-name
 novus.messaging.durable
 ```
+
 * Следующие настройки были переименованы
     - `messaging.user-role-provider` -> `novus.messaging.user-role-provider`
     - `messaging.mapping-file-location` -> `novus.messaging.mapping-file-location`
     - `messaging.user-provider-url` -> `novus.messaging.user-provider-url`
     - `messaging.role-provider-url` -> `novus.messaging.role-provider-url`
-    - `novus.messaging.topic.email` -> `novus.messaging.channel.email.queue` (перенесена в модуль `messaging-channel-email`)
-    - `novus.messaging.timeout` -> `novus.messaging.channel.web.message-lifetime` (эта и следующие настройки перенесены в модуль `messaging-channel-web`)
+    - `novus.messaging.topic.email` -> `novus.messaging.channel.email.queue` (перенесена в
+      модуль `messaging-channel-email`)
+    - `novus.messaging.timeout` -> `novus.messaging.channel.web.message-lifetime` (эта и следующие настройки перенесены
+      в модуль `messaging-channel-web`)
     - `novus.messaging.topic.notice` -> `novus.messaging.channel.web.topic`
     - `novus.messaging.app_prefix` -> `novus.messaging.channel.web.app_prefix`
     - `novus.messaging.end_point` -> `novus.messaging.channel.web.end_point`
     - `novus.messaging.public_dest_prefix` -> `novus.messaging.channel.web.public_dest_prefix`
     - `novus.messaging.private_dest_prefix` -> `novus.messaging.channel.web.private_dest_prefix`
-* Удален `InfoType` enum. 
-Теперь информация о каналах содержится в БД. А сами каналы подключаются через зависимости.
-* Изменен механизм отправки уведомлений в канал. 
-Теперь одно уведомление можно отправлять только в один канал.
-Раньше можно было отправлять в несколько каналов одновременно.
+* Удален `InfoType` enum. Теперь информация о каналах содержится в БД. А сами каналы подключаются через зависимости.
+* Изменен механизм отправки уведомлений в канал. Теперь одно уведомление можно отправлять только в один канал. Раньше
+  можно было отправлять в несколько каналов одновременно.
 * В `messaging-channel-web` (канал передачи уведомлений в web через web socket) осталась только базовая аутентификация.
-Механизм аутентификации в web теперь определяет сам пользователь.
-
+  Механизм аутентификации в web теперь определяет сам пользователь.
 
 #### 3.39
+
 * Изменены названия настроек для задания публичного ключа в сервисе messaging-backend
-  - `novus.messaging.keycloak.modulus` -> `novus.messaging.jwt.verifier-key.modulus`
-  - `novus.messaging.keycloak.exponent` -> `novus.messaging.jwt.verifier-key.exponent`
+    - `novus.messaging.keycloak.modulus` -> `novus.messaging.jwt.verifier-key.modulus`
+    - `novus.messaging.keycloak.exponent` -> `novus.messaging.jwt.verifier-key.exponent`

@@ -14,17 +14,18 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import ru.inovus.messaging.api.criteria.ProviderRecipientCriteria;
 import ru.inovus.messaging.api.criteria.RoleCriteria;
-import ru.inovus.messaging.api.criteria.UserCriteria;
-import ru.inovus.messaging.impl.provider.SecurityAdminUserRoleProvider;
+import ru.inovus.messaging.api.model.RecipientFromProvider;
+import ru.inovus.messaging.impl.provider.SecurityAdminRecipientProvider;
 
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class SecurityUserRoleProviderTest {
-    private SecurityAdminUserRoleProvider userRoleProvider;
+public class SecurityRecipientProviderTest {
+    private SecurityAdminRecipientProvider recipientProvider;
 
     @Mock
     private UserRestService userRestService;
@@ -56,19 +57,19 @@ public class SecurityUserRoleProviderTest {
         role1.setDescription("description1");
         user2.setRoles(List.of(role1));
 
-        PageImpl userPage = new PageImpl(List.of(user1, user2), new UserCriteria(), 2);
+        PageImpl userPage = new PageImpl(List.of(user1, user2), new ProviderRecipientCriteria(), 2);
         Mockito.when(userRestService.findAll(new RestUserCriteria())).thenReturn(userPage);
 
         PageImpl rolePage = new PageImpl(List.of(role1), new RoleCriteria(), 1);
         Mockito.when(roleRestService.findAll(new RestRoleCriteria())).thenReturn(rolePage);
 
-        userRoleProvider = new SecurityAdminUserRoleProvider(userRestService, roleRestService);
+        recipientProvider = new SecurityAdminRecipientProvider(userRestService);
         MockitoAnnotations.initMocks(this);
     }
 
     @Test
     public void testGetUsers() {
-        List<ru.inovus.messaging.api.model.User> content = userRoleProvider.getUsers(new UserCriteria()).getContent();
+        List<RecipientFromProvider> content = recipientProvider.getUsers(new ProviderRecipientCriteria()).getContent();
         assertEquals(2, content.size());
         assertEquals("username1", content.get(0).getUsername());
         assertEquals("fio1", content.get(0).getFio());
@@ -76,7 +77,6 @@ public class SecurityUserRoleProviderTest {
         assertEquals("surname1", content.get(0).getSurname());
         assertEquals("name1", content.get(0).getName());
         assertEquals("patronymic1", content.get(0).getPatronymic());
-        assertEquals(0, content.get(0).getRoles().size());
 
         assertEquals("username2", content.get(1).getUsername());
         assertEquals("fio2", content.get(1).getFio());
@@ -84,16 +84,5 @@ public class SecurityUserRoleProviderTest {
         assertEquals("surname2", content.get(1).getSurname());
         assertEquals("name2", content.get(1).getName());
         assertEquals("patronymic2", content.get(1).getPatronymic());
-        assertEquals(1, content.get(1).getRoles().size());
-    }
-
-    @Test
-    public void testGetRoles() {
-        List<ru.inovus.messaging.api.model.Role> content = userRoleProvider.getRoles(new RoleCriteria()).getContent();
-        assertEquals(1, content.size());
-        assertEquals("1", content.get(0).getId());
-        assertEquals("name1", content.get(0).getName());
-        assertEquals("code1", content.get(0).getCode());
-        assertEquals("description1", content.get(0).getDescription());
     }
 }

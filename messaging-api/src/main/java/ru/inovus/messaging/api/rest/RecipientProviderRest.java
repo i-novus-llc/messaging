@@ -20,19 +20,19 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.Authorization;
 import org.springframework.data.domain.Page;
-import ru.inovus.messaging.api.criteria.UserCriteria;
-import ru.inovus.messaging.api.model.User;
+import ru.inovus.messaging.api.criteria.ProviderRecipientCriteria;
+import ru.inovus.messaging.api.model.RecipientFromProvider;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
-@Api(value = "Пользователи", authorizations = @Authorization(value = "oauth2"))
-@Path("/users")
+@Api(value = "Получатели", authorizations = @Authorization(value = "oauth2"))
+@Path("/recipients")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public interface UserRest {
+public interface RecipientProviderRest {
     @GET
-    @ApiOperation("Получение списка пользователей")
-    @ApiResponse(code = 200, message = "Список пользователей")
-    Page<User> getUsers(@BeanParam UserCriteria criteria);
+    @ApiOperation("Получение списка получателей")
+    @ApiResponse(code = 200, message = "Список получателей")
+    Page<RecipientFromProvider> getProviderRecipient(@BeanParam ProviderRecipientCriteria criteria);
 }

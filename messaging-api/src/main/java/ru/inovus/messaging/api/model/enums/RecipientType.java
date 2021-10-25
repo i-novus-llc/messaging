@@ -19,8 +19,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum RecipientType {
-    USER("Пользователь"),
-    ALL("Все");
+    RECIPIENT("Пользователь");
 
     private String name;
 

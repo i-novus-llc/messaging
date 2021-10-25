@@ -18,8 +18,6 @@ public class XmlMapping {
         }
     }
 
-    @XmlElement(name = "user")
-    public XmlMappingEntity userMapping;
-    @XmlElement(name = "role")
-    public XmlMappingEntity roleMapping;
+    @XmlElement(name = "recipient")
+    public XmlMappingEntity recipientMapping;
 }
