@@ -7,13 +7,14 @@
     <changeSet id="MESSAGING-212-test" author="ilebedenko">
         <comment>Скрипт для тестирования сервиса RecipientService.</comment>
         <sql>
-            <!-- tenant            -->
+            <!-- tenant -->
             INSERT INTO messaging.tenant VALUES ('tenant', 'Test tenant');
             INSERT INTO messaging.tenant VALUES ('tenant2', 'Test tenant2');
             <!-- channels -->
             INSERT INTO messaging.channel (id, name, queue_name, is_internal, tenant_code) VALUES
             (1, 'notice', 'web_queue', true, 'tenant'),
-            (2, 'email', 'email_queue', false, 'tenant');
+            (2, 'email', 'email_queue', false, 'tenant'),
+            (3, 'custom', 'custom_queue', false, 'tenant2');
             <!-- messages and recipients-->
             INSERT INTO messaging.message (id, text, severity, alert_type, tenant_code, formation_type, recipient_type, channel_id)
             VALUES ('a2bd666b-1684-4005-a10f-f14224f66d0a', 'Message1', 'INFO', 'POPUP', 'tenant', 'HAND', 'USER', 1);
