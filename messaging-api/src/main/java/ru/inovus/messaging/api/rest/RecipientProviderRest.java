@@ -21,7 +21,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.Authorization;
 import org.springframework.data.domain.Page;
 import ru.inovus.messaging.api.criteria.ProviderRecipientCriteria;
-import ru.inovus.messaging.api.model.RecipientFromProvider;
+import ru.inovus.messaging.api.model.ProviderRecipient;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -34,5 +34,5 @@ public interface RecipientProviderRest {
     @GET
     @ApiOperation("Получение списка получателей")
     @ApiResponse(code = 200, message = "Список получателей")
-    Page<RecipientFromProvider> getProviderRecipient(@BeanParam ProviderRecipientCriteria criteria);
+    Page<ProviderRecipient> getProviderRecipient(@BeanParam ProviderRecipientCriteria criteria);
 }

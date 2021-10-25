@@ -5,7 +5,7 @@ import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import ru.inovus.messaging.api.criteria.ProviderRecipientCriteria;
-import ru.inovus.messaging.api.model.RecipientFromProvider;
+import ru.inovus.messaging.api.model.ProviderRecipient;
 import ru.inovus.messaging.impl.RecipientProvider;
 
 import java.util.stream.Collectors;
@@ -18,7 +18,7 @@ public class SecurityAdminRecipientProvider implements RecipientProvider {
         this.userRestService = userRestService;
     }
 
-    public Page<RecipientFromProvider> getUsers(ProviderRecipientCriteria criteria) {
+    public Page<ProviderRecipient> getRecipients(ProviderRecipientCriteria criteria) {
         RestUserCriteria restUserCriteria = new RestUserCriteria();
         restUserCriteria.setUsername(criteria.getUsername());
         restUserCriteria.setPageNumber(criteria.getPageNumber());
@@ -29,8 +29,8 @@ public class SecurityAdminRecipientProvider implements RecipientProvider {
                 new PageImpl<>(userPage.getContent().stream().map(this::mapSecurityUser).collect(Collectors.toList()), userPage.getPageable(), userPage.getTotalElements());
     }
 
-    private RecipientFromProvider mapSecurityUser(net.n2oapp.security.admin.api.model.User securityUser) {
-        RecipientFromProvider user = new RecipientFromProvider();
+    private ProviderRecipient mapSecurityUser(net.n2oapp.security.admin.api.model.User securityUser) {
+        ProviderRecipient user = new ProviderRecipient();
         user.setUsername(securityUser.getUsername());
         user.setFio(securityUser.getFio());
         user.setEmail(securityUser.getEmail());

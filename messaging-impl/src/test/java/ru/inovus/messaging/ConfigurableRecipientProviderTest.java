@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.RestTemplate;
 import ru.inovus.messaging.api.criteria.ProviderRecipientCriteria;
-import ru.inovus.messaging.api.model.RecipientFromProvider;
+import ru.inovus.messaging.api.model.ProviderRecipient;
 import ru.inovus.messaging.impl.provider.ConfigurableRecipientProvider;
 
 import javax.xml.bind.JAXBException;
@@ -53,7 +53,7 @@ public class ConfigurableRecipientProviderTest {
         Mockito.doReturn(new ResponseEntity(mockResponse, HttpStatus.OK))
                 .when(restTemplate).exchange(any(String.class), any(HttpMethod.class), any(HttpEntity.class), any(Class.class));
         userRoleProvider.setRestTemplate(restTemplate);
-        List<RecipientFromProvider> content = userRoleProvider.getUsers(new ProviderRecipientCriteria()).getContent();
+        List<ProviderRecipient> content = userRoleProvider.getRecipients(new ProviderRecipientCriteria()).getContent();
         assertEquals(2, content.size());
         assertEquals("Username1", content.get(0).getUsername());
         assertEquals("Fio1", content.get(0).getFio());

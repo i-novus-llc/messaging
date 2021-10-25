@@ -16,7 +16,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.inovus.messaging.api.criteria.ProviderRecipientCriteria;
 import ru.inovus.messaging.api.criteria.RoleCriteria;
-import ru.inovus.messaging.api.model.RecipientFromProvider;
+import ru.inovus.messaging.api.model.ProviderRecipient;
 import ru.inovus.messaging.impl.provider.SecurityAdminRecipientProvider;
 
 import java.util.List;
@@ -69,7 +69,7 @@ public class SecurityRecipientProviderTest {
 
     @Test
     public void testGetUsers() {
-        List<RecipientFromProvider> content = recipientProvider.getUsers(new ProviderRecipientCriteria()).getContent();
+        List<ProviderRecipient> content = recipientProvider.getRecipients(new ProviderRecipientCriteria()).getContent();
         assertEquals(2, content.size());
         assertEquals("username1", content.get(0).getUsername());
         assertEquals("fio1", content.get(0).getFio());

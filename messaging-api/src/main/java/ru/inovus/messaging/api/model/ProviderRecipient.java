@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RecipientFromProvider {
+public class ProviderRecipient {
     private String username;
     private String email;
     private String fio;

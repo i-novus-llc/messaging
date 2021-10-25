@@ -15,8 +15,8 @@ import ru.inovus.messaging.api.criteria.ProviderRecipientCriteria;
 import ru.inovus.messaging.api.criteria.RecipientCriteria;
 import ru.inovus.messaging.api.model.FeedCount;
 import ru.inovus.messaging.api.model.MessageStatus;
+import ru.inovus.messaging.api.model.ProviderRecipient;
 import ru.inovus.messaging.api.model.Recipient;
-import ru.inovus.messaging.api.model.RecipientFromProvider;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.impl.RecipientProvider;
@@ -194,15 +194,15 @@ public class RecipientService {
         userCriteria.setUsername(username);
         userCriteria.setPageNumber(0);
         userCriteria.setPageSize(1);
-        List<RecipientFromProvider> recipients = recipientProvider.getUsers(userCriteria).getContent();
+        List<ProviderRecipient> recipients = recipientProvider.getRecipients(userCriteria).getContent();
         if (CollectionUtils.isEmpty(recipients)) {
             log.warn("User with username: {} not found in user provider", username);
             return null;
         } else {
-            RecipientFromProvider recipientFromProvider = recipients.get(0);
-            recipient.setName(recipientFromProvider.getFio() + " (" + username + ")");
-            recipient.setUsername(recipientFromProvider.getUsername());
-            recipient.setEmail(recipientFromProvider.getEmail());
+            ProviderRecipient providerRecipient = recipients.get(0);
+            recipient.setName(providerRecipient.getFio() + " (" + username + ")");
+            recipient.setUsername(providerRecipient.getUsername());
+            recipient.setEmail(providerRecipient.getEmail());
         }
 
         return recipient;

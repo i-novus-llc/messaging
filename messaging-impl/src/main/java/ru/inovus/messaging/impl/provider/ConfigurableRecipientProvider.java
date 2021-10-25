@@ -12,7 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 import ru.inovus.messaging.api.criteria.ProviderRecipientCriteria;
-import ru.inovus.messaging.api.model.RecipientFromProvider;
+import ru.inovus.messaging.api.model.ProviderRecipient;
 import ru.inovus.messaging.impl.RecipientProvider;
 import ru.inovus.messaging.impl.provider.xml.XmlMapping;
 
@@ -70,7 +70,7 @@ public class ConfigurableRecipientProvider implements RecipientProvider {
     }
 
     @Override
-    public Page<RecipientFromProvider> getUsers(ProviderRecipientCriteria criteria) {
+    public Page<ProviderRecipient> getRecipients(ProviderRecipientCriteria criteria) {
         Map<String, Object> response = restTemplate.exchange(userUrl + "?" + buildQueryParam(criteria),
                 HttpMethod.GET, prepareRequest(request), Map.class).getBody();
         Page page = new PageImpl(mapUsers(response), criteria, (Integer) response.get(userMapping.get("count")));
@@ -83,7 +83,7 @@ public class ConfigurableRecipientProvider implements RecipientProvider {
         return new HttpEntity<>(headers);
     }
 
-    private List<RecipientFromProvider> mapUsers(Map<String, Object> response) {
+    private List<ProviderRecipient> mapUsers(Map<String, Object> response) {
         Object content = null;
         if (userResponseContentLocation.length > 1)
             for (int i = 0; i < userResponseContentLocation.length; i++) {
@@ -94,9 +94,9 @@ public class ConfigurableRecipientProvider implements RecipientProvider {
             }
         else
             content = response.get(userResponseContentLocation[0]);
-        List<RecipientFromProvider> result = new ArrayList<>();
+        List<ProviderRecipient> result = new ArrayList<>();
         for (Map<String, Object> responseUser : (List<Map<String, Object>>) content) {
-            RecipientFromProvider user = new RecipientFromProvider();
+            ProviderRecipient user = new ProviderRecipient();
             if (userMapping.containsKey("username"))
                 user.setUsername((String) responseUser.get(userMapping.get("username")));
             if (userMapping.containsKey("fio")) user.setFio((String) responseUser.get(userMapping.get("fio")));

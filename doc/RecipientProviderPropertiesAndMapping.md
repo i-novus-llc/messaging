@@ -27,7 +27,7 @@
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping>
-    <user content-mapping="content" count-mapping="totalElements">
+    <recipient content-mapping="content" count-mapping="totalElements">
         <response>
             <username mapping="username"/>
             <fio mapping="fio1"/>
@@ -44,7 +44,7 @@
             <name mapping="name1"/>
             <fio mapping="fio1"/>
         </criteria>
-    </user>
+    </recipient>
 </mapping>
 ```
 

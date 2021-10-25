@@ -16,6 +16,11 @@ novus.messaging.role-provider-url
  - `novus.messaging.security-admin-url` -> `novus.messaging.recipient-provider.url`
 ```
 
+* Изменена структура файла для маппинга полей в конфигурируемом провайдере получателей:
+  [Свойства для настройки провайдера пользователей и конфигурация маппинга](RecipientProviderPropertiesAndMapping.md)
+
+* Изменен эндпоинт получения списка получателей сообщений -`/user` -> `/recipients`
+
 #### 4.1.0
 
 * Прекращена поддержка компонентов системы
