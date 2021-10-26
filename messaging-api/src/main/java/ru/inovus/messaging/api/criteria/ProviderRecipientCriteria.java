@@ -19,11 +19,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.ws.rs.QueryParam;
-import java.util.List;
 
 @Getter
 @Setter
-public class UserCriteria extends BaseMessagingCriteria {
+public class ProviderRecipientCriteria extends BaseMessagingCriteria {
     @QueryParam("username")
     private String username;
 
@@ -32,7 +31,4 @@ public class UserCriteria extends BaseMessagingCriteria {
 
     @QueryParam("fio")
     private String fio;
-
-    @QueryParam("roleIds")
-    private List<String> roleIds;
 }

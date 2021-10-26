@@ -11,15 +11,15 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import ru.inovus.messaging.api.criteria.ProviderRecipientCriteria;
 import ru.inovus.messaging.api.criteria.RecipientCriteria;
-import ru.inovus.messaging.api.criteria.UserCriteria;
 import ru.inovus.messaging.api.model.FeedCount;
 import ru.inovus.messaging.api.model.MessageStatus;
+import ru.inovus.messaging.api.model.ProviderRecipient;
 import ru.inovus.messaging.api.model.Recipient;
-import ru.inovus.messaging.api.model.User;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
-import ru.inovus.messaging.impl.UserRoleProvider;
+import ru.inovus.messaging.impl.RecipientProvider;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecipientRecord;
 
 import java.time.LocalDateTime;
@@ -46,14 +46,10 @@ public class RecipientService {
     private MqProvider mqProvider;
 
     @Autowired
-    private UserRoleProvider userRoleProvider;
+    private RecipientProvider recipientProvider;
 
     @Value("${novus.messaging.queue.feed-count}")
     private String feedCountQueue;
-
-    @Value("${sec.admin.rest.enable}")
-    private boolean securityAdminRestEnable;
-
 
     private static final RecordMapper<Record, Recipient> MAPPER = rec -> {
         MessageRecipientRecord record = rec.into(MESSAGE_RECIPIENT);
@@ -174,7 +170,6 @@ public class RecipientService {
             recipient.setName(providerRecipient.getName());
             recipient.setEmail(providerRecipient.getEmail());
         });
-
     }
 
     /**
@@ -195,22 +190,21 @@ public class RecipientService {
      */
     private Recipient getRecipientByUsername(String username) {
         Recipient recipient = new Recipient();
-        if (securityAdminRestEnable) {
-            UserCriteria userCriteria = new UserCriteria();
-            userCriteria.setUsername(username);
-            userCriteria.setPageNumber(0);
-            userCriteria.setPageSize(1);
-            List<ru.inovus.messaging.api.model.User> users = userRoleProvider.getUsers(userCriteria).getContent();
-            if (CollectionUtils.isEmpty(users)) {
-                log.warn("User with username: {} not found in user provider", username);
-                return null;
-            } else {
-                User user = users.get(0);
-                recipient.setName(user.getFio() + " (" + username + ")");
-                recipient.setUsername(user.getUsername());
-                recipient.setEmail(user.getEmail());
-            }
+        ProviderRecipientCriteria userCriteria = new ProviderRecipientCriteria();
+        userCriteria.setUsername(username);
+        userCriteria.setPageNumber(0);
+        userCriteria.setPageSize(1);
+        List<ProviderRecipient> recipients = recipientProvider.getRecipients(userCriteria).getContent();
+        if (CollectionUtils.isEmpty(recipients)) {
+            log.warn("User with username: {} not found in user provider", username);
+            return null;
+        } else {
+            ProviderRecipient providerRecipient = recipients.get(0);
+            recipient.setName(providerRecipient.getFio() + " (" + username + ")");
+            recipient.setUsername(providerRecipient.getUsername());
+            recipient.setEmail(providerRecipient.getEmail());
         }
+
         return recipient;
     }
 }

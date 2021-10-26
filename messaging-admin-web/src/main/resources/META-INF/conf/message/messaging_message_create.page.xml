@@ -64,27 +64,24 @@
                     </text-area>
                 </row>
                 <row>
-                    <radio-group id="recipientType" label="Тип получателей" inline="true">
-                        <default-value id="USER" name="Пользователи"/>
+                    <radio-group id="recipientType" label="Тип получателей" inline="true" visible="false">
+                        <default-value id="RECIPIENT" name="Пользователи"/>
                         <options>
-                            <option id="USER" name="Пользователи"/>
-                            <option id="ALL" name="Все"/>
+                            <option id="RECIPIENT" name="Пользователи"/>
                         </options>
                     </radio-group>
                 </row>
             </set>
-            <line label="Получатели" depends-on="recipientType" visible="{recipientType.id == 'USER'}">
-                <row>
-                    <input-select id="users" type="checkboxes" label="Пользователи" required="true"
-                                  query-id="messaging_user" label-field-id="name" search-field-id="name">
-                        <dependencies>
-                            <visibility on="recipientType">
-                                recipientType.id == 'USER'
-                            </visibility>
-                        </dependencies>
-                    </input-select>
-                </row>
-            </line>
+            <row>
+                <input-select id="users" type="checkboxes" label="Получатели" required="true"
+                              query-id="messaging_recipient" label-field-id="name" search-field-id="name">
+                    <dependencies>
+                        <visibility on="recipientType">
+                            recipientType.id == 'RECIPIENT'
+                        </visibility>
+                    </dependencies>
+                </input-select>
+            </row>
         </fields>
     </form>
 </simple-page>

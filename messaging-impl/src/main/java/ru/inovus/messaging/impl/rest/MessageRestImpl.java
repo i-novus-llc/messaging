@@ -5,22 +5,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import ru.inovus.messaging.api.criteria.MessageCriteria;
-import ru.inovus.messaging.api.criteria.RoleCriteria;
-import ru.inovus.messaging.api.criteria.UserCriteria;
 import ru.inovus.messaging.api.criteria.UserSettingCriteria;
 import ru.inovus.messaging.api.model.*;
 import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.rest.MessageRest;
 import ru.inovus.messaging.api.rest.UserSettingRest;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
-import ru.inovus.messaging.impl.UserRoleProvider;
+import ru.inovus.messaging.impl.RecipientProvider;
 import ru.inovus.messaging.impl.service.ChannelService;
 import ru.inovus.messaging.impl.service.MessageService;
 import ru.inovus.messaging.impl.service.MessageSettingService;
 import ru.inovus.messaging.impl.service.RecipientService;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -31,21 +28,21 @@ public class MessageRestImpl implements MessageRest {
     private final ChannelService channelService;
     private final MqProvider mqProvider;
     private final UserSettingRest userSettingRest;
-    private final UserRoleProvider userRoleProvider;
+    private final RecipientProvider recipientProvider;
 
     public MessageRestImpl(MessageService messageService,
                            MessageSettingService messageSettingService,
                            RecipientService recipientService,
                            ChannelService channelService,
                            MqProvider mqProvider,
-                           UserRoleProvider userRoleProvider,
+                           RecipientProvider recipientProvider,
                            UserSettingRest userSettingRest) {
         this.messageService = messageService;
         this.messageSettingService = messageSettingService;
         this.recipientService = recipientService;
         this.channelService = channelService;
         this.mqProvider = mqProvider;
-        this.userRoleProvider = userRoleProvider;
+        this.recipientProvider = recipientProvider;
         this.userSettingRest = userSettingRest;
     }
 
@@ -86,7 +83,7 @@ public class MessageRestImpl implements MessageRest {
         //Пользователи без настроек (из тех, кто должен получить уведомление)
         List<String> usersWithDefaultMsgSetting = new ArrayList<>();
 
-        setUsersAndMsgSettings(templateMessageOutbox, usersWithUserSetting, usersWithDefaultMsgSetting);
+        setUsersAndMsgSettingsByUserNames(templateMessageOutbox, usersWithUserSetting, usersWithDefaultMsgSetting, templateMessageOutbox.getUserNameList());
 
         //Рассылка пользователям с настройками
         for (Map.Entry<String, UserSetting> entry : usersWithUserSetting.entrySet()) {
@@ -115,13 +112,6 @@ public class MessageRestImpl implements MessageRest {
         mqProvider.publish(constructMessage(message), channel.getQueueName());
     }
 
-    //Заполнение списков Пользователей для рассылки уведомления
-    private void setUsersAndMsgSettings(TemplateMessageOutbox templateMessageOutbox, Map<String, UserSetting> usersWithUserSetting, List<String> usersWithDefaultMsgSetting) {
-        setUsersAndMsgSettingsByPermissionCodes(templateMessageOutbox, usersWithUserSetting, usersWithDefaultMsgSetting, templateMessageOutbox.getPermissions());
-        setUsersAndMsgSettingsByUserNames(templateMessageOutbox, usersWithUserSetting, usersWithDefaultMsgSetting, templateMessageOutbox.getUserNameList());
-    }
-
-    //Заполнение списков Пользователей по пермишенам
     private void setUsersAndMsgSettingsByUserNames(TemplateMessageOutbox templateMessageOutbox, Map<String, UserSetting> usersWithUserSetting,
                                                    List<String> usersWithDefaultMsgSetting, List<String> userNames) {
         if (!CollectionUtils.isEmpty(userNames)) {
@@ -132,25 +122,6 @@ public class MessageRestImpl implements MessageRest {
                     usersWithDefaultMsgSetting.add(userName);
                 } else {
                     usersWithUserSetting.put(userName, userSetting);
-                }
-            }
-        }
-    }
-
-    //Заполнение списков Пользователей по userName
-    private void setUsersAndMsgSettingsByPermissionCodes(TemplateMessageOutbox templateMessageOutbox, Map<String, UserSetting> usersWithUserSetting,
-                                                         List<String> usersWithDefaultMsgSetting, List<String> permissions) {
-        if (!CollectionUtils.isEmpty(permissions)) {
-            Set<User> users = getUserByPermissionCodes(permissions);
-
-            if (!CollectionUtils.isEmpty(users)) {
-                for (User user : users) {
-                    UserSetting userSetting = getUserSetting(templateMessageOutbox, user.getUsername());
-                    if (userSetting.isDefaultSetting()) {
-                        usersWithDefaultMsgSetting.add(user.getUsername());
-                    } else {
-                        usersWithUserSetting.put(user.getUsername(), userSetting);
-                    }
                 }
             }
         }
@@ -177,7 +148,7 @@ public class MessageRestImpl implements MessageRest {
         message.setSentAt(params.getSentAt());
         message.setChannel(userSetting == null ? messageSetting.getChannel() : userSetting.getChannel());
         message.setFormationType(messageSetting.getFormationType());
-        message.setRecipientType(RecipientType.USER);
+        message.setRecipientType(RecipientType.RECIPIENT);
         message.setTenantCode(params.getTenantCode());
         message.setRecipients(recipientService.getRecipientsByUsername(userNameList));
         message.setData(null);
@@ -191,67 +162,6 @@ public class MessageRestImpl implements MessageRest {
         for (Map.Entry<String, Object> placeHolder : params.getPlaceholders().entrySet())
             text = text.replace(placeHolder.getKey(), placeHolder.getValue().toString());
         return text;
-    }
-
-    //Получение Пользоватлей по кодам Привилегий
-    private Set<User> getUserByPermissionCodes(List<String> permissions) {
-        Set<User> users = null;
-        Set<Role> roles = getRolesByPermissionCodes(permissions);
-
-        if (!CollectionUtils.isEmpty(roles)) {
-            users = getUsersByRoles(roles);
-        }
-
-        return users;
-    }
-
-    //Полуение Пользователей по Ролям
-    private Set<User> getUsersByRoles(Set<Role> roles) {
-        UserCriteria userCriteria = new UserCriteria();
-        userCriteria.setRoleIds(roles.stream().map(Role::getId).collect(Collectors.toList()));
-        userCriteria.setPageNumber(0);
-
-        Page<User> userPage = userRoleProvider.getUsers(userCriteria);
-        Set<User> users = new HashSet<>(userPage.getContent());
-
-        if (!CollectionUtils.isEmpty(users) && userPage.getTotalElements() > users.size()) {
-
-            int pageCount = (int) (userPage.getTotalElements() / userCriteria.getPageSize());
-            if (userPage.getTotalElements() % userCriteria.getPageSize() != 0) {
-                pageCount++;
-            }
-
-            for (int i = 1; i < pageCount; i++) {
-                userCriteria.setPageNumber(i);
-                userPage = userRoleProvider.getUsers(userCriteria);
-                users.addAll(userPage.getContent());
-            }
-        }
-        return users;
-    }
-
-    //Получение Ролей по кодам Привилегий
-    private Set<Role> getRolesByPermissionCodes(List<String> permissions) {
-        RoleCriteria roleCriteria = new RoleCriteria();
-        roleCriteria.setPermissionCodes(permissions);
-        roleCriteria.setPageNumber(0);
-
-        Page<Role> rolePage = userRoleProvider.getRoles(roleCriteria);
-        Set<Role> roles = new HashSet<>(rolePage.getContent());
-
-        if (!CollectionUtils.isEmpty(roles) && rolePage.getTotalElements() > roles.size()) {
-            int pageCount = (int) (rolePage.getTotalElements() / roleCriteria.getPageSize());
-            if (rolePage.getTotalElements() % roleCriteria.getPageSize() != 0) {
-                pageCount++;
-            }
-
-            for (int i = 1; i < pageCount; i++) {
-                roleCriteria.setPageNumber(i);
-                rolePage = userRoleProvider.getRoles(roleCriteria);
-                roles.addAll(rolePage.getContent());
-            }
-        }
-        return roles;
     }
 
     private Message constructMessage(Message message) {

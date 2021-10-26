@@ -1,4 +1,4 @@
-package ru.inovus.messaging;
+package ru.inovus.messaging.impl.service;
 
 import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
 import org.junit.jupiter.api.Test;
@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import ru.inovus.messaging.TestApp;
 import ru.inovus.messaging.api.criteria.RecipientCriteria;
 import ru.inovus.messaging.api.model.FeedCount;
 import ru.inovus.messaging.api.model.MessageStatus;
@@ -17,7 +18,6 @@ import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.api.queue.QueueMqConsumer;
-import ru.inovus.messaging.impl.service.RecipientService;
 
 import java.util.List;
 import java.util.UUID;

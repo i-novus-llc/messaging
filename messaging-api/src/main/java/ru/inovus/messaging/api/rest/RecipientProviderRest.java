@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 the original author or authors.
+ * Copyright 2017-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,24 +19,20 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.Authorization;
-import ru.inovus.messaging.api.model.Sms;
+import org.springframework.data.domain.Page;
+import ru.inovus.messaging.api.criteria.ProviderRecipientCriteria;
+import ru.inovus.messaging.api.model.ProviderRecipient;
 
-import javax.validation.Valid;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
-@Api(value = "Отправка сообщения по расписанию", authorizations = @Authorization(value = "oauth2"))
-@Path("/messages")
+@Api(value = "Получатели", authorizations = @Authorization(value = "oauth2"))
+@Path("/recipients")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public interface SchedulerRest {
-
-    @POST
-    @Path("/scheduled")
-    @ApiOperation("Отправка сообщения")
-    @ApiResponse(code = 200, message = "SMS запланировано")
-    void createScheduledMessage(@Valid Sms sms);
+public interface RecipientProviderRest {
+    @GET
+    @ApiOperation("Получение списка получателей")
+    @ApiResponse(code = 200, message = "Список получателей")
+    Page<ProviderRecipient> getProviderRecipient(@BeanParam ProviderRecipientCriteria criteria);
 }

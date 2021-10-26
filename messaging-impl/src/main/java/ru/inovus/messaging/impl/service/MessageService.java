@@ -77,7 +77,7 @@ public class MessageService {
                 .returning()
                 .fetch().get(0).getId();
         message.setId(id.toString());
-        if (recipients != null && RecipientType.USER.equals(message.getRecipientType())) {
+        if (recipients != null && RecipientType.RECIPIENT.equals(message.getRecipientType())) {
             for (Recipient recipient : recipients) {
                 dsl
                         .insertInto(MESSAGE_RECIPIENT)

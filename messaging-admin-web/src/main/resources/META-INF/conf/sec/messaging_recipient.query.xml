@@ -3,7 +3,7 @@
        object-id="messaging_user">
 
     <list result-mapping="['content']" count-mapping="['totalElements']">
-        <rest filters-separator="&amp;">${messaging.backend.path}/users?{filters}&amp;{sorting}&amp;size={limit}&amp;page={page}</rest>
+        <rest filters-separator="&amp;">${messaging.backend.path}/recipients?{filters}&amp;{sorting}&amp;size={limit}&amp;page={page}</rest>
     </list>
 
     <fields>
