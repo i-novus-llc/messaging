@@ -28,8 +28,13 @@ import java.util.UUID;
 import static ru.inovus.messaging.impl.jooq.Sequences.RECIPIENT_ID_SEQ;
 import static ru.inovus.messaging.impl.jooq.Tables.*;
 
+/**
+ * Сервис уведомлений
+ */
 @Service
 public class MessageService {
+
+    private final DSLContext dsl;
 
     private static final ZoneId USER_DEFAULT_ZONE_ID = ZoneId.of("Europe/Moscow");
 
@@ -53,7 +58,6 @@ public class MessageService {
         message.setTenantCode(record.getTenantCode());
         return message;
     };
-    private final DSLContext dsl;
 
     public MessageService(DSLContext dsl) {
         this.dsl = dsl;
@@ -129,6 +133,12 @@ public class MessageService {
         return new PageImpl<>(collection, criteria, count);
     }
 
+    /**
+     * Получение уведомления по его идентификатору
+     *
+     * @param messageId Идентификатор уведомления
+     * @return Уведомление
+     */
     public Message getMessage(UUID messageId) {
         Message message = dsl
                 .select(MESSAGE.fields())

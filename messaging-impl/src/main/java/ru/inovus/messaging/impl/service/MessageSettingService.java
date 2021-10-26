@@ -23,36 +23,47 @@ import java.util.stream.Collectors;
 import static ru.inovus.messaging.impl.jooq.Sequences.MESSAGE_SETTING_ID_SEQ;
 import static ru.inovus.messaging.impl.jooq.Tables.MESSAGE_SETTING;
 
+/**
+ * Сервис шаблонов уведомлений
+ */
 @Service
 public class MessageSettingService {
+
+    private final DSLContext dsl;
 
     @Autowired
     private ChannelService channelService;
 
     RecordMapper<Record, MessageSetting> MAPPER = rec -> {
-        MessageSettingRecord settingRec = rec.into(MESSAGE_SETTING);
+        MessageSettingRecord record = rec.into(MESSAGE_SETTING);
         MessageSetting messageSetting = new MessageSetting();
-        messageSetting.setId(settingRec.getId());
-        messageSetting.setName(settingRec.getName());
-        messageSetting.setAlertType(settingRec.getAlertType());
-        messageSetting.setSeverity(settingRec.getSeverity());
-        if (settingRec.getChannelId() != null) {
-            Channel channel = channelService.getChannel(settingRec.getChannelId());
+        messageSetting.setId(record.getId());
+        messageSetting.setName(record.getName());
+        messageSetting.setAlertType(record.getAlertType());
+        messageSetting.setSeverity(record.getSeverity());
+        if (record.getChannelId() != null) {
+            Channel channel = channelService.getChannel(record.getChannelId());
             messageSetting.setChannel(channel);
         }
-        messageSetting.setCaption(settingRec.getCaption());
-        messageSetting.setText(settingRec.getText());
-        messageSetting.setFormationType(settingRec.getFormationType());
-        messageSetting.setDisabled(settingRec.getIsDisabled());
-        messageSetting.setCode(settingRec.getCode());
+        messageSetting.setCaption(record.getCaption());
+        messageSetting.setText(record.getText());
+        messageSetting.setFormationType(record.getFormationType());
+        messageSetting.setDisabled(record.getIsDisabled());
+        messageSetting.setCode(record.getCode());
         return messageSetting;
     };
-    private final DSLContext dsl;
 
     public MessageSettingService(DSLContext dsl) {
         this.dsl = dsl;
     }
 
+    /**
+     * Получение страницы шаблонов уведомлений
+     *
+     * @param tenantCode Код тенанта
+     * @param criteria   Критерии шаблонов уведомлений
+     * @return Страница шаблонов уведомлений
+     */
     public Page<MessageSetting> getSettings(String tenantCode, MessageSettingCriteria criteria) {
         List<Condition> conditions = new ArrayList<>();
         conditions.add(MESSAGE_SETTING.TENANT_CODE.eq(tenantCode));
@@ -89,9 +100,18 @@ public class MessageSettingService {
         return new PageImpl<>(list, criteria, count);
     }
 
+    /**
+     * Создание шаблона уведомлений
+     *
+     * @param tenantCode     Код тенанта
+     * @param messageSetting Шаблон уведомлений
+     * @return Созданный шаблон уведомлений
+     */
     @Transactional
-    public void createSetting(String tenantCode, MessageSetting messageSetting) {
-        Long id = dsl.nextval(MESSAGE_SETTING_ID_SEQ);
+    public MessageSetting createSetting(String tenantCode, MessageSetting messageSetting) {
+        Integer id = dsl.nextval(MESSAGE_SETTING_ID_SEQ).intValue();
+        messageSetting.setId(id);
+
         dsl
                 .insertInto(MESSAGE_SETTING)
                 .columns(MESSAGE_SETTING.ID, MESSAGE_SETTING.NAME,
@@ -100,14 +120,22 @@ public class MessageSettingService {
                         MESSAGE_SETTING.CAPTION, MESSAGE_SETTING.TEXT,
                         MESSAGE_SETTING.CODE, MESSAGE_SETTING.TENANT_CODE
                 )
-                .values(id.intValue(), messageSetting.getName(),
+                .values(id, messageSetting.getName(),
                         messageSetting.getAlertType(), messageSetting.getSeverity(),
                         messageSetting.getChannel() != null ? messageSetting.getChannel().getId() : null,
                         messageSetting.getFormationType(), messageSetting.getDisabled(), messageSetting.getCaption(), messageSetting.getText(),
                         messageSetting.getCode(), tenantCode)
                 .execute();
+
+        return messageSetting;
     }
 
+    /**
+     * Обновление шаблона уведомлений
+     *
+     * @param id             Идентификатор шаблона уведомлений
+     * @param messageSetting Обновленный шаблон уведомлений
+     */
     @Transactional
     public void updateSetting(Integer id, MessageSetting messageSetting) {
         dsl
@@ -125,6 +153,11 @@ public class MessageSettingService {
                 .execute();
     }
 
+    /**
+     * Удаление шаблона уведомлений
+     *
+     * @param id Идентификатор шаблона уведомлений
+     */
     @Transactional
     public void deleteSetting(Integer id) {
         dsl
@@ -133,38 +166,48 @@ public class MessageSettingService {
                 .execute();
     }
 
+    /**
+     * Получение шаблона уведомления по идентификатору
+     *
+     * @param id Идентификатор шаблона уведомления
+     * @return Шаблон уведомления
+     */
     public MessageSetting getSetting(Integer id) {
-        MessageSetting ms = dsl
+        return dsl
                 .selectFrom(MESSAGE_SETTING)
                 .where(MESSAGE_SETTING.ID.eq(id))
                 .fetchOne()
                 .map(MAPPER);
-
-        return ms;
     }
 
+    /**
+     * Получение шаблона уведомления по коду
+     *
+     * @param code Код шаблона уведомления
+     * @return Шаблон уведомления
+     */
     public MessageSetting getSetting(String code) {
-        MessageSetting ms = dsl
+        return dsl
                 .selectFrom(MESSAGE_SETTING)
                 .where(MESSAGE_SETTING.CODE.eq(code))
                 .fetchOne()
                 .map(MAPPER);
-
-        return ms;
     }
 
+    /**
+     * Получение списка полей, по которым будет производиться сортировка
+     *
+     * @param sort Вариант сортировки
+     * @return Список полей, по которым будет производиться сортировка
+     */
     private Collection<SortField<?>> getSortFields(Sort sort) {
-        Collection<SortField<?>> querySortFields = new ArrayList<>();
-        if (sort.isEmpty()) {
-            return querySortFields;
-        }
+        if (sort.isEmpty())
+            return new ArrayList<>();
 
-        sort.get().map(s -> {
+        return sort.get().map(s -> {
             Field field = MESSAGE_SETTING.field(s.getProperty());
-            return s.getDirection().equals(Sort.Direction.ASC) ?
-                    field.asc() : field.desc();
+            return (SortField<?>) (s.getDirection().equals(Sort.Direction.ASC) ?
+                    field.asc() : field.desc());
         }).collect(Collectors.toList());
-
-        return querySortFields;
     }
 }

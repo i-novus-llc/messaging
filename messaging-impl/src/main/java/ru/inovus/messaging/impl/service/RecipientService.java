@@ -70,11 +70,11 @@ public class RecipientService {
     }
 
     /**
-     * Получение списка получателей уведомлений по критерию
+     * Получение страницы получателей уведомлений по критерию
      *
      * @param tenantCode Код тенанта
      * @param criteria   Критерий получателей
-     * @return Список получателей уведомлений
+     * @return Страница получателей уведомлений
      */
     public Page<Recipient> getRecipients(String tenantCode, RecipientCriteria criteria) {
         if (criteria.getMessageId() == null)
@@ -97,23 +97,6 @@ public class RecipientService {
                 .offset((int) criteria.getOffset())
                 .fetch(MAPPER);
         return new PageImpl<>(collection, criteria, count);
-    }
-
-    /**
-     * Получение списка полей, по которым будет производиться сортировка
-     *
-     * @param sort Вариант сортировки
-     * @return Список полей, по которым будет производиться сортировка
-     */
-    private Collection<SortField<?>> getSortFields(Sort sort) {
-        if (sort.isEmpty())
-            return new ArrayList<>();
-
-        return sort.get().map(s -> {
-            Field field = MESSAGE_RECIPIENT.field(s.getProperty());
-            return (SortField<?>) (s.getDirection().equals(Sort.Direction.ASC) ?
-                    field.asc() : field.desc());
-        }).collect(Collectors.toList());
     }
 
     /**
@@ -206,5 +189,22 @@ public class RecipientService {
         }
 
         return recipient;
+    }
+
+    /**
+     * Получение списка полей, по которым будет производиться сортировка
+     *
+     * @param sort Вариант сортировки
+     * @return Список полей, по которым будет производиться сортировка
+     */
+    private Collection<SortField<?>> getSortFields(Sort sort) {
+        if (sort.isEmpty())
+            return new ArrayList<>();
+
+        return sort.get().map(s -> {
+            Field field = MESSAGE_RECIPIENT.field(s.getProperty());
+            return (SortField<?>) (s.getDirection().equals(Sort.Direction.ASC) ?
+                    field.asc() : field.desc());
+        }).collect(Collectors.toList());
     }
 }

@@ -21,23 +21,23 @@ import static org.hamcrest.Matchers.is;
 @EnableEmbeddedPg
 public class ChannelServiceTest {
     @Autowired
-    private ChannelService channelService;
+    private ChannelService service;
 
     @Test
     public void testGetChannels() {
-        List<Channel> channels = channelService.getChannels("tenant");
+        List<Channel> channels = service.getChannels("tenant");
         assertThat(channels.size(), is(2));
         assertThat(channels.get(0).getName(), is("notice"));
         assertThat(channels.get(1).getName(), is("email"));
 
-        channels = channelService.getChannels("tenant2");
+        channels = service.getChannels("tenant2");
         assertThat(channels.size(), is(1));
         assertThat(channels.get(0).getName(), is("custom"));
     }
 
     @Test
     public void testGetChannel() {
-        Channel channel = channelService.getChannel(2);
+        Channel channel = service.getChannel(2);
         assertThat(channel.getName(), is("email"));
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.inovus.messaging.TestApp;
@@ -49,6 +50,21 @@ public class RecipientServiceTest {
     private static final String TENANT_CODE = "tenant";
 
 
+    @Test
+    public void testGetRecipients() {
+        RecipientCriteria criteria = new RecipientCriteria();
+
+        // should be empty without messageId
+        Page<Recipient> recipients = service.getRecipients(TENANT_CODE, criteria);
+        assertThat(recipients.getSize(), is(0));
+
+        criteria.setMessageId(UUID.fromString("a2bd666b-1684-4005-a10f-f14224f66d0a"));
+        recipients = service.getRecipients(TENANT_CODE, criteria);
+        assertThat(recipients.getTotalElements(), is(2L));
+        // order by id desc
+        assertThat(recipients.getContent().get(0).getId(), is(2));
+        assertThat(recipients.getContent().get(1).getId(), is(1));
+    }
 
     @Test
     public void testUpdateStatus() throws InterruptedException {

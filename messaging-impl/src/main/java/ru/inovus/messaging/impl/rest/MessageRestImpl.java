@@ -11,7 +11,6 @@ import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.rest.MessageRest;
 import ru.inovus.messaging.api.rest.UserSettingRest;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
-import ru.inovus.messaging.impl.RecipientProvider;
 import ru.inovus.messaging.impl.service.ChannelService;
 import ru.inovus.messaging.impl.service.MessageService;
 import ru.inovus.messaging.impl.service.MessageSettingService;
@@ -28,21 +27,18 @@ public class MessageRestImpl implements MessageRest {
     private final ChannelService channelService;
     private final MqProvider mqProvider;
     private final UserSettingRest userSettingRest;
-    private final RecipientProvider recipientProvider;
 
     public MessageRestImpl(MessageService messageService,
                            MessageSettingService messageSettingService,
                            RecipientService recipientService,
                            ChannelService channelService,
                            MqProvider mqProvider,
-                           RecipientProvider recipientProvider,
                            UserSettingRest userSettingRest) {
         this.messageService = messageService;
         this.messageSettingService = messageSettingService;
         this.recipientService = recipientService;
         this.channelService = channelService;
         this.mqProvider = mqProvider;
-        this.recipientProvider = recipientProvider;
         this.userSettingRest = userSettingRest;
     }
 
