@@ -19,10 +19,10 @@ public class RecipientProviderConfiguration {
 
     @Bean
     @ConditionalOnProperty(value = "novus.messaging.recipient-provider.type", havingValue = "configurable")
-    public RecipientProvider userRoleDataProvider(ResourceLoader resourceLoader,
-                                                  @Value("${novus.messaging.mapping-file-location}") String mappingFileLocation,
-                                                  @Value("${novus.messaging.user-provider-url}") String userUrl) throws IOException, JAXBException {
-        return new ConfigurableRecipientProvider(resourceLoader, mappingFileLocation, userUrl);
+    public RecipientProvider recipientProvider(@Value("${novus.messaging.mapping-file-location}") String mappingFileLocation,
+                                               @Value("${novus.messaging.recipient-provider.url}") String recipientProviderUrl,
+                                               ResourceLoader resourceLoader) throws IOException, JAXBException {
+        return new ConfigurableRecipientProvider(resourceLoader, mappingFileLocation, recipientProviderUrl);
     }
 
     @Configuration
@@ -31,7 +31,7 @@ public class RecipientProviderConfiguration {
     static public class SecurityAdminConfiguration {
 
         @Bean
-        public RecipientProvider userRoleDataProvider(UserRestClient userRestService) {
+        public RecipientProvider recipientProvider(UserRestClient userRestService) {
             return new SecurityAdminRecipientProvider(userRestService);
         }
     }

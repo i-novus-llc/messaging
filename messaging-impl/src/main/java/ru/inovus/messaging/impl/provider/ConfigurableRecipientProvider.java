@@ -1,8 +1,7 @@
 package ru.inovus.messaging.impl.provider;
 
 import lombok.Setter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.domain.Page;
@@ -26,9 +25,11 @@ import java.util.*;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
+/**
+ * Конфигурируемый провайдер для работы с получателями уведомлений с возможностью указания маппинга полей
+ */
+@Slf4j
 public class ConfigurableRecipientProvider implements RecipientProvider {
-
-    private static Logger logger = LoggerFactory.getLogger(ConfigurableRecipientProvider.class);
 
     @Setter
     private RestTemplate restTemplate;
@@ -40,7 +41,7 @@ public class ConfigurableRecipientProvider implements RecipientProvider {
 
     private String mappingFileLocation;
 
-    private String userUrl;
+    private String recipientProviderUrl;
 
     private String[] userResponseContentLocation;
 
@@ -48,10 +49,10 @@ public class ConfigurableRecipientProvider implements RecipientProvider {
 
     private Map<String, String> userCriteriaMapping = new HashMap<>();
 
-    public ConfigurableRecipientProvider(ResourceLoader resourceLoader, String mappingFileLocation, String userUrl) throws IOException, JAXBException {
+    public ConfigurableRecipientProvider(ResourceLoader resourceLoader, String mappingFileLocation, String recipientProviderUrl) throws IOException, JAXBException {
         this.resourceLoader = resourceLoader;
         this.mappingFileLocation = mappingFileLocation;
-        this.userUrl = userUrl;
+        this.recipientProviderUrl = recipientProviderUrl;
         init();
     }
 
@@ -71,7 +72,7 @@ public class ConfigurableRecipientProvider implements RecipientProvider {
 
     @Override
     public Page<ProviderRecipient> getRecipients(ProviderRecipientCriteria criteria) {
-        Map<String, Object> response = restTemplate.exchange(userUrl + "?" + buildQueryParam(criteria),
+        Map<String, Object> response = restTemplate.exchange(recipientProviderUrl + "?" + buildQueryParam(criteria),
                 HttpMethod.GET, prepareRequest(request), Map.class).getBody();
         Page page = new PageImpl(mapUsers(response), criteria, (Integer) response.get(userMapping.get("count")));
         return page;
@@ -159,7 +160,7 @@ public class ConfigurableRecipientProvider implements RecipientProvider {
             Unmarshaller unmarshaller = XmlMapping.JAXB_CONTEXT.createUnmarshaller();
             mapping = (XmlMapping) unmarshaller.unmarshal(io);
         } catch (JAXBException | IOException e) {
-            logger.error("xml mapping file load error ", e);
+            log.error("xml mapping file load error ", e);
             throw e;
         }
         return mapping;

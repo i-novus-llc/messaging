@@ -74,12 +74,6 @@
         <field id="users" domain="object">
             <select mapping="['recipients']"/>
         </field>
-
-        <field id="username" domain="string">
-            <filters>
-                <eq filter-id="username">user={username}</eq>
-            </filters>
-        </field>
     </fields>
 
 </query>
