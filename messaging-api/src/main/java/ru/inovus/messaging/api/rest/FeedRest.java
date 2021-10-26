@@ -33,7 +33,7 @@ public interface FeedRest {
     @GET
     @Path("/{username}")
     @ApiOperation("Получение ленты уведомлений по критериям поиска")
-    @ApiResponse(code = 200, message = "Страница сообщений")
+    @ApiResponse(code = 200, message = "Страница уведомлений")
     Page<Feed> getMessageFeed(@PathParam("tenantCode") @ApiParam(value = "Код тенанта") String tenantCode,
                               @PathParam("username") @ApiParam(value = "Имя пользователя") String username,
                               @BeanParam @ApiParam(value = "Критерии ленты уведомлений") FeedCriteria criteria);
@@ -47,32 +47,32 @@ public interface FeedRest {
 
     @GET
     @Path("/{username}/message/{id}")
-    @ApiOperation("Получение сообщения по идентификатору")
-    @ApiResponse(code = 200, message = "Сообщение")
+    @ApiOperation("Получение уведомления по идентификатору")
+    @ApiResponse(code = 200, message = "Уведомление")
     Feed getMessage(@PathParam("tenantCode") @ApiParam(value = "Код тенанта") String tenantCode,
                     @PathParam("username") @ApiParam(value = "Имя пользователя") String username,
-                    @PathParam("id") @ApiParam(value = "Идентификатор сообщения") UUID id);
+                    @PathParam("id") @ApiParam(value = "Идентификатор уведомления") UUID id);
 
     @GET
     @Path("/{username}/message/{id}/read")
-    @ApiOperation("Получение сообщения по идентификатору и фиксирование даты прочтения")
-    @ApiResponse(code = 200, message = "Сообщение")
+    @ApiOperation("Получение уведомления по идентификатору и фиксирование даты прочтения")
+    @ApiResponse(code = 200, message = "Уведомление")
     Feed getMessageAndRead(@PathParam("tenantCode") @ApiParam(value = "Код тенанта") String tenantCode,
                            @PathParam("username") @ApiParam(value = "Имя пользователя") String username,
-                           @PathParam("id") @ApiParam(value = "Идентификатор сообщения") UUID id);
+                           @PathParam("id") @ApiParam(value = "Идентификатор уведомления") UUID id);
 
     @POST
     @Path("/{username}/readall")
-    @ApiOperation("Пометить все сообщения прочитанными")
-    @ApiResponse(code = 200, message = "Все сообщения помечены прочитанными")
+    @ApiOperation("Пометить все уведомления прочитанными")
+    @ApiResponse(code = 200, message = "Все уведомления помечены прочитанными")
     void markReadAll(@PathParam("tenantCode") @ApiParam(value = "Код тенанта") String tenantCode,
                      @PathParam("username") @ApiParam(value = "Имя пользователя") String username);
 
     @POST
     @Path("/{username}/read/")
-    @ApiOperation("Пометить сообщение прочитанным")
-    @ApiResponse(code = 200, message = "Все сообщения помечены прочитанными")
+    @ApiOperation("Пометить уведомление прочитанным")
+    @ApiResponse(code = 200, message = "Уведомление помечено прочитанными")
     void markRead(@PathParam("tenantCode") @ApiParam(value = "Код тенанта") String tenantCode,
                   @PathParam("username") @ApiParam(value = "Имя пользователя") String username,
-                  @ApiParam(value = "Идентификатор сообщения") UUID messageId);
+                  @ApiParam(value = "Идентификатор уведомления") UUID messageId);
 }

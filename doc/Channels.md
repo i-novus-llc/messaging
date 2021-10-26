@@ -54,7 +54,7 @@ public class MyChannel extends AbstractChannel {
         ...
     }
 
-    // Отправка сообщения в канал
+    // Отправка уведомления в канал
     public void send(Message message) {
         ...
     }
@@ -64,7 +64,7 @@ public class MyChannel extends AbstractChannel {
 Необходимо учесть, что `statusQueueName` - это имя очереди статусов уведомлений
 и оно должно совпадать с настройкой `novus.messaging.queue.status`.
 
-`messageQueueName` - имя очереди, из которой в ваш канал будут приходить сообщения (например: `my-channel-queue`).
+`messageQueueName` - имя очереди, из которой в ваш канал будут приходить уведомления (например: `my-channel-queue`).
 
 3. Для подключения необходимо добавить скрипт в БД messaging со следующей строкой:
 

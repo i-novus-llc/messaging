@@ -38,7 +38,7 @@ public class Application {
 
 ## Настройки
 
-- `novus.messaging.channel.email.queue` - имя очереди сообщений email канала (по умолчанию: `email-queue`)
+- `novus.messaging.channel.email.queue` - имя очереди уведомлений email канала (по умолчанию: `email-queue`)
 - `spring.mail.host=smtp.gmail.com`
 - `spring.mail.port=587`
 - `spring.mail.username=[username]`

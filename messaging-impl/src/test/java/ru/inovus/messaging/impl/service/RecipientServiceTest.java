@@ -48,6 +48,8 @@ public class RecipientServiceTest {
 
     private static final String TENANT_CODE = "tenant";
 
+
+
     @Test
     public void testUpdateStatus() throws InterruptedException {
         RecipientCriteria criteria = new RecipientCriteria();

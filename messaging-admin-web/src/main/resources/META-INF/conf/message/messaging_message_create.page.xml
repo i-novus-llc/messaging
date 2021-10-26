@@ -34,8 +34,8 @@
                     </input-select>
                     <select id="alertType" label="Способ отображения" required="true">
                         <options>
-                            <option id="BLOCKER" name="Блокирующее сообщение"/>
-                            <option id="POPUP" name="Всплывающее сообщение"/>
+                            <option id="BLOCKER" name="Блокирующее уведомление"/>
+                            <option id="POPUP" name="Всплывающее уведомление"/>
                             <option id="HIDDEN" name="Лента уведомлений"/>
                         </options>
                         <dependencies>

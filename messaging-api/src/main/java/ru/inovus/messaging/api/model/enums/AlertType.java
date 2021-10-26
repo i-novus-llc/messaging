@@ -19,9 +19,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum AlertType {
-    BLOCKER("Блокирующее сообщение"),
-    POPUP("Всплывающее сообщение"),
-    HIDDEN("Лента сообщений");
+    BLOCKER("Блокирующее уведомление"),
+    POPUP("Всплывающее уведомление"),
+    HIDDEN("Лента уведомлений");
 
     private String name;
 

@@ -46,10 +46,10 @@ public class Application {
   (по умолчанию: `/topic`)
 - `novus.messaging.channel.web.private_dest_prefix` - приватный префикс пути клиента
   (по умолчанию: `/exchange`)
-- `novus.messaging.channel.web.message-lifetime` - время в секундах, по истечении которого сообщения не будут
+- `novus.messaging.channel.web.message-lifetime` - время в секундах, по истечении которого уведомления не будут
   показываться, если пользователь не был подключен (по умолчанию: `60`)
-- `novus.messaging.channel.web.queue` - имя очереди сообщений веб канала (по умолчанию: `web-queue`)
-- `novus.messaging.channel.web.topic` - имя топика сообщений веб канала (по умолчанию: `web-notice-topic`)
+- `novus.messaging.channel.web.queue` - имя очереди уведомлений веб канала (по умолчанию: `web-queue`)
+- `novus.messaging.channel.web.topic` - имя топика уведомлений веб канала (по умолчанию: `web-notice-topic`)
 
 ## Формат сообщений для Web Socket
 
@@ -60,8 +60,8 @@ public class Application {
 ```json
 {
   "id": 2,
-  "caption": "Заголовок сообщения",
-  "text": "Текст сообщения",
+  "caption": "Заголовок уведомления",
+  "text": "Текст уведомления",
   "severity": {
     "value": 30,
     "name": "Ошибка"
