@@ -37,7 +37,8 @@ import static ru.inovus.messaging.impl.jooq.Tables.*;
 @Slf4j
 public class RecipientService {
 
-    private final DSLContext dsl;
+    @Autowired
+    private DSLContext dsl;
 
     @Autowired
     private FeedService feedService;
@@ -65,9 +66,6 @@ public class RecipientService {
         return recipient;
     };
 
-    public RecipientService(DSLContext dsl) {
-        this.dsl = dsl;
-    }
 
     /**
      * Получение страницы получателей уведомлений по критерию

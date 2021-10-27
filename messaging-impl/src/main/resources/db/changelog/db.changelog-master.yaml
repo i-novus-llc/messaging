@@ -280,3 +280,11 @@ databaseChangeLog:
             encoding: utf8
             path: sql/MESSAGING-139.sql
             relativeToChangelogFile: true
+  - changeSet:
+      id: MESSAGING-235
+      author: ilebedenko
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/MESSAGING-235.sql
+            relativeToChangelogFile: true

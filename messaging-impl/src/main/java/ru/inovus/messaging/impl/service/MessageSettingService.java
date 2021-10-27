@@ -29,7 +29,8 @@ import static ru.inovus.messaging.impl.jooq.Tables.MESSAGE_SETTING;
 @Service
 public class MessageSettingService {
 
-    private final DSLContext dsl;
+    @Autowired
+    private DSLContext dsl;
 
     @Autowired
     private ChannelService channelService;
@@ -53,9 +54,6 @@ public class MessageSettingService {
         return messageSetting;
     };
 
-    public MessageSettingService(DSLContext dsl) {
-        this.dsl = dsl;
-    }
 
     /**
      * Получение страницы шаблонов уведомлений

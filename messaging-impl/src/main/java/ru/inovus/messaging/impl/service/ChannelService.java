@@ -2,6 +2,7 @@ package ru.inovus.messaging.impl.service;
 
 import org.jooq.DSLContext;
 import org.jooq.RecordMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.inovus.messaging.api.model.Channel;
 import ru.inovus.messaging.impl.jooq.tables.records.ChannelRecord;
@@ -16,15 +17,12 @@ import static ru.inovus.messaging.impl.jooq.tables.Channel.CHANNEL;
 @Service
 public class ChannelService {
 
-    private final DSLContext dsl;
+    @Autowired
+    private DSLContext dsl;
 
     private final RecordMapper<ChannelRecord, Channel> MAPPER = record ->
             new Channel(record.getId(), record.getName(), record.getQueueName());
 
-
-    public ChannelService(DSLContext dsl) {
-        this.dsl = dsl;
-    }
 
     /**
      * Получение списка каналов по коду тенанта

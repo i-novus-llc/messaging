@@ -20,7 +20,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Messaging extends SchemaImpl {
 
-    private static final long serialVersionUID = 2105825497;
+    private static final long serialVersionUID = 1648689555;
 
     /**
      * The reference instance of <code>messaging</code>
@@ -53,11 +53,6 @@ public class Messaging extends SchemaImpl {
     public final Tenant TENANT = Tenant.TENANT;
 
     /**
-     * Пользовательские настройки уведомлений
-     */
-    public final UserSetting USER_SETTING = UserSetting.USER_SETTING;
-
-    /**
      * No further instances allowed
      */
     private Messaging() {
@@ -87,7 +82,6 @@ public class Messaging extends SchemaImpl {
             Message.MESSAGE,
             MessageRecipient.MESSAGE_RECIPIENT,
             MessageSetting.MESSAGE_SETTING,
-            Tenant.TENANT,
-            UserSetting.USER_SETTING);
+            Tenant.TENANT);
     }
 }

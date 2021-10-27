@@ -20,14 +20,15 @@ novus.messaging.role-provider-url
     * удалена возможность указания ролей
     * `<user>` переименован в `<recipient>`
 
-* Изменен эндпоинт получения списка получателей уведомлений -`/user` -> `/provider_recipients`
+* Изменен Rest для получения списка получателей уведомлений -`/user` -> `/provider_recipients`
+* Прекращена поддержка пользовательских шаблонов уведомлений
 
 #### 4.1.0
 
 * Прекращена поддержка компонентов системы
 * Добавлена мультитенантность
     - `systemId` изменено на `tenantCode`
-    - Изменены эндпоинты большинства рестов
+    - Rest API изменено следующим образом:
         - `/messages` -> `/{tenantCode}/messages`
         - `/settings` -> `/{tenantCode}/settings`
         - `/user/{username}/settings` -> `/{tenantCode}/user/{username}/settings`
