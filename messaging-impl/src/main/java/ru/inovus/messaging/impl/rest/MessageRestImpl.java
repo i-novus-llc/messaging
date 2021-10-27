@@ -11,7 +11,7 @@ import ru.inovus.messaging.api.rest.MessageRest;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.impl.service.ChannelService;
 import ru.inovus.messaging.impl.service.MessageService;
-import ru.inovus.messaging.impl.service.MessageSettingService;
+import ru.inovus.messaging.impl.service.MessageTemplateService;
 import ru.inovus.messaging.impl.service.RecipientService;
 
 import java.util.List;
@@ -22,18 +22,18 @@ import java.util.UUID;
 @Controller
 public class MessageRestImpl implements MessageRest {
     private final MessageService messageService;
-    private final MessageSettingService messageSettingService;
+    private final MessageTemplateService messageTemplateService;
     private final RecipientService recipientService;
     private final ChannelService channelService;
     private final MqProvider mqProvider;
 
     public MessageRestImpl(MessageService messageService,
-                           MessageSettingService messageSettingService,
+                           MessageTemplateService messageTemplateService,
                            RecipientService recipientService,
                            ChannelService channelService,
                            MqProvider mqProvider) {
         this.messageService = messageService;
-        this.messageSettingService = messageSettingService;
+        this.messageTemplateService = messageTemplateService;
         this.recipientService = recipientService;
         this.channelService = channelService;
         this.mqProvider = mqProvider;
@@ -65,14 +65,14 @@ public class MessageRestImpl implements MessageRest {
     }
 
     private void buildAndSendMessage(TemplateMessageOutbox templateMessageOutbox) {
-        MessageSetting ms = messageSettingService.getSetting(templateMessageOutbox.getTemplateCode());
+        MessageTemplate template = messageTemplateService.getTemplate(templateMessageOutbox.getTemplateCode());
 
-        if (ms.getDisabled() != null && ms.getDisabled())
+        if (template.getDisabled() != null && template.getDisabled())
             return;
 
         //Рассылка пользователям без настроек
         if (!CollectionUtils.isEmpty(templateMessageOutbox.getUserNameList())) {
-            Message message = buildMessage(ms, templateMessageOutbox.getUserNameList(), templateMessageOutbox);
+            Message message = buildMessage(template, templateMessageOutbox.getUserNameList(), templateMessageOutbox);
             save(message);
             send(message);
         }
@@ -89,15 +89,15 @@ public class MessageRestImpl implements MessageRest {
     }
 
     //Построение уведомления по шаблону уведомления и доп. параметрам
-    private Message buildMessage(MessageSetting messageSetting, List<String> userNameList, TemplateMessageOutbox params) {
+    private Message buildMessage(MessageTemplate messageTemplate, List<String> userNameList, TemplateMessageOutbox params) {
         Message message = new Message();
-        message.setCaption(buildText(messageSetting.getCaption(), params));
-        message.setText(buildText(messageSetting.getText(), params));
-        message.setSeverity(messageSetting.getSeverity());
-        message.setAlertType(messageSetting.getAlertType());
+        message.setCaption(buildText(messageTemplate.getCaption(), params));
+        message.setText(buildText(messageTemplate.getText(), params));
+        message.setSeverity(messageTemplate.getSeverity());
+        message.setAlertType(messageTemplate.getAlertType());
         message.setSentAt(params.getSentAt());
-        message.setChannel(messageSetting.getChannel());
-        message.setFormationType(messageSetting.getFormationType());
+        message.setChannel(messageTemplate.getChannel());
+        message.setFormationType(messageTemplate.getFormationType());
         message.setRecipientType(RecipientType.RECIPIENT);
         message.setTenantCode(params.getTenantCode());
         message.setRecipients(recipientService.getRecipientsByUsername(userNameList));

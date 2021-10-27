@@ -11,6 +11,5 @@ public class FeedPagesRegistrar implements MetadataPack<N2oApplicationBuilder> {
     @Override
     public void build(N2oApplicationBuilder b) {
         b.routes(new RouteInfo("/feed", new PageContext("messaging_feed", "/feed")));
-        b.routes(new RouteInfo("/feed_settings", new PageContext("messaging_user_setting", "/feed_settings")));
     }
 }

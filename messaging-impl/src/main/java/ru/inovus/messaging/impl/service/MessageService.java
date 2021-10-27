@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static ru.inovus.messaging.impl.jooq.Sequences.RECIPIENT_ID_SEQ;
+import static ru.inovus.messaging.impl.jooq.Sequences.MESSAGE_RECIPIENT_ID_SEQ;
 import static ru.inovus.messaging.impl.jooq.Tables.*;
 
 /**
@@ -87,7 +87,7 @@ public class MessageService {
                         .insertInto(MESSAGE_RECIPIENT)
                         .columns(MESSAGE_RECIPIENT.ID, MESSAGE_RECIPIENT.RECIPIENT_NAME, MESSAGE_RECIPIENT.MESSAGE_ID,
                                 MESSAGE_RECIPIENT.STATUS, MESSAGE_RECIPIENT.STATUS_TIME, MESSAGE_RECIPIENT.RECIPIENT_USERNAME)
-                        .values(dsl.nextval(RECIPIENT_ID_SEQ).intValue(), recipient.getName(), id, MessageStatusType.SCHEDULED, LocalDateTime.now(), recipient.getUsername())
+                        .values(dsl.nextval(MESSAGE_RECIPIENT_ID_SEQ).intValue(), recipient.getName(), id, MessageStatusType.SCHEDULED, LocalDateTime.now(), recipient.getUsername())
                         .execute();
             }
         }

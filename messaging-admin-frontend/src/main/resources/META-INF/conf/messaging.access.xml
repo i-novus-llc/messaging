@@ -7,7 +7,7 @@
         <object-access object-id="messaging_feed" operations="*"/>
         <object-access object-id="messaging_message" operations="*"/>
         <object-access object-id="messaging_user" operations="*"/>
-        <object-access object-id="messaging_msg_setting" operations="*"/>
+        <object-access object-id="messaging_msg_template" operations="*"/>
     </permit-all>
 
 </access>

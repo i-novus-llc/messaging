@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.jooq.impl.DSL.exists;
-import static ru.inovus.messaging.impl.jooq.Sequences.RECIPIENT_ID_SEQ;
+import static ru.inovus.messaging.impl.jooq.Sequences.MESSAGE_RECIPIENT_ID_SEQ;
 import static ru.inovus.messaging.impl.jooq.Tables.*;
 
 @Service
@@ -107,7 +107,7 @@ public class FeedService {
                     .execute();
             if (updated == 0) {
                 dsl.insertInto(MESSAGE_RECIPIENT)
-                        .set(MESSAGE_RECIPIENT.ID, dsl.nextval(RECIPIENT_ID_SEQ).intValue())
+                        .set(MESSAGE_RECIPIENT.ID, dsl.nextval(MESSAGE_RECIPIENT_ID_SEQ).intValue())
                         .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
                         .set(MESSAGE_RECIPIENT.MESSAGE_ID, messageId)
                         .set(MESSAGE_RECIPIENT.RECIPIENT_USERNAME, username)

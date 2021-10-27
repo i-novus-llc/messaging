@@ -13,44 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ru.inovus.messaging.api.criteria;
+package ru.inovus.messaging.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.inovus.messaging.api.model.enums.AlertType;
 import ru.inovus.messaging.api.model.enums.FormationType;
 import ru.inovus.messaging.api.model.enums.Severity;
-import ru.inovus.messaging.api.model.enums.YesNo;
 
-import javax.ws.rs.QueryParam;
+import java.io.Serializable;
 
 @Getter
 @Setter
-public class MessageSettingCriteria extends BaseMessagingCriteria {
-
-    @QueryParam("severity.id")
+@NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class MessageTemplate implements Serializable {
+    private Integer id;
+    private String caption;
+    private String text;
     private Severity severity;
-
-    @QueryParam("alertType.id")
     private AlertType alertType;
-
-    @QueryParam("infoType.id")
-    private Integer channelId;
-
-    @QueryParam("name")
-    private String name;
-
-    @QueryParam("formationType.id")
+    private Channel channel;
     private FormationType formationType;
-
-    @QueryParam("enabled.id")
-    private YesNo enabled;
-
-    @QueryParam("code")
+    private String name;
+    private Boolean disabled;
     private String code;
 
-
-    public Boolean getEnabled() {
-        return enabled != null ? enabled.getValue() : null;
+    public MessageTemplate(Integer id) {
+        this.id = id;
     }
 }

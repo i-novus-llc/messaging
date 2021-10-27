@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <table xmlns="http://n2oapp.net/framework/config/schema/n2o-widget-4.0"
-       query-id="messaging_msg_setting" id="message_setting_list">
+       query-id="messaging_msg_template" id="message_template_list">
     <filters>
         <row>
             <col>
@@ -66,10 +66,10 @@
     </columns>
     <toolbar>
         <button label="Добавить" id="create" model="filter" icon="fa fa-plus">
-            <show-modal page-id="messaging_msg_setting" submit-operation-id="create" upload="defaults"/>
+            <show-modal page-id="messaging_msg_template" submit-operation-id="create" upload="defaults"/>
         </button>
         <button label="Изменить" id="update" model="resolve" icon="fa fa-edit">
-            <show-modal page-id="messaging_msg_setting" submit-operation-id="update"
+            <show-modal page-id="messaging_msg_template" submit-operation-id="update"
                         close-after-submit="true" detail-field-id="id"/>
         </button>
         <button label="Удалить" id="delete" model="resolve" icon="fa fa-remove">

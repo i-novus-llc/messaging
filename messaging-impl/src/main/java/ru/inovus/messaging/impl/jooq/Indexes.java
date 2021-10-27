@@ -8,7 +8,7 @@ import org.jooq.Index;
 import org.jooq.OrderField;
 import org.jooq.impl.Internal;
 import ru.inovus.messaging.impl.jooq.tables.Message;
-import ru.inovus.messaging.impl.jooq.tables.MessageSetting;
+import ru.inovus.messaging.impl.jooq.tables.MessageTemplate;
 
 
 /**
@@ -30,6 +30,6 @@ public class Indexes {
 
     private static class Indexes0 {
         public static Index IX_MESSAGE_SYSTEM_ID = Internal.createIndex("ix_message_system_id", Message.MESSAGE, new OrderField[] { Message.MESSAGE.TENANT_CODE }, false);
-        public static Index CODE_UX = Internal.createIndex("code_ux", MessageSetting.MESSAGE_SETTING, new OrderField[] { MessageSetting.MESSAGE_SETTING.CODE }, true);
+        public static Index CODE_UX = Internal.createIndex("code_ux", MessageTemplate.MESSAGE_TEMPLATE, new OrderField[] { MessageTemplate.MESSAGE_TEMPLATE.CODE }, true);
     }
 }

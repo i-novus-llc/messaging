@@ -5,7 +5,7 @@
         <fields>
             <set>
                 <row>
-                    <input-select id="template" label="Шаблон" query-id="messaging_msg_setting" search-field-id="name"
+                    <input-select id="template" label="Шаблон" query-id="messaging_msg_template" search-field-id="name"
                                   label-field-id="name"/>
                 </row>
                 <row>

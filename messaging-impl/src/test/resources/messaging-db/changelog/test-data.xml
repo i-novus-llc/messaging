@@ -17,13 +17,13 @@
             (2, 'email', 'email_queue', false, 'tenant'),
             (3, 'custom', 'custom_queue', false, 'tenant2');
             
-            <!-- message settings -->
-            INSERT INTO messaging.message_setting (id, name, code, caption, text, alert_type, 
+            <!-- message templates -->
+            INSERT INTO messaging.message_template (id, name, code, caption, text, alert_type,
             severity, formation_type, is_disabled, channel_id, tenant_code) VALUES
-            (1, 'msg_setting1', 'ms1', 'Message setting 1', 'Some text', 'POPUP', 10, 'HAND', false, 1, 'tenant'),
-            (2, 'msg_setting2', 'ms2', 'Message setting 2', 'Some text2', 'HIDDEN', 10, 'AUTO', false, 2, 'tenant'),
-            (3, 'msg_setting3', 'ms3', 'Message setting 3', 'Some text3', 'HIDDEN', 30, 'AUTO', true, 2, 'tenant');
-            SELECT setval('messaging.message_setting_id_seq', 4, false);
+            (1, 'msg_template1', 'mt1', 'Message template 1', 'Some text', 'POPUP', 10, 'HAND', false, 1, 'tenant'),
+            (2, 'msg_template2', 'mt2', 'Message template 2', 'Some text2', 'HIDDEN', 10, 'AUTO', false, 2, 'tenant'),
+            (3, 'msg_template3', 'mt3', 'Message template 3', 'Some text3', 'HIDDEN', 30, 'AUTO', true, 2, 'tenant');
+            SELECT setval('messaging.message_template_id_seq', 4, false);
 
             <!-- messages and recipients -->
             INSERT INTO messaging.message (id, text, severity, alert_type, tenant_code, formation_type, recipient_type, channel_id)
