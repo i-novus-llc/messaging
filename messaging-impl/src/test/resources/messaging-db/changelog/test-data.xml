@@ -4,10 +4,10 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
 
-    <changeSet id="MESSAGING-212-test" author="ilebedenko">
-        <comment>Скрипт для тестирования сервиса RecipientService.</comment>
+    <changeSet id="test-data" author="ilebedenko">
+        <comment>Скрипт для тестирования сервисов.</comment>
         <sql>
-            <!-- tenant -->
+            <!-- tenants -->
             INSERT INTO messaging.tenant VALUES ('tenant', 'Test tenant');
             INSERT INTO messaging.tenant VALUES ('tenant2', 'Test tenant2');
             
@@ -23,6 +23,7 @@
             (1, 'msg_setting1', 'ms1', 'Message setting 1', 'Some text', 'POPUP', 10, 'HAND', false, 1, 'tenant'),
             (2, 'msg_setting2', 'ms2', 'Message setting 2', 'Some text2', 'HIDDEN', 10, 'AUTO', false, 2, 'tenant'),
             (3, 'msg_setting3', 'ms3', 'Message setting 3', 'Some text3', 'HIDDEN', 30, 'AUTO', true, 2, 'tenant');
+            SELECT setval('messaging.message_setting_id_seq', 4, false);
 
             <!-- messages and recipients -->
             INSERT INTO messaging.message (id, text, severity, alert_type, tenant_code, formation_type, recipient_type, channel_id)

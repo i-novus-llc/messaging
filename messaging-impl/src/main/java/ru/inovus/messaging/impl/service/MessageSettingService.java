@@ -173,11 +173,11 @@ public class MessageSettingService {
      * @return Шаблон уведомления
      */
     public MessageSetting getSetting(Integer id) {
-        return dsl
+        MessageSettingRecord messageSettingRecord = dsl
                 .selectFrom(MESSAGE_SETTING)
                 .where(MESSAGE_SETTING.ID.eq(id))
-                .fetchOne()
-                .map(MAPPER);
+                .fetchOne();
+        return messageSettingRecord != null ? messageSettingRecord.map(MAPPER) : null;
     }
 
     /**
@@ -187,11 +187,11 @@ public class MessageSettingService {
      * @return Шаблон уведомления
      */
     public MessageSetting getSetting(String code) {
-        return dsl
+        MessageSettingRecord messageSettingRecord = dsl
                 .selectFrom(MESSAGE_SETTING)
                 .where(MESSAGE_SETTING.CODE.eq(code))
-                .fetchOne()
-                .map(MAPPER);
+                .fetchOne();
+        return messageSettingRecord != null ? messageSettingRecord.map(MAPPER) : null;
     }
 
     /**
