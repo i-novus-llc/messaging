@@ -19,24 +19,24 @@
         </field>
 
         <field id="severity.id" domain="string">
-            <select mapping="['severity']"/>
+            <select mapping="['severity.name']"/>
             <filters>
-                <eq filter-id="severity.id">severity.id={severity.id}</eq>
+                <eq filter-id="severity.name">severity.id={severity.id}</eq>
             </filters>
         </field>
         <field id="severity.name" domain="string">
-            <select mapping="['severity.name']"/>
+            <select mapping="['severity.description']"/>
             <sorting>sort=severity,{severity.nameDirection}</sorting>
         </field>
 
         <field id="alertType.id" domain="string">
-            <select mapping="['alertType']"/>
+            <select mapping="['alertType.name']"/>
             <filters>
                 <eq filter-id="alertType.id">alertType.id={alertType.id}</eq>
             </filters>
         </field>
         <field id="alertType.name" domain="string">
-            <select mapping="['alertType.name']"/>
+            <select mapping="['alertType.description']"/>
         </field>
 
         <field id="infoType" domain="object">

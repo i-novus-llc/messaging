@@ -17,9 +17,7 @@
                             <option id="INFO" name="Информация"/>
                         </options>
                         <dependencies>
-                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return
-                                template.severity;
-                            </set-value>
+                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return template.severity;</set-value>
                         </dependencies>
                     </select>
                 </row>
@@ -27,9 +25,7 @@
                     <input-select id="infoType" label="Информирование" required="true"
                                   query-id="messaging_channels">
                         <dependencies>
-                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return
-                                template.infoType;
-                            </set-value>
+                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return template.infoType;</set-value>
                         </dependencies>
                     </input-select>
                     <select id="alertType" label="Способ отображения" required="true">
@@ -39,27 +35,21 @@
                             <option id="HIDDEN" name="Лента уведомлений"/>
                         </options>
                         <dependencies>
-                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return
-                                template.alertType;
-                            </set-value>
+                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return template.alertType;</set-value>
                         </dependencies>
                     </select>
                 </row>
                 <row>
                     <text-area id="caption" label="Заголовок уведомления" max-rows="3" required="true">
                         <dependencies>
-                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return
-                                template.caption;
-                            </set-value>
+                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return template.caption;</set-value>
                         </dependencies>
                     </text-area>
                 </row>
                 <row>
                     <text-area id="text" label="Текст уведомления" max-rows="5" required="true">
                         <dependencies>
-                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return
-                                template.text;
-                            </set-value>
+                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return template.text;</set-value>
                         </dependencies>
                     </text-area>
                 </row>

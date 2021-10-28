@@ -25,18 +25,22 @@ public enum Severity {
     SEVERE("40", "Важный");
 
     private String value;
-    private String name;
+    private String description;
 
-    Severity(String value, String name) {
+    Severity(String value, String description) {
         this.value = value;
-        this.name = name;
+        this.description = description;
     }
 
     public String getValue() {
         return value;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public String getName() {
-        return name;
+        return name();
     }
 }
