@@ -69,7 +69,7 @@ public class MessageTemplateService {
                 .ifPresent(severity -> conditions.add(MESSAGE_TEMPLATE.SEVERITY.eq(severity)));
         Optional.ofNullable(criteria.getAlertType())
                 .ifPresent(alertType -> conditions.add(MESSAGE_TEMPLATE.ALERT_TYPE.eq(alertType)));
-        Optional.ofNullable(criteria.getChannelId())
+        Optional.ofNullable(criteria.getChannelCode())
                 .ifPresent(channelId -> conditions.add(MESSAGE_TEMPLATE.CHANNEL_ID.eq(channelId)));
         Optional.ofNullable(criteria.getName()).filter(StringUtils::isNotBlank)
                 .ifPresent(name -> conditions.add(MESSAGE_TEMPLATE.NAME.containsIgnoreCase(name)));

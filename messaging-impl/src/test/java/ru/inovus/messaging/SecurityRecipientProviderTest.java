@@ -2,9 +2,7 @@ package ru.inovus.messaging;
 
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
-import net.n2oapp.security.admin.rest.api.RoleRestService;
 import net.n2oapp.security.admin.rest.api.UserRestService;
-import net.n2oapp.security.admin.rest.api.criteria.RestRoleCriteria;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +13,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.inovus.messaging.api.criteria.ProviderRecipientCriteria;
-import ru.inovus.messaging.api.criteria.RoleCriteria;
 import ru.inovus.messaging.api.model.ProviderRecipient;
 import ru.inovus.messaging.impl.provider.SecurityAdminRecipientProvider;
 
@@ -30,8 +27,6 @@ public class SecurityRecipientProviderTest {
     @Mock
     private UserRestService userRestService;
 
-    @Mock
-    private RoleRestService roleRestService;
 
     @Before
     public void before() {
@@ -59,9 +54,6 @@ public class SecurityRecipientProviderTest {
 
         PageImpl userPage = new PageImpl(List.of(user1, user2), new ProviderRecipientCriteria(), 2);
         Mockito.when(userRestService.findAll(new RestUserCriteria())).thenReturn(userPage);
-
-        PageImpl rolePage = new PageImpl(List.of(role1), new RoleCriteria(), 1);
-        Mockito.when(roleRestService.findAll(new RestRoleCriteria())).thenReturn(rolePage);
 
         recipientProvider = new SecurityAdminRecipientProvider(userRestService);
         MockitoAnnotations.initMocks(this);

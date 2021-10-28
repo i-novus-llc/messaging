@@ -16,6 +16,7 @@
 package ru.inovus.messaging.api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,15 +31,35 @@ import java.io.Serializable;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MessageTemplate implements Serializable {
+
+    @ApiModelProperty("Идентификатор шаблона")
     private Integer id;
+
+    @ApiModelProperty("Заголовок шаблона")
     private String caption;
+
+    @ApiModelProperty("Текст шаблона")
     private String text;
+
+    @ApiModelProperty("Уровень важности шаблона")
     private Severity severity;
+
+    @ApiModelProperty("Способ отображения шаблона")
     private AlertType alertType;
+
+    @ApiModelProperty("Канал отправки")
     private Channel channel;
+
+    @ApiModelProperty("Способ формирования уведомления")
     private FormationType formationType;
+
+    @ApiModelProperty("Имя шаблона")
     private String name;
+
+    @ApiModelProperty("Признак включения")
     private Boolean enabled;
+
+    @ApiModelProperty("Код шаблона")
     private String code;
 
     public MessageTemplate(Integer id) {

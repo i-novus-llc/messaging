@@ -15,6 +15,7 @@
  */
 package ru.inovus.messaging.api.criteria;
 
+import io.swagger.annotations.ApiParam;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,6 +25,8 @@ import java.util.UUID;
 @Getter
 @Setter
 public class RecipientCriteria extends BaseMessagingCriteria {
+
     @QueryParam("messageId")
+    @ApiParam("Идентификатор уведомления")
     private UUID messageId;
 }

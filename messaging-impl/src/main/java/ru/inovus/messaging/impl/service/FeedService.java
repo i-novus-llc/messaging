@@ -148,7 +148,6 @@ public class FeedService {
         message.setText(record.getText());
         message.setSeverity(record.getSeverity());
         message.setSentAt(record.getSentAt());
-        message.setTenantCode(record.getTenantCode());
         message.setReadAt(recipientRecord.getStatusTime());
         return message;
     }

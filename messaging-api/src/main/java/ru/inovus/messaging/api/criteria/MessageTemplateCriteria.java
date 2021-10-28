@@ -15,6 +15,7 @@
  */
 package ru.inovus.messaging.api.criteria;
 
+import io.swagger.annotations.ApiParam;
 import lombok.Getter;
 import lombok.Setter;
 import ru.inovus.messaging.api.model.enums.AlertType;
@@ -27,24 +28,31 @@ import javax.ws.rs.QueryParam;
 @Setter
 public class MessageTemplateCriteria extends BaseMessagingCriteria {
 
-    @QueryParam("severity.id")
+    @QueryParam("severity")
+    @ApiParam("Уровень важности шаблона")
     private Severity severity;
 
-    @QueryParam("alertType.id")
+    @QueryParam("alertType")
+    @ApiParam("Способ отображения шаблона")
     private AlertType alertType;
 
-    @QueryParam("channelId")
-    private Integer channelId;
+    @QueryParam("infoType")
+    @ApiParam("Канал отправки шаблона")
+    private Integer channelCode;
 
     @QueryParam("name")
+    @ApiParam("Имя шаблона")
     private String name;
 
-    @QueryParam("formationType.id")
+    @QueryParam("formationType")
+    @ApiParam("Способ формирования шаблона")
     private FormationType formationType;
 
     @QueryParam("enabled")
+    @ApiParam("Признак включения")
     private Boolean enabled;
 
     @QueryParam("code")
+    @ApiParam("Код шаблона")
     private String code;
 }

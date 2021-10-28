@@ -101,7 +101,6 @@ public class MessageRestImpl implements MessageRest {
         message.setRecipientType(RecipientType.RECIPIENT);
         message.setTenantCode(params.getTenantCode());
         message.setRecipients(recipientService.getRecipientsByUsername(userNameList));
-        message.setData(null);
         message.setTemplateCode(params.getTemplateCode());
 
         return message;

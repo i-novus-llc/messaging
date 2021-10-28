@@ -15,7 +15,9 @@
  */
 package ru.inovus.messaging.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -27,25 +29,49 @@ import ru.inovus.messaging.api.model.enums.Severity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 @ToString
 public class Message implements Serializable {
+
+    @ApiModelProperty("Идентификатор уведомления")
     private String id;
+
+    @ApiModelProperty("Заголовок уведомления")
     private String caption;
+
+    @ApiModelProperty("Текст уведомления")
     private String text;
+
+    @ApiModelProperty("Уровень важности уведомления")
     private Severity severity;
+
+    @ApiModelProperty("Способ отображения уведомления")
     private AlertType alertType;
+
+    @ApiModelProperty("Дата отправки")
     private LocalDateTime sentAt;
+
+    @ApiModelProperty("Дата прочтения")
     private LocalDateTime readAt;
+
+    @ApiModelProperty("Канал отправки")
     private Channel channel;
+
+    @ApiModelProperty("Способ формирования уведомления")
     private FormationType formationType;
+
+    @ApiModelProperty("Тип получателей уведомления")
     private RecipientType recipientType;
-    private String tenantCode;
+
+    @ApiModelProperty("Список получателей")
     private List<Recipient> recipients;
-    private Map<String, String> data;
+
+    @ApiModelProperty("Код шаблона уведомления")
     private String templateCode;
+
+    @JsonIgnore
+    private String tenantCode;
 }

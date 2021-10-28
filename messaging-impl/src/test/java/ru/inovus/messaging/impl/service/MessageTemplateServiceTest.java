@@ -90,7 +90,7 @@ public class MessageTemplateServiceTest {
 
         // filter by channel id
         criteria = new MessageTemplateCriteria();
-        criteria.setChannelId(2);
+        criteria.setChannelCode(2);
         templates = service.getTemplates(TENANT_CODE, criteria);
         assertThat(templates.getTotalElements(), is(2L));
         assertThat(templates.getContent().get(0).getId(), is(3));

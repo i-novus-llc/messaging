@@ -21,7 +21,7 @@
         <field id="severity.id" domain="string">
             <select mapping="['severity.id']"/>
             <filters>
-                <eq filter-id="severity.id">severity.id={severity.id}</eq>
+                <eq filter-id="severity.id">severity={severity.id}</eq>
             </filters>
         </field>
         <field id="severity.name" domain="string">
@@ -31,7 +31,7 @@
         <field id="infoType" domain="object">
             <select mapping="['channel']"/>
             <filters>
-                <eq filter-id="infoType.id">channel.id={infoType.id}</eq>
+                <eq filter-id="infoType.id">infoType={infoType.id}</eq>
             </filters>
         </field>
 

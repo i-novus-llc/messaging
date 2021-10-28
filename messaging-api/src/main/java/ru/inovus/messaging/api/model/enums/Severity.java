@@ -17,6 +17,9 @@ package ru.inovus.messaging.api.model.enums;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+/**
+ * Уровень важности уведомления
+ */
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Severity {
     INFO("Информация"),

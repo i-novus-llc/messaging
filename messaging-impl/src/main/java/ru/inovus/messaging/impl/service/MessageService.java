@@ -109,7 +109,7 @@ public class MessageService {
         conditions.add(MESSAGE.TENANT_CODE.eq(tenantCode));
         Optional.ofNullable(criteria.getSeverity())
                 .ifPresent(severity -> conditions.add(MESSAGE.SEVERITY.eq(severity)));
-        Optional.ofNullable(criteria.getChannelId())
+        Optional.ofNullable(criteria.getChannelCode())
                 .ifPresent(channelId -> conditions.add(MESSAGE.CHANNEL_ID.eq(channelId)));
 
         //TODO: UTC?

@@ -21,7 +21,7 @@
         <field id="severity.id" domain="string">
             <select mapping="['severity.id']"/>
             <filters>
-                <eq filter-id="severity.id">severity.id={severity.id}</eq>
+                <eq filter-id="severity.id">severity={severity.id}</eq>
             </filters>
         </field>
         <field id="severity.name" domain="string">
@@ -54,12 +54,6 @@
 
         <field id="isRead" domain="boolean">
             <select mapping="#this['readAt'] == null ? false : true"/>
-        </field>
-
-        <field id="username" domain="string">
-            <filters>
-                <eq filter-id="username" default-value="#{username}">user={username}</eq>
-            </filters>
         </field>
     </fields>
 

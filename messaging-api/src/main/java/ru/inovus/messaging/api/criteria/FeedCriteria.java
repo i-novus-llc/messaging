@@ -15,6 +15,7 @@
  */
 package ru.inovus.messaging.api.criteria;
 
+import io.swagger.annotations.ApiParam;
 import lombok.Getter;
 import lombok.Setter;
 import ru.inovus.messaging.api.model.enums.Severity;
@@ -27,11 +28,14 @@ import java.time.LocalDateTime;
 public class FeedCriteria extends BaseMessagingCriteria {
 
     @QueryParam("sentAtBegin")
+    @ApiParam("Начальная дата отправки уведомления")
     private LocalDateTime sentAtBegin;
 
     @QueryParam("sentAtEnd")
+    @ApiParam("Конечная дата отправки уведомления")
     private LocalDateTime sentAtEnd;
 
-    @QueryParam("severity.id")
+    @QueryParam("severity")
+    @ApiParam("Уровень важности уведомления")
     private Severity severity;
 }
