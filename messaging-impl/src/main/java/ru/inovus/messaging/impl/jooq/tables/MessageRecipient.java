@@ -26,7 +26,7 @@ import java.util.UUID;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class MessageRecipient extends TableImpl<MessageRecipientRecord> {
 
-    private static final long serialVersionUID = 2024281022;
+    private static final long serialVersionUID = 2048401086;
 
     /**
      * The reference instance of <code>messaging.message_recipient</code>
@@ -121,21 +121,21 @@ public class MessageRecipient extends TableImpl<MessageRecipientRecord> {
 
     @Override
     public UniqueKey<MessageRecipientRecord> getPrimaryKey() {
-        return Keys.RECIPIENT_PKEY;
+        return Keys.MESSAGE_RECIPIENT_PKEY;
     }
 
     @Override
     public List<UniqueKey<MessageRecipientRecord>> getKeys() {
-        return Arrays.<UniqueKey<MessageRecipientRecord>>asList(Keys.RECIPIENT_PKEY);
+        return Arrays.<UniqueKey<MessageRecipientRecord>>asList(Keys.MESSAGE_RECIPIENT_PKEY);
     }
 
     @Override
     public List<ForeignKey<MessageRecipientRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<MessageRecipientRecord, ?>>asList(Keys.MESSAGE_RECIPIENT__RECIPIENT_MESSAGE_ID_FKEY);
+        return Arrays.<ForeignKey<MessageRecipientRecord, ?>>asList(Keys.MESSAGE_RECIPIENT__MESSAGE_RECIPIENT_MESSAGE_ID_FKEY);
     }
 
     public Message message() {
-        return new Message(this, Keys.MESSAGE_RECIPIENT__RECIPIENT_MESSAGE_ID_FKEY);
+        return new Message(this, Keys.MESSAGE_RECIPIENT__MESSAGE_RECIPIENT_MESSAGE_ID_FKEY);
     }
 
     @Override

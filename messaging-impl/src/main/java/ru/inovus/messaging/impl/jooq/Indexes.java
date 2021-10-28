@@ -7,6 +7,7 @@ package ru.inovus.messaging.impl.jooq;
 import org.jooq.Index;
 import org.jooq.OrderField;
 import org.jooq.impl.Internal;
+
 import ru.inovus.messaging.impl.jooq.tables.Message;
 import ru.inovus.messaging.impl.jooq.tables.MessageTemplate;
 
