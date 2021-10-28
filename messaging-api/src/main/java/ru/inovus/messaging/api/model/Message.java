@@ -47,5 +47,5 @@ public class Message implements Serializable {
     private String tenantCode;
     private List<Recipient> recipients;
     private Map<String, String> data;
-    private String notificationType;
+    private String templateCode;
 }

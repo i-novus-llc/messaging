@@ -29,7 +29,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class MessageTemplate extends TableImpl<MessageTemplateRecord> {
 
-    private static final long serialVersionUID = -51082877;
+    private static final long serialVersionUID = -1884988348;
 
     /**
      * The reference instance of <code>messaging.message_template</code>
@@ -139,7 +139,7 @@ public class MessageTemplate extends TableImpl<MessageTemplateRecord> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.CODE_UX);
+        return Arrays.<Index>asList(Indexes.CODE_UX, Indexes.MESSAGE_TEMPLATE_TENANT_CODE_IDX);
     }
 
     @Override
@@ -149,7 +149,7 @@ public class MessageTemplate extends TableImpl<MessageTemplateRecord> {
 
     @Override
     public List<UniqueKey<MessageTemplateRecord>> getKeys() {
-        return Arrays.<UniqueKey<MessageTemplateRecord>>asList(Keys.MESSAGE_TEMPLATE_PKEY);
+        return Arrays.<UniqueKey<MessageTemplateRecord>>asList(Keys.MESSAGE_TEMPLATE_PKEY, Keys.MESSAGE_TEMPLATE_CODE_KEY);
     }
 
     @Override

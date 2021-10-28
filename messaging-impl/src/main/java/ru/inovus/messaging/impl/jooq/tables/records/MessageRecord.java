@@ -4,19 +4,20 @@
 package ru.inovus.messaging.impl.jooq.tables.records;
 
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 import org.jooq.Field;
 import org.jooq.Record1;
 import org.jooq.Record11;
 import org.jooq.Row11;
 import org.jooq.impl.UpdatableRecordImpl;
+
 import ru.inovus.messaging.api.model.enums.AlertType;
 import ru.inovus.messaging.api.model.enums.FormationType;
 import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.model.enums.Severity;
 import ru.inovus.messaging.impl.jooq.tables.Message;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 
 /**
@@ -25,7 +26,7 @@ import java.util.UUID;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements Record11<UUID, String, String, Severity, AlertType, LocalDateTime, String, FormationType, RecipientType, String, Integer> {
 
-    private static final long serialVersionUID = 1093856845;
+    private static final long serialVersionUID = -1111340417;
 
     /**
      * Setter for <code>messaging.message.id</code>. Уникальный идентификатор
@@ -154,16 +155,16 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
     }
 
     /**
-     * Setter for <code>messaging.message.notification_type</code>. Код шаблона, который был использован для формирования уведомления
+     * Setter for <code>messaging.message.template_code</code>. Код шаблона, который был использован для формирования уведомления
      */
-    public void setNotificationType(String value) {
+    public void setTemplateCode(String value) {
         set(9, value);
     }
 
     /**
-     * Getter for <code>messaging.message.notification_type</code>. Код шаблона, который был использован для формирования уведомления
+     * Getter for <code>messaging.message.template_code</code>. Код шаблона, который был использован для формирования уведомления
      */
-    public String getNotificationType() {
+    public String getTemplateCode() {
         return (String) get(9);
     }
 
@@ -251,7 +252,7 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
 
     @Override
     public Field<String> field10() {
-        return Message.MESSAGE.NOTIFICATION_TYPE;
+        return Message.MESSAGE.TEMPLATE_CODE;
     }
 
     @Override
@@ -306,7 +307,7 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
 
     @Override
     public String component10() {
-        return getNotificationType();
+        return getTemplateCode();
     }
 
     @Override
@@ -361,7 +362,7 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
 
     @Override
     public String value10() {
-        return getNotificationType();
+        return getTemplateCode();
     }
 
     @Override
@@ -425,7 +426,7 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
 
     @Override
     public MessageRecord value10(String value) {
-        setNotificationType(value);
+        setTemplateCode(value);
         return this;
     }
 
@@ -465,7 +466,7 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
     /**
      * Create a detached, initialised MessageRecord
      */
-    public MessageRecord(UUID id, String caption, String text, Severity severity, AlertType alertType, LocalDateTime sentAt, String tenantCode, FormationType formationType, RecipientType recipientType, String notificationType, Integer channelId) {
+    public MessageRecord(UUID id, String caption, String text, Severity severity, AlertType alertType, LocalDateTime sentAt, String tenantCode, FormationType formationType, RecipientType recipientType, String templateCode, Integer channelId) {
         super(Message.MESSAGE);
 
         set(0, id);
@@ -477,7 +478,7 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
         set(6, tenantCode);
         set(7, formationType);
         set(8, recipientType);
-        set(9, notificationType);
+        set(9, templateCode);
         set(10, channelId);
     }
 }

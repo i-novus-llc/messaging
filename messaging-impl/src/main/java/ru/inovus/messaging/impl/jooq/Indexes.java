@@ -22,15 +22,17 @@ public class Indexes {
     // INDEX definitions
     // -------------------------------------------------------------------------
 
-    public static final Index IX_MESSAGE_SYSTEM_ID = Indexes0.IX_MESSAGE_SYSTEM_ID;
+    public static final Index MESSAGE_TENANT_CODE_IDX = Indexes0.MESSAGE_TENANT_CODE_IDX;
     public static final Index CODE_UX = Indexes0.CODE_UX;
+    public static final Index MESSAGE_TEMPLATE_TENANT_CODE_IDX = Indexes0.MESSAGE_TEMPLATE_TENANT_CODE_IDX;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
     // -------------------------------------------------------------------------
 
     private static class Indexes0 {
-        public static Index IX_MESSAGE_SYSTEM_ID = Internal.createIndex("ix_message_system_id", Message.MESSAGE, new OrderField[] { Message.MESSAGE.TENANT_CODE }, false);
+        public static Index MESSAGE_TENANT_CODE_IDX = Internal.createIndex("message_tenant_code_idx", Message.MESSAGE, new OrderField[] { Message.MESSAGE.TENANT_CODE }, false);
         public static Index CODE_UX = Internal.createIndex("code_ux", MessageTemplate.MESSAGE_TEMPLATE, new OrderField[] { MessageTemplate.MESSAGE_TEMPLATE.CODE }, true);
+        public static Index MESSAGE_TEMPLATE_TENANT_CODE_IDX = Internal.createIndex("message_template_tenant_code_idx", MessageTemplate.MESSAGE_TEMPLATE, new OrderField[] { MessageTemplate.MESSAGE_TEMPLATE.TENANT_CODE }, false);
     }
 }

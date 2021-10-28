@@ -76,7 +76,7 @@ public class MessageService {
                         MESSAGE.FORMATION_TYPE, MESSAGE.RECIPIENT_TYPE, MESSAGE.NOTIFICATION_TYPE, MESSAGE.CHANNEL_ID)
                 .values(id, message.getCaption(), message.getText(), message.getSeverity(), message.getAlertType(),
                         message.getSentAt(), message.getTenantCode(),
-                        message.getFormationType(), message.getRecipientType(), message.getNotificationType(),
+                        message.getFormationType(), message.getRecipientType(), message.getTemplateCode(),
                         message.getChannel() != null ? message.getChannel().getId() : null)
                 .returning()
                 .fetch().get(0).getId();

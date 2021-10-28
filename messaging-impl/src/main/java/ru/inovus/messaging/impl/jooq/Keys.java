@@ -43,6 +43,7 @@ public class Keys {
     public static final UniqueKey<MessageRecord> MESSAGE_PKEY = UniqueKeys0.MESSAGE_PKEY;
     public static final UniqueKey<MessageRecipientRecord> MESSAGE_RECIPIENT_PKEY = UniqueKeys0.MESSAGE_RECIPIENT_PKEY;
     public static final UniqueKey<MessageTemplateRecord> MESSAGE_TEMPLATE_PKEY = UniqueKeys0.MESSAGE_TEMPLATE_PKEY;
+    public static final UniqueKey<MessageTemplateRecord> MESSAGE_TEMPLATE_CODE_KEY = UniqueKeys0.MESSAGE_TEMPLATE_CODE_KEY;
     public static final UniqueKey<TenantRecord> TENANT_PKEY = UniqueKeys0.TENANT_PKEY;
 
     // -------------------------------------------------------------------------
@@ -69,6 +70,7 @@ public class Keys {
         public static final UniqueKey<MessageRecord> MESSAGE_PKEY = Internal.createUniqueKey(Message.MESSAGE, "message_pkey", new TableField[] { Message.MESSAGE.ID }, true);
         public static final UniqueKey<MessageRecipientRecord> MESSAGE_RECIPIENT_PKEY = Internal.createUniqueKey(MessageRecipient.MESSAGE_RECIPIENT, "message_recipient_pkey", new TableField[] { MessageRecipient.MESSAGE_RECIPIENT.ID }, true);
         public static final UniqueKey<MessageTemplateRecord> MESSAGE_TEMPLATE_PKEY = Internal.createUniqueKey(MessageTemplate.MESSAGE_TEMPLATE, "message_template_pkey", new TableField[] { MessageTemplate.MESSAGE_TEMPLATE.ID }, true);
+        public static final UniqueKey<MessageTemplateRecord> MESSAGE_TEMPLATE_CODE_KEY = Internal.createUniqueKey(MessageTemplate.MESSAGE_TEMPLATE, "message_template_code_key", new TableField[] { MessageTemplate.MESSAGE_TEMPLATE.CODE }, true);
         public static final UniqueKey<TenantRecord> TENANT_PKEY = Internal.createUniqueKey(Tenant.TENANT, "tenant_pkey", new TableField[] { Tenant.TENANT.CODE }, true);
     }
 
