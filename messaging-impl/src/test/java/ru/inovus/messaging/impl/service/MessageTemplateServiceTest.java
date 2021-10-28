@@ -14,7 +14,6 @@ import ru.inovus.messaging.api.model.MessageTemplate;
 import ru.inovus.messaging.api.model.enums.AlertType;
 import ru.inovus.messaging.api.model.enums.FormationType;
 import ru.inovus.messaging.api.model.enums.Severity;
-import ru.inovus.messaging.api.model.enums.YesNo;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -83,7 +82,7 @@ public class MessageTemplateServiceTest {
 
         // filter by enabled
         criteria = new MessageTemplateCriteria();
-        criteria.setEnabled(YesNo.YES);
+        criteria.setEnabled(Boolean.TRUE);
         templates = service.getTemplates(TENANT_CODE, criteria);
         assertThat(templates.getTotalElements(), is(2L));
         assertThat(templates.getContent().get(0).getId(), is(2));
@@ -126,7 +125,7 @@ public class MessageTemplateServiceTest {
         newTemplate.setFormationType(FormationType.AUTO);
         newTemplate.setAlertType(AlertType.BLOCKER);
         newTemplate.setChannel(new Channel(1, "notice", "web_queue"));
-        newTemplate.setDisabled(false);
+        newTemplate.setEnabled(true);
         Integer newTemplateId = service.createTemplate(TENANT_CODE, newTemplate).getId();
 
         MessageTemplate template = service.getTemplate(newTemplateId);
@@ -138,7 +137,7 @@ public class MessageTemplateServiceTest {
         assertThat(template.getFormationType(), is(newTemplate.getFormationType()));
         assertThat(template.getAlertType(), is(newTemplate.getAlertType()));
         assertThat(template.getChannel().getId(), is(newTemplate.getChannel().getId()));
-        assertThat(template.getDisabled(), is(newTemplate.getDisabled()));
+        assertThat(template.getEnabled(), is(newTemplate.getEnabled()));
 
         return newTemplateId;
     }
@@ -153,7 +152,7 @@ public class MessageTemplateServiceTest {
         updatedTemplate.setFormationType(FormationType.HAND);
         updatedTemplate.setAlertType(AlertType.HIDDEN);
         updatedTemplate.setChannel(new Channel(2, "email", "email_queue"));
-        updatedTemplate.setDisabled(true);
+        updatedTemplate.setEnabled(false);
         service.updateTemplate(id, updatedTemplate);
 
         MessageTemplate template = service.getTemplate(id);
@@ -165,7 +164,7 @@ public class MessageTemplateServiceTest {
         assertThat(template.getFormationType(), is(updatedTemplate.getFormationType()));
         assertThat(template.getAlertType(), is(updatedTemplate.getAlertType()));
         assertThat(template.getChannel().getId(), is(updatedTemplate.getChannel().getId()));
-        assertThat(template.getDisabled(), is(updatedTemplate.getDisabled()));
+        assertThat(template.getEnabled(), is(updatedTemplate.getEnabled()));
     }
 
     private void testDeleteTemplate(Integer id) {

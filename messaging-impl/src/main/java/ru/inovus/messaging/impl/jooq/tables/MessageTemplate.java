@@ -29,7 +29,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class MessageTemplate extends TableImpl<MessageTemplateRecord> {
 
-    private static final long serialVersionUID = -1884988348;
+    private static final long serialVersionUID = 1656722129;
 
     /**
      * The reference instance of <code>messaging.message_template</code>
@@ -75,9 +75,9 @@ public class MessageTemplate extends TableImpl<MessageTemplateRecord> {
     public final TableField<MessageTemplateRecord, String> NAME = createField(DSL.name("name"), org.jooq.impl.SQLDataType.VARCHAR, this, "Наименование шаблона уведомления");
 
     /**
-     * The column <code>messaging.message_template.is_disabled</code>. Признак выключения уведомления
+     * The column <code>messaging.message_template.enabled</code>. Признак включения уведомления
      */
-    public final TableField<MessageTemplateRecord, Boolean> IS_DISABLED = createField(DSL.name("is_disabled"), org.jooq.impl.SQLDataType.BOOLEAN.defaultValue(org.jooq.impl.DSL.field("false", org.jooq.impl.SQLDataType.BOOLEAN)), this, "Признак выключения уведомления");
+    public final TableField<MessageTemplateRecord, Boolean> ENABLED = createField(DSL.name("enabled"), org.jooq.impl.SQLDataType.BOOLEAN.defaultValue(org.jooq.impl.DSL.field("true", org.jooq.impl.SQLDataType.BOOLEAN)), this, "Признак включения уведомления");
 
     /**
      * The column <code>messaging.message_template.formation_type</code>. Тип формирования уведомления

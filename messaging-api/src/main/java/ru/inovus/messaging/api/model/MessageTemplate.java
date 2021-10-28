@@ -38,7 +38,7 @@ public class MessageTemplate implements Serializable {
     private Channel channel;
     private FormationType formationType;
     private String name;
-    private Boolean disabled;
+    private Boolean enabled;
     private String code;
 
     public MessageTemplate(Integer id) {

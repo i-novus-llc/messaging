@@ -49,7 +49,7 @@ public class MessageTemplateService {
         messageTemplate.setCaption(record.getCaption());
         messageTemplate.setText(record.getText());
         messageTemplate.setFormationType(record.getFormationType());
-        messageTemplate.setDisabled(record.getIsDisabled());
+        messageTemplate.setEnabled(record.getEnabled());
         messageTemplate.setCode(record.getCode());
         return messageTemplate;
     };
@@ -76,7 +76,7 @@ public class MessageTemplateService {
         Optional.ofNullable(criteria.getFormationType())
                 .ifPresent(formationType -> conditions.add(MESSAGE_TEMPLATE.FORMATION_TYPE.eq(formationType)));
         Optional.ofNullable(criteria.getEnabled())
-                .ifPresent(enabled -> conditions.add(MESSAGE_TEMPLATE.IS_DISABLED.notEqual(enabled)));
+                .ifPresent(enabled -> conditions.add(MESSAGE_TEMPLATE.ENABLED.eq(enabled)));
         Optional.ofNullable(criteria.getCode()).filter(StringUtils::isNotBlank)
                 .ifPresent(code -> conditions.add(MESSAGE_TEMPLATE.CODE.contains(code)));
 
@@ -114,14 +114,14 @@ public class MessageTemplateService {
                 .insertInto(MESSAGE_TEMPLATE)
                 .columns(MESSAGE_TEMPLATE.ID, MESSAGE_TEMPLATE.NAME,
                         MESSAGE_TEMPLATE.ALERT_TYPE, MESSAGE_TEMPLATE.SEVERITY, MESSAGE_TEMPLATE.CHANNEL_ID,
-                        MESSAGE_TEMPLATE.FORMATION_TYPE, MESSAGE_TEMPLATE.IS_DISABLED,
+                        MESSAGE_TEMPLATE.FORMATION_TYPE, MESSAGE_TEMPLATE.ENABLED,
                         MESSAGE_TEMPLATE.CAPTION, MESSAGE_TEMPLATE.TEXT,
                         MESSAGE_TEMPLATE.CODE, MESSAGE_TEMPLATE.TENANT_CODE
                 )
                 .values(id, messageTemplate.getName(),
                         messageTemplate.getAlertType(), messageTemplate.getSeverity(),
                         messageTemplate.getChannel() != null ? messageTemplate.getChannel().getId() : null,
-                        messageTemplate.getFormationType(), messageTemplate.getDisabled(), messageTemplate.getCaption(), messageTemplate.getText(),
+                        messageTemplate.getFormationType(), messageTemplate.getEnabled(), messageTemplate.getCaption(), messageTemplate.getText(),
                         messageTemplate.getCode(), tenantCode)
                 .execute();
 
@@ -143,7 +143,7 @@ public class MessageTemplateService {
                 .set(MESSAGE_TEMPLATE.SEVERITY, messageTemplate.getSeverity())
                 .set(MESSAGE_TEMPLATE.CHANNEL_ID, messageTemplate.getChannel() != null ? messageTemplate.getChannel().getId() : null)
                 .set(MESSAGE_TEMPLATE.FORMATION_TYPE, messageTemplate.getFormationType())
-                .set(MESSAGE_TEMPLATE.IS_DISABLED, messageTemplate.getDisabled())
+                .set(MESSAGE_TEMPLATE.ENABLED, messageTemplate.getEnabled())
                 .set(MESSAGE_TEMPLATE.CAPTION, messageTemplate.getCaption())
                 .set(MESSAGE_TEMPLATE.TEXT, messageTemplate.getText())
                 .set(MESSAGE_TEMPLATE.CODE, messageTemplate.getCode())

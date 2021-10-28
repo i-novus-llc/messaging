@@ -42,13 +42,7 @@
                 </input-select>
             </col>
             <col>
-                <radio-group id="enabled" label="Уведомление включено" inline="true">
-                    <default-value id="YES" name="Да"/>
-                    <options>
-                        <option id="YES" name="Да"/>
-                        <option id="NO" name="Нет"/>
-                    </options>
-                </radio-group>
+                <checkbox id="enabled" label="Уведомление включено" default-value="true" unchecked="false"/>
             </col>
         </row>
         <!--</set>-->

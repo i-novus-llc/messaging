@@ -20,7 +20,6 @@ import lombok.Setter;
 import ru.inovus.messaging.api.model.enums.AlertType;
 import ru.inovus.messaging.api.model.enums.FormationType;
 import ru.inovus.messaging.api.model.enums.Severity;
-import ru.inovus.messaging.api.model.enums.YesNo;
 
 import javax.ws.rs.QueryParam;
 
@@ -34,7 +33,7 @@ public class MessageTemplateCriteria extends BaseMessagingCriteria {
     @QueryParam("alertType.id")
     private AlertType alertType;
 
-    @QueryParam("infoType.id")
+    @QueryParam("channelId")
     private Integer channelId;
 
     @QueryParam("name")
@@ -43,14 +42,9 @@ public class MessageTemplateCriteria extends BaseMessagingCriteria {
     @QueryParam("formationType.id")
     private FormationType formationType;
 
-    @QueryParam("enabled.id")
-    private YesNo enabled;
+    @QueryParam("enabled")
+    private Boolean enabled;
 
     @QueryParam("code")
     private String code;
-
-
-    public Boolean getEnabled() {
-        return enabled != null ? enabled.getValue() : null;
-    }
 }

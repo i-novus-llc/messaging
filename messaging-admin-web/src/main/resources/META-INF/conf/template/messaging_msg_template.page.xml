@@ -6,7 +6,7 @@
             <row>
                 <input-text id="name" label="Наименование шаблона" required="true"/>
                 <input-text id="code" label="Код шаблона" required="true"/>
-                <checkbox id="disabled" label="Отключить"/>
+                <checkbox id="enabled" label="Включить" default-value="true" unchecked="false"/>
             </row>
             <row>
                 <input-select id="severity" label="Уровень важности" required="true">

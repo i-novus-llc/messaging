@@ -22,7 +22,7 @@ import ru.inovus.messaging.impl.jooq.tables.MessageTemplate;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class MessageTemplateRecord extends UpdatableRecordImpl<MessageTemplateRecord> implements Record11<Integer, String, String, Severity, AlertType, String, Boolean, FormationType, String, Integer, String> {
 
-    private static final long serialVersionUID = 207189782;
+    private static final long serialVersionUID = -2022163161;
 
     /**
      * Setter for <code>messaging.message_template.id</code>. Уникальный идентификатор
@@ -109,16 +109,16 @@ public class MessageTemplateRecord extends UpdatableRecordImpl<MessageTemplateRe
     }
 
     /**
-     * Setter for <code>messaging.message_template.is_disabled</code>. Признак выключения уведомления
+     * Setter for <code>messaging.message_template.enabled</code>. Признак включения уведомления
      */
-    public void setIsDisabled(Boolean value) {
+    public void setEnabled(Boolean value) {
         set(6, value);
     }
 
     /**
-     * Getter for <code>messaging.message_template.is_disabled</code>. Признак выключения уведомления
+     * Getter for <code>messaging.message_template.enabled</code>. Признак включения уведомления
      */
-    public Boolean getIsDisabled() {
+    public Boolean getEnabled() {
         return (Boolean) get(6);
     }
 
@@ -233,7 +233,7 @@ public class MessageTemplateRecord extends UpdatableRecordImpl<MessageTemplateRe
 
     @Override
     public Field<Boolean> field7() {
-        return MessageTemplate.MESSAGE_TEMPLATE.IS_DISABLED;
+        return MessageTemplate.MESSAGE_TEMPLATE.ENABLED;
     }
 
     @Override
@@ -288,7 +288,7 @@ public class MessageTemplateRecord extends UpdatableRecordImpl<MessageTemplateRe
 
     @Override
     public Boolean component7() {
-        return getIsDisabled();
+        return getEnabled();
     }
 
     @Override
@@ -343,7 +343,7 @@ public class MessageTemplateRecord extends UpdatableRecordImpl<MessageTemplateRe
 
     @Override
     public Boolean value7() {
-        return getIsDisabled();
+        return getEnabled();
     }
 
     @Override
@@ -404,7 +404,7 @@ public class MessageTemplateRecord extends UpdatableRecordImpl<MessageTemplateRe
 
     @Override
     public MessageTemplateRecord value7(Boolean value) {
-        setIsDisabled(value);
+        setEnabled(value);
         return this;
     }
 
@@ -462,7 +462,7 @@ public class MessageTemplateRecord extends UpdatableRecordImpl<MessageTemplateRe
     /**
      * Create a detached, initialised MessageTemplateRecord
      */
-    public MessageTemplateRecord(Integer id, String caption, String text, Severity severity, AlertType alertType, String name, Boolean isDisabled, FormationType formationType, String code, Integer channelId, String tenantCode) {
+    public MessageTemplateRecord(Integer id, String caption, String text, Severity severity, AlertType alertType, String name, Boolean enabled, FormationType formationType, String code, Integer channelId, String tenantCode) {
         super(MessageTemplate.MESSAGE_TEMPLATE);
 
         set(0, id);
@@ -471,7 +471,7 @@ public class MessageTemplateRecord extends UpdatableRecordImpl<MessageTemplateRe
         set(3, severity);
         set(4, alertType);
         set(5, name);
-        set(6, isDisabled);
+        set(6, enabled);
         set(7, formationType);
         set(8, code);
         set(9, channelId);

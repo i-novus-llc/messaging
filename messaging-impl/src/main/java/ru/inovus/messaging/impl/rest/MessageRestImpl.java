@@ -67,7 +67,7 @@ public class MessageRestImpl implements MessageRest {
     private void buildAndSendMessage(TemplateMessageOutbox templateMessageOutbox) {
         MessageTemplate template = messageTemplateService.getTemplate(templateMessageOutbox.getTemplateCode());
 
-        if (template.getDisabled() != null && template.getDisabled())
+        if (Boolean.FALSE.equals(template.getEnabled()))
             return;
 
         //Рассылка пользователям без настроек

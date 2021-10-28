@@ -30,8 +30,14 @@ CREATE INDEX ON messaging.message_template (tenant_code);
 -- add new constraints
 ALTER TABLE messaging.message_template ADD UNIQUE (code);
 
--- rename notification_type column
+-- rename columns
 ALTER TABLE messaging.message
     RENAME COLUMN notification_type TO template_code;
+ALTER TABLE messaging.message_template
+    RENAME COLUMN is_disabled TO enabled;
+COMMENT ON COLUMN messaging.message_template.enabled IS 'Признак включения уведомления';
+ALTER TABLE messaging.message_template ALTER COLUMN enabled SET DEFAULT true;
+UPDATE messaging.message_template SET enabled = NOT enabled;
+
 
 
