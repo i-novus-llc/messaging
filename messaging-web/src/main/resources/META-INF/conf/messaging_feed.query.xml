@@ -19,7 +19,7 @@
         </field>
 
         <field id="severity.id" domain="string">
-            <select mapping="['severity']"/>
+            <select mapping="['severity.id']"/>
             <filters>
                 <eq filter-id="severity.id">severity.id={severity.id}</eq>
             </filters>

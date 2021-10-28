@@ -19,7 +19,7 @@
         </field>
 
         <field id="severity.id" domain="string">
-            <select mapping="['severity']"/>
+            <select mapping="['severity.id']"/>
             <filters>
                 <eq filter-id="severity.id">severity.id={severity.id}</eq>
             </filters>
@@ -30,7 +30,7 @@
         </field>
 
         <field id="alertType.id" domain="string">
-            <select mapping="['alertType']"/>
+            <select mapping="['alertType.id']"/>
             <filters>
                 <eq filter-id="alertType.id">alertType.id={alertType.id}</eq>
             </filters>
@@ -46,7 +46,7 @@
             </filters>
         </field>
         <field id="formationType.id" domain="string">
-            <select mapping="['formationType']"/>
+            <select mapping="['formationType.id']"/>
             <filters>
                 <eq filter-id="formationType.id">formationType.id={formationType.id}</eq>
             </filters>

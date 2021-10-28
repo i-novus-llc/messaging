@@ -27,7 +27,7 @@ DROP INDEX messaging.ix_message_system_id;
 CREATE INDEX ON messaging.message (tenant_code);
 CREATE INDEX ON messaging.message_template (tenant_code);
 
--- add new constraints
+-- add unique constraint
 ALTER TABLE messaging.message_template ADD UNIQUE (code);
 
 -- rename columns
@@ -38,6 +38,21 @@ ALTER TABLE messaging.message_template
 COMMENT ON COLUMN messaging.message_template.enabled IS 'Признак включения уведомления';
 ALTER TABLE messaging.message_template ALTER COLUMN enabled SET DEFAULT true;
 UPDATE messaging.message_template SET enabled = NOT enabled;
+
+-- change severity store mechanism
+UPDATE messaging.message SET severity =
+    (CASE WHEN severity = '10' THEN 'INFO'
+          WHEN severity = '20' THEN 'WARNING'
+          WHEN severity = '30' THEN 'ERROR'
+          WHEN severity = '40' THEN 'SEVERE'
+     END);
+UPDATE messaging.message_template SET severity =
+    (CASE WHEN severity = '10' THEN 'INFO'
+          WHEN severity = '20' THEN 'WARNING'
+          WHEN severity = '30' THEN 'ERROR'
+          WHEN severity = '40' THEN 'SEVERE'
+     END);
+
 
 
 

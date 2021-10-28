@@ -31,4 +31,8 @@ public enum FormationType {
     public String getName() {
         return name;
     }
+
+    public String getId() {
+        return name();
+    }
 }

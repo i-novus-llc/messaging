@@ -32,4 +32,8 @@ public enum AlertType {
     public String getName() {
         return name;
     }
+
+    public String getId() {
+        return name();
+    }
 }
