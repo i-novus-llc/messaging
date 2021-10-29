@@ -42,8 +42,8 @@ public class MessageTemplateService {
         messageTemplate.setName(record.getName());
         messageTemplate.setAlertType(record.getAlertType());
         messageTemplate.setSeverity(record.getSeverity());
-        if (record.getChannelId() != null) {
-            Channel channel = channelService.getChannel(record.getChannelId());
+        if (record.getChannelCode() != null) {
+            Channel channel = channelService.getChannel(record.getChannelCode());
             messageTemplate.setChannel(channel);
         }
         messageTemplate.setCaption(record.getCaption());
@@ -70,7 +70,7 @@ public class MessageTemplateService {
         Optional.ofNullable(criteria.getAlertType())
                 .ifPresent(alertType -> conditions.add(MESSAGE_TEMPLATE.ALERT_TYPE.eq(alertType)));
         Optional.ofNullable(criteria.getChannelCode())
-                .ifPresent(channelId -> conditions.add(MESSAGE_TEMPLATE.CHANNEL_ID.eq(channelId)));
+                .ifPresent(channelCode -> conditions.add(MESSAGE_TEMPLATE.CHANNEL_CODE.eq(channelCode)));
         Optional.ofNullable(criteria.getName()).filter(StringUtils::isNotBlank)
                 .ifPresent(name -> conditions.add(MESSAGE_TEMPLATE.NAME.containsIgnoreCase(name)));
         Optional.ofNullable(criteria.getFormationType())
@@ -113,7 +113,7 @@ public class MessageTemplateService {
         dsl
                 .insertInto(MESSAGE_TEMPLATE)
                 .columns(MESSAGE_TEMPLATE.ID, MESSAGE_TEMPLATE.NAME,
-                        MESSAGE_TEMPLATE.ALERT_TYPE, MESSAGE_TEMPLATE.SEVERITY, MESSAGE_TEMPLATE.CHANNEL_ID,
+                        MESSAGE_TEMPLATE.ALERT_TYPE, MESSAGE_TEMPLATE.SEVERITY, MESSAGE_TEMPLATE.CHANNEL_CODE,
                         MESSAGE_TEMPLATE.FORMATION_TYPE, MESSAGE_TEMPLATE.ENABLED,
                         MESSAGE_TEMPLATE.CAPTION, MESSAGE_TEMPLATE.TEXT,
                         MESSAGE_TEMPLATE.CODE, MESSAGE_TEMPLATE.TENANT_CODE
@@ -141,7 +141,7 @@ public class MessageTemplateService {
                 .set(MESSAGE_TEMPLATE.NAME, messageTemplate.getName())
                 .set(MESSAGE_TEMPLATE.ALERT_TYPE, messageTemplate.getAlertType())
                 .set(MESSAGE_TEMPLATE.SEVERITY, messageTemplate.getSeverity())
-                .set(MESSAGE_TEMPLATE.CHANNEL_ID, messageTemplate.getChannel() != null ? messageTemplate.getChannel().getId() : null)
+                .set(MESSAGE_TEMPLATE.CHANNEL_CODE, messageTemplate.getChannel() != null ? messageTemplate.getChannel().getId() : null)
                 .set(MESSAGE_TEMPLATE.FORMATION_TYPE, messageTemplate.getFormationType())
                 .set(MESSAGE_TEMPLATE.ENABLED, messageTemplate.getEnabled())
                 .set(MESSAGE_TEMPLATE.CAPTION, messageTemplate.getCaption())

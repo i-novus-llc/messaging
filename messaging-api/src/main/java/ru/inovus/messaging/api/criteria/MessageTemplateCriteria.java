@@ -38,7 +38,7 @@ public class MessageTemplateCriteria extends BaseMessagingCriteria {
 
     @QueryParam("infoType")
     @ApiParam("Канал отправки шаблона")
-    private Integer channelCode;
+    private String channelCode;
 
     @QueryParam("name")
     @ApiParam("Имя шаблона")

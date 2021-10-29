@@ -15,12 +15,12 @@ public class ChannelRestImpl implements ChannelRest {
     private ChannelService channelService;
 
     @Override
-    public List<Channel> getChannels(String tenantCode) {
-        return channelService.getChannels(tenantCode);
+    public List<Channel> getChannels() {
+        return channelService.getChannels();
     }
 
     @Override
-    public Channel getChannel(String tenantCode, Integer id) {
-        return channelService.getChannel(id);
+    public Channel getChannel(String code) {
+        return channelService.getChannel(code);
     }
 }

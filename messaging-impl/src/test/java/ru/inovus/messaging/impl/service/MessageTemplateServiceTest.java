@@ -88,9 +88,9 @@ public class MessageTemplateServiceTest {
         assertThat(templates.getContent().get(0).getId(), is(2));
         assertThat(templates.getContent().get(1).getId(), is(1));
 
-        // filter by channel id
+        // filter by channel code
         criteria = new MessageTemplateCriteria();
-        criteria.setChannelCode(2);
+        criteria.setChannelCode("email");
         templates = service.getTemplates(TENANT_CODE, criteria);
         assertThat(templates.getTotalElements(), is(2L));
         assertThat(templates.getContent().get(0).getId(), is(3));
@@ -124,7 +124,7 @@ public class MessageTemplateServiceTest {
         newTemplate.setSeverity(Severity.ERROR);
         newTemplate.setFormationType(FormationType.AUTO);
         newTemplate.setAlertType(AlertType.BLOCKER);
-        newTemplate.setChannel(new Channel(1, "notice", "web_queue"));
+        newTemplate.setChannel(new Channel("web", "Web", "web_queue"));
         newTemplate.setEnabled(true);
         Integer newTemplateId = service.createTemplate(TENANT_CODE, newTemplate).getId();
 
@@ -151,7 +151,7 @@ public class MessageTemplateServiceTest {
         updatedTemplate.setSeverity(Severity.INFO);
         updatedTemplate.setFormationType(FormationType.HAND);
         updatedTemplate.setAlertType(AlertType.HIDDEN);
-        updatedTemplate.setChannel(new Channel(2, "email", "email_queue"));
+        updatedTemplate.setChannel(new Channel("email", "Email", "email_queue"));
         updatedTemplate.setEnabled(false);
         service.updateTemplate(id, updatedTemplate);
 

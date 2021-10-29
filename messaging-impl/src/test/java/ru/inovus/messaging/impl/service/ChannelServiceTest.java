@@ -25,19 +25,16 @@ public class ChannelServiceTest {
 
     @Test
     public void testGetChannels() {
-        List<Channel> channels = service.getChannels("tenant");
-        assertThat(channels.size(), is(2));
-        assertThat(channels.get(0).getName(), is("notice"));
-        assertThat(channels.get(1).getName(), is("email"));
-
-        channels = service.getChannels("tenant2");
-        assertThat(channels.size(), is(1));
-        assertThat(channels.get(0).getName(), is("custom"));
+        List<Channel> channels = service.getChannels();
+        assertThat(channels.size(), is(3));
+        assertThat(channels.get(0).getName(), is("Web"));
+        assertThat(channels.get(1).getName(), is("Email"));
+        assertThat(channels.get(2).getName(), is("Custom"));
     }
 
     @Test
     public void testGetChannel() {
-        Channel channel = service.getChannel(2);
-        assertThat(channel.getName(), is("email"));
+        Channel channel = service.getChannel("email");
+        assertThat(channel.getName(), is("Email"));
     }
 }

@@ -69,10 +69,11 @@ public class MyChannel extends AbstractChannel {
 3. Для подключения необходимо добавить скрипт в БД messaging со следующей строкой:
 
  ```roomsql
- INSERT INTO messaging.channel (name, queue_name, is_internal, tenant_code) 
-        VALUES ('My Channel', 'my-channel-queue', false, 'my_tenant')
+ INSERT INTO messaging.channel (code, name, queue_name, is_internal, tenant_code) 
+        VALUES ('my_ch', 'My Channel', 'my-channel-queue', false, 'my_tenant')
  ```
 
+- `code` - Уникальный код канала
 - `name` - Имя канала, отображаемое на UI
 - `queue_name` - Имя очереди канала (`my-channel-queue`)
 - `is_internal` - Признак того, что канал является внутрисистемным

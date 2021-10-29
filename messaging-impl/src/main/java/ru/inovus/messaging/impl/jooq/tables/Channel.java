@@ -22,7 +22,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Channel extends TableImpl<ChannelRecord> {
 
-    private static final long serialVersionUID = -719919734;
+    private static final long serialVersionUID = -144895748;
 
     /**
      * The reference instance of <code>messaging.channel</code>
@@ -36,11 +36,6 @@ public class Channel extends TableImpl<ChannelRecord> {
     public Class<ChannelRecord> getRecordType() {
         return ChannelRecord.class;
     }
-
-    /**
-     * The column <code>messaging.channel.id</code>. Уникальный идентификатор
-     */
-    public final TableField<ChannelRecord, Integer> ID = createField(DSL.name("id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaultValue(org.jooq.impl.DSL.field("nextval('messaging.channel_id_seq'::regclass)", org.jooq.impl.SQLDataType.INTEGER)), this, "Уникальный идентификатор");
 
     /**
      * The column <code>messaging.channel.name</code>. Наименование канала
@@ -58,9 +53,9 @@ public class Channel extends TableImpl<ChannelRecord> {
     public final TableField<ChannelRecord, Boolean> IS_INTERNAL = createField(DSL.name("is_internal"), org.jooq.impl.SQLDataType.BOOLEAN, this, "Признак внутрисистемного канала отправки");
 
     /**
-     * The column <code>messaging.channel.tenant_code</code>. Тенант, к которому относится канал отправки
+     * The column <code>messaging.channel.code</code>. Код канала
      */
-    public final TableField<ChannelRecord, String> TENANT_CODE = createField(DSL.name("tenant_code"), org.jooq.impl.SQLDataType.VARCHAR, this, "Тенант, к которому относится канал отправки");
+    public final TableField<ChannelRecord, String> CODE = createField(DSL.name("code"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Код канала");
 
     /**
      * Create a <code>messaging.channel</code> table reference
@@ -101,11 +96,6 @@ public class Channel extends TableImpl<ChannelRecord> {
     }
 
     @Override
-    public Identity<ChannelRecord, Integer> getIdentity() {
-        return Keys.IDENTITY_CHANNEL;
-    }
-
-    @Override
     public UniqueKey<ChannelRecord> getPrimaryKey() {
         return Keys.CHANNEL_PKEY;
     }
@@ -113,15 +103,6 @@ public class Channel extends TableImpl<ChannelRecord> {
     @Override
     public List<UniqueKey<ChannelRecord>> getKeys() {
         return Arrays.<UniqueKey<ChannelRecord>>asList(Keys.CHANNEL_PKEY);
-    }
-
-    @Override
-    public List<ForeignKey<ChannelRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<ChannelRecord, ?>>asList(Keys.CHANNEL__CHANNEL_TENANT_CODE_FKEY);
-    }
-
-    public Tenant tenant() {
-        return new Tenant(this, Keys.CHANNEL__CHANNEL_TENANT_CODE_FKEY);
     }
 
     @Override
@@ -151,11 +132,11 @@ public class Channel extends TableImpl<ChannelRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row5 type methods
+    // Row4 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row5<Integer, String, String, Boolean, String> fieldsRow() {
-        return (Row5) super.fieldsRow();
+    public Row4<String, String, Boolean, String> fieldsRow() {
+        return (Row4) super.fieldsRow();
     }
 }

@@ -41,5 +41,5 @@ public class MessageCriteria extends BaseMessagingCriteria {
 
     @QueryParam("infoType")
     @ApiParam("Канал отправки уведомления")
-    private Integer channelCode;
+    private String channelCode;
 }

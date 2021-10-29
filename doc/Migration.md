@@ -23,6 +23,7 @@ novus.messaging.role-provider-url
 * Изменения в Rest API:
     - `/user` -> `/provider_recipients`
     - `/{tenantCode}/settings` -> `/{tenantCode}/templates`
+    - убрана мультитенантность у каналов: `/{tenantCode}/channels` -> `/channels`
 * Прекращена поддержка пользовательских шаблонов уведомлений
 
 #### 4.1.0

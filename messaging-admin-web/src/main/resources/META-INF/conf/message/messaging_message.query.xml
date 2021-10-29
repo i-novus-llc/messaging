@@ -28,7 +28,7 @@
             <select mapping="['severity.name']"/>
         </field>
 
-        <field id="infoType" domain="object">
+        <field id="infoType">
             <select mapping="['channel']"/>
             <filters>
                 <eq filter-id="infoType.id">infoType={infoType.id}</eq>

@@ -120,7 +120,7 @@ public class RecipientService {
                     .where(MESSAGE.ID.eq(MESSAGE_RECIPIENT.MESSAGE_ID),
                             MESSAGE.TENANT_CODE.eq(status.getTenantCode())
                                     .andExists(dsl.selectOne().from(CHANNEL)
-                                            .where(CHANNEL.ID.eq(MESSAGE.CHANNEL_ID)
+                                            .where(CHANNEL.CODE.eq(MESSAGE.CHANNEL_CODE)
                                             )))));
 
         dsl

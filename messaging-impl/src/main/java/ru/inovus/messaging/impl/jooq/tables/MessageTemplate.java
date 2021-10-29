@@ -29,7 +29,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class MessageTemplate extends TableImpl<MessageTemplateRecord> {
 
-    private static final long serialVersionUID = 1656722129;
+    private static final long serialVersionUID = -1312148152;
 
     /**
      * The reference instance of <code>messaging.message_template</code>
@@ -90,9 +90,9 @@ public class MessageTemplate extends TableImpl<MessageTemplateRecord> {
     public final TableField<MessageTemplateRecord, String> CODE = createField(DSL.name("code"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Код шаблона уведомления");
 
     /**
-     * The column <code>messaging.message_template.channel_id</code>. Идентификатор канала отправки уведомления
+     * The column <code>messaging.message_template.channel_code</code>. Код канала отправки уведомления
      */
-    public final TableField<MessageTemplateRecord, Integer> CHANNEL_ID = createField(DSL.name("channel_id"), org.jooq.impl.SQLDataType.INTEGER, this, "Идентификатор канала отправки уведомления");
+    public final TableField<MessageTemplateRecord, String> CHANNEL_CODE = createField(DSL.name("channel_code"), org.jooq.impl.SQLDataType.VARCHAR, this, "Код канала отправки уведомления");
 
     /**
      * The column <code>messaging.message_template.tenant_code</code>. Тенант, к которому относится настройка
@@ -154,11 +154,11 @@ public class MessageTemplate extends TableImpl<MessageTemplateRecord> {
 
     @Override
     public List<ForeignKey<MessageTemplateRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<MessageTemplateRecord, ?>>asList(Keys.MESSAGE_TEMPLATE__MESSAGE_TEMPLATE_CHANNEL_ID_CHANNEL_ID_FK, Keys.MESSAGE_TEMPLATE__MESSAGE_TEMPLATE_TENANT_CODE_FKEY);
+        return Arrays.<ForeignKey<MessageTemplateRecord, ?>>asList(Keys.MESSAGE_TEMPLATE__MESSAGE_TEMPLATE_CHANNEL_CODE_CHANNEL_CODE_FK, Keys.MESSAGE_TEMPLATE__MESSAGE_TEMPLATE_TENANT_CODE_FKEY);
     }
 
     public Channel channel() {
-        return new Channel(this, Keys.MESSAGE_TEMPLATE__MESSAGE_TEMPLATE_CHANNEL_ID_CHANNEL_ID_FK);
+        return new Channel(this, Keys.MESSAGE_TEMPLATE__MESSAGE_TEMPLATE_CHANNEL_CODE_CHANNEL_CODE_FK);
     }
 
     public Tenant tenant() {
@@ -196,7 +196,7 @@ public class MessageTemplate extends TableImpl<MessageTemplateRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Row11<Integer, String, String, Severity, AlertType, String, Boolean, FormationType, String, Integer, String> fieldsRow() {
+    public Row11<Integer, String, String, Severity, AlertType, String, Boolean, FormationType, String, String, String> fieldsRow() {
         return (Row11) super.fieldsRow();
     }
 }

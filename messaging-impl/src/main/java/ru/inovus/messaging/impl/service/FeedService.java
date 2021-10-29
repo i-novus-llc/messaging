@@ -50,7 +50,7 @@ public class FeedService {
                 .select(MESSAGE_RECIPIENT.fields())
                 .from(MESSAGE)
                 .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username)))
-                .leftJoin(CHANNEL).on(CHANNEL.ID.eq(MESSAGE.CHANNEL_ID))
+                .leftJoin(CHANNEL).on(CHANNEL.CODE.eq(MESSAGE.CHANNEL_CODE))
                 .where(conditions);
         int count = dsl.fetchCount(query);
         Field fieldSentAt = MESSAGE.field("sent_at");
@@ -128,7 +128,7 @@ public class FeedService {
                 .selectCount()
                 .from(MESSAGE)
                 .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID))
-                .leftJoin(CHANNEL).on(MESSAGE.CHANNEL_ID.eq(CHANNEL.ID))
+                .leftJoin(CHANNEL).on(MESSAGE.CHANNEL_CODE.eq(CHANNEL.CODE))
                 .where(
                         MESSAGE.TENANT_CODE.eq(tenantCode),
                         MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username),

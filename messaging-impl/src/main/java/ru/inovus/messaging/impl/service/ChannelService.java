@@ -21,30 +21,27 @@ public class ChannelService {
     private DSLContext dsl;
 
     private final RecordMapper<ChannelRecord, Channel> MAPPER = record ->
-            new Channel(record.getId(), record.getName(), record.getQueueName());
+            new Channel(record.getCode(), record.getName(), record.getQueueName());
 
 
     /**
      * Получение списка каналов по коду тенанта
      *
-     * @param tenantCode Код тенанта
      * @return Список каналов
      */
-    public List<Channel> getChannels(String tenantCode) {
-        return dsl.selectFrom(CHANNEL)
-                .where(CHANNEL.TENANT_CODE.eq(tenantCode))
-                .fetch(MAPPER);
+    public List<Channel> getChannels() {
+        return dsl.selectFrom(CHANNEL).fetch(MAPPER);
     }
 
     /**
      * Получение канала по идентификатору
      *
-     * @param id Идентификатор канала
+     * @param code Код канала
      * @return Канал
      */
-    public Channel getChannel(Integer id) {
+    public Channel getChannel(String code) {
         return dsl.selectFrom(CHANNEL)
-                .where(CHANNEL.ID.eq(id))
+                .where(CHANNEL.CODE.eq(code))
                 .fetchOne(MAPPER);
     }
 }

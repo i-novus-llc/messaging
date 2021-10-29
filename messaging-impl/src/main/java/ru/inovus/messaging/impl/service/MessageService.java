@@ -49,7 +49,7 @@ public class MessageService {
         message.setSentAt(record.getSentAt());
         ChannelRecord channelRecord = rec.into(CHANNEL);
         Channel channel = new Channel();
-        channel.setId(channelRecord.getId());
+        channel.setId(channelRecord.getCode());
         channel.setName(channelRecord.getName());
         channel.setQueueName(channelRecord.getQueueName());
         message.setChannel(channel);
@@ -73,7 +73,7 @@ public class MessageService {
                 .insertInto(MESSAGE)
                 .columns(MESSAGE.ID, MESSAGE.CAPTION, MESSAGE.TEXT, MESSAGE.SEVERITY, MESSAGE.ALERT_TYPE,
                         MESSAGE.SENT_AT, MESSAGE.TENANT_CODE,
-                        MESSAGE.FORMATION_TYPE, MESSAGE.RECIPIENT_TYPE, MESSAGE.TEMPLATE_CODE, MESSAGE.CHANNEL_ID)
+                        MESSAGE.FORMATION_TYPE, MESSAGE.RECIPIENT_TYPE, MESSAGE.TEMPLATE_CODE, MESSAGE.CHANNEL_CODE)
                 .values(id, message.getCaption(), message.getText(), message.getSeverity(), message.getAlertType(),
                         message.getSentAt(), message.getTenantCode(),
                         message.getFormationType(), message.getRecipientType(), message.getTemplateCode(),
@@ -110,7 +110,7 @@ public class MessageService {
         Optional.ofNullable(criteria.getSeverity())
                 .ifPresent(severity -> conditions.add(MESSAGE.SEVERITY.eq(severity)));
         Optional.ofNullable(criteria.getChannelCode())
-                .ifPresent(channelId -> conditions.add(MESSAGE.CHANNEL_ID.eq(channelId)));
+                .ifPresent(channelCode -> conditions.add(MESSAGE.CHANNEL_CODE.eq(channelCode)));
 
         //TODO: UTC?
         Optional.ofNullable(sentAtBeginDateTime)
@@ -121,7 +121,7 @@ public class MessageService {
                 .select(MESSAGE.fields())
                 .select(CHANNEL.fields())
                 .from(MESSAGE)
-                .leftJoin(CHANNEL).on(CHANNEL.ID.eq(MESSAGE.CHANNEL_ID))
+                .leftJoin(CHANNEL).on(CHANNEL.CODE.eq(MESSAGE.CHANNEL_CODE))
                 .where(conditions);
         int count = dsl.fetchCount(query);
         Field<?> fieldSentAt = MESSAGE.field("sent_at");
@@ -144,7 +144,7 @@ public class MessageService {
                 .select(MESSAGE.fields())
                 .select(CHANNEL.fields())
                 .from(MESSAGE)
-                .leftJoin(CHANNEL).on(CHANNEL.ID.eq(MESSAGE.CHANNEL_ID))
+                .leftJoin(CHANNEL).on(CHANNEL.CODE.eq(MESSAGE.CHANNEL_CODE))
                 .where(MESSAGE.ID.cast(UUID.class).eq(messageId))
                 .fetchOne(MAPPER);
         List<Recipient> recipients = dsl

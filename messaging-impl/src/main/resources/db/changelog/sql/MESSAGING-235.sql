@@ -53,6 +53,29 @@ UPDATE messaging.message_template SET severity =
           WHEN severity = '40' THEN 'SEVERE'
      END);
 
+-- channels (delete multitenancy / update pk)
+ALTER TABLE messaging.channel DROP COLUMN tenant_code;
+
+ALTER TABLE messaging.message DROP CONSTRAINT message_channel_id_channel_id_fk;
+ALTER TABLE messaging.message RENAME channel_id TO channel_code;
+ALTER TABLE messaging.message ALTER COLUMN channel_code TYPE VARCHAR;
+COMMENT ON COLUMN messaging.message.channel_code IS 'Код канала отправки уведомления';
+
+ALTER TABLE messaging.message_template DROP CONSTRAINT message_template_channel_id_channel_id_fk;
+ALTER TABLE messaging.message_template RENAME channel_id TO channel_code;
+ALTER TABLE messaging.message_template ALTER COLUMN channel_code TYPE VARCHAR;
+COMMENT ON COLUMN messaging.message_template.channel_code IS 'Код канала отправки уведомления';
+
+ALTER TABLE messaging.channel DROP CONSTRAINT channel_pkey;
+ALTER TABLE messaging.channel ADD COLUMN code VARCHAR PRIMARY KEY;
+COMMENT ON COLUMN messaging.channel.code IS 'Код канала';
+ALTER TABLE messaging.channel DROP COLUMN id;
+
+ALTER TABLE messaging.message ADD CONSTRAINT message_channel_code_channel_code_fk
+    FOREIGN KEY (channel_code) REFERENCES messaging.channel (code);
+ALTER TABLE messaging.message_template ADD CONSTRAINT message_template_channel_code_channel_code_fk
+    FOREIGN KEY (channel_code) REFERENCES messaging.channel (code);
+
 
 
 
