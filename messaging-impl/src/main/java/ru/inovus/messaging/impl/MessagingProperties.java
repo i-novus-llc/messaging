@@ -11,18 +11,25 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 )
 public class MessagingProperties {
     private Queue queue;
-    private RecipientProvider userRoleProvider;
-    private ConfigurableProvider configurableProvider;
-    private SecurityAdminProvider securityAdminProvider;
+    private RecipientProvider recipientProvider;
+    private String tenantCode;
 
     @Getter
     @Setter
     public static class Queue {
         private String status;
-        private String feed;
+        private String feedCount;
     }
 
-    public enum RecipientProvider {
+    @Getter
+    @Setter
+    public static class RecipientProvider {
+        private RecipientProviderType type;
+        private String url;
+        private ConfigurableProvider configurable;
+    }
+
+    public enum RecipientProviderType {
         CONFIGURABLE,
         SECURITY,
         CUSTOM
@@ -31,13 +38,6 @@ public class MessagingProperties {
     @Getter
     @Setter
     public static class ConfigurableProvider {
-        private String usersUrl;
-        private String rolesUrl;
-    }
-
-    @Getter
-    @Setter
-    public static class SecurityAdminProvider {
-        private String apiUrl;
+        String mappingFileLocation;
     }
 }

@@ -11,16 +11,15 @@
 
 ## Настройки провайдеров
 
-- `novus.messaging.recipient-provider` - провайдер данных для получения пользователей и ролей. Доступные
-  значения `configurable` или `security`.
-  (по умолчанию: `configurable`)
+- `novus.messaging.recipient-provider.type` - провайдер данных для получения пользователей и ролей. Доступные
+  значения `configurable` или `security`(по умолчанию: `configurable`)
+- `novus.messaging.recipient-provider.url` - адрес, с которого провайдер будет забирать информацию о получателях
 
 ## Настройки ConfigurableRecipientProvider
 
-- `novus.messaging.mapping-file-location` - путь до файла для маппинга полей
-  (по умолчанию: `classpath:recipientProviderFieldMapping.xml`)
-- `novus.messaging.recipient-provider.url` - эндпоинт, с которого провайдер будет забирать информацию о пользователях
-  (по умолчанию: `http://localhost:9999/api/users`)
+- `novus.messaging.recipient-provider.configurable.mapping-file-location` - путь до файла с маппингом полей
+  для конфигурируемого провайдера (по умолчанию: `classpath:recipientProviderFieldMapping.xml`)
+
 
 ## Настройка маппинга в ConfigurableRecipientProvider
 

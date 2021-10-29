@@ -27,7 +27,7 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 public class WebChannel extends AbstractChannel {
 
     @Setter
-    private String noticeTopicName;
+    private String webTopicName;
 
     @Setter
     private Integer timeout;
@@ -51,7 +51,7 @@ public class WebChannel extends AbstractChannel {
         String dest = headers.getDestination();
         if (dest != null && dest.endsWith("/message") && headers.getUser() != null) {
             MqConsumer consumer = new TopicMqConsumer(headers.getSessionId(), getTenantCode(dest), headers.getUser().getName(),
-                    noticeTopicName, message -> sendTo((Message) message, headers));
+                    webTopicName, message -> sendTo((Message) message, headers));
             mqProvider.subscribe(consumer);
         }
     }
@@ -63,7 +63,7 @@ public class WebChannel extends AbstractChannel {
 
     @Override
     public void send(Message message) {
-        mqProvider.publish(message, noticeTopicName);
+        mqProvider.publish(message, webTopicName);
     }
 
     private void sendTo(Message message, SimpMessageHeaderAccessor headers) {

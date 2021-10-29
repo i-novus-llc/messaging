@@ -14,6 +14,7 @@ novus.messaging.role-provider-url
  - `novus.messaging.user-role-provider` -> `novus.messaging.recipient-provider.type`
  - `novus.messaging.user-provider-url` -> `novus.messaging.recipient-provider.url`
  - `novus.messaging.security-admin-url` -> `novus.messaging.recipient-provider.url`
+ - `novus.messaging.mapping-file-location` -> `novus.messaging.recipient-provider.configurable.mapping-file-location`
 ```
 
 * Изменена структура файла для маппинга полей в конфигурируемом провайдере получателей:

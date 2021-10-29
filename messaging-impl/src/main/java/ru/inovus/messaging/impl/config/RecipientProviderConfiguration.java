@@ -19,7 +19,7 @@ public class RecipientProviderConfiguration {
 
     @Bean
     @ConditionalOnProperty(value = "novus.messaging.recipient-provider.type", havingValue = "configurable")
-    public RecipientProvider recipientProvider(@Value("${novus.messaging.mapping-file-location}") String mappingFileLocation,
+    public RecipientProvider recipientProvider(@Value("${novus.messaging.recipient-provider.configurable.mapping-file-location}") String mappingFileLocation,
                                                @Value("${novus.messaging.recipient-provider.url}") String recipientProviderUrl,
                                                ResourceLoader resourceLoader) throws IOException, JAXBException {
         return new ConfigurableRecipientProvider(resourceLoader, mappingFileLocation, recipientProviderUrl);

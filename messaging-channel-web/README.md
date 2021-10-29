@@ -50,7 +50,7 @@ public class Application {
 - `novus.messaging.channel.web.message-lifetime` - время в секундах, по истечении которого уведомления не будут
   показываться, если пользователь не был подключен (по умолчанию: `60`)
 - `novus.messaging.channel.web.queue` - имя очереди уведомлений веб канала (по умолчанию: `web-queue`)
-- `novus.messaging.channel.web.topic` - имя топика уведомлений веб канала (по умолчанию: `web-notice-topic`)
+- `novus.messaging.channel.web.topic` - имя топика уведомлений веб канала (по умолчанию: `web-topic`)
 
 ## Формат сообщений для Web Socket
 
