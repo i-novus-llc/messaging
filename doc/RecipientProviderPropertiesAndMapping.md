@@ -54,7 +54,6 @@
       поддерживается
 
 ```xml
-
 <response>
     <username mapping="username"/>
     <fio mapping="fio1"/>
@@ -70,7 +69,6 @@
 - Список всех доступных тегов приведен в примере в начале главы
 
 ```xml
-
 <criteria>
     <page-size mapping="size"/>
     <page-number mapping="page"/>
