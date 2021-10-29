@@ -107,7 +107,7 @@ public class FeedService {
                     .execute();
             if (updated == 0) {
                 dsl.insertInto(MESSAGE_RECIPIENT)
-                        .set(MESSAGE_RECIPIENT.ID, dsl.nextval(MESSAGE_RECIPIENT_ID_SEQ).intValue())
+                        .set(MESSAGE_RECIPIENT.ID, dsl.nextval(MESSAGE_RECIPIENT_ID_SEQ))
                         .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
                         .set(MESSAGE_RECIPIENT.MESSAGE_ID, messageId)
                         .set(MESSAGE_RECIPIENT.RECIPIENT_USERNAME, username)

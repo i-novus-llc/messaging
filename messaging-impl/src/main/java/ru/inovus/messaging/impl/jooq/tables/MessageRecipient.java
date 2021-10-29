@@ -26,7 +26,7 @@ import java.util.UUID;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class MessageRecipient extends TableImpl<MessageRecipientRecord> {
 
-    private static final long serialVersionUID = 2048401086;
+    private static final long serialVersionUID = 410240673;
 
     /**
      * The reference instance of <code>messaging.message_recipient</code>
@@ -44,7 +44,7 @@ public class MessageRecipient extends TableImpl<MessageRecipientRecord> {
     /**
      * The column <code>messaging.message_recipient.id</code>. Уникальный идентификатор
      */
-    public final TableField<MessageRecipientRecord, Integer> ID = createField(DSL.name("id"), org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "Уникальный идентификатор");
+    public final TableField<MessageRecipientRecord, Long> ID = createField(DSL.name("id"), org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "Уникальный идентификатор");
 
     /**
      * The column <code>messaging.message_recipient.message_id</code>. Идентификатор уведомления
@@ -169,7 +169,7 @@ public class MessageRecipient extends TableImpl<MessageRecipientRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Row8<Integer, UUID, LocalDateTime, String, String, MessageStatusType, LocalDateTime, String> fieldsRow() {
+    public Row8<Long, UUID, LocalDateTime, String, String, MessageStatusType, LocalDateTime, String> fieldsRow() {
         return (Row8) super.fieldsRow();
     }
 }

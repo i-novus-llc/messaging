@@ -76,6 +76,9 @@ ALTER TABLE messaging.message ADD CONSTRAINT message_channel_code_channel_code_f
 ALTER TABLE messaging.message_template ADD CONSTRAINT message_template_channel_code_channel_code_fk
     FOREIGN KEY (channel_code) REFERENCES messaging.channel (code);
 
+-- change message_recipient pk type
+ALTER TABLE messaging.message_recipient ALTER COLUMN id TYPE BIGINT;
+
 
 
 

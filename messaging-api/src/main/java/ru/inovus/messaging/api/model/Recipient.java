@@ -35,7 +35,7 @@ import java.util.UUID;
 public class Recipient implements Serializable {
 
     @ApiModelProperty("Идентификатор получателя")
-    private Integer id;
+    private Long id;
 
     @ApiModelProperty("Имя получателя")
     private String name;
