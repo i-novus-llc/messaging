@@ -2,6 +2,7 @@ package ru.inovus.messaging.impl.service;
 
 import org.jooq.Record;
 import org.jooq.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,8 @@ import static ru.inovus.messaging.impl.jooq.Tables.*;
 @Service
 public class MessageService {
 
-    private final DSLContext dsl;
+    @Autowired
+    private DSLContext dsl;
 
     private static final ZoneId USER_DEFAULT_ZONE_ID = ZoneId.of("Europe/Moscow");
 
@@ -59,16 +61,20 @@ public class MessageService {
         return message;
     };
 
-    public MessageService(DSLContext dsl) {
-        this.dsl = dsl;
-    }
 
+    /**
+     * Создание уведомления
+     *
+     * @param message    Уведомление
+     * @param recipients Список получателей
+     * @return Созданное уведомление
+     */
     @Transactional
     public Message createMessage(Message message, Recipient... recipients) {
         UUID id = UUID.randomUUID();
-        if (message.getSentAt() == null) {
+        if (message.getSentAt() == null)
             message.setSentAt(LocalDateTime.now(Clock.systemUTC()));
-        }
+
         dsl
                 .insertInto(MESSAGE)
                 .columns(MESSAGE.ID, MESSAGE.CAPTION, MESSAGE.TEXT, MESSAGE.SEVERITY, MESSAGE.ALERT_TYPE,
@@ -81,29 +87,37 @@ public class MessageService {
                 .returning()
                 .fetch().get(0).getId();
         message.setId(id.toString());
+
         if (recipients != null && RecipientType.RECIPIENT.equals(message.getRecipientType())) {
             for (Recipient recipient : recipients) {
                 dsl
                         .insertInto(MESSAGE_RECIPIENT)
                         .columns(MESSAGE_RECIPIENT.ID, MESSAGE_RECIPIENT.RECIPIENT_NAME, MESSAGE_RECIPIENT.MESSAGE_ID,
                                 MESSAGE_RECIPIENT.STATUS, MESSAGE_RECIPIENT.STATUS_TIME, MESSAGE_RECIPIENT.RECIPIENT_USERNAME)
-                        .values(dsl.nextval(MESSAGE_RECIPIENT_ID_SEQ), recipient.getName(), id, MessageStatusType.SCHEDULED, LocalDateTime.now(), recipient.getUsername())
+                        .values(dsl.nextval(MESSAGE_RECIPIENT_ID_SEQ), recipient.getName(), id,
+                                MessageStatusType.SCHEDULED, LocalDateTime.now(), recipient.getUsername())
                         .execute();
             }
         }
         return message;
     }
 
+    /**
+     * Получение страницы уведомлений
+     *
+     * @param tenantCode Код тенанта
+     * @param criteria   Критерии уведомлений
+     * @return Страница уведомлений
+     */
     public Page<Message> getMessages(String tenantCode, MessageCriteria criteria) {
-        LocalDateTime sentAtBeginDateTime = null;
-        LocalDateTime sentAtEndDateTime = null;
+        LocalDateTime sentAtBegin = null;
+        LocalDateTime sentAtEnd = null;
 
-        if (criteria.getSentAtBegin() != null) {
-            sentAtBeginDateTime = DateTimeUtil.toZone(criteria.getSentAtBegin(), USER_DEFAULT_ZONE_ID, ZoneOffset.UTC);
-        }
-        if (criteria.getSentAtEnd() != null) {
-            sentAtEndDateTime = DateTimeUtil.toZone(criteria.getSentAtEnd(), USER_DEFAULT_ZONE_ID, ZoneOffset.UTC);
-        }
+        // TODO - убрать
+        if (criteria.getSentAtBegin() != null)
+            sentAtBegin = DateTimeUtil.toZone(criteria.getSentAtBegin(), USER_DEFAULT_ZONE_ID, ZoneOffset.UTC);
+        if (criteria.getSentAtEnd() != null)
+            sentAtEnd = DateTimeUtil.toZone(criteria.getSentAtEnd(), USER_DEFAULT_ZONE_ID, ZoneOffset.UTC);
 
         List<Condition> conditions = new ArrayList<>();
         conditions.add(MESSAGE.TENANT_CODE.eq(tenantCode));
@@ -111,12 +125,11 @@ public class MessageService {
                 .ifPresent(severity -> conditions.add(MESSAGE.SEVERITY.eq(severity)));
         Optional.ofNullable(criteria.getChannelCode())
                 .ifPresent(channelCode -> conditions.add(MESSAGE.CHANNEL_CODE.eq(channelCode)));
-
-        //TODO: UTC?
-        Optional.ofNullable(sentAtBeginDateTime)
+        Optional.ofNullable(sentAtBegin)
                 .ifPresent(start -> conditions.add(MESSAGE.SENT_AT.greaterOrEqual(start)));
-        Optional.ofNullable(sentAtEndDateTime)
+        Optional.ofNullable(sentAtEnd)
                 .ifPresent(end -> conditions.add(MESSAGE.SENT_AT.lessOrEqual(end)));
+
         SelectConditionStep<Record> query = dsl
                 .select(MESSAGE.fields())
                 .select(CHANNEL.fields())
@@ -124,9 +137,8 @@ public class MessageService {
                 .leftJoin(CHANNEL).on(CHANNEL.CODE.eq(MESSAGE.CHANNEL_CODE))
                 .where(conditions);
         int count = dsl.fetchCount(query);
-        Field<?> fieldSentAt = MESSAGE.field("sent_at");
         List<Message> collection = query
-                .orderBy(fieldSentAt.desc())
+                .orderBy(MESSAGE.SENT_AT.desc())
                 .limit(criteria.getPageSize())
                 .offset((int) criteria.getOffset())
                 .fetch(MAPPER);
@@ -152,6 +164,7 @@ public class MessageService {
                 .where(MESSAGE_RECIPIENT.MESSAGE_ID.eq(messageId))
                 .fetch().map(r -> {
                     Recipient recipient = new Recipient();
+                    recipient.setId(r.getId());
                     recipient.setMessageId(r.getMessageId());
                     recipient.setStatusTime(r.getStatusTime());
                     recipient.setName(r.getRecipientName());

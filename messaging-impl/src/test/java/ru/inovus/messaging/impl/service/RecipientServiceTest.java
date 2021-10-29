@@ -62,8 +62,8 @@ public class RecipientServiceTest {
         recipients = service.getRecipients(TENANT_CODE, criteria);
         assertThat(recipients.getTotalElements(), is(2L));
         // order by id desc
-        assertThat(recipients.getContent().get(0).getId(), is(2));
-        assertThat(recipients.getContent().get(1).getId(), is(1));
+        assertThat(recipients.getContent().get(0).getId(), is(2L));
+        assertThat(recipients.getContent().get(1).getId(), is(1L));
     }
 
     @Test

@@ -64,13 +64,17 @@ public class MessageRestImpl implements MessageRest {
         }
     }
 
+    /**
+     * Построение уведомления по шаблону и отправка
+     *
+     * @param templateMessageOutbox Уведомление для построения по шаблону
+     */
     private void buildAndSendMessage(TemplateMessageOutbox templateMessageOutbox) {
         MessageTemplate template = messageTemplateService.getTemplate(templateMessageOutbox.getTemplateCode());
 
         if (Boolean.FALSE.equals(template.getEnabled()))
             return;
 
-        //Рассылка пользователям без настроек
         if (!CollectionUtils.isEmpty(templateMessageOutbox.getUserNameList())) {
             Message message = buildMessage(template, templateMessageOutbox.getUserNameList(), templateMessageOutbox);
             save(message);
@@ -78,21 +82,38 @@ public class MessageRestImpl implements MessageRest {
         }
     }
 
+    /**
+     * Сохранение уведомления
+     *
+     * @param message Уведомление
+     */
     private void save(Message message) {
         Message savedMessage = messageService.createMessage(message, message.getRecipients() == null ? null : message.getRecipients().toArray(new Recipient[0]));
         message.setId(savedMessage.getId());
     }
 
+    /**
+     * Отправка уведомления в канал отправки
+     *
+     * @param message Уведомление
+     */
     private void send(Message message) {
         Channel channel = channelService.getChannel(message.getChannel().getId());
         mqProvider.publish(constructMessage(message), channel.getQueueName());
     }
 
-    //Построение уведомления по шаблону уведомления и доп. параметрам
+    /**
+     * Построение уведомления по шаблону
+     *
+     * @param messageTemplate Шаблон уведомления
+     * @param userNameList    Список получателей
+     * @param params          Параметры для построения по шаблону
+     * @return Уведомление
+     */
     private Message buildMessage(MessageTemplate messageTemplate, List<String> userNameList, TemplateMessageOutbox params) {
         Message message = new Message();
-        message.setCaption(buildText(messageTemplate.getCaption(), params));
-        message.setText(buildText(messageTemplate.getText(), params));
+        message.setCaption(buildText(messageTemplate.getCaption(), params.getPlaceholders()));
+        message.setText(buildText(messageTemplate.getText(), params.getPlaceholders()));
         message.setSeverity(messageTemplate.getSeverity());
         message.setAlertType(messageTemplate.getAlertType());
         message.setSentAt(params.getSentAt());
@@ -102,17 +123,28 @@ public class MessageRestImpl implements MessageRest {
         message.setTenantCode(params.getTenantCode());
         message.setRecipients(recipientService.getRecipientsByUsername(userNameList));
         message.setTemplateCode(params.getTemplateCode());
-
         return message;
     }
 
-    //Построение текста уведомления по плейсхолдерам
-    private String buildText(String text, TemplateMessageOutbox params) {
-        for (Map.Entry<String, Object> placeHolder : params.getPlaceholders().entrySet())
+    /**
+     * Замена плейсхолдеров во входном тексте
+     *
+     * @param text         Входной текст
+     * @param placeholders Заменители плейсхолдеров
+     * @return Текст с замененными плейсхолдерами
+     */
+    private String buildText(String text, Map<String, Object> placeholders) {
+        for (Map.Entry<String, Object> placeHolder : placeholders.entrySet())
             text = text.replace(placeHolder.getKey(), placeHolder.getValue().toString());
         return text;
     }
 
+    /**
+     * Конструирование уведомления для публикации в очередь
+     *
+     * @param message Уведомление
+     * @return
+     */
     private Message constructMessage(Message message) {
         Message newMessage = new Message();
         newMessage.setId(message.getId());

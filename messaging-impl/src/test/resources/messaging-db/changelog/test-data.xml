@@ -26,24 +26,20 @@
             SELECT setval('messaging.message_template_id_seq', 4, false);
 
             <!-- messages and recipients -->
-            INSERT INTO messaging.message (id, text, severity, alert_type, tenant_code, formation_type, recipient_type, channel_code)
-            VALUES ('a2bd666b-1684-4005-a10f-f14224f66d0a', 'Message1', 'INFO', 'POPUP', 'tenant', 'HAND', 'RECIPIENT', 'web');
+            INSERT INTO messaging.message (id, text, severity, alert_type, tenant_code, formation_type, sent_at, recipient_type, channel_code)
+            VALUES ('a2bd666b-1684-4005-a10f-f14224f66d0a', 'Message1', 'ERROR', 'POPUP', 'tenant', 'HAND', '2021-08-15 00:00:00', 'RECIPIENT', 'web');
             INSERT INTO messaging.message_recipient (id, message_id, recipient_username, status)
             VALUES (1, 'a2bd666b-1684-4005-a10f-f14224f66d0a', 'web1', 'SCHEDULED');
             INSERT INTO messaging.message_recipient (id, message_id, recipient_username, status)
             VALUES (2, 'a2bd666b-1684-4005-a10f-f14224f66d0a', 'web2', 'SCHEDULED');
 
-            INSERT INTO messaging.message (id, text, severity, alert_type, tenant_code, formation_type, recipient_type, channel_code)
-            VALUES ('d1450cd1-5b93-47fe-9e44-a3800476342e', 'Message2', 'INFO', 'POPUP', 'tenant', 'HAND', 'RECIPIENT', 'web');
+            INSERT INTO messaging.message (id, text, severity, alert_type, tenant_code, formation_type, sent_at, recipient_type, channel_code)
+            VALUES ('d1450cd1-5b93-47fe-9e44-a3800476342e', 'Message2', 'INFO', 'POPUP', 'tenant', 'HAND', '2021-12-31 00:00:00', 'RECIPIENT', 'web');
             INSERT INTO messaging.message_recipient (id, message_id, recipient_username, status)
             VALUES (3, 'd1450cd1-5b93-47fe-9e44-a3800476342e', 'web1', 'SCHEDULED');
             INSERT INTO messaging.message_recipient (id, message_id, recipient_username, status)
             VALUES (4, 'd1450cd1-5b93-47fe-9e44-a3800476342e', 'web2', 'SCHEDULED');
-
-            INSERT INTO messaging.message (id, text, severity, alert_type, tenant_code, formation_type, recipient_type, channel_code)
-            VALUES ('497ef832-fa00-4715-a79f-8c13cde89b09', 'Message3', 'INFO', 'POPUP', 'tenant2', 'HAND', 'RECIPIENT', 'email');
-            INSERT INTO messaging.message_recipient (id, message_id, recipient_username, status)
-            VALUES (5, '497ef832-fa00-4715-a79f-8c13cde89b09', 'web1', 'SCHEDULED');
+            SELECT setval('messaging.message_recipient_id_seq', 5, false);
         </sql>
     </changeSet>
 </databaseChangeLog>
