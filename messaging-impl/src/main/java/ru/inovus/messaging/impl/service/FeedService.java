@@ -2,6 +2,7 @@ package ru.inovus.messaging.impl.service;
 
 import org.jooq.Record;
 import org.jooq.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
@@ -24,18 +25,38 @@ import static org.jooq.impl.DSL.exists;
 import static ru.inovus.messaging.impl.jooq.Sequences.MESSAGE_RECIPIENT_ID_SEQ;
 import static ru.inovus.messaging.impl.jooq.Tables.*;
 
+/**
+ * Сервис непрочитанных уведомлений
+ */
 @Service
 public class FeedService {
-    private static final RecordMapper<Record, Feed> MAPPER = FeedService::mapFeed;
-    private final DSLContext dsl;
 
-    public FeedService(DSLContext dsl) {
-        this.dsl = dsl;
-    }
+    private static final RecordMapper<Record, Feed> MAPPER = rec -> {
+        MessageRecord record = rec.into(MESSAGE);
+        MessageRecipientRecord recipientRecord = rec.into(MESSAGE_RECIPIENT);
+        Feed message = new Feed();
+        message.setId(String.valueOf(record.getId()));
+        message.setCaption(record.getCaption());
+        message.setText(record.getText());
+        message.setSeverity(record.getSeverity());
+        message.setSentAt(record.getSentAt());
+        message.setReadAt(recipientRecord.getStatusTime());
+        return message;
+    };
 
+    @Autowired
+    private DSLContext dsl;
+
+    /**
+     * Получение страницы непрочитанных уведомлений пользователя
+     *
+     * @param tenantCode Код тенанта
+     * @param username   Имя пользователя
+     * @param criteria   Критерии непрочитанных уведомлений
+     * @return Страница непрочитанных уведомлений
+     */
     public Page<Feed> getMessageFeed(String tenantCode, String username, FeedCriteria criteria) {
         List<Condition> conditions = new ArrayList<>();
-        conditions.add(MESSAGE_RECIPIENT.ID.isNotNull());
         conditions.add(CHANNEL.IS_INTERNAL.eq(Boolean.TRUE));
         conditions.add(MESSAGE.TENANT_CODE.eq(tenantCode));
         Optional.ofNullable(criteria.getSeverity())
@@ -49,19 +70,27 @@ public class FeedService {
                 .select(MESSAGE.fields())
                 .select(MESSAGE_RECIPIENT.fields())
                 .from(MESSAGE)
-                .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username)))
+                .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID)
+                        .and(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username)))
                 .leftJoin(CHANNEL).on(CHANNEL.CODE.eq(MESSAGE.CHANNEL_CODE))
                 .where(conditions);
         int count = dsl.fetchCount(query);
-        Field fieldSentAt = MESSAGE.field("sent_at");
+
         List<Feed> collection = query
-                .orderBy(fieldSentAt.desc())
+                .orderBy(MESSAGE.SENT_AT.desc())
                 .limit(criteria.getPageSize())
                 .offset((int) criteria.getOffset())
                 .fetch(MAPPER);
         return new PageImpl<>(collection, criteria, count);
     }
 
+    /**
+     * Получение непрочитанного уведомления пользователя
+     *
+     * @param messageId Идентификатор уведомления
+     * @param username  Имя пользователя
+     * @return Непрочитанное уведомление
+     */
     public Feed getMessage(UUID messageId, String username) {
         return dsl
                 .select(MESSAGE.fields())
@@ -72,19 +101,30 @@ public class FeedService {
                 .fetchOne(MAPPER);
     }
 
+    /**
+     * Прочтение и возврат непрочтенного уведомления пользователя
+     *
+     * @param messageId Идентификатор уведомления
+     * @param username  Имя пользователя
+     * @return Уведомление
+     */
     @Transactional
     public Feed getMessageAndRead(UUID messageId, String username) {
         Feed result = getMessage(messageId, username);
-        if (result != null) {
+        if (result != null)
             markRead(username, messageId);
-        }
         return result;
     }
 
+    /**
+     * Пометить все уведомления пользователя прочитанными
+     *
+     * @param tenantCode Код тенанта
+     * @param username   Имя пользователя
+     */
     @Transactional
     public void markReadAll(String tenantCode, String username) {
         LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
-        // Update 'personal' messages
         dsl
                 .update(MESSAGE_RECIPIENT)
                 .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
@@ -96,6 +136,12 @@ public class FeedService {
                 .execute();
     }
 
+    /**
+     * Пометить уведомление пользователя прочитанными
+     *
+     * @param username  Имя пользователя
+     * @param messageId Идентификатор уведомления
+     */
     @Transactional
     public void markRead(String username, UUID messageId) {
         if (messageId != null) {
@@ -136,19 +182,5 @@ public class FeedService {
                         MESSAGE_RECIPIENT.STATUS.eq(MessageStatusType.SENT))
                 .fetchOne().value1();
         return new FeedCount(tenantCode, username, count);
-    }
-
-    private static Feed mapFeed(Record rec) {
-        if (rec == null) return null;
-        MessageRecord record = rec.into(MESSAGE);
-        MessageRecipientRecord recipientRecord = rec.into(MESSAGE_RECIPIENT);
-        Feed message = new Feed();
-        message.setId(String.valueOf(record.getId()));
-        message.setCaption(record.getCaption());
-        message.setText(record.getText());
-        message.setSeverity(record.getSeverity());
-        message.setSentAt(record.getSentAt());
-        message.setReadAt(recipientRecord.getStatusTime());
-        return message;
     }
 }

@@ -74,8 +74,10 @@ public class ConfigurableRecipientProvider implements RecipientProvider {
     public Page<ProviderRecipient> getRecipients(ProviderRecipientCriteria criteria) {
         Map<String, Object> response = restTemplate.exchange(recipientProviderUrl + "?" + buildQueryParam(criteria),
                 HttpMethod.GET, prepareRequest(request), Map.class).getBody();
-        Page page = new PageImpl(mapUsers(response), criteria, (Integer) response.get(userMapping.get("count")));
-        return page;
+        if (response == null)
+            return new PageImpl<>(Collections.emptyList(), criteria, 0);
+
+        return new PageImpl(mapUsers(response), criteria, (Integer) response.get(userMapping.get("count")));
     }
 
     private HttpEntity<Map<String, Object>> prepareRequest(HttpServletRequest request) {

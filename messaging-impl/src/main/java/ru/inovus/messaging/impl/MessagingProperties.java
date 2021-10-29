@@ -24,12 +24,12 @@ public class MessagingProperties {
     @Getter
     @Setter
     public static class RecipientProvider {
-        private RecipientProviderType type;
+        private RecipientProviderEnum type;
         private String url;
         private ConfigurableProvider configurable;
     }
 
-    public enum RecipientProviderType {
+    public enum RecipientProviderEnum {
         CONFIGURABLE,
         SECURITY,
         CUSTOM
