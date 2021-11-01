@@ -55,6 +55,12 @@
         <field id="isRead" domain="boolean">
             <select mapping="#this['readAt'] == null ? false : true"/>
         </field>
+
+        <field id="username" domain="string">
+            <filters>
+                <eq filter-id="username" default-value="#{username}">user={username}</eq>
+            </filters>
+        </field>
     </fields>
 
 </query>
