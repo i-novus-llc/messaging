@@ -18,7 +18,6 @@ import ru.inovus.messaging.api.model.MessageOutbox;
 import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.TemplateMessageOutbox;
 import ru.inovus.messaging.api.model.enums.AlertType;
-import ru.inovus.messaging.api.model.enums.FormationType;
 import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.model.enums.Severity;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
@@ -90,7 +89,6 @@ public class MessageRestImplTest {
         Assert.assertEquals(dbStoredMessage.getChannel().getId(), "web");
         Assert.assertEquals(dbStoredMessage.getTemplateCode(), "mt1");
         Assert.assertEquals(dbStoredMessage.getRecipientType(), RecipientType.RECIPIENT);
-        Assert.assertEquals(dbStoredMessage.getFormationType(), FormationType.HAND);
         Assert.assertEquals(dbStoredMessage.getSentAt(), LocalDateTime.parse("2007-12-03T10:15:30"));
     }
 

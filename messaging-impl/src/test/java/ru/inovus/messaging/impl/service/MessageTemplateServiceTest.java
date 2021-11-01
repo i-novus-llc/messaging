@@ -12,7 +12,6 @@ import ru.inovus.messaging.api.criteria.MessageTemplateCriteria;
 import ru.inovus.messaging.api.model.Channel;
 import ru.inovus.messaging.api.model.MessageTemplate;
 import ru.inovus.messaging.api.model.enums.AlertType;
-import ru.inovus.messaging.api.model.enums.FormationType;
 import ru.inovus.messaging.api.model.enums.Severity;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -72,14 +71,6 @@ public class MessageTemplateServiceTest {
         assertThat(templates.getContent().get(0).getId(), is(2));
         assertThat(templates.getContent().get(1).getId(), is(1));
 
-        // filter by formation type
-        criteria = new MessageTemplateCriteria();
-        criteria.setFormationType(FormationType.AUTO);
-        templates = service.getTemplates(TENANT_CODE, criteria);
-        assertThat(templates.getTotalElements(), is(2L));
-        assertThat(templates.getContent().get(0).getId(), is(3));
-        assertThat(templates.getContent().get(1).getId(), is(2));
-
         // filter by enabled
         criteria = new MessageTemplateCriteria();
         criteria.setEnabled(Boolean.TRUE);
@@ -122,7 +113,6 @@ public class MessageTemplateServiceTest {
         newTemplate.setCaption("caption");
         newTemplate.setText("text");
         newTemplate.setSeverity(Severity.ERROR);
-        newTemplate.setFormationType(FormationType.AUTO);
         newTemplate.setAlertType(AlertType.BLOCKER);
         newTemplate.setChannel(new Channel("web", "Web", "web_queue"));
         newTemplate.setEnabled(true);
@@ -134,7 +124,6 @@ public class MessageTemplateServiceTest {
         assertThat(template.getCaption(), is(newTemplate.getCaption()));
         assertThat(template.getText(), is(newTemplate.getText()));
         assertThat(template.getSeverity(), is(newTemplate.getSeverity()));
-        assertThat(template.getFormationType(), is(newTemplate.getFormationType()));
         assertThat(template.getAlertType(), is(newTemplate.getAlertType()));
         assertThat(template.getChannel().getId(), is(newTemplate.getChannel().getId()));
         assertThat(template.getEnabled(), is(newTemplate.getEnabled()));
@@ -149,7 +138,6 @@ public class MessageTemplateServiceTest {
         updatedTemplate.setCaption("caption2");
         updatedTemplate.setText("text2");
         updatedTemplate.setSeverity(Severity.INFO);
-        updatedTemplate.setFormationType(FormationType.HAND);
         updatedTemplate.setAlertType(AlertType.HIDDEN);
         updatedTemplate.setChannel(new Channel("email", "Email", "email_queue"));
         updatedTemplate.setEnabled(false);
@@ -161,7 +149,6 @@ public class MessageTemplateServiceTest {
         assertThat(template.getCaption(), is(updatedTemplate.getCaption()));
         assertThat(template.getText(), is(updatedTemplate.getText()));
         assertThat(template.getSeverity(), is(updatedTemplate.getSeverity()));
-        assertThat(template.getFormationType(), is(updatedTemplate.getFormationType()));
         assertThat(template.getAlertType(), is(updatedTemplate.getAlertType()));
         assertThat(template.getChannel().getId(), is(updatedTemplate.getChannel().getId()));
         assertThat(template.getEnabled(), is(updatedTemplate.getEnabled()));

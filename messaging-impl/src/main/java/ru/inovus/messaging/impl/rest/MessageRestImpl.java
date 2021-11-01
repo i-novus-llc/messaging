@@ -118,7 +118,6 @@ public class MessageRestImpl implements MessageRest {
         message.setAlertType(messageTemplate.getAlertType());
         message.setSentAt(params.getSentAt());
         message.setChannel(messageTemplate.getChannel());
-        message.setFormationType(messageTemplate.getFormationType());
         message.setRecipientType(RecipientType.RECIPIENT);
         message.setTenantCode(params.getTenantCode());
         message.setRecipients(recipientService.getRecipientsByUsername(userNameList));

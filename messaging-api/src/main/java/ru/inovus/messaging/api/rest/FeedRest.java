@@ -69,10 +69,10 @@ public interface FeedRest {
                      @PathParam("username") @ApiParam(value = "Имя пользователя") String username);
 
     @POST
-    @Path("/{username}/read/")
+    @Path("/{username}/message/{id}/read")
     @ApiOperation("Пометить уведомление прочитанным")
     @ApiResponse(code = 200, message = "Уведомление помечено прочитанными")
     void markRead(@PathParam("tenantCode") @ApiParam(value = "Код тенанта") String tenantCode,
                   @PathParam("username") @ApiParam(value = "Имя пользователя") String username,
-                  @ApiParam(value = "Идентификатор уведомления") UUID messageId);
+                  @PathParam("id") @ApiParam(value = "Идентификатор уведомления") UUID id);
 }

@@ -6,12 +6,11 @@ package ru.inovus.messaging.impl.jooq.tables.records;
 
 import org.jooq.Field;
 import org.jooq.Record1;
-import org.jooq.Record11;
-import org.jooq.Row11;
+import org.jooq.Record10;
+import org.jooq.Row10;
 import org.jooq.impl.UpdatableRecordImpl;
 
 import ru.inovus.messaging.api.model.enums.AlertType;
-import ru.inovus.messaging.api.model.enums.FormationType;
 import ru.inovus.messaging.api.model.enums.Severity;
 import ru.inovus.messaging.impl.jooq.tables.MessageTemplate;
 
@@ -20,9 +19,9 @@ import ru.inovus.messaging.impl.jooq.tables.MessageTemplate;
  * Шаблоны уведомлений
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
-public class MessageTemplateRecord extends UpdatableRecordImpl<MessageTemplateRecord> implements Record11<Integer, String, String, Severity, AlertType, String, Boolean, FormationType, String, String, String> {
+public class MessageTemplateRecord extends UpdatableRecordImpl<MessageTemplateRecord> implements Record10<Integer, String, String, Severity, AlertType, String, Boolean, String, String, String> {
 
-    private static final long serialVersionUID = -2010983693;
+    private static final long serialVersionUID = -1015805154;
 
     /**
      * Setter for <code>messaging.message_template.id</code>. Уникальный идентификатор
@@ -123,59 +122,45 @@ public class MessageTemplateRecord extends UpdatableRecordImpl<MessageTemplateRe
     }
 
     /**
-     * Setter for <code>messaging.message_template.formation_type</code>. Тип формирования уведомления
-     */
-    public void setFormationType(FormationType value) {
-        set(7, value);
-    }
-
-    /**
-     * Getter for <code>messaging.message_template.formation_type</code>. Тип формирования уведомления
-     */
-    public FormationType getFormationType() {
-        return (FormationType) get(7);
-    }
-
-    /**
      * Setter for <code>messaging.message_template.code</code>. Код шаблона уведомления
      */
     public void setCode(String value) {
-        set(8, value);
+        set(7, value);
     }
 
     /**
      * Getter for <code>messaging.message_template.code</code>. Код шаблона уведомления
      */
     public String getCode() {
-        return (String) get(8);
+        return (String) get(7);
     }
 
     /**
      * Setter for <code>messaging.message_template.channel_code</code>. Код канала отправки уведомления
      */
     public void setChannelCode(String value) {
-        set(9, value);
+        set(8, value);
     }
 
     /**
      * Getter for <code>messaging.message_template.channel_code</code>. Код канала отправки уведомления
      */
     public String getChannelCode() {
-        return (String) get(9);
+        return (String) get(8);
     }
 
     /**
      * Setter for <code>messaging.message_template.tenant_code</code>. Тенант, к которому относится настройка
      */
     public void setTenantCode(String value) {
-        set(10, value);
+        set(9, value);
     }
 
     /**
      * Getter for <code>messaging.message_template.tenant_code</code>. Тенант, к которому относится настройка
      */
     public String getTenantCode() {
-        return (String) get(10);
+        return (String) get(9);
     }
 
     // -------------------------------------------------------------------------
@@ -188,17 +173,17 @@ public class MessageTemplateRecord extends UpdatableRecordImpl<MessageTemplateRe
     }
 
     // -------------------------------------------------------------------------
-    // Record11 type implementation
+    // Record10 type implementation
     // -------------------------------------------------------------------------
 
     @Override
-    public Row11<Integer, String, String, Severity, AlertType, String, Boolean, FormationType, String, String, String> fieldsRow() {
-        return (Row11) super.fieldsRow();
+    public Row10<Integer, String, String, Severity, AlertType, String, Boolean, String, String, String> fieldsRow() {
+        return (Row10) super.fieldsRow();
     }
 
     @Override
-    public Row11<Integer, String, String, Severity, AlertType, String, Boolean, FormationType, String, String, String> valuesRow() {
-        return (Row11) super.valuesRow();
+    public Row10<Integer, String, String, Severity, AlertType, String, Boolean, String, String, String> valuesRow() {
+        return (Row10) super.valuesRow();
     }
 
     @Override
@@ -237,22 +222,17 @@ public class MessageTemplateRecord extends UpdatableRecordImpl<MessageTemplateRe
     }
 
     @Override
-    public Field<FormationType> field8() {
-        return MessageTemplate.MESSAGE_TEMPLATE.FORMATION_TYPE;
-    }
-
-    @Override
-    public Field<String> field9() {
+    public Field<String> field8() {
         return MessageTemplate.MESSAGE_TEMPLATE.CODE;
     }
 
     @Override
-    public Field<String> field10() {
+    public Field<String> field9() {
         return MessageTemplate.MESSAGE_TEMPLATE.CHANNEL_CODE;
     }
 
     @Override
-    public Field<String> field11() {
+    public Field<String> field10() {
         return MessageTemplate.MESSAGE_TEMPLATE.TENANT_CODE;
     }
 
@@ -292,22 +272,17 @@ public class MessageTemplateRecord extends UpdatableRecordImpl<MessageTemplateRe
     }
 
     @Override
-    public FormationType component8() {
-        return getFormationType();
-    }
-
-    @Override
-    public String component9() {
+    public String component8() {
         return getCode();
     }
 
     @Override
-    public String component10() {
+    public String component9() {
         return getChannelCode();
     }
 
     @Override
-    public String component11() {
+    public String component10() {
         return getTenantCode();
     }
 
@@ -347,22 +322,17 @@ public class MessageTemplateRecord extends UpdatableRecordImpl<MessageTemplateRe
     }
 
     @Override
-    public FormationType value8() {
-        return getFormationType();
-    }
-
-    @Override
-    public String value9() {
+    public String value8() {
         return getCode();
     }
 
     @Override
-    public String value10() {
+    public String value9() {
         return getChannelCode();
     }
 
     @Override
-    public String value11() {
+    public String value10() {
         return getTenantCode();
     }
 
@@ -409,31 +379,25 @@ public class MessageTemplateRecord extends UpdatableRecordImpl<MessageTemplateRe
     }
 
     @Override
-    public MessageTemplateRecord value8(FormationType value) {
-        setFormationType(value);
-        return this;
-    }
-
-    @Override
-    public MessageTemplateRecord value9(String value) {
+    public MessageTemplateRecord value8(String value) {
         setCode(value);
         return this;
     }
 
     @Override
-    public MessageTemplateRecord value10(String value) {
+    public MessageTemplateRecord value9(String value) {
         setChannelCode(value);
         return this;
     }
 
     @Override
-    public MessageTemplateRecord value11(String value) {
+    public MessageTemplateRecord value10(String value) {
         setTenantCode(value);
         return this;
     }
 
     @Override
-    public MessageTemplateRecord values(Integer value1, String value2, String value3, Severity value4, AlertType value5, String value6, Boolean value7, FormationType value8, String value9, String value10, String value11) {
+    public MessageTemplateRecord values(Integer value1, String value2, String value3, Severity value4, AlertType value5, String value6, Boolean value7, String value8, String value9, String value10) {
         value1(value1);
         value2(value2);
         value3(value3);
@@ -444,7 +408,6 @@ public class MessageTemplateRecord extends UpdatableRecordImpl<MessageTemplateRe
         value8(value8);
         value9(value9);
         value10(value10);
-        value11(value11);
         return this;
     }
 
@@ -462,7 +425,7 @@ public class MessageTemplateRecord extends UpdatableRecordImpl<MessageTemplateRe
     /**
      * Create a detached, initialised MessageTemplateRecord
      */
-    public MessageTemplateRecord(Integer id, String caption, String text, Severity severity, AlertType alertType, String name, Boolean enabled, FormationType formationType, String code, String channelCode, String tenantCode) {
+    public MessageTemplateRecord(Integer id, String caption, String text, Severity severity, AlertType alertType, String name, Boolean enabled, String code, String channelCode, String tenantCode) {
         super(MessageTemplate.MESSAGE_TEMPLATE);
 
         set(0, id);
@@ -472,9 +435,8 @@ public class MessageTemplateRecord extends UpdatableRecordImpl<MessageTemplateRe
         set(4, alertType);
         set(5, name);
         set(6, enabled);
-        set(7, formationType);
-        set(8, code);
-        set(9, channelCode);
-        set(10, tenantCode);
+        set(7, code);
+        set(8, channelCode);
+        set(9, tenantCode);
     }
 }

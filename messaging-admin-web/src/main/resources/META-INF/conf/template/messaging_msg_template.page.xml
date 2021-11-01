@@ -26,7 +26,6 @@
                 </input-select>
                 <input-select id="infoType" label="Информирование" required="true"
                               query-id="messaging_channels"/>
-                <hidden id="formationType.id" default-value="HAND"/>
             </row>
             <row>
                 <text-area id="caption" label="Заголовок уведомления" max-rows="3" required="true"/>

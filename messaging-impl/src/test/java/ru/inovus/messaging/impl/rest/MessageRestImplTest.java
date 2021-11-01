@@ -15,7 +15,6 @@ import ru.inovus.messaging.api.criteria.ProviderRecipientCriteria;
 import ru.inovus.messaging.api.criteria.RecipientCriteria;
 import ru.inovus.messaging.api.model.*;
 import ru.inovus.messaging.api.model.enums.AlertType;
-import ru.inovus.messaging.api.model.enums.FormationType;
 import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.model.enums.Severity;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
@@ -94,7 +93,6 @@ public class MessageRestImplTest {
         assertThat(createdMessage.getAlertType(), is(AlertType.HIDDEN));
         assertThat(createdMessage.getSentAt(), is(LocalDateTime.of(2022, 1, 15, 0, 0, 0)));
         assertThat(createdMessage.getChannel().getId(), is("email"));
-        assertThat(createdMessage.getFormationType(), is(FormationType.AUTO));
         assertThat(createdMessage.getRecipientType(), is(RecipientType.RECIPIENT));
 
         RecipientCriteria recipientCriteria = new RecipientCriteria();
