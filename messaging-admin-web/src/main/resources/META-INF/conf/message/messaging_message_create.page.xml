@@ -30,8 +30,8 @@
                             <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return
                                 template.severity;
                             </set-value>
-                            <visibility on="infoType">${novus.messaging.web-channel-id} === Number(infoType.id)</visibility>
-                            <requiring on="infoType">${novus.messaging.web-channel-id} === Number(infoType.id)</requiring>
+                            <visibility on="infoType">${novus.messaging.web-channel-id} === infoType.id</visibility>
+                            <requiring on="infoType">${novus.messaging.web-channel-id} === infoType.id</requiring>
                         </dependencies>
                     </select>
                     <select id="alertType" label="Способ отображения">
@@ -44,8 +44,8 @@
                             <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return
                                 template.alertType;
                             </set-value>
-                            <visibility on="infoType">${novus.messaging.web-channel-id} === Number(infoType.id)</visibility>
-                            <requiring on="infoType">${novus.messaging.web-channel-id} === Number(infoType.id)</requiring>
+                            <visibility on="infoType">${novus.messaging.web-channel-id} === infoType.id</visibility>
+                            <requiring on="infoType">${novus.messaging.web-channel-id} === infoType.id</requiring>
                         </dependencies>
                     </select>
                 </row>
