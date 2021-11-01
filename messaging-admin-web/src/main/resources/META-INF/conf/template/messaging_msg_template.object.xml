@@ -9,8 +9,8 @@
             <in>
                 <field id="name" mapping="['name']" required="true"/>
                 <field id="enabled" mapping="['enabled']" default-value="true"/>
-                <field id="severity.id" mapping="['severity']" required="true"/>
-                <field id="alertType.id" mapping="['alertType']" required="true"/>
+                <field id="severity.id" mapping="['severity']"/>
+                <field id="alertType.id" mapping="['alertType']"/>
                 <field id="infoType" mapping="['channel']"/>
                 <field id="caption" mapping="['caption']" required="true"/>
                 <field id="text" mapping="['text']" required="true"/>
@@ -26,8 +26,8 @@
                 <field id="id" mapping="['id']"/>
                 <field id="name" mapping="['name']" required="true"/>
                 <field id="enabled" mapping="['enabled']"/>
-                <field id="severity.id" mapping="['severity']" required="true"/>
-                <field id="alertType.id" mapping="['alertType']" required="true"/>
+                <field id="severity.id" mapping="['severity']"/>
+                <field id="alertType.id" mapping="['alertType']"/>
                 <field id="infoType" mapping="['channel']"/>
                 <field id="caption" mapping="['caption']" required="true"/>
                 <field id="text" mapping="['text']" required="true"/>
