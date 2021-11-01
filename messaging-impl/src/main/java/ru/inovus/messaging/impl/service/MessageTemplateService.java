@@ -132,7 +132,7 @@ public class MessageTemplateService {
      * @param messageTemplate Обновленный шаблон уведомлений
      */
     @Transactional
-    public void updateTemplate(Integer id, MessageTemplate messageTemplate) {
+    public void updateTemplate(Integer id, MessageTemplate messageTemplate, String tenantCode) {
         dsl
                 .update(MESSAGE_TEMPLATE)
                 .set(MESSAGE_TEMPLATE.NAME, messageTemplate.getName())
@@ -143,7 +143,7 @@ public class MessageTemplateService {
                 .set(MESSAGE_TEMPLATE.CAPTION, messageTemplate.getCaption())
                 .set(MESSAGE_TEMPLATE.TEXT, messageTemplate.getText())
                 .set(MESSAGE_TEMPLATE.CODE, messageTemplate.getCode())
-                .where(MESSAGE_TEMPLATE.ID.eq(id))
+                .where(MESSAGE_TEMPLATE.ID.eq(id), MESSAGE_TEMPLATE.TENANT_CODE.eq(tenantCode))
                 .execute();
     }
 
@@ -153,10 +153,10 @@ public class MessageTemplateService {
      * @param id Идентификатор шаблона уведомлений
      */
     @Transactional
-    public void deleteTemplate(Integer id) {
+    public void deleteTemplate(Integer id, String tenantCode) {
         dsl
                 .deleteFrom(MESSAGE_TEMPLATE)
-                .where(MESSAGE_TEMPLATE.ID.eq(id))
+                .where(MESSAGE_TEMPLATE.ID.eq(id), MESSAGE_TEMPLATE.TENANT_CODE.eq(tenantCode))
                 .execute();
     }
 
@@ -166,10 +166,10 @@ public class MessageTemplateService {
      * @param id Идентификатор шаблона уведомления
      * @return Шаблон уведомления
      */
-    public MessageTemplate getTemplate(Integer id) {
+    public MessageTemplate getTemplate(Integer id, String tenantCode) {
         MessageTemplateRecord messageTemplateRecord = dsl
                 .selectFrom(MESSAGE_TEMPLATE)
-                .where(MESSAGE_TEMPLATE.ID.eq(id))
+                .where(MESSAGE_TEMPLATE.ID.eq(id), MESSAGE_TEMPLATE.TENANT_CODE.eq(tenantCode))
                 .fetchOne();
         return messageTemplateRecord != null ? messageTemplateRecord.map(MAPPER) : null;
     }
@@ -180,10 +180,10 @@ public class MessageTemplateService {
      * @param code Код шаблона уведомления
      * @return Шаблон уведомления
      */
-    public MessageTemplate getTemplate(String code) {
+    public MessageTemplate getTemplate(String code, String tenantCode) {
         MessageTemplateRecord messageTemplateRecord = dsl
                 .selectFrom(MESSAGE_TEMPLATE)
-                .where(MESSAGE_TEMPLATE.CODE.eq(code))
+                .where(MESSAGE_TEMPLATE.CODE.eq(code), MESSAGE_TEMPLATE.TENANT_CODE.eq(tenantCode))
                 .fetchOne();
         return messageTemplateRecord != null ? messageTemplateRecord.map(MAPPER) : null;
     }

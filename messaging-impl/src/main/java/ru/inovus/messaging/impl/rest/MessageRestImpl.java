@@ -70,7 +70,7 @@ public class MessageRestImpl implements MessageRest {
      * @param templateMessageOutbox Уведомление для построения по шаблону
      */
     private void buildAndSendMessage(TemplateMessageOutbox templateMessageOutbox) {
-        MessageTemplate template = messageTemplateService.getTemplate(templateMessageOutbox.getTemplateCode());
+        MessageTemplate template = messageTemplateService.getTemplate(templateMessageOutbox.getTemplateCode(), templateMessageOutbox.getTenantCode());
 
         if (template == null || Boolean.FALSE.equals(template.getEnabled()))
             return;
@@ -150,6 +150,7 @@ public class MessageRestImpl implements MessageRest {
         newMessage.setCaption(message.getCaption());
         newMessage.setText(message.getText());
         newMessage.setSeverity(message.getSeverity());
+        newMessage.setAlertType(message.getAlertType());
         newMessage.setRecipients(message.getRecipients());
         newMessage.setTenantCode(message.getTenantCode());
         return newMessage;
