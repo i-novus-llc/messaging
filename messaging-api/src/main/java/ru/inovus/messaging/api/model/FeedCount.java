@@ -1,5 +1,7 @@
 package ru.inovus.messaging.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,9 +14,15 @@ import java.io.Serializable;
 @Getter
 @Setter
 public class FeedCount implements Serializable {
-    private String tenantCode;
-    private String username;
+
+    @ApiModelProperty("Количество непрочитанных уведомлений пользователем")
     private Integer count;
+
+    @JsonIgnore
+    private String tenantCode;
+
+    @JsonIgnore
+    private String username;
 
     public FeedCount(String tenantCode, String username, Integer count) {
         this.tenantCode = tenantCode;

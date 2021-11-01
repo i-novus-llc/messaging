@@ -32,7 +32,7 @@ import java.util.UUID;
 public interface MessageRest {
     @GET
     @ApiOperation("Получение страницы уведомлений по критериям поиска")
-    @ApiResponse(code = 200, message = "Страница сообщений")
+    @ApiResponse(code = 200, message = "Страница уведомлений")
     Page<Message> getMessages(@PathParam("tenantCode") @ApiParam(value = "Код тенанта") String tenantCode,
                               @BeanParam @ApiParam(value = "Критерии уведомлений") MessageCriteria criteria);
 

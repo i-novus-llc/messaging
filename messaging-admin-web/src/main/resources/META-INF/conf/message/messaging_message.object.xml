@@ -12,7 +12,6 @@
                 <field id="severity.id" mapping="['message.severity']" domain="string"/>
                 <field id="alertType.id" mapping="['message.alertType']" domain="string"/>
                 <field id="infoType" mapping="['message.channel']" domain="object"/>
-                <field id="formationType.id" mapping="['message.formationType']" default-value="HAND" domain="string"/>
                 <field id="recipientType.id" mapping="['message.recipientType']" domain="string"/>
                 <field id="users*.username" mapping="['message.recipients*.username']"/>
             </in>

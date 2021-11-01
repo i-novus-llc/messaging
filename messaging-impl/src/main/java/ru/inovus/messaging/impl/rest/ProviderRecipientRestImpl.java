@@ -4,15 +4,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import ru.inovus.messaging.api.criteria.ProviderRecipientCriteria;
 import ru.inovus.messaging.api.model.ProviderRecipient;
-import ru.inovus.messaging.api.rest.RecipientProviderRest;
+import ru.inovus.messaging.api.rest.ProviderRecipientRest;
 import ru.inovus.messaging.impl.RecipientProvider;
 
 @Controller
-public class RecipientProviderRestImpl implements RecipientProviderRest {
+public class ProviderRecipientRestImpl implements ProviderRecipientRest {
 
     private final RecipientProvider client;
 
-    public RecipientProviderRestImpl(RecipientProvider recipientProvider) {
+    public ProviderRecipientRestImpl(RecipientProvider recipientProvider) {
         this.client = recipientProvider;
     }
 

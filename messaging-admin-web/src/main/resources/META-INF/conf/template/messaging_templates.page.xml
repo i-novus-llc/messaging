@@ -20,7 +20,9 @@
                         </row>
                     </filters>
                     <columns>
-                        <column text-field-id="sentAt" label="Дата отправки"/>
+                        <column text-field-id="sentAt" label="Дата отправки">
+                            <text format="date DD.MM.YYYY HH:mm:ss"/>
+                        </column>
                         <column text-field-id="caption" label="Заголовок"/>
                         <column text-field-id="severity.name" label="Уровень важности"/>
                         <column text-field-id="infoType.name" label="Информирование"/>
@@ -43,7 +45,7 @@
                 </table>
             </tab>
             <tab name="Шаблоны уведомлений">
-                <table id="settings" ref-id="messaging_msg_setting_list"/>
+                <table id="templates" ref-id="messaging_msg_template_list"/>
             </tab>
         </tabs>
     </regions>

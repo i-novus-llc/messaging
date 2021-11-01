@@ -19,9 +19,9 @@
         </field>
 
         <field id="severity.id" domain="string">
-            <select mapping="['severity']"/>
+            <select mapping="['severity.id']"/>
             <filters>
-                <eq filter-id="severity.id">severity.id={severity.id}</eq>
+                <eq filter-id="severity.id">severity={severity.id}</eq>
             </filters>
         </field>
         <field id="severity.name" domain="string">
@@ -37,7 +37,7 @@
         </field>
 
         <field id="sentAt" domain="localdatetime">
-            <select normalize="T(ru.inovus.messaging.n2o.utils.LocalDateTimeUtils).parseDateToMsk(#this)" mapping="['sentAt']"/>
+            <select mapping="['sentAt']"/>
             <filters>
                 <more filter-id="sentAt.begin"  domain="localdatetime">sentAtBegin={sentAt.begin}</more>
                 <less filter-id="sentAt.end" normalize="#this.plusDays(1).minusNanos(1)"  domain="localdatetime">sentAtEnd={sentAt.end}</less>
@@ -45,7 +45,7 @@
         </field>
 
         <field id="sentAtFormatted" domain="date">
-            <select normalize="T(ru.inovus.messaging.n2o.utils.LocalDateTimeUtils).parseDateToMsk(#this)" mapping="['sentAt']"/>
+            <select mapping="['sentAt']" normalize="new java.text.SimpleDateFormat('dd.MM.yyyy HH:mm:ss').format(#this)"/>
         </field>
 
         <field id="readAt" domain="date">

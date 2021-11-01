@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class BaseMessagingCriteria extends RestCriteria {
+
     @Override
     protected List<Sort.Order> getDefaultOrders() {
         return Collections.singletonList(new Sort.Order(Sort.Direction.DESC, "id"));

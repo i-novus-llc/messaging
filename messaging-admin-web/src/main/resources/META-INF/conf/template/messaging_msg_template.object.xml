@@ -4,40 +4,40 @@
     <operations>
         <operation id="create">
             <invocation>
-                <rest method="POST">${messaging.backend.path}/${novus.messaging.tenant-code}/settings</rest>
+                <rest method="POST">${messaging.backend.path}/${novus.messaging.tenant-code}/templates</rest>
             </invocation>
             <in>
                 <field id="name" mapping="['name']" required="true"/>
-                <field id="disabled" mapping="['disabled']" default-value="false"/>
+                <field id="enabled" mapping="['enabled']" default-value="true"/>
                 <field id="severity.id" mapping="['severity']" required="true"/>
                 <field id="alertType.id" mapping="['alertType']" required="true"/>
                 <field id="infoType" mapping="['channel']"/>
-                <field id="formationType.id" mapping="['formationType']" required="true"/>
                 <field id="caption" mapping="['caption']" required="true"/>
                 <field id="text" mapping="['text']" required="true"/>
                 <field id="code" mapping="['code']" required="true"/>
             </in>
         </operation>
+
         <operation id="update">
             <invocation>
-                <rest method="PUT">${messaging.backend.path}/${novus.messaging.tenant-code}/settings/{id}</rest>
+                <rest method="PUT">${messaging.backend.path}/${novus.messaging.tenant-code}/templates/{id}</rest>
             </invocation>
             <in>
                 <field id="id" mapping="['id']"/>
                 <field id="name" mapping="['name']" required="true"/>
-                <field id="disabled" mapping="['disabled']"/>
+                <field id="enabled" mapping="['enabled']"/>
                 <field id="severity.id" mapping="['severity']" required="true"/>
                 <field id="alertType.id" mapping="['alertType']" required="true"/>
                 <field id="infoType" mapping="['channel']"/>
-                <field id="formationType.id" mapping="['formationType']" required="true"/>
                 <field id="caption" mapping="['caption']" required="true"/>
                 <field id="text" mapping="['text']" required="true"/>
                 <field id="code" mapping="['code']" required="true"/>
             </in>
         </operation>
+
         <operation id="delete" confirm="true">
             <invocation>
-                <rest method="DELETE">${messaging.backend.path}/${novus.messaging.tenant-code}/settings/{id}</rest>
+                <rest method="DELETE">${messaging.backend.path}/${novus.messaging.tenant-code}/templates/{id}</rest>
             </invocation>
             <in>
                 <field id="id" mapping="['id']"/>

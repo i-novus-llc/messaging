@@ -10,6 +10,9 @@ import ru.inovus.messaging.impl.RecipientProvider;
 
 import java.util.stream.Collectors;
 
+/**
+ * Провайдер для работы с получателями уведомлений из security-admin
+ */
 public class SecurityAdminRecipientProvider implements RecipientProvider {
 
     private final UserRestService userRestService;
@@ -30,14 +33,14 @@ public class SecurityAdminRecipientProvider implements RecipientProvider {
     }
 
     private ProviderRecipient mapSecurityUser(net.n2oapp.security.admin.api.model.User securityUser) {
-        ProviderRecipient user = new ProviderRecipient();
-        user.setUsername(securityUser.getUsername());
-        user.setFio(securityUser.getFio());
-        user.setEmail(securityUser.getEmail());
-        user.setSurname(securityUser.getSurname());
-        user.setName(securityUser.getName());
-        user.setPatronymic(securityUser.getPatronymic());
+        ProviderRecipient recipient = new ProviderRecipient();
+        recipient.setUsername(securityUser.getUsername());
+        recipient.setFio(securityUser.getFio());
+        recipient.setEmail(securityUser.getEmail());
+        recipient.setSurname(securityUser.getSurname());
+        recipient.setName(securityUser.getName());
+        recipient.setPatronymic(securityUser.getPatronymic());
 
-        return user;
+        return recipient;
     }
 }

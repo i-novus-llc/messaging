@@ -28,8 +28,8 @@ import java.util.stream.Collectors;
 public class MessagingHistoryListPageBinder implements BaseMetadataBinder<Page> {
 
     private static final String HISTORY_WIDGET = "history";
-    private static final String MESSAGING_SETTINGS_HISTORY_WIDGET1 = "messagingSettings_history";
-    private static final String MESSAGING_SETTINGS_HISTORY_WIDGET2 = "messaging_settings_history";
+    private static final String MESSAGING_TEMPLATES_HISTORY_WIDGET1 = "messagingTemplates_history";
+    private static final String MESSAGING_TEMPLATES_HISTORY_WIDGET2 = "messaging_templates_history";
 
     @Override
     public Class<? extends Compiled> getCompiledClass() {
@@ -48,8 +48,8 @@ public class MessagingHistoryListPageBinder implements BaseMetadataBinder<Page> 
             widgets = BasePageUtil.getCompiledWidgets(standardPage).stream()
                     .collect(Collectors.toMap(Widget::getId, w -> w));
         }
-        if (!widgets.containsKey(HISTORY_WIDGET) && !widgets.containsKey(MESSAGING_SETTINGS_HISTORY_WIDGET1)
-                && !widgets.containsKey(MESSAGING_SETTINGS_HISTORY_WIDGET2))
+        if (!widgets.containsKey(HISTORY_WIDGET) && !widgets.containsKey(MESSAGING_TEMPLATES_HISTORY_WIDGET1)
+                && !widgets.containsKey(MESSAGING_TEMPLATES_HISTORY_WIDGET2))
             return page;
 
         DataSet data = new DataSet();
@@ -66,10 +66,10 @@ public class MessagingHistoryListPageBinder implements BaseMetadataBinder<Page> 
 
         if (widgets.containsKey(HISTORY_WIDGET)) {
             page.getModels().add(ReduxModel.FILTER, HISTORY_WIDGET, ml);
-        } else if (widgets.containsKey(MESSAGING_SETTINGS_HISTORY_WIDGET1)) {
-            page.getModels().add(ReduxModel.FILTER, MESSAGING_SETTINGS_HISTORY_WIDGET1, ml);
+        } else if (widgets.containsKey(MESSAGING_TEMPLATES_HISTORY_WIDGET1)) {
+            page.getModels().add(ReduxModel.FILTER, MESSAGING_TEMPLATES_HISTORY_WIDGET1, ml);
         } else {
-            page.getModels().add(ReduxModel.FILTER, MESSAGING_SETTINGS_HISTORY_WIDGET2, ml);
+            page.getModels().add(ReduxModel.FILTER, MESSAGING_TEMPLATES_HISTORY_WIDGET2, ml);
         }
 
         return page;

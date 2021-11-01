@@ -9,8 +9,7 @@ import org.jooq.OrderField;
 import org.jooq.impl.Internal;
 
 import ru.inovus.messaging.impl.jooq.tables.Message;
-import ru.inovus.messaging.impl.jooq.tables.MessageSetting;
-import ru.inovus.messaging.impl.jooq.tables.UserSetting;
+import ru.inovus.messaging.impl.jooq.tables.MessageTemplate;
 
 
 /**
@@ -23,17 +22,17 @@ public class Indexes {
     // INDEX definitions
     // -------------------------------------------------------------------------
 
-    public static final Index IX_MESSAGE_SYSTEM_ID = Indexes0.IX_MESSAGE_SYSTEM_ID;
+    public static final Index MESSAGE_TENANT_CODE_IDX = Indexes0.MESSAGE_TENANT_CODE_IDX;
     public static final Index CODE_UX = Indexes0.CODE_UX;
-    public static final Index USER_SETTING_USER_ID_MSG_SETTING_ID_UX = Indexes0.USER_SETTING_USER_ID_MSG_SETTING_ID_UX;
+    public static final Index MESSAGE_TEMPLATE_TENANT_CODE_IDX = Indexes0.MESSAGE_TEMPLATE_TENANT_CODE_IDX;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
     // -------------------------------------------------------------------------
 
     private static class Indexes0 {
-        public static Index IX_MESSAGE_SYSTEM_ID = Internal.createIndex("ix_message_system_id", Message.MESSAGE, new OrderField[] { Message.MESSAGE.TENANT_CODE }, false);
-        public static Index CODE_UX = Internal.createIndex("code_ux", MessageSetting.MESSAGE_SETTING, new OrderField[] { MessageSetting.MESSAGE_SETTING.CODE }, true);
-        public static Index USER_SETTING_USER_ID_MSG_SETTING_ID_UX = Internal.createIndex("user_setting_user_id_msg_setting_id_ux", UserSetting.USER_SETTING, new OrderField[] { UserSetting.USER_SETTING.USER_ID, UserSetting.USER_SETTING.MSG_SETTING_ID }, true);
+        public static Index MESSAGE_TENANT_CODE_IDX = Internal.createIndex("message_tenant_code_idx", Message.MESSAGE, new OrderField[] { Message.MESSAGE.TENANT_CODE }, false);
+        public static Index CODE_UX = Internal.createIndex("code_ux", MessageTemplate.MESSAGE_TEMPLATE, new OrderField[] { MessageTemplate.MESSAGE_TEMPLATE.CODE }, true);
+        public static Index MESSAGE_TEMPLATE_TENANT_CODE_IDX = Internal.createIndex("message_template_tenant_code_idx", MessageTemplate.MESSAGE_TEMPLATE, new OrderField[] { MessageTemplate.MESSAGE_TEMPLATE.TENANT_CODE }, false);
     }
 }

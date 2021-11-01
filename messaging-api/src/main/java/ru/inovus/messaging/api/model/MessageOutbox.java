@@ -16,6 +16,7 @@
 package ru.inovus.messaging.api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,10 +28,10 @@ import java.io.Serializable;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MessageOutbox implements Serializable {
-    private Message message;
-    private TemplateMessageOutbox templateMessageOutbox;
 
-    public MessageOutbox(Message message) {
-        this.message = message;
-    }
+    @ApiModelProperty("Уведомление")
+    private Message message;
+
+    @ApiModelProperty("Уведомление для построение по шаблону")
+    private TemplateMessageOutbox templateMessageOutbox;
 }

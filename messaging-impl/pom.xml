@@ -88,6 +88,12 @@
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-starter-test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -157,12 +163,6 @@
                                             <userType>ru.inovus.messaging.api.model.enums.AlertType</userType>
                                             <converter>ru.inovus.messaging.impl.util.AlertTypeConverter</converter>
                                             <expression>.*\.alert_type</expression>
-                                            <types>.*</types>
-                                        </forcedType>
-                                        <forcedType>
-                                            <userType>ru.inovus.messaging.api.model.enums.FormationType</userType>
-                                            <converter>ru.inovus.messaging.impl.util.FormationTypeConverter</converter>
-                                            <expression>.*\.formation_type</expression>
                                             <types>.*</types>
                                         </forcedType>
                                         <forcedType>

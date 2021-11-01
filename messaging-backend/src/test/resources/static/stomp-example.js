@@ -34,7 +34,7 @@ function connectWS() {
             // url = url.substring(url.lastIndexOf("/") + 1, url.length);
             // console.log("Your current session is: " + url);
 
-            //Подписка на личные сообщения
+            //Подписка на личные уведомления
             stompClient.subscribe('/user/exchange/' + systemID + '/message'
                 , function (msg) {
                     console.log(msg);
@@ -67,7 +67,7 @@ function disconnectWS() {
 }
 
 
-//отправка личного сообщения
+//отправка личного уведомления
 function sendPriv() {
     if (stompClient && stompClient.connected) {
         var name = document.getElementById('name').value;
@@ -79,21 +79,21 @@ function sendPriv() {
     }
 }
 
-//Запросить кол-во пропущенных сообщений
+//Запросить кол-во непрочитанных уведомлений
 function getCount() {
     if (stompClient && stompClient.connected) {
         stompClient.send('/app/' + systemID + '/message.count');
     }
 }
 
-//Отметить все сообщения прочитанными
+//Отметить все уведомления прочитанными
 function sendMarkReadAll() {
     if (stompClient && stompClient.connected) {
         stompClient.send('/app/' + systemID + '/message.markreadall');
     }
 }
 
-//Отметить определенные сообщения прочитанными ids = JSON.stringify(["id1","id2","id3"])
+//Отметить определенные уведомления прочитанными ids = JSON.stringify(["id1","id2","id3"])
 function sendMarkRead(ids) {
     if (stompClient && stompClient.connected) {
         stompClient.send('/app/' + systemID + '/message.markread', {}, ids);
