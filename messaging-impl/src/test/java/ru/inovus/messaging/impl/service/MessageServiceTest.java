@@ -13,7 +13,6 @@ import ru.inovus.messaging.api.model.Channel;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.enums.AlertType;
-import ru.inovus.messaging.api.model.enums.FormationType;
 import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.model.enums.Severity;
 
@@ -54,7 +53,7 @@ public class MessageServiceTest {
 
         // filter by sentAt end
         criteria = new MessageCriteria();
-        criteria.setSentAtEnd(LocalDateTime.of(2021, 12, 1, 0, 0 , 0));
+        criteria.setSentAtEnd(LocalDateTime.of(2021, 12, 1, 0, 0, 0));
         messages = service.getMessages(TENANT_CODE, criteria);
         assertThat(messages.getTotalElements(), is(1L));
         assertThat(messages.getContent().get(0).getText(), is("Message1"));
@@ -85,7 +84,6 @@ public class MessageServiceTest {
         assertThat(message.getText(), is("Message2"));
         assertThat(message.getSeverity(), is(Severity.INFO));
         assertThat(message.getAlertType(), is(AlertType.POPUP));
-        assertThat(message.getFormationType(), is(FormationType.HAND));
         assertThat(message.getSentAt(), is(LocalDateTime.of(2021, 12, 31, 0, 0, 0)));
         assertThat(message.getRecipientType(), is(RecipientType.RECIPIENT));
         assertThat(message.getChannel().getId(), is("web"));
@@ -102,7 +100,6 @@ public class MessageServiceTest {
         newMessage.setCaption("caption");
         newMessage.setSeverity(Severity.WARNING);
         newMessage.setAlertType(AlertType.HIDDEN);
-        newMessage.setFormationType(FormationType.AUTO);
         newMessage.setRecipientType(RecipientType.RECIPIENT);
         newMessage.setChannel(new Channel("email", "Email", "email-queue"));
         Recipient recipient = new Recipient();
@@ -115,7 +112,6 @@ public class MessageServiceTest {
         assertThat(message.getCaption(), is(newMessage.getCaption()));
         assertThat(message.getSeverity(), is(newMessage.getSeverity()));
         assertThat(message.getAlertType(), is(newMessage.getAlertType()));
-        assertThat(message.getFormationType(), is(newMessage.getFormationType()));
         assertThat(message.getRecipientType(), is(newMessage.getRecipientType()));
         assertThat(message.getChannel().getId(), is(newMessage.getChannel().getId()));
         assertThat(message.getRecipients().size(), is(1));

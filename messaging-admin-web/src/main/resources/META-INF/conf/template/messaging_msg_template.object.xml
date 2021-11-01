@@ -12,7 +12,6 @@
                 <field id="severity.id" mapping="['severity']" required="true"/>
                 <field id="alertType.id" mapping="['alertType']" required="true"/>
                 <field id="infoType" mapping="['channel']"/>
-                <field id="formationType.id" mapping="['formationType']" required="true"/>
                 <field id="caption" mapping="['caption']" required="true"/>
                 <field id="text" mapping="['text']" required="true"/>
                 <field id="code" mapping="['code']" required="true"/>
@@ -30,7 +29,6 @@
                 <field id="severity.id" mapping="['severity']" required="true"/>
                 <field id="alertType.id" mapping="['alertType']" required="true"/>
                 <field id="infoType" mapping="['channel']"/>
-                <field id="formationType.id" mapping="['formationType']" required="true"/>
                 <field id="caption" mapping="['caption']" required="true"/>
                 <field id="text" mapping="['text']" required="true"/>
                 <field id="code" mapping="['code']" required="true"/>

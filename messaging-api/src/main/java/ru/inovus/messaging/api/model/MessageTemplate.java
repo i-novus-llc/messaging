@@ -21,7 +21,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.inovus.messaging.api.model.enums.AlertType;
-import ru.inovus.messaging.api.model.enums.FormationType;
 import ru.inovus.messaging.api.model.enums.Severity;
 
 import java.io.Serializable;
@@ -49,9 +48,6 @@ public class MessageTemplate implements Serializable {
 
     @ApiModelProperty("Канал отправки")
     private Channel channel;
-
-    @ApiModelProperty("Способ формирования уведомления")
-    private FormationType formationType;
 
     @ApiModelProperty("Имя шаблона")
     private String name;

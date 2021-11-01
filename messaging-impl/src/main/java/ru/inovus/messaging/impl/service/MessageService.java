@@ -50,7 +50,6 @@ public class MessageService {
         channel.setName(channelRecord.getName());
         channel.setQueueName(channelRecord.getQueueName());
         message.setChannel(channel);
-        message.setFormationType(record.getFormationType());
         message.setRecipientType(record.getRecipientType());
         message.setTenantCode(record.getTenantCode());
         return message;
@@ -74,10 +73,10 @@ public class MessageService {
                 .insertInto(MESSAGE)
                 .columns(MESSAGE.ID, MESSAGE.CAPTION, MESSAGE.TEXT, MESSAGE.SEVERITY, MESSAGE.ALERT_TYPE,
                         MESSAGE.SENT_AT, MESSAGE.TENANT_CODE,
-                        MESSAGE.FORMATION_TYPE, MESSAGE.RECIPIENT_TYPE, MESSAGE.TEMPLATE_CODE, MESSAGE.CHANNEL_CODE)
+                        MESSAGE.RECIPIENT_TYPE, MESSAGE.TEMPLATE_CODE, MESSAGE.CHANNEL_CODE)
                 .values(id, message.getCaption(), message.getText(), message.getSeverity(), message.getAlertType(),
                         message.getSentAt(), message.getTenantCode(),
-                        message.getFormationType(), message.getRecipientType(), message.getTemplateCode(),
+                        message.getRecipientType(), message.getTemplateCode(),
                         message.getChannel() != null ? message.getChannel().getId() : null)
                 .returning()
                 .fetch().get(0).getId();

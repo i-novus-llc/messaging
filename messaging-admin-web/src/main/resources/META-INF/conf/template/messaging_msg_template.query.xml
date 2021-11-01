@@ -45,15 +45,6 @@
                 <eq filter-id="infoType.id">infoType={infoType.id}</eq>
             </filters>
         </field>
-        <field id="formationType.id" domain="string">
-            <select mapping="['formationType.id']"/>
-            <filters>
-                <eq filter-id="formationType.id">formationType={formationType.id}</eq>
-            </filters>
-        </field>
-        <field id="formationType.name" domain="string">
-            <select mapping="['formationType.name']"/>
-        </field>
 
         <field id="name" domain="string" name="Наименование шаблона">
             <select mapping="['name']"/>

@@ -166,12 +166,6 @@
                                             <types>.*</types>
                                         </forcedType>
                                         <forcedType>
-                                            <userType>ru.inovus.messaging.api.model.enums.FormationType</userType>
-                                            <converter>ru.inovus.messaging.impl.util.FormationTypeConverter</converter>
-                                            <expression>.*\.formation_type</expression>
-                                            <types>.*</types>
-                                        </forcedType>
-                                        <forcedType>
                                             <userType>ru.inovus.messaging.api.model.enums.RecipientType</userType>
                                             <converter>ru.inovus.messaging.impl.util.RecipientTypeConverter</converter>
                                             <expression>.*\.recipient_type</expression>
