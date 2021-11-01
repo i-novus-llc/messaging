@@ -2,6 +2,7 @@ package ru.inovus.messaging;
 
 import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
 import org.junit.Assert;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import ru.inovus.messaging.api.criteria.MessageCriteria;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.MessageOutbox;
 import ru.inovus.messaging.api.model.Recipient;
@@ -29,6 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(SpringExtension.class)
@@ -52,11 +56,16 @@ public class MessageRestImplTest {
     @Captor
     ArgumentCaptor<Message> messageArgumentCaptor;
 
+    private String TENANT_CODE = "tenant";
+
+    @BeforeEach
+    public void before() {
+        Mockito.when(recipientService.getRecipientsByUsername(any())).thenReturn(List.of(getRecipient()));
+    }
+
     @Test
     public void testTemplatedMessage() {
-        Mockito.when(recipientService.getRecipientsByUsername(any())).thenReturn(List.of(getRecipient()));
-
-        messageRest.sendMessage("default", getTemplatedMessage());
+        messageRest.sendMessage(TENANT_CODE, getTemplatedMessage());
 
         Mockito.verify(mqProvider).publish(messageArgumentCaptor.capture(), any());
         Message capturedMessage = messageArgumentCaptor.getValue();
@@ -67,7 +76,7 @@ public class MessageRestImplTest {
         Assert.assertEquals(capturedMessage.getRecipients().get(0).getName(), "тестовый пользователь");
         Assert.assertEquals(capturedMessage.getRecipients().get(0).getUsername(), "testUser");
         Assert.assertEquals(capturedMessage.getRecipients().get(0).getEmail(), "email@mail.novus");
-        Assert.assertEquals(capturedMessage.getTenantCode(), "default");
+        Assert.assertEquals(capturedMessage.getTenantCode(), TENANT_CODE);
         Assert.assertEquals(capturedMessage.getAlertType(), AlertType.POPUP);
 
         Message dbStoredMessage = messageService.getMessage(UUID.fromString(capturedMessage.getId()));
@@ -83,6 +92,25 @@ public class MessageRestImplTest {
         Assert.assertEquals(dbStoredMessage.getRecipientType(), RecipientType.RECIPIENT);
         Assert.assertEquals(dbStoredMessage.getFormationType(), FormationType.HAND);
         Assert.assertEquals(dbStoredMessage.getSentAt(), LocalDateTime.parse("2007-12-03T10:15:30"));
+    }
+
+    @Test
+    public void testEmptyTemplateCodeAndWrongTenant() {
+
+        // template with empty templateCode shouldn't create message
+        long count = messageRest.getMessages(TENANT_CODE, new MessageCriteria()).getTotalElements();
+
+        MessageOutbox outboxNullTemplateCode = getTemplatedMessage();
+        outboxNullTemplateCode.getTemplateMessageOutbox().setTemplateCode(null);
+        messageRest.sendMessage(TENANT_CODE, outboxNullTemplateCode);
+        assertThat(messageRest.getMessages(TENANT_CODE, new MessageCriteria()).getTotalElements(), is(count));
+        Mockito.verify(mqProvider, Mockito.never()).publish(messageArgumentCaptor.capture(), any());
+
+        // template with wrongTenant shouldn't create message
+        MessageOutbox outbox = getTemplatedMessage();
+        messageRest.sendMessage("wrong_tenant_code", outbox);
+        assertThat(messageRest.getMessages(TENANT_CODE, new MessageCriteria()).getTotalElements(), is(count));
+        Mockito.verify(mqProvider, Mockito.never()).publish(messageArgumentCaptor.capture(), any());
     }
 
     private MessageOutbox getTemplatedMessage() {
