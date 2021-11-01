@@ -26,18 +26,14 @@ public enum AlertType {
     POPUP("Всплывающее уведомление"),
     HIDDEN("Лента уведомлений");
 
-    private String description;
+    private String name;
 
-    AlertType(String description) {
-        this.description = description;
-    }
-
-    public String getDescription() {
-        return description;
+    AlertType(String name) {
+        this.name = name;
     }
 
     public String getName() {
-        return name();
+        return name;
     }
 
     public String getId() {

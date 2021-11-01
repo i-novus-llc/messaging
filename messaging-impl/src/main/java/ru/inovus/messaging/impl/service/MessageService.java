@@ -58,6 +58,7 @@ public class MessageService {
         message.setFormationType(record.getFormationType());
         message.setRecipientType(record.getRecipientType());
         message.setTenantCode(record.getTenantCode());
+        message.setTemplateCode(record.getTemplateCode());
         return message;
     };
 
