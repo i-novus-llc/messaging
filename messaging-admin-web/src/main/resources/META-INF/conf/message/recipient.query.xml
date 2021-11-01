@@ -26,8 +26,7 @@
         </field>
 
         <field id="statusTime" domain="date" name="Время установки статуса">
-            <select normalize="T(ru.inovus.messaging.n2o.utils.LocalDateTimeUtils).parseDateToMsk(#this)"
-                    mapping="['statusTime']"/>
+            <select mapping="['statusTime']"/>
         </field>
 
         <field id="status" name="Статус">
