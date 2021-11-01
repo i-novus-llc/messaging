@@ -78,3 +78,7 @@ ALTER TABLE messaging.message_template ADD CONSTRAINT message_template_channel_c
 
 -- change message_recipient pk type
 ALTER TABLE messaging.message_recipient ALTER COLUMN id TYPE BIGINT;
+
+-- delete formation_type column
+ALTER TABLE messaging.message DROP COLUMN formation_type;
+ALTER TABLE messaging.message_template DROP COLUMN formation_type;

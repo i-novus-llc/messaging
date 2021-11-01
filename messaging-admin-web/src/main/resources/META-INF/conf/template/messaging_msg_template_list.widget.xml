@@ -34,14 +34,6 @@
                 <input-text id="code" label="Код шаблона"/>
             </col>
             <col>
-                <input-select id="formationType" label="Тип уведомления">
-                    <options>
-                        <option id="AUTO" name="Автоматическое"/>
-                        <option id="HAND" name="Ручное"/>
-                    </options>
-                </input-select>
-            </col>
-            <col>
                 <checkbox id="enabled" label="Уведомление включено" default-value="true" unchecked="false"/>
             </col>
         </row>
@@ -53,7 +45,6 @@
         <column text-field-id="severity.name" label="Уровень важности" sorting-direction="desc"/>
         <column text-field-id="alertType.name" label="Способ отображения"/>
         <column text-field-id="infoType.name" label="Информирование"/>
-        <column text-field-id="formationType.name" label="Тип уведомления"/>
         <column text-field-id="enabled" label="Включено">
             <checkbox/>
         </column>

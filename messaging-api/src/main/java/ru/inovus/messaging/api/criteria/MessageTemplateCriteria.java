@@ -19,7 +19,6 @@ import io.swagger.annotations.ApiParam;
 import lombok.Getter;
 import lombok.Setter;
 import ru.inovus.messaging.api.model.enums.AlertType;
-import ru.inovus.messaging.api.model.enums.FormationType;
 import ru.inovus.messaging.api.model.enums.Severity;
 
 import javax.ws.rs.QueryParam;
@@ -43,10 +42,6 @@ public class MessageTemplateCriteria extends BaseMessagingCriteria {
     @QueryParam("name")
     @ApiParam("Имя шаблона")
     private String name;
-
-    @QueryParam("formationType")
-    @ApiParam("Способ формирования шаблона")
-    private FormationType formationType;
 
     @QueryParam("enabled")
     @ApiParam("Признак включения")

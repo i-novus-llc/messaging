@@ -26,7 +26,7 @@
                             <text-area id="text" label="Текст уведомления" max-rows="5" enabled="false"/>
                         </row>
                         <row>
-                            <output-text id="sentAt" label="Дата отправки" enabled="false"/>
+                            <output-text id="sentAt" label="Дата отправки" enabled="false" format="date DD.MM.YYYY HH:mm:ss"/>
                         </row>
                     </set>
                 </fields>
@@ -34,7 +34,9 @@
         </region>
         <table query-id="recipient" depends-on="view" detail-field-id="messageId" name="Получатели">
             <columns>
-                <column text-field-id="statusTime"/>
+                <column text-field-id="statusTime">
+                    <text format="date DD.MM.YYYY HH:mm:ss"/>
+                </column>
                 <column text-field-id="status"/>
                 <column text-field-id="name"/>
             </columns>

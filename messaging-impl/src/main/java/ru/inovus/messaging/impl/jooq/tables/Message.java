@@ -9,7 +9,6 @@ import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
 import ru.inovus.messaging.api.model.enums.AlertType;
-import ru.inovus.messaging.api.model.enums.FormationType;
 import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.model.enums.Severity;
 import ru.inovus.messaging.impl.jooq.Indexes;
@@ -17,7 +16,6 @@ import ru.inovus.messaging.impl.jooq.Keys;
 import ru.inovus.messaging.impl.jooq.Messaging;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
 import ru.inovus.messaging.impl.util.AlertTypeConverter;
-import ru.inovus.messaging.impl.util.FormationTypeConverter;
 import ru.inovus.messaging.impl.util.RecipientTypeConverter;
 import ru.inovus.messaging.impl.util.SeverityConverter;
 
@@ -33,7 +31,7 @@ import java.util.UUID;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Message extends TableImpl<MessageRecord> {
 
-    private static final long serialVersionUID = -244018046;
+    private static final long serialVersionUID = -1770616774;
 
     /**
      * The reference instance of <code>messaging.message</code>
@@ -82,11 +80,6 @@ public class Message extends TableImpl<MessageRecord> {
      * The column <code>messaging.message.tenant_code</code>. Тенант, к которому относится уведомление
      */
     public final TableField<MessageRecord, String> TENANT_CODE = createField(DSL.name("tenant_code"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Тенант, к которому относится уведомление");
-
-    /**
-     * The column <code>messaging.message.formation_type</code>. Тип формирования уведомления
-     */
-    public final TableField<MessageRecord, FormationType> FORMATION_TYPE = createField(DSL.name("formation_type"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false).defaultValue(org.jooq.impl.DSL.field("'AUTO'::character varying", org.jooq.impl.SQLDataType.VARCHAR)), this, "Тип формирования уведомления", new FormationTypeConverter());
 
     /**
      * The column <code>messaging.message.recipient_type</code>. Тип получателя уведомления
@@ -196,11 +189,11 @@ public class Message extends TableImpl<MessageRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row11 type methods
+    // Row10 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row11<UUID, String, String, Severity, AlertType, LocalDateTime, String, FormationType, RecipientType, String, String> fieldsRow() {
-        return (Row11) super.fieldsRow();
+    public Row10<UUID, String, String, Severity, AlertType, LocalDateTime, String, RecipientType, String, String> fieldsRow() {
+        return (Row10) super.fieldsRow();
     }
 }

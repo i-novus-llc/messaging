@@ -9,14 +9,12 @@ import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
 import ru.inovus.messaging.api.model.enums.AlertType;
-import ru.inovus.messaging.api.model.enums.FormationType;
 import ru.inovus.messaging.api.model.enums.Severity;
 import ru.inovus.messaging.impl.jooq.Indexes;
 import ru.inovus.messaging.impl.jooq.Keys;
 import ru.inovus.messaging.impl.jooq.Messaging;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageTemplateRecord;
 import ru.inovus.messaging.impl.util.AlertTypeConverter;
-import ru.inovus.messaging.impl.util.FormationTypeConverter;
 import ru.inovus.messaging.impl.util.SeverityConverter;
 
 import java.util.Arrays;
@@ -29,7 +27,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class MessageTemplate extends TableImpl<MessageTemplateRecord> {
 
-    private static final long serialVersionUID = -1312148152;
+    private static final long serialVersionUID = -985629237;
 
     /**
      * The reference instance of <code>messaging.message_template</code>
@@ -78,11 +76,6 @@ public class MessageTemplate extends TableImpl<MessageTemplateRecord> {
      * The column <code>messaging.message_template.enabled</code>. Признак включения уведомления
      */
     public final TableField<MessageTemplateRecord, Boolean> ENABLED = createField(DSL.name("enabled"), org.jooq.impl.SQLDataType.BOOLEAN.defaultValue(org.jooq.impl.DSL.field("true", org.jooq.impl.SQLDataType.BOOLEAN)), this, "Признак включения уведомления");
-
-    /**
-     * The column <code>messaging.message_template.formation_type</code>. Тип формирования уведомления
-     */
-    public final TableField<MessageTemplateRecord, FormationType> FORMATION_TYPE = createField(DSL.name("formation_type"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Тип формирования уведомления", new FormationTypeConverter());
 
     /**
      * The column <code>messaging.message_template.code</code>. Код шаблона уведомления
@@ -192,11 +185,11 @@ public class MessageTemplate extends TableImpl<MessageTemplateRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row11 type methods
+    // Row10 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row11<Integer, String, String, Severity, AlertType, String, Boolean, FormationType, String, String, String> fieldsRow() {
-        return (Row11) super.fieldsRow();
+    public Row10<Integer, String, String, Severity, AlertType, String, Boolean, String, String, String> fieldsRow() {
+        return (Row10) super.fieldsRow();
     }
 }

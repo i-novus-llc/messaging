@@ -17,7 +17,7 @@
         </filters>
         <columns>
             <column text-field-id="sentAt" label="Дата отправки">
-                <!--<text format="datetime DD.MM.YYYY HH:mm"/>-->
+                <text format="date DD.MM.YYYY HH:mm:ss"/>
             </column>
             <column text-field-id="severity.name" label="Важность"/>
             <column text-field-id="caption" label="Заголовок"/>
