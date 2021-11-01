@@ -44,9 +44,8 @@ public class FeedRestImpl implements FeedRest {
     @Override
     public Feed getMessageAndRead(String tenantCode, String username, UUID messageId) {
         Feed result = feedService.getMessageAndRead(messageId, username);
-        if (result != null) {
+        if (result != null)
             mqProvider.publish(getFeedCount(tenantCode, username), feedCountQueue);
-        }
         return result;
     }
 

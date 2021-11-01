@@ -7,9 +7,8 @@ package ru.inovus.messaging.impl.jooq;
 import ru.inovus.messaging.impl.jooq.tables.Channel;
 import ru.inovus.messaging.impl.jooq.tables.Message;
 import ru.inovus.messaging.impl.jooq.tables.MessageRecipient;
-import ru.inovus.messaging.impl.jooq.tables.MessageSetting;
+import ru.inovus.messaging.impl.jooq.tables.MessageTemplate;
 import ru.inovus.messaging.impl.jooq.tables.Tenant;
-import ru.inovus.messaging.impl.jooq.tables.UserSetting;
 
 
 /**
@@ -34,17 +33,12 @@ public class Tables {
     public static final MessageRecipient MESSAGE_RECIPIENT = MessageRecipient.MESSAGE_RECIPIENT;
 
     /**
-     * Шаблоны уведомлений (общесистемные настройки)
+     * Шаблоны уведомлений
      */
-    public static final MessageSetting MESSAGE_SETTING = MessageSetting.MESSAGE_SETTING;
+    public static final MessageTemplate MESSAGE_TEMPLATE = MessageTemplate.MESSAGE_TEMPLATE;
 
     /**
      * Тенанты
      */
     public static final Tenant TENANT = Tenant.TENANT;
-
-    /**
-     * Пользовательские настройки уведомлений
-     */
-    public static final UserSetting USER_SETTING = UserSetting.USER_SETTING;
 }

@@ -17,6 +17,9 @@ package ru.inovus.messaging.api.model.enums;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+/**
+ * Способ формирования уведомления
+ */
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum FormationType {
     AUTO("Автоматическое"),
@@ -30,5 +33,9 @@ public enum FormationType {
 
     public String getName() {
         return name;
+    }
+
+    public String getId() {
+        return name();
     }
 }

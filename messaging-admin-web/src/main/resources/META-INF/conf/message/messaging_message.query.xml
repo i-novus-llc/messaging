@@ -19,19 +19,19 @@
         </field>
 
         <field id="severity.id" domain="string">
-            <select mapping="['severity.name']"/>
+            <select mapping="['severity.id']"/>
             <filters>
-                <eq filter-id="severity.id">severity.id={severity.id}</eq>
+                <eq filter-id="severity.id">severity={severity.id}</eq>
             </filters>
         </field>
         <field id="severity.name" domain="string">
-            <select mapping="['severity.description']"/>
+            <select mapping="['severity.name']"/>
         </field>
 
-        <field id="infoType" domain="object">
+        <field id="infoType">
             <select mapping="['channel']"/>
             <filters>
-                <eq filter-id="infoType.id">channel.id={infoType.id}</eq>
+                <eq filter-id="infoType.id">infoType={infoType.id}</eq>
             </filters>
         </field>
 
@@ -43,7 +43,7 @@
         </field>
 
         <field id="alertType.id">
-            <select mapping="['alertType']"/>
+            <select mapping="['alertType.id']"/>
         </field>
         <field id="alertType.name">
             <select mapping="['alertType.name']"/>
@@ -73,12 +73,6 @@
 
         <field id="users" domain="object">
             <select mapping="['recipients']"/>
-        </field>
-
-        <field id="username" domain="string">
-            <filters>
-                <eq filter-id="username">user={username}</eq>
-            </filters>
         </field>
     </fields>
 

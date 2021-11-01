@@ -44,24 +44,24 @@ public class PageBindersTest extends SourceCompileTestBase {
     public void testMessagingHistoryListPageBinder() {
         builder.sources(new CompileInfo("ru/inovus/messaging/n2o/test.query.xml"));
         builder.binders(new MessagingHistoryListPageBinder());
-        Page page = bind("ru/inovus/messaging/n2o/messaging_settings.page.xml")
-                .get(new PageContext("messaging_settings"), new DataSet());
+        Page page = bind("ru/inovus/messaging/n2o/messaging_templates.page.xml")
+                .get(new PageContext("messaging_templates"), new DataSet());
 
-        assertDates(page, "filter['messaging_settings_history']");
+        assertDates(page, "filter['messaging_templates_history']");
 
-        page = bind("ru/inovus/messaging/n2o/messagingSettings.page.xml")
-                .get(new PageContext("messagingSettings"), new DataSet());
+        page = bind("ru/inovus/messaging/n2o/messagingTemplates.page.xml")
+                .get(new PageContext("messagingTemplates"), new DataSet());
 
-        assertDates(page, "filter['messagingSettings_history']");
+        assertDates(page, "filter['messagingTemplates_history']");
 
-        page = bind("ru/inovus/messaging/n2o/_messagingSettings.page.xml")
-                .get(new PageContext("_messagingSettings"), new DataSet());
+        page = bind("ru/inovus/messaging/n2o/_messagingTemplates.page.xml")
+                .get(new PageContext("_messagingTemplates"), new DataSet());
 
         assertDates(page, "filter['history']");
 
-        Page simplePage = bind("ru/inovus/messaging/n2o/simple/messaging_settings.page.xml")
-                .get(new PageContext("messaging_settings"), new DataSet());
-        assertDates(simplePage, "filter['messaging_settings_history']");
+        Page simplePage = bind("ru/inovus/messaging/n2o/simple/messaging_templates.page.xml")
+                .get(new PageContext("messaging_templates"), new DataSet());
+        assertDates(simplePage, "filter['messaging_templates_history']");
 
         page = bind("ru/inovus/messaging/n2o/blank.page.xml")
                 .get(new PageContext("blank"), new DataSet());

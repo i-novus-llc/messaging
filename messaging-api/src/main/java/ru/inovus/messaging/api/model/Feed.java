@@ -16,6 +16,7 @@
 package ru.inovus.messaging.api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import ru.inovus.messaging.api.model.enums.Severity;
@@ -27,11 +28,22 @@ import java.time.LocalDateTime;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Feed implements Serializable {
+
+    @ApiModelProperty("Идентификатор уведомления")
     private String id;
+
+    @ApiModelProperty("Заголовок уведомления")
     private String caption;
+
+    @ApiModelProperty("Текст уведомления")
     private String text;
+
+    @ApiModelProperty("Уровень важности уведомления")
     private Severity severity;
+
+    @ApiModelProperty("Дата отправки уведомления")
     private LocalDateTime sentAt;
+
+    @ApiModelProperty("Дата прочтения уведомления")
     private LocalDateTime readAt;
-    private String tenantCode;
 }

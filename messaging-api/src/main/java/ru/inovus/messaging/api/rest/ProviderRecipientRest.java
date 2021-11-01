@@ -27,10 +27,10 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 @Api(value = "Получатели", authorizations = @Authorization(value = "oauth2"))
-@Path("/recipients")
+@Path("/provider_recipients")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public interface RecipientProviderRest {
+public interface ProviderRecipientRest {
     @GET
     @ApiOperation("Получение списка получателей")
     @ApiResponse(code = 200, message = "Список получателей")

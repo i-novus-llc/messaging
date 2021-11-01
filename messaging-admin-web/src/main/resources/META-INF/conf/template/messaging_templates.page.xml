@@ -43,7 +43,7 @@
                 </table>
             </tab>
             <tab name="Шаблоны уведомлений">
-                <table id="settings" ref-id="messaging_msg_setting_list"/>
+                <table id="templates" ref-id="messaging_msg_template_list"/>
             </tab>
         </tabs>
     </regions>

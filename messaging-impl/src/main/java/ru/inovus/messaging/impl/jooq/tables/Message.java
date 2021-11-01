@@ -33,7 +33,7 @@ import java.util.UUID;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Message extends TableImpl<MessageRecord> {
 
-    private static final long serialVersionUID = -1201678096;
+    private static final long serialVersionUID = -244018046;
 
     /**
      * The reference instance of <code>messaging.message</code>
@@ -94,14 +94,14 @@ public class Message extends TableImpl<MessageRecord> {
     public final TableField<MessageRecord, RecipientType> RECIPIENT_TYPE = createField(DSL.name("recipient_type"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Тип получателя уведомления", new RecipientTypeConverter());
 
     /**
-     * The column <code>messaging.message.notification_type</code>. Код шаблона, который был использован для формирования уведомления
+     * The column <code>messaging.message.template_code</code>. Код шаблона, который был использован для формирования уведомления
      */
-    public final TableField<MessageRecord, String> NOTIFICATION_TYPE = createField(DSL.name("notification_type"), org.jooq.impl.SQLDataType.VARCHAR, this, "Код шаблона, который был использован для формирования уведомления");
+    public final TableField<MessageRecord, String> TEMPLATE_CODE = createField(DSL.name("template_code"), org.jooq.impl.SQLDataType.VARCHAR, this, "Код шаблона, который был использован для формирования уведомления");
 
     /**
-     * The column <code>messaging.message.channel_id</code>. Идентификатор канала отправки уведомления
+     * The column <code>messaging.message.channel_code</code>. Код канала отправки уведомления
      */
-    public final TableField<MessageRecord, Integer> CHANNEL_ID = createField(DSL.name("channel_id"), org.jooq.impl.SQLDataType.INTEGER, this, "Идентификатор канала отправки уведомления");
+    public final TableField<MessageRecord, String> CHANNEL_CODE = createField(DSL.name("channel_code"), org.jooq.impl.SQLDataType.VARCHAR, this, "Код канала отправки уведомления");
 
     /**
      * Create a <code>messaging.message</code> table reference
@@ -143,7 +143,7 @@ public class Message extends TableImpl<MessageRecord> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.IX_MESSAGE_SYSTEM_ID);
+        return Arrays.<Index>asList(Indexes.MESSAGE_TENANT_CODE_IDX);
     }
 
     @Override
@@ -158,7 +158,7 @@ public class Message extends TableImpl<MessageRecord> {
 
     @Override
     public List<ForeignKey<MessageRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<MessageRecord, ?>>asList(Keys.MESSAGE__MESSAGE_TENANT_CODE_FKEY, Keys.MESSAGE__MESSAGE_CHANNEL_ID_CHANNEL_ID_FK);
+        return Arrays.<ForeignKey<MessageRecord, ?>>asList(Keys.MESSAGE__MESSAGE_TENANT_CODE_FKEY, Keys.MESSAGE__MESSAGE_CHANNEL_CODE_CHANNEL_CODE_FK);
     }
 
     public Tenant tenant() {
@@ -166,7 +166,7 @@ public class Message extends TableImpl<MessageRecord> {
     }
 
     public Channel channel() {
-        return new Channel(this, Keys.MESSAGE__MESSAGE_CHANNEL_ID_CHANNEL_ID_FK);
+        return new Channel(this, Keys.MESSAGE__MESSAGE_CHANNEL_CODE_CHANNEL_CODE_FK);
     }
 
     @Override
@@ -200,7 +200,7 @@ public class Message extends TableImpl<MessageRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Row11<UUID, String, String, Severity, AlertType, LocalDateTime, String, FormationType, RecipientType, String, Integer> fieldsRow() {
+    public Row11<UUID, String, String, Severity, AlertType, LocalDateTime, String, FormationType, RecipientType, String, String> fieldsRow() {
         return (Row11) super.fieldsRow();
     }
 }

@@ -16,26 +16,53 @@
 package ru.inovus.messaging.api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.inovus.messaging.api.model.enums.AlertType;
+import ru.inovus.messaging.api.model.enums.FormationType;
 import ru.inovus.messaging.api.model.enums.Severity;
 
 import java.io.Serializable;
 
-@Setter
 @Getter
+@Setter
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserSetting implements Serializable {
+public class MessageTemplate implements Serializable {
+
+    @ApiModelProperty("Идентификатор шаблона")
     private Integer id;
+
+    @ApiModelProperty("Заголовок шаблона")
     private String caption;
+
+    @ApiModelProperty("Текст шаблона")
     private String text;
+
+    @ApiModelProperty("Уровень важности шаблона")
     private Severity severity;
-    private AlertType defaultAlertType;
+
+    @ApiModelProperty("Способ отображения шаблона")
     private AlertType alertType;
+
+    @ApiModelProperty("Канал отправки")
     private Channel channel;
+
+    @ApiModelProperty("Способ формирования уведомления")
+    private FormationType formationType;
+
+    @ApiModelProperty("Имя шаблона")
     private String name;
-    private Boolean disabled;
-    private String templateCode;
-    private boolean defaultSetting;
+
+    @ApiModelProperty("Признак включения")
+    private Boolean enabled;
+
+    @ApiModelProperty("Код шаблона")
+    private String code;
+
+    public MessageTemplate(Integer id) {
+        this.id = id;
+    }
 }

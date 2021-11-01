@@ -15,40 +15,44 @@
  */
 package ru.inovus.messaging.api.criteria;
 
+import io.swagger.annotations.ApiParam;
 import lombok.Getter;
 import lombok.Setter;
 import ru.inovus.messaging.api.model.enums.AlertType;
+import ru.inovus.messaging.api.model.enums.FormationType;
 import ru.inovus.messaging.api.model.enums.Severity;
-import ru.inovus.messaging.api.model.enums.YesNo;
 
-import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 
 @Getter
 @Setter
-public class UserSettingCriteria extends BaseMessagingCriteria {
-    @PathParam("user")
-    private String username;
+public class MessageTemplateCriteria extends BaseMessagingCriteria {
 
-    @QueryParam("severity.id")
+    @QueryParam("severity")
+    @ApiParam("Уровень важности шаблона")
     private Severity severity;
 
-    @QueryParam("alertType.id")
+    @QueryParam("alertType")
+    @ApiParam("Способ отображения шаблона")
     private AlertType alertType;
 
-    @QueryParam("infoType.id")
-    private Integer channelId;
+    @QueryParam("infoType")
+    @ApiParam("Канал отправки шаблона")
+    private String channelCode;
 
     @QueryParam("name")
+    @ApiParam("Имя шаблона")
     private String name;
 
-    @QueryParam("templateCode")
-    private String templateCode;
+    @QueryParam("formationType")
+    @ApiParam("Способ формирования шаблона")
+    private FormationType formationType;
 
-    @QueryParam("enabled.id")
-    private YesNo enabled;
+    @QueryParam("enabled")
+    @ApiParam("Признак включения")
+    private Boolean enabled;
 
-    public Boolean getEnabled() {
-        return enabled != null ? enabled.getValue() : null;
-    }
+    @QueryParam("code")
+    @ApiParam("Код шаблона")
+    private String code;
 }

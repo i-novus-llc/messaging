@@ -16,6 +16,7 @@
 package ru.inovus.messaging.api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,15 +33,34 @@ import java.util.UUID;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @ToString
 public class Recipient implements Serializable {
-    private Integer id;
-    private LocalDateTime statusTime;
-    private UUID messageId;
+
+    @ApiModelProperty("Идентификатор получателя")
+    private Long id;
+
+    @ApiModelProperty("Имя получателя")
     private String name;
-    private LocalDateTime departuredAt;
-    private MessageStatusType status;
-    private String errorMessage;
+
+    @ApiModelProperty("Имя пользователя получателя")
     private String username;
+
+    @ApiModelProperty("Email получателя")
     private String email;
+
+    @ApiModelProperty("Время установки текущего статуса")
+    private LocalDateTime statusTime;
+
+    @ApiModelProperty("Идентификатор уведомления")
+    private UUID messageId;
+
+    @ApiModelProperty("Дата отправки уведомления")
+    private LocalDateTime departuredAt;
+
+    @ApiModelProperty("Текущий статус")
+    private MessageStatusType status;
+
+    @ApiModelProperty("Сообщение ошибки отправки")
+    private String errorMessage;
+
 
     public Recipient(String username) {
         this.username = username;

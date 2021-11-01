@@ -15,6 +15,7 @@
  */
 package ru.inovus.messaging.api.criteria;
 
+import io.swagger.annotations.ApiParam;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,12 +24,16 @@ import javax.ws.rs.QueryParam;
 @Getter
 @Setter
 public class ProviderRecipientCriteria extends BaseMessagingCriteria {
+
     @QueryParam("username")
+    @ApiParam("Имя пользователя получателя")
     private String username;
 
     @QueryParam("name")
+    @ApiParam("Имя получателя")
     private String name;
 
     @QueryParam("fio")
+    @ApiParam("ФИО получателя")
     private String fio;
 }

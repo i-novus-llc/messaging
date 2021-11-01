@@ -16,7 +16,7 @@ import ru.inovus.messaging.channel.api.queue.MqProvider;
 import java.security.Principal;
 
 /**
- * Контроллер для отправки/получения сообщений через WebSocket
+ * Контроллер для отправки/получения уведомлений через WebSocket
  */
 @Controller
 public class MessageController {
@@ -50,7 +50,7 @@ public class MessageController {
      *
      * @param tenantCode Идентификатор системы, в которой находится пользователь
      * @param username   Имя пользователя
-     * @param message    Сообщение
+     * @param message    Уведомление
      */
     public void sendPrivateMessage(String tenantCode,
                                    String username,
@@ -92,7 +92,7 @@ public class MessageController {
      * Отметить уведомление, прочитанным пользователем
      *
      * @param tenantCode Идентификатор системы, в которой находится пользователь
-     * @param messageId  Идентификатор сообщения
+     * @param messageId  Идентификатор уведомления
      * @param principal  Информация о пользователе
      */
     @MessageMapping("/{tenantCode}/message.markread")

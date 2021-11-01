@@ -37,7 +37,8 @@ import static ru.inovus.messaging.impl.jooq.Tables.*;
 @Slf4j
 public class RecipientService {
 
-    private final DSLContext dsl;
+    @Autowired
+    private DSLContext dsl;
 
     @Autowired
     private FeedService feedService;
@@ -65,16 +66,13 @@ public class RecipientService {
         return recipient;
     };
 
-    public RecipientService(DSLContext dsl) {
-        this.dsl = dsl;
-    }
 
     /**
-     * Получение списка получателей уведомлений по критерию
+     * Получение страницы получателей уведомлений по критерию
      *
      * @param tenantCode Код тенанта
      * @param criteria   Критерий получателей
-     * @return Список получателей уведомлений
+     * @return Страница получателей уведомлений
      */
     public Page<Recipient> getRecipients(String tenantCode, RecipientCriteria criteria) {
         if (criteria.getMessageId() == null)
@@ -100,23 +98,6 @@ public class RecipientService {
     }
 
     /**
-     * Получение списка полей, по которым будет производиться сортировка
-     *
-     * @param sort Вариант сортировки
-     * @return Список полей, по которым будет производиться сортировка
-     */
-    private Collection<SortField<?>> getSortFields(Sort sort) {
-        if (sort.isEmpty())
-            return new ArrayList<>();
-
-        return sort.get().map(s -> {
-            Field field = MESSAGE_RECIPIENT.field(s.getProperty());
-            return (SortField<?>) (s.getDirection().equals(Sort.Direction.ASC) ?
-                    field.asc() : field.desc());
-        }).collect(Collectors.toList());
-    }
-
-    /**
      * Обновление статуса получателя уведомления
      *
      * @param status Статус уведомления
@@ -139,7 +120,7 @@ public class RecipientService {
                     .where(MESSAGE.ID.eq(MESSAGE_RECIPIENT.MESSAGE_ID),
                             MESSAGE.TENANT_CODE.eq(status.getTenantCode())
                                     .andExists(dsl.selectOne().from(CHANNEL)
-                                            .where(CHANNEL.ID.eq(MESSAGE.CHANNEL_ID)
+                                            .where(CHANNEL.CODE.eq(MESSAGE.CHANNEL_CODE)
                                             )))));
 
         dsl
@@ -206,5 +187,22 @@ public class RecipientService {
         }
 
         return recipient;
+    }
+
+    /**
+     * Получение списка полей, по которым будет производиться сортировка
+     *
+     * @param sort Вариант сортировки
+     * @return Список полей, по которым будет производиться сортировка
+     */
+    private Collection<SortField<?>> getSortFields(Sort sort) {
+        if (sort.isEmpty())
+            return new ArrayList<>();
+
+        return sort.get().map(s -> {
+            Field field = MESSAGE_RECIPIENT.field(s.getProperty());
+            return (SortField<?>) (s.getDirection().equals(Sort.Direction.ASC) ?
+                    field.asc() : field.desc());
+        }).collect(Collectors.toList());
     }
 }
