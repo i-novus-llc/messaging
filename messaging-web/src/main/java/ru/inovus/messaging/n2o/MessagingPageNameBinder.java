@@ -1,6 +1,5 @@
 package ru.inovus.messaging.n2o;
 
-import net.n2oapp.criteria.dataset.DataSet;
 import net.n2oapp.framework.api.criteria.N2oPreparedCriteria;
 import net.n2oapp.framework.api.criteria.Restriction;
 import net.n2oapp.framework.api.data.QueryProcessor;
@@ -14,7 +13,6 @@ import net.n2oapp.framework.api.metadata.global.view.page.N2oPage;
 import net.n2oapp.framework.api.metadata.global.view.widget.N2oWidget;
 import net.n2oapp.framework.api.metadata.meta.ModelLink;
 import net.n2oapp.framework.api.metadata.meta.page.Page;
-import net.n2oapp.framework.config.metadata.compile.context.QueryContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 
@@ -62,10 +60,6 @@ public class MessagingPageNameBinder implements MetadataBinder<Page>, CompiledCl
         if (id == null || id.isEmpty() || id.equals("{id}"))
             return page;
         criteria.addRestriction(new Restriction("id", id));
-        String queryId = widget.getQueryId();
-        DataSet data = queryProcessor.executeOneSizeQuery(p.getCompiled(new QueryContext(queryId)), criteria)
-                .getCollection().iterator().next();
         return page;
-
     }
 }

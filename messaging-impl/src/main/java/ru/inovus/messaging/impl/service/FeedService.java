@@ -2,6 +2,7 @@ package ru.inovus.messaging.impl.service;
 
 import org.jooq.Record;
 import org.jooq.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,6 @@ import ru.inovus.messaging.api.criteria.FeedCriteria;
 import ru.inovus.messaging.api.model.Feed;
 import ru.inovus.messaging.api.model.FeedCount;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
-import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecipientRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
 
@@ -22,22 +22,41 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.jooq.impl.DSL.exists;
-import static org.jooq.impl.DSL.notExists;
-import static ru.inovus.messaging.impl.jooq.Sequences.RECIPIENT_ID_SEQ;
+import static ru.inovus.messaging.impl.jooq.Sequences.MESSAGE_RECIPIENT_ID_SEQ;
 import static ru.inovus.messaging.impl.jooq.Tables.*;
 
+/**
+ * Сервис непрочитанных уведомлений
+ */
 @Service
 public class FeedService {
-    private static final RecordMapper<Record, Feed> MAPPER = FeedService::mapFeed;
-    private final DSLContext dsl;
 
-    public FeedService(DSLContext dsl) {
-        this.dsl = dsl;
-    }
+    private static final RecordMapper<Record, Feed> MAPPER = rec -> {
+        MessageRecord record = rec.into(MESSAGE);
+        MessageRecipientRecord recipientRecord = rec.into(MESSAGE_RECIPIENT);
+        Feed message = new Feed();
+        message.setId(String.valueOf(record.getId()));
+        message.setCaption(record.getCaption());
+        message.setText(record.getText());
+        message.setSeverity(record.getSeverity());
+        message.setSentAt(record.getSentAt());
+        message.setReadAt(recipientRecord.getStatusTime());
+        return message;
+    };
 
+    @Autowired
+    private DSLContext dsl;
+
+    /**
+     * Получение страницы непрочитанных уведомлений пользователя
+     *
+     * @param tenantCode Код тенанта
+     * @param username   Имя пользователя
+     * @param criteria   Критерии непрочитанных уведомлений
+     * @return Страница непрочитанных уведомлений
+     */
     public Page<Feed> getMessageFeed(String tenantCode, String username, FeedCriteria criteria) {
         List<Condition> conditions = new ArrayList<>();
-        conditions.add(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL).or(MESSAGE_RECIPIENT.ID.isNotNull()));
         conditions.add(CHANNEL.IS_INTERNAL.eq(Boolean.TRUE));
         conditions.add(MESSAGE.TENANT_CODE.eq(tenantCode));
         Optional.ofNullable(criteria.getSeverity())
@@ -51,43 +70,61 @@ public class FeedService {
                 .select(MESSAGE.fields())
                 .select(MESSAGE_RECIPIENT.fields())
                 .from(MESSAGE)
-                .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username)))
-                .leftJoin(CHANNEL).on(CHANNEL.ID.eq(MESSAGE.CHANNEL_ID))
+                .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID)
+                        .and(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username)))
+                .leftJoin(CHANNEL).on(CHANNEL.CODE.eq(MESSAGE.CHANNEL_CODE))
                 .where(conditions);
         int count = dsl.fetchCount(query);
-        Field fieldSentAt = MESSAGE.field("sent_at");
+
         List<Feed> collection = query
-                .orderBy(fieldSentAt.desc())
+                .orderBy(MESSAGE.SENT_AT.desc())
                 .limit(criteria.getPageSize())
                 .offset((int) criteria.getOffset())
                 .fetch(MAPPER);
         return new PageImpl<>(collection, criteria, count);
     }
 
+    /**
+     * Получение непрочитанного уведомления пользователя
+     *
+     * @param messageId Идентификатор уведомления
+     * @param username  Имя пользователя
+     * @return Непрочитанное уведомление
+     */
     public Feed getMessage(UUID messageId, String username) {
         return dsl
                 .select(MESSAGE.fields())
                 .select(MESSAGE_RECIPIENT.fields())
                 .from(MESSAGE)
                 .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username)))
-                .where(MESSAGE.ID.cast(UUID.class).eq(messageId), MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL)
-                        .or(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username)))
+                .where(MESSAGE.ID.cast(UUID.class).eq(messageId), MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username))
                 .fetchOne(MAPPER);
     }
 
+    /**
+     * Прочтение и возврат непрочтенного уведомления пользователя
+     *
+     * @param messageId Идентификатор уведомления
+     * @param username  Имя пользователя
+     * @return Уведомление
+     */
     @Transactional
     public Feed getMessageAndRead(UUID messageId, String username) {
         Feed result = getMessage(messageId, username);
-        if (result != null) {
+        if (result != null)
             markRead(username, messageId);
-        }
         return result;
     }
 
+    /**
+     * Пометить все уведомления пользователя прочитанными
+     *
+     * @param tenantCode Код тенанта
+     * @param username   Имя пользователя
+     */
     @Transactional
     public void markReadAll(String tenantCode, String username) {
         LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
-        // Update 'personal' messages
         dsl
                 .update(MESSAGE_RECIPIENT)
                 .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
@@ -97,28 +134,14 @@ public class FeedService {
                                 .where(MESSAGE.ID.eq(MESSAGE_RECIPIENT.MESSAGE_ID),
                                         MESSAGE.TENANT_CODE.eq(tenantCode))))
                 .execute();
-        // Update messages 'for all'
-        List<UUID> ids = dsl
-                .select(MESSAGE.ID)
-                .from(MESSAGE)
-                .where(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.ALL),
-                        MESSAGE.TENANT_CODE.eq(tenantCode),
-                        notExists(dsl.selectOne().from(MESSAGE_RECIPIENT)
-                                .where(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID),
-                                        MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username))))
-                .fetch().map(Record1::component1);
-        for (UUID id : ids) {
-            dsl
-                    .insertInto(MESSAGE_RECIPIENT)
-                    .set(MESSAGE_RECIPIENT.ID, dsl.nextval(RECIPIENT_ID_SEQ).intValue())
-                    .set(MESSAGE_RECIPIENT.STATUS, MessageStatusType.READ)
-                    .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
-                    .set(MESSAGE_RECIPIENT.MESSAGE_ID, id)
-                    .set(MESSAGE_RECIPIENT.RECIPIENT_USERNAME, username)
-                    .execute();
-        }
     }
 
+    /**
+     * Пометить уведомление пользователя прочитанными
+     *
+     * @param username  Имя пользователя
+     * @param messageId Идентификатор уведомления
+     */
     @Transactional
     public void markRead(String username, UUID messageId) {
         if (messageId != null) {
@@ -130,7 +153,7 @@ public class FeedService {
                     .execute();
             if (updated == 0) {
                 dsl.insertInto(MESSAGE_RECIPIENT)
-                        .set(MESSAGE_RECIPIENT.ID, dsl.nextval(RECIPIENT_ID_SEQ).intValue())
+                        .set(MESSAGE_RECIPIENT.ID, dsl.nextval(MESSAGE_RECIPIENT_ID_SEQ))
                         .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
                         .set(MESSAGE_RECIPIENT.MESSAGE_ID, messageId)
                         .set(MESSAGE_RECIPIENT.RECIPIENT_USERNAME, username)
@@ -151,7 +174,7 @@ public class FeedService {
                 .selectCount()
                 .from(MESSAGE)
                 .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID))
-                .leftJoin(CHANNEL).on(MESSAGE.CHANNEL_ID.eq(CHANNEL.ID))
+                .leftJoin(CHANNEL).on(MESSAGE.CHANNEL_CODE.eq(CHANNEL.CODE))
                 .where(
                         MESSAGE.TENANT_CODE.eq(tenantCode),
                         MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username),
@@ -159,20 +182,5 @@ public class FeedService {
                         MESSAGE_RECIPIENT.STATUS.eq(MessageStatusType.SENT))
                 .fetchOne().value1();
         return new FeedCount(tenantCode, username, count);
-    }
-
-    private static Feed mapFeed(Record rec) {
-        if (rec == null) return null;
-        MessageRecord record = rec.into(MESSAGE);
-        MessageRecipientRecord recipientRecord = rec.into(MESSAGE_RECIPIENT);
-        Feed message = new Feed();
-        message.setId(String.valueOf(record.getId()));
-        message.setCaption(record.getCaption());
-        message.setText(record.getText());
-        message.setSeverity(record.getSeverity());
-        message.setSentAt(record.getSentAt());
-        message.setTenantCode(record.getTenantCode());
-        message.setReadAt(recipientRecord.getStatusTime());
-        return message;
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping>
-    <user content-mapping="content" count-mapping="totalElements">
+    <recipient content-mapping="content" count-mapping="totalElements">
         <response>
             <username mapping="username"/>
             <fio mapping="fio1"/>
@@ -8,12 +8,6 @@
             <surname mapping="surname"/>
             <name mapping="name"/>
             <patronymic mapping="patronymic"/>
-            <roles mapping="roles1"
-                   plain-string-array="true"
-                   id-mapping="id1"
-                   name-mapping="name1"
-                   code-mapping="code1"
-                   description-mapping="description1"/>
         </response>
 
         <criteria>
@@ -22,23 +16,6 @@
             <username mapping="username"/>
             <name mapping="name1"/>
             <fio mapping="fio1"/>
-            <roleIds mapping="roleIds1"/>
         </criteria>
-    </user>
-    <role content-mapping="content" count-mapping="totalElements">
-        <response>
-            <id mapping="id1"/>
-            <name mapping="name1"/>
-            <code mapping="code1"/>
-            <description mapping="description1"/>
-            <count mapping="totalElements"/>
-        </response>
-
-        <criteria>
-            <page-size mapping="pageSize"/>
-            <name mapping="name1"/>
-            <page-number mapping="pageNumber"/>
-            <permissionCodes mapping="permissionCodes1"/>
-        </criteria>
-    </role>
+    </recipient>
 </mapping>

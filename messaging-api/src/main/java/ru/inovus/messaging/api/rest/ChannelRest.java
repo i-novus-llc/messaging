@@ -8,7 +8,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @Api(value = "Каналы", authorizations = @Authorization(value = "oauth2"))
-@Path("/{tenantCode}/channels")
+@Path("/channels")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public interface ChannelRest {
@@ -16,12 +16,12 @@ public interface ChannelRest {
     @GET
     @ApiOperation("Получение списка каналов")
     @ApiResponse(code = 200, message = "Список каналов")
-    List<Channel> getChannels(@PathParam("tenantCode") @ApiParam(value = "Код тенанта") String tenantCode);
+    List<Channel> getChannels();
 
     @GET
+    @Path("/{code}")
     @ApiOperation("Получение канала по идентификатору")
     @ApiResponse(code = 200, message = "Канал")
-    Channel getChannel(@PathParam("tenantCode") @ApiParam(value = "Код тенанта") String tenantCode,
-                       @PathParam("id") @ApiParam(value = "Идентификатор канала") Integer id);
+    Channel getChannel(@PathParam("code") @ApiParam(value = "Идентификатор канала") String code);
 }
 

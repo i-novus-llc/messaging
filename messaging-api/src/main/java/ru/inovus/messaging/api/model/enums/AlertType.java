@@ -17,11 +17,14 @@ package ru.inovus.messaging.api.model.enums;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+/**
+ * Способ отображения уведомления
+ */
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum AlertType {
-    BLOCKER("Блокирующее сообщение"),
-    POPUP("Всплывающее сообщение"),
-    HIDDEN("Лента сообщений");
+    BLOCKER("Блокирующее уведомление"),
+    POPUP("Всплывающее уведомление"),
+    HIDDEN("Лента уведомлений");
 
     private String name;
 
@@ -31,5 +34,9 @@ public enum AlertType {
 
     public String getName() {
         return name;
+    }
+
+    public String getId() {
+        return name();
     }
 }

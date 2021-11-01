@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <nav xmlns="http://n2oapp.net/framework/config/schema/menu-2.0">
-    <page page-id="messaging_settings" label="Настройка уведомлений" route="/messaging_settings"/>
+    <page page-id="messaging_templates" label="Настройка уведомлений" route="/messaging_templates"/>
     <page page-id="messaging_feed" label="Лента уведомлений" route="/messaging_feed" />
     <sub-menu label="Администрирование">
         <a href="${messaging.user.admin.url}" label="Настройка доступа" />

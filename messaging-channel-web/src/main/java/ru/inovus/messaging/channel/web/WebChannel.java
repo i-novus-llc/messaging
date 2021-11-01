@@ -8,7 +8,6 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.Recipient;
-import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.channel.api.AbstractChannel;
 import ru.inovus.messaging.channel.api.queue.MqConsumer;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
@@ -19,6 +18,8 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
+import static org.springframework.util.CollectionUtils.isEmpty;
+
 /**
  * Реализация канала отправки уведомлений через Web c использованием WebSocket
  */
@@ -26,7 +27,7 @@ import java.time.temporal.ChronoUnit;
 public class WebChannel extends AbstractChannel {
 
     @Setter
-    private String noticeTopicName;
+    private String webTopicName;
 
     @Setter
     private Integer timeout;
@@ -50,7 +51,7 @@ public class WebChannel extends AbstractChannel {
         String dest = headers.getDestination();
         if (dest != null && dest.endsWith("/message") && headers.getUser() != null) {
             MqConsumer consumer = new TopicMqConsumer(headers.getSessionId(), getTenantCode(dest), headers.getUser().getName(),
-                    noticeTopicName, message -> sendTo((Message) message, headers));
+                    webTopicName, message -> sendTo((Message) message, headers));
             mqProvider.subscribe(consumer);
         }
     }
@@ -62,7 +63,7 @@ public class WebChannel extends AbstractChannel {
 
     @Override
     public void send(Message message) {
-        mqProvider.publish(message, noticeTopicName);
+        mqProvider.publish(message, webTopicName);
     }
 
     private void sendTo(Message message, SimpMessageHeaderAccessor headers) {
@@ -84,9 +85,7 @@ public class WebChannel extends AbstractChannel {
     }
 
     private boolean checkRecipient(Message message, String recipient, String tenantCode) {
-        if (message != null && RecipientType.ALL.equals(message.getRecipientType()))
-            return true;
-        if (message == null || message.getRecipients() == null || message.getRecipients().isEmpty())
+        if (message == null || isEmpty(message.getRecipients()))
             return false;
         for (Recipient r : message.getRecipients()) {
             if (r.getUsername().equals(recipient) && message.getTenantCode().equals(tenantCode))

@@ -13,17 +13,17 @@ public enum MessageStatusType {
     FAILED("Ошибка отправки получателю"),
     READ("Прочитано");
 
-    private String description;
+    private String name;
 
-    MessageStatusType(String description) {
-        this.description = description;
-    }
-
-    public String getDescription() {
-        return description;
+    MessageStatusType(String name) {
+        this.name = name;
     }
 
     public String getName() {
+        return name;
+    }
+
+    public String getId() {
         return name();
     }
 

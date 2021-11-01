@@ -15,7 +15,9 @@
  */
 package ru.inovus.messaging.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,11 +30,19 @@ import java.util.Map;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TemplateMessageOutbox implements Serializable {
-    private String phoneNumber;
+
+    @ApiModelProperty("Код шаблона")
     private String templateCode;
+
+    @ApiModelProperty("Дата отправки")
     private LocalDateTime sentAt;
+
+    @ApiModelProperty("Список получателей")
     private List<String> userNameList;
-    private List<String> permissions;
+
+    @ApiModelProperty("Заменители плейсхолдеров в тексте шаблона")
     private Map<String, Object> placeholders;
+
+    @JsonIgnore
     private String tenantCode;
 }

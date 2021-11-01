@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<table xmlns="http://n2oapp.net/framework/config/schema/n2o-widget-4.0"
+       query-id="messaging_msg_template" id="message_template_list">
+    <filters>
+        <row>
+            <col>
+                <input-select id="severity" label="Уровень важности">
+                    <options>
+                        <option id="SEVERE" name="Важный"/>
+                        <option id="ERROR" name="Ошибка"/>
+                        <option id="WARNING" name="Предупреждение"/>
+                        <option id="INFO" name="Информация"/>
+                    </options>
+                </input-select>
+            </col>
+            <col>
+                <input-select id="alertType" label="Способ отображения">
+                    <options>
+                        <option id="BLOCKER" name="Блокирующее уведомление"/>
+                        <option id="POPUP" name="Всплывающее уведомление"/>
+                        <option id="HIDDEN" name="Лента уведомлений"/>
+                    </options>
+                </input-select>
+            </col>
+            <col>
+                <input-select id="infoType" label="Информирование" query-id="messaging_channels"/>
+            </col>
+        </row>
+        <row>
+            <col>
+                <input-text id="name" label="Наименование шаблона"/>
+            </col>
+            <col>
+                <input-text id="code" label="Код шаблона"/>
+            </col>
+            <col>
+                <checkbox id="enabled" label="Уведомление включено" default-value="true" unchecked="false"/>
+            </col>
+        </row>
+        <!--</set>-->
+    </filters>
+    <columns>
+        <column text-field-id="name" label="Наименование шаблона"/>
+        <column text-field-id="code" label="Код шаблона"/>
+        <column text-field-id="severity.name" label="Уровень важности" sorting-direction="desc"/>
+        <column text-field-id="alertType.name" label="Способ отображения"/>
+        <column text-field-id="infoType.name" label="Информирование"/>
+        <column text-field-id="enabled" label="Включено">
+            <checkbox/>
+        </column>
+    </columns>
+    <toolbar>
+        <button label="Добавить" id="create" model="filter" icon="fa fa-plus">
+            <show-modal page-id="messaging_msg_template" submit-operation-id="create" upload="defaults"/>
+        </button>
+        <button label="Изменить" id="update" model="resolve" icon="fa fa-edit">
+            <show-modal page-id="messaging_msg_template" submit-operation-id="update"
+                        close-after-submit="true" detail-field-id="id"/>
+        </button>
+        <button label="Удалить" id="delete" model="resolve" icon="fa fa-remove">
+            <invoke operation-id="delete"/>
+        </button>
+    </toolbar>
+</table>

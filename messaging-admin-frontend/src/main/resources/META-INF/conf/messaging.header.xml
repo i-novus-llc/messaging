@@ -2,7 +2,7 @@
 <header xmlns="http://n2oapp.net/framework/config/schema/header-2.0"
         color="inverse"
         brand-name="Уведомления"
-        welcome-page-id="messaging_settings">
+        welcome-page-id="messaging_templates">
     <nav ref-id="messaging"/>
     <extra-menu ref-id="user"/>
 </header>

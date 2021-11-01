@@ -17,26 +17,27 @@ package ru.inovus.messaging.api.model.enums;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+/**
+ * Уровень важности уведомления
+ */
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Severity {
-    INFO("10", "Информация"),
-    WARNING("20", "Предупреждение"),
-    ERROR("30", "Ошибка"),
-    SEVERE("40", "Важный");
+    INFO("Информация"),
+    WARNING("Предупреждение"),
+    ERROR("Ошибка"),
+    SEVERE("Важный");
 
-    private String value;
     private String name;
 
-    Severity(String value, String name) {
-        this.value = value;
+    Severity(String name) {
         this.name = name;
-    }
-
-    public String getValue() {
-        return value;
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getId() {
+        return name();
     }
 }

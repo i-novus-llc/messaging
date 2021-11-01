@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping>
+    <recipient content-mapping="ment.content" count-mapping="totalMent">
+        <response>
+            <username mapping="Cthulhu"/>
+            <fio mapping="666"/>
+            <email mapping="Petroleum"/>
+            <surname mapping="surname14124"/>
+            <name mapping="nameGame"/>
+            <patronymic mapping="отчество"/>
+        </response>
+
+        <criteria>
+            <page-size mapping="size"/>
+            <page-number mapping="page"/>
+            <username mapping="Cthulhu"/>
+            <name mapping="name1"/>
+            <fio mapping="666"/>
+        </criteria>
+    </recipient>
+</mapping>

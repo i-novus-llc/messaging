@@ -15,10 +15,13 @@ import java.io.Serializable;
 @NoArgsConstructor
 @ApiModel("Тип канала отправки уведомлений")
 public class Channel implements Serializable {
-    @ApiModelProperty("Идентификатор канала")
-    private Integer id;
+
+    @ApiModelProperty("Код канала")
+    private String id;
+
     @ApiModelProperty("Наименование канала")
     private String name;
+
     @ApiModelProperty("Наименование очереди канала")
     private String queueName;
 }

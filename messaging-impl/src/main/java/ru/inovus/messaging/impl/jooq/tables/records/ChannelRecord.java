@@ -6,8 +6,8 @@ package ru.inovus.messaging.impl.jooq.tables.records;
 
 import org.jooq.Field;
 import org.jooq.Record1;
-import org.jooq.Record5;
-import org.jooq.Row5;
+import org.jooq.Record4;
+import org.jooq.Row4;
 import org.jooq.impl.UpdatableRecordImpl;
 
 import ru.inovus.messaging.impl.jooq.tables.Channel;
@@ -17,78 +17,64 @@ import ru.inovus.messaging.impl.jooq.tables.Channel;
  * Каналы отправки уведомлений
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
-public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements Record5<Integer, String, String, Boolean, String> {
+public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements Record4<String, String, Boolean, String> {
 
-    private static final long serialVersionUID = -102443028;
-
-    /**
-     * Setter for <code>messaging.channel.id</code>. Уникальный идентификатор
-     */
-    public void setId(Integer value) {
-        set(0, value);
-    }
-
-    /**
-     * Getter for <code>messaging.channel.id</code>. Уникальный идентификатор
-     */
-    public Integer getId() {
-        return (Integer) get(0);
-    }
+    private static final long serialVersionUID = 1095337288;
 
     /**
      * Setter for <code>messaging.channel.name</code>. Наименование канала
      */
     public void setName(String value) {
-        set(1, value);
+        set(0, value);
     }
 
     /**
      * Getter for <code>messaging.channel.name</code>. Наименование канала
      */
     public String getName() {
-        return (String) get(1);
+        return (String) get(0);
     }
 
     /**
      * Setter for <code>messaging.channel.queue_name</code>. Наименование очереди канала
      */
     public void setQueueName(String value) {
-        set(2, value);
+        set(1, value);
     }
 
     /**
      * Getter for <code>messaging.channel.queue_name</code>. Наименование очереди канала
      */
     public String getQueueName() {
-        return (String) get(2);
+        return (String) get(1);
     }
 
     /**
      * Setter for <code>messaging.channel.is_internal</code>. Признак внутрисистемного канала отправки
      */
     public void setIsInternal(Boolean value) {
-        set(3, value);
+        set(2, value);
     }
 
     /**
      * Getter for <code>messaging.channel.is_internal</code>. Признак внутрисистемного канала отправки
      */
     public Boolean getIsInternal() {
-        return (Boolean) get(3);
+        return (Boolean) get(2);
     }
 
     /**
-     * Setter for <code>messaging.channel.tenant_code</code>. Тенант, к которому относится канал отправки
+     * Setter for <code>messaging.channel.code</code>. Код канала
      */
-    public void setTenantCode(String value) {
-        set(4, value);
+    public void setCode(String value) {
+        set(3, value);
     }
 
     /**
-     * Getter for <code>messaging.channel.tenant_code</code>. Тенант, к которому относится канал отправки
+     * Getter for <code>messaging.channel.code</code>. Код канала
      */
-    public String getTenantCode() {
-        return (String) get(4);
+    public String getCode() {
+        return (String) get(3);
     }
 
     // -------------------------------------------------------------------------
@@ -96,136 +82,114 @@ public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements
     // -------------------------------------------------------------------------
 
     @Override
-    public Record1<Integer> key() {
+    public Record1<String> key() {
         return (Record1) super.key();
     }
 
     // -------------------------------------------------------------------------
-    // Record5 type implementation
+    // Record4 type implementation
     // -------------------------------------------------------------------------
 
     @Override
-    public Row5<Integer, String, String, Boolean, String> fieldsRow() {
-        return (Row5) super.fieldsRow();
+    public Row4<String, String, Boolean, String> fieldsRow() {
+        return (Row4) super.fieldsRow();
     }
 
     @Override
-    public Row5<Integer, String, String, Boolean, String> valuesRow() {
-        return (Row5) super.valuesRow();
+    public Row4<String, String, Boolean, String> valuesRow() {
+        return (Row4) super.valuesRow();
     }
 
     @Override
-    public Field<Integer> field1() {
-        return Channel.CHANNEL.ID;
-    }
-
-    @Override
-    public Field<String> field2() {
+    public Field<String> field1() {
         return Channel.CHANNEL.NAME;
     }
 
     @Override
-    public Field<String> field3() {
+    public Field<String> field2() {
         return Channel.CHANNEL.QUEUE_NAME;
     }
 
     @Override
-    public Field<Boolean> field4() {
+    public Field<Boolean> field3() {
         return Channel.CHANNEL.IS_INTERNAL;
     }
 
     @Override
-    public Field<String> field5() {
-        return Channel.CHANNEL.TENANT_CODE;
+    public Field<String> field4() {
+        return Channel.CHANNEL.CODE;
     }
 
     @Override
-    public Integer component1() {
-        return getId();
+    public String component1() {
+        return getName();
     }
 
     @Override
     public String component2() {
-        return getName();
-    }
-
-    @Override
-    public String component3() {
         return getQueueName();
     }
 
     @Override
-    public Boolean component4() {
+    public Boolean component3() {
         return getIsInternal();
     }
 
     @Override
-    public String component5() {
-        return getTenantCode();
+    public String component4() {
+        return getCode();
     }
 
     @Override
-    public Integer value1() {
-        return getId();
+    public String value1() {
+        return getName();
     }
 
     @Override
     public String value2() {
-        return getName();
-    }
-
-    @Override
-    public String value3() {
         return getQueueName();
     }
 
     @Override
-    public Boolean value4() {
+    public Boolean value3() {
         return getIsInternal();
     }
 
     @Override
-    public String value5() {
-        return getTenantCode();
+    public String value4() {
+        return getCode();
     }
 
     @Override
-    public ChannelRecord value1(Integer value) {
-        setId(value);
-        return this;
-    }
-
-    @Override
-    public ChannelRecord value2(String value) {
+    public ChannelRecord value1(String value) {
         setName(value);
         return this;
     }
 
     @Override
-    public ChannelRecord value3(String value) {
+    public ChannelRecord value2(String value) {
         setQueueName(value);
         return this;
     }
 
     @Override
-    public ChannelRecord value4(Boolean value) {
+    public ChannelRecord value3(Boolean value) {
         setIsInternal(value);
         return this;
     }
 
     @Override
-    public ChannelRecord value5(String value) {
-        setTenantCode(value);
+    public ChannelRecord value4(String value) {
+        setCode(value);
         return this;
     }
 
     @Override
-    public ChannelRecord values(Integer value1, String value2, String value3, Boolean value4, String value5) {
+    public ChannelRecord values(String value1, String value2, Boolean value3, String value4) {
         value1(value1);
         value2(value2);
         value3(value3);
         value4(value4);
-        value5(value5);
         return this;
     }
 
@@ -243,13 +207,12 @@ public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements
     /**
      * Create a detached, initialised ChannelRecord
      */
-    public ChannelRecord(Integer id, String name, String queueName, Boolean isInternal, String tenantCode) {
+    public ChannelRecord(String name, String queueName, Boolean isInternal, String code) {
         super(Channel.CHANNEL);
 
-        set(0, id);
-        set(1, name);
-        set(2, queueName);
-        set(3, isInternal);
-        set(4, tenantCode);
+        set(0, name);
+        set(1, queueName);
+        set(2, isInternal);
+        set(3, code);
     }
 }

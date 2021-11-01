@@ -1,7 +1,7 @@
 package ru.inovus.messaging.n2o;
 
-import net.n2oapp.framework.security.auth.oauth2.gateway.GatewayPrincipalExtractor;
 import net.n2oapp.security.admin.rest.client.AdminRestClientConfiguration;
+import net.n2oapp.security.auth.common.GatewayPrincipalExtractor;
 import net.n2oapp.security.auth.common.User;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

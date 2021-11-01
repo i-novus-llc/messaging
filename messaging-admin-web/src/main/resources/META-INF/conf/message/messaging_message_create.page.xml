@@ -5,7 +5,7 @@
         <fields>
             <set>
                 <row>
-                    <input-select id="template" label="Шаблон" query-id="messaging_msg_setting" search-field-id="name"
+                    <input-select id="template" label="Шаблон" query-id="messaging_msg_template" search-field-id="name"
                                   label-field-id="name"/>
                 </row>
                 <input-select id="infoType" label="Информирование" required="true"
@@ -36,8 +36,8 @@
                     </select>
                     <select id="alertType" label="Способ отображения">
                         <options>
-                            <option id="BLOCKER" name="Блокирующее сообщение"/>
-                            <option id="POPUP" name="Всплывающее сообщение"/>
+                            <option id="BLOCKER" name="Блокирующее уведомление"/>
+                            <option id="POPUP" name="Всплывающее уведомление"/>
                             <option id="HIDDEN" name="Лента уведомлений"/>
                         </options>
                         <dependencies>
@@ -68,27 +68,24 @@
                     </text-area>
                 </row>
                 <row>
-                    <radio-group id="recipientType" label="Тип получателей" inline="true">
-                        <default-value id="USER" name="Пользователи"/>
+                    <radio-group id="recipientType" label="Тип получателей" inline="true" visible="false">
+                        <default-value id="RECIPIENT" name="Пользователи"/>
                         <options>
-                            <option id="USER" name="Пользователи"/>
-                            <option id="ALL" name="Все"/>
+                            <option id="RECIPIENT" name="Пользователи"/>
                         </options>
                     </radio-group>
                 </row>
             </set>
-            <line label="Получатели" depends-on="recipientType" visible="{recipientType.id == 'USER'}">
-                <row>
-                    <input-select id="users" type="checkboxes" label="Пользователи" required="true"
-                                  query-id="messaging_user" label-field-id="name" search-field-id="name">
-                        <dependencies>
-                            <visibility on="recipientType">
-                                recipientType.id == 'USER'
-                            </visibility>
-                        </dependencies>
-                    </input-select>
-                </row>
-            </line>
+            <row>
+                <input-select id="users" type="checkboxes" label="Получатели" required="true"
+                              query-id="messaging_recipient" label-field-id="name" search-field-id="name">
+                    <dependencies>
+                        <visibility on="recipientType">
+                            recipientType.id == 'RECIPIENT'
+                        </visibility>
+                    </dependencies>
+                </input-select>
+            </row>
         </fields>
     </form>
 </simple-page>
