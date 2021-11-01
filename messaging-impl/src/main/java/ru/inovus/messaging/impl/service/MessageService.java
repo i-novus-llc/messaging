@@ -15,12 +15,9 @@ import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.impl.jooq.tables.records.ChannelRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
-import ru.inovus.messaging.impl.util.DateTimeUtil;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -37,8 +34,6 @@ public class MessageService {
 
     @Autowired
     private DSLContext dsl;
-
-    private static final ZoneId USER_DEFAULT_ZONE_ID = ZoneId.of("Europe/Moscow");
 
     private static final RecordMapper<Record, Message> MAPPER = rec -> {
         MessageRecord record = rec.into(MESSAGE);
@@ -110,24 +105,15 @@ public class MessageService {
      * @return Страница уведомлений
      */
     public Page<Message> getMessages(String tenantCode, MessageCriteria criteria) {
-        LocalDateTime sentAtBegin = null;
-        LocalDateTime sentAtEnd = null;
-
-        // TODO - убрать
-        if (criteria.getSentAtBegin() != null)
-            sentAtBegin = DateTimeUtil.toZone(criteria.getSentAtBegin(), USER_DEFAULT_ZONE_ID, ZoneOffset.UTC);
-        if (criteria.getSentAtEnd() != null)
-            sentAtEnd = DateTimeUtil.toZone(criteria.getSentAtEnd(), USER_DEFAULT_ZONE_ID, ZoneOffset.UTC);
-
         List<Condition> conditions = new ArrayList<>();
         conditions.add(MESSAGE.TENANT_CODE.eq(tenantCode));
         Optional.ofNullable(criteria.getSeverity())
                 .ifPresent(severity -> conditions.add(MESSAGE.SEVERITY.eq(severity)));
         Optional.ofNullable(criteria.getChannelCode())
                 .ifPresent(channelCode -> conditions.add(MESSAGE.CHANNEL_CODE.eq(channelCode)));
-        Optional.ofNullable(sentAtBegin)
+        Optional.ofNullable(criteria.getSentAtBegin())
                 .ifPresent(start -> conditions.add(MESSAGE.SENT_AT.greaterOrEqual(start)));
-        Optional.ofNullable(sentAtEnd)
+        Optional.ofNullable(criteria.getSentAtEnd())
                 .ifPresent(end -> conditions.add(MESSAGE.SENT_AT.lessOrEqual(end)));
 
         SelectConditionStep<Record> query = dsl
