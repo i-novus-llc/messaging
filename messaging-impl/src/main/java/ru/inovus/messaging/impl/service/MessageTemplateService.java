@@ -130,6 +130,7 @@ public class MessageTemplateService {
      *
      * @param id              Идентификатор шаблона уведомлений
      * @param messageTemplate Обновленный шаблон уведомлений
+     * @param tenantCode      Код тенанта к которому принадлежит шаблон
      */
     @Transactional
     public void updateTemplate(Integer id, MessageTemplate messageTemplate, String tenantCode) {
@@ -151,6 +152,7 @@ public class MessageTemplateService {
      * Удаление шаблона уведомлений
      *
      * @param id Идентификатор шаблона уведомлений
+     * @param tenantCode Код тенанта к которому принадлежит шаблон
      */
     @Transactional
     public void deleteTemplate(Integer id, String tenantCode) {
@@ -165,6 +167,7 @@ public class MessageTemplateService {
      *
      * @param id Идентификатор шаблона уведомления
      * @return Шаблон уведомления
+     * @param tenantCode Код тенанта к которому принадлежит шаблон
      */
     public MessageTemplate getTemplate(Integer id, String tenantCode) {
         MessageTemplateRecord messageTemplateRecord = dsl
@@ -179,6 +182,7 @@ public class MessageTemplateService {
      *
      * @param code Код шаблона уведомления
      * @return Шаблон уведомления
+     * @param tenantCode Код тенанта к которому принадлежит шаблон
      */
     public MessageTemplate getTemplate(String code, String tenantCode) {
         MessageTemplateRecord messageTemplateRecord = dsl
