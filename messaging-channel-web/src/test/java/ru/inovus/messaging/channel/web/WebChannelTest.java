@@ -20,7 +20,6 @@ import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.socket.WebSocketHttpHeaders;
@@ -115,13 +114,19 @@ public class WebChannelTest {
         recipient2.setUsername(USERNAME);
         message.setRecipients(Arrays.asList(recipient1, recipient2));
 
+        latch = new CountDownLatch(2);
+        QueueMqConsumer dummyConsumer = new QueueMqConsumer(statusQueue, msg -> latch.countDown(), statusQueue);
+
+        // send message through ws and wait publishing to status queue
+        mqProvider.subscribe(dummyConsumer);
+
         // publish message to web queue and wait for sending to stomp
         StompSession stompSession = getStompSessionWithHeaders();
         stompSession.subscribe("/user" + properties.getPrivateDestPrefix() + "/" + TENANT_CODE + "/message", new TestReceivedMessageHandler());
 
-        latch = new CountDownLatch(1);
         mqProvider.publish(message, properties.getQueue());
         latch.await();
+        mqProvider.unsubscribe(dummyConsumer.subscriber());
 
         // expected message on client
         Message receivedMessage = (Message) completableFuture.get();
@@ -212,7 +217,6 @@ public class WebChannelTest {
     }
 
     @Test
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     public void testMarkReadAllMessage() throws Exception {
         StompSession stompSession = getStompSessionWithHeaders();
         assertThat(stompSession, notNullValue());
