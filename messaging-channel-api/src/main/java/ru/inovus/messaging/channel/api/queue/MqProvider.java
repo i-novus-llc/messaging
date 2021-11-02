@@ -17,11 +17,30 @@ package ru.inovus.messaging.channel.api.queue;
 
 import java.io.Serializable;
 
+/**
+ * Провайдер очереди объектов
+ */
 public interface MqProvider {
 
+    /**
+     * Подписка на очередь
+     *
+     * @param mqConsumer Consumer очереди объектов
+     */
     void subscribe(MqConsumer mqConsumer);
 
-    void publish(Object queueObject, String mqDestinationName);
+    /**
+     * Публикация объекта в очередь
+     *
+     * @param object    Объект, который попадет в очередь
+     * @param queueName Имя очереди
+     */
+    void publish(Object object, String queueName);
 
+    /**
+     * Отписка подписчика от очереди
+     *
+     * @param subscriber Подписчик
+     */
     void unsubscribe(Serializable subscriber);
 }

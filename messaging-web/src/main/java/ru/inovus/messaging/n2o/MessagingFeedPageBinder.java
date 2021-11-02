@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 /**
- * Класс, который нужен для UI ,  для стр. messaging_feed, устанавливает дефолтные значения в фильтре 'Дата отправки'
+ * Биндер для установки дефолтных значений в фильтр 'Дата отправки' ленты уведомлений
  */
 @Component
 public class MessagingFeedPageBinder implements BaseMetadataBinder<Page> {

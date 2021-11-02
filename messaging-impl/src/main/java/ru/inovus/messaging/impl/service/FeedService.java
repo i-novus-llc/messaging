@@ -22,11 +22,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.jooq.impl.DSL.exists;
-import static ru.inovus.messaging.impl.jooq.Sequences.MESSAGE_RECIPIENT_ID_SEQ;
 import static ru.inovus.messaging.impl.jooq.Tables.*;
 
 /**
- * Сервис непрочитанных уведомлений
+ * Сервис уведомлений пользователя
  */
 @Service
 public class FeedService {
@@ -40,7 +39,8 @@ public class FeedService {
         message.setText(record.getText());
         message.setSeverity(record.getSeverity());
         message.setSentAt(record.getSentAt());
-        message.setReadAt(recipientRecord.getStatusTime());
+        if (MessageStatusType.READ.equals(recipientRecord.getStatus()))
+            message.setReadAt(recipientRecord.getStatusTime());
         return message;
     };
 
@@ -48,12 +48,12 @@ public class FeedService {
     private DSLContext dsl;
 
     /**
-     * Получение страницы непрочитанных уведомлений пользователя
+     * Получение страницы уведомлений пользователя
      *
      * @param tenantCode Код тенанта
      * @param username   Имя пользователя
-     * @param criteria   Критерии непрочитанных уведомлений
-     * @return Страница непрочитанных уведомлений
+     * @param criteria   Критерии уведомлений
+     * @return Страница уведомлений пользователя
      */
     public Page<Feed> getMessageFeed(String tenantCode, String username, FeedCriteria criteria) {
         List<Condition> conditions = new ArrayList<>();
@@ -85,11 +85,11 @@ public class FeedService {
     }
 
     /**
-     * Получение непрочитанного уведомления пользователя
+     * Получение уведомления пользователя
      *
      * @param messageId Идентификатор уведомления
      * @param username  Имя пользователя
-     * @return Непрочитанное уведомление
+     * @return Уведомление пользователя
      */
     public Feed getMessage(UUID messageId, String username) {
         return dsl
@@ -97,16 +97,16 @@ public class FeedService {
                 .select(MESSAGE_RECIPIENT.fields())
                 .from(MESSAGE)
                 .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID).and(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username)))
-                .where(MESSAGE.ID.cast(UUID.class).eq(messageId), MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username))
+                .where(MESSAGE.ID.cast(UUID.class).eq(messageId))
                 .fetchOne(MAPPER);
     }
 
     /**
-     * Прочтение и возврат непрочтенного уведомления пользователя
+     * Прочтение и возврат уведомления пользователя
      *
      * @param messageId Идентификатор уведомления
      * @param username  Имя пользователя
-     * @return Уведомление
+     * @return Уведомление пользователя
      */
     @Transactional
     public Feed getMessageAndRead(UUID messageId, String username) {
@@ -130,6 +130,7 @@ public class FeedService {
                 .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
                 .set(MESSAGE_RECIPIENT.STATUS, MessageStatusType.READ)
                 .where(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username),
+                        MESSAGE_RECIPIENT.STATUS.eq(MessageStatusType.SENT),
                         exists(dsl.selectOne().from(MESSAGE)
                                 .where(MESSAGE.ID.eq(MESSAGE_RECIPIENT.MESSAGE_ID),
                                         MESSAGE.TENANT_CODE.eq(tenantCode))))
@@ -144,22 +145,14 @@ public class FeedService {
      */
     @Transactional
     public void markRead(String username, UUID messageId) {
-        if (messageId != null) {
-            LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
-            int updated = dsl.update(MESSAGE_RECIPIENT)
-                    .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
-                    .set(MESSAGE_RECIPIENT.STATUS, MessageStatusType.READ)
-                    .where(MESSAGE_RECIPIENT.MESSAGE_ID.eq(messageId)).and(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username))
-                    .execute();
-            if (updated == 0) {
-                dsl.insertInto(MESSAGE_RECIPIENT)
-                        .set(MESSAGE_RECIPIENT.ID, dsl.nextval(MESSAGE_RECIPIENT_ID_SEQ))
-                        .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
-                        .set(MESSAGE_RECIPIENT.MESSAGE_ID, messageId)
-                        .set(MESSAGE_RECIPIENT.RECIPIENT_USERNAME, username)
-                        .execute();
-            }
-        }
+        LocalDateTime now = LocalDateTime.now();
+        dsl.update(MESSAGE_RECIPIENT)
+                .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
+                .set(MESSAGE_RECIPIENT.STATUS, MessageStatusType.READ)
+                .where(MESSAGE_RECIPIENT.MESSAGE_ID.eq(messageId),
+                        MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username),
+                        MESSAGE_RECIPIENT.STATUS.eq(MessageStatusType.SENT))
+                .execute();
     }
 
     /**

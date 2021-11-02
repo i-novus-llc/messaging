@@ -18,10 +18,6 @@ package ru.inovus.messaging.channel.api.queue;
 import java.io.Serializable;
 import java.util.function.Consumer;
 
-/**
- * @author RMakhmutov
- * @since 02.04.2019
- */
 public class TopicMqConsumer implements MqConsumer {
     private final String topicName;
     private final Consumer<Object> messageHandler;

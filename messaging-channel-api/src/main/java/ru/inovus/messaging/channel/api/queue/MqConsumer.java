@@ -19,9 +19,25 @@ import java.io.Serializable;
 import java.util.function.Consumer;
 
 public interface MqConsumer {
+    /**
+     * Получение обработчика объекта очереди.
+     * Набор действий, который будет производиться при попадании объекта в очередь
+     *
+     * @return Обработчик объекта очереди
+     */
     Consumer messageHandler();
 
+    /**
+     * Получение имени очереди объектов
+     *
+     * @return Имя очереди объектов
+     */
     String mqName();
 
+    /**
+     * Получение подписчика
+     *
+     * @return Подписчик
+     */
     Serializable subscriber();
 }
