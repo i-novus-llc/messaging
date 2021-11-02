@@ -11,9 +11,7 @@
                 <input-select id="infoType" label="Информирование" required="true"
                               query-id="messaging_channels">
                     <dependencies>
-                        <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return
-                            template.infoType;
-                        </set-value>
+                        <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return template.infoType;</set-value>
                     </dependencies>
                 </input-select>
                 <row>
