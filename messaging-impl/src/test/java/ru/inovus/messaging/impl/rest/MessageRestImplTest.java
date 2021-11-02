@@ -1,7 +1,6 @@
 package ru.inovus.messaging.impl.rest;
 
 import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,6 +32,7 @@ import java.util.UUID;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApp.class,
@@ -58,9 +58,10 @@ public class MessageRestImplTest {
 
     private String TENANT_CODE = "tenant";
 
+
     @BeforeEach
     public void before() {
-        Mockito.when(recipientService.getRecipientsByUsername(any())).thenReturn(List.of(getRecipient()));
+        when(recipientService.getRecipientsByUsername(any())).thenReturn(List.of(getRecipient()));
     }
 
     @Test
@@ -68,34 +69,34 @@ public class MessageRestImplTest {
         messageRest.sendMessage(TENANT_CODE, getTemplatedMessage());
 
         Mockito.verify(mqProvider).publish(messageArgumentCaptor.capture(), any());
-        Message capturedMessage = messageArgumentCaptor.getValue();
+        Message publishedMessage = messageArgumentCaptor.getValue();
 
-        Assert.assertEquals(capturedMessage.getCaption(), "Message template 1 Первый тестовый параметр второй параметр для теста Первый тестовый параметр");
-        Assert.assertEquals(capturedMessage.getText(), "Some text with второй параметр для теста Первый тестовый параметр второй параметр для теста");
-        Assert.assertEquals(capturedMessage.getSeverity(), Severity.INFO);
-        Assert.assertEquals(capturedMessage.getRecipients().get(0).getName(), "тестовый пользователь");
-        Assert.assertEquals(capturedMessage.getRecipients().get(0).getUsername(), "testUser");
-        Assert.assertEquals(capturedMessage.getRecipients().get(0).getEmail(), "email@mail.novus");
-        Assert.assertEquals(capturedMessage.getTenantCode(), TENANT_CODE);
-        Assert.assertEquals(capturedMessage.getAlertType(), AlertType.POPUP);
+        assertThat(publishedMessage.getCaption(), is("Congratulations, User"));
+        assertThat(publishedMessage.getText(), is("Hello, User. You win $25000!"));
+        assertThat(publishedMessage.getSeverity(), is(Severity.ERROR));
+        Recipient recipient = publishedMessage.getRecipients().get(0);
+        assertThat(recipient.getName(), is("Test User"));
+        assertThat(recipient.getUsername(), is("testUser"));
+        assertThat(recipient.getEmail(), is("email@mail.novus"));
+        assertThat(publishedMessage.getTenantCode(), is(TENANT_CODE));
+        assertThat(publishedMessage.getAlertType(), is(AlertType.HIDDEN));
 
-        Message dbStoredMessage = messageService.getMessage(UUID.fromString(capturedMessage.getId()));
-        Assert.assertEquals(dbStoredMessage.getCaption(), capturedMessage.getCaption());
-        Assert.assertEquals(dbStoredMessage.getText(), capturedMessage.getText());
-        Assert.assertEquals(dbStoredMessage.getSeverity(), capturedMessage.getSeverity());
-        Assert.assertEquals(dbStoredMessage.getRecipients().get(0).getName(), capturedMessage.getRecipients().get(0).getName());
-        Assert.assertEquals(dbStoredMessage.getRecipients().get(0).getUsername(), capturedMessage.getRecipients().get(0).getUsername());
-        Assert.assertEquals(dbStoredMessage.getTenantCode(), capturedMessage.getTenantCode());
-        Assert.assertEquals(dbStoredMessage.getAlertType(), capturedMessage.getAlertType());
-        Assert.assertEquals(dbStoredMessage.getChannel().getId(), "web");
-        Assert.assertEquals(dbStoredMessage.getTemplateCode(), "mt1");
-        Assert.assertEquals(dbStoredMessage.getRecipientType(), RecipientType.RECIPIENT);
-        Assert.assertEquals(dbStoredMessage.getSentAt(), LocalDateTime.parse("2007-12-03T10:15:30"));
+        Message dbStoredMessage = messageService.getMessage(UUID.fromString(publishedMessage.getId()));
+        assertThat(dbStoredMessage.getCaption(), is(publishedMessage.getCaption()));
+        assertThat(dbStoredMessage.getText(), is(publishedMessage.getText()));
+        assertThat(dbStoredMessage.getSeverity(), is(publishedMessage.getSeverity()));
+        assertThat(dbStoredMessage.getRecipients().get(0).getName(), is(recipient.getName()));
+        assertThat(dbStoredMessage.getRecipients().get(0).getUsername(), is(recipient.getUsername()));
+        assertThat(dbStoredMessage.getTenantCode(), is(publishedMessage.getTenantCode()));
+        assertThat(dbStoredMessage.getAlertType(), is(publishedMessage.getAlertType()));
+        assertThat(dbStoredMessage.getChannel().getId(), is("web"));
+        assertThat(dbStoredMessage.getTemplateCode(), is("mt1"));
+        assertThat(dbStoredMessage.getRecipientType(), is(RecipientType.RECIPIENT));
+        assertThat(dbStoredMessage.getSentAt(), is(LocalDateTime.parse("2007-12-03T10:15:30")));
     }
 
     @Test
     public void testEmptyTemplateCodeAndWrongTenant() {
-
         // template with empty templateCode shouldn't create message
         long count = messageRest.getMessages(TENANT_CODE, new MessageCriteria()).getTotalElements();
 
@@ -114,11 +115,10 @@ public class MessageRestImplTest {
 
     private MessageOutbox getTemplatedMessage() {
         TemplateMessageOutbox templateMessageOutbox = new TemplateMessageOutbox();
-        templateMessageOutbox.setTemplateCode("mt1");
+        templateMessageOutbox.setTemplateCode("mt3");
         templateMessageOutbox.setSentAt(LocalDateTime.parse("2007-12-03T10:15:30"));
         templateMessageOutbox.setUserNameList(List.of("testUser"));
-        templateMessageOutbox.setPlaceholders(Map.of("%{param1}", "Первый тестовый параметр",
-                "%{param2}", "второй параметр для теста"));
+        templateMessageOutbox.setPlaceholders(Map.of("%{name}", "User", "%{count}", "25000"));
 
         MessageOutbox messageOutbox = new MessageOutbox();
         messageOutbox.setTemplateMessageOutbox(templateMessageOutbox);
@@ -127,7 +127,7 @@ public class MessageRestImplTest {
 
     private Recipient getRecipient() {
         Recipient recipient = new Recipient("testUser");
-        recipient.setName("тестовый пользователь");
+        recipient.setName("Test User");
         recipient.setEmail("email@mail.novus");
         return recipient;
     }

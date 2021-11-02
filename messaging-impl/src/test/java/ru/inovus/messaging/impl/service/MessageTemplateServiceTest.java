@@ -91,10 +91,10 @@ public class MessageTemplateServiceTest {
     @Test
     public void testGetByCode() {
         // return null if not exist
-        MessageTemplate template = service.getTemplate("undefined", TENANT_CODE);
+        MessageTemplate template = service.getTemplate(TENANT_CODE, "undefined");
         assertThat(template, nullValue());
 
-        template = service.getTemplate("mt2", TENANT_CODE);
+        template = service.getTemplate(TENANT_CODE, "mt2");
         assertThat(template.getId(), is(2));
         assertThat(template.getCode(), is("mt2"));
     }
@@ -118,7 +118,7 @@ public class MessageTemplateServiceTest {
         newTemplate.setEnabled(true);
         Integer newTemplateId = service.createTemplate(TENANT_CODE, newTemplate).getId();
 
-        MessageTemplate template = service.getTemplate(newTemplateId, TENANT_CODE);
+        MessageTemplate template = service.getTemplate(TENANT_CODE, newTemplateId);
         assertThat(template.getName(), is(newTemplate.getName()));
         assertThat(template.getCode(), is(newTemplate.getCode()));
         assertThat(template.getCaption(), is(newTemplate.getCaption()));
@@ -141,9 +141,9 @@ public class MessageTemplateServiceTest {
         updatedTemplate.setAlertType(AlertType.HIDDEN);
         updatedTemplate.setChannel(new Channel("email", "Email", "email_queue"));
         updatedTemplate.setEnabled(false);
-        service.updateTemplate(id, updatedTemplate, TENANT_CODE);
+        service.updateTemplate(TENANT_CODE, id, updatedTemplate);
 
-        MessageTemplate template = service.getTemplate(id, TENANT_CODE);
+        MessageTemplate template = service.getTemplate(TENANT_CODE, id);
         assertThat(template.getName(), is(updatedTemplate.getName()));
         assertThat(template.getCode(), is(updatedTemplate.getCode()));
         assertThat(template.getCaption(), is(updatedTemplate.getCaption()));
@@ -155,8 +155,8 @@ public class MessageTemplateServiceTest {
     }
 
     private void testDeleteTemplate(Integer id) {
-        service.deleteTemplate(id, TENANT_CODE);
-        MessageTemplate template = service.getTemplate(id, TENANT_CODE);
+        service.deleteTemplate(TENANT_CODE, id);
+        MessageTemplate template = service.getTemplate(TENANT_CODE, id);
         assertThat(template, nullValue());
     }
 }
