@@ -89,8 +89,8 @@ public class MessageRestImplTest {
         assertThat(dbStoredMessage.getRecipients().get(0).getUsername(), is(recipient.getUsername()));
         assertThat(dbStoredMessage.getTenantCode(), is(publishedMessage.getTenantCode()));
         assertThat(dbStoredMessage.getAlertType(), is(publishedMessage.getAlertType()));
-        assertThat(dbStoredMessage.getChannel().getId(), is("web"));
-        assertThat(dbStoredMessage.getTemplateCode(), is("mt1"));
+        assertThat(dbStoredMessage.getChannel().getId(), is("email"));
+        assertThat(dbStoredMessage.getTemplateCode(), is("mt3"));
         assertThat(dbStoredMessage.getRecipientType(), is(RecipientType.RECIPIENT));
         assertThat(dbStoredMessage.getSentAt(), is(LocalDateTime.parse("2007-12-03T10:15:30")));
     }
