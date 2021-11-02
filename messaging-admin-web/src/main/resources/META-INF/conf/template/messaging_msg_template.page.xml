@@ -19,8 +19,8 @@
                         <option id="INFO" name="Информация"/>
                     </options>
                     <dependencies>
-                        <visibility on="infoType">${novus.messaging.web-channel-id} === infoType.id</visibility>
-                        <requiring on="infoType">${novus.messaging.web-channel-id} === infoType.id</requiring>
+                        <visibility on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</visibility>
+                        <requiring on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</requiring>
                     </dependencies>
                 </input-select>
                 <input-select id="alertType" label="Способ отображения" required="true">
@@ -30,8 +30,8 @@
                         <option id="HIDDEN" name="Лента уведомлений"/>
                     </options>
                     <dependencies>
-                        <visibility on="infoType">${novus.messaging.web-channel-id} === infoType.id</visibility>
-                        <requiring on="infoType">${novus.messaging.web-channel-id} === infoType.id</requiring>
+                        <visibility on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</visibility>
+                        <requiring on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</requiring>
                     </dependencies>
                 </input-select>
             </row>

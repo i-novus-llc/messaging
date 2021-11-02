@@ -19,7 +19,7 @@
                                     <option id="INFO" name="Информация"/>
                                 </options>
                                 <dependencies>
-                                    <visibility on="infoType">${novus.messaging.web-channel-id} === infoType.id</visibility>
+                                    <visibility on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</visibility>
                                 </dependencies>
                             </input-select>
                         </row>
