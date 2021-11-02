@@ -1,4 +1,4 @@
-package ru.inovus.messaging;
+package ru.inovus.messaging.impl.provider;
 
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
@@ -14,7 +14,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.inovus.messaging.api.criteria.ProviderRecipientCriteria;
 import ru.inovus.messaging.api.model.ProviderRecipient;
-import ru.inovus.messaging.impl.provider.SecurityAdminRecipientProvider;
 
 import java.util.List;
 
