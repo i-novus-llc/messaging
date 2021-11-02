@@ -4,8 +4,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
 /**
- * @author RMakhmutov
- * @since 29.03.2019
+ * Handler for redirect to previous page on login
  */
 public class RefererRedirectionAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     public RefererRedirectionAuthenticationSuccessHandler() {

@@ -128,12 +128,12 @@ public class MessageTemplateService {
     /**
      * Обновление шаблона уведомлений
      *
+     * @param tenantCode      Код тенанта
      * @param id              Идентификатор шаблона уведомлений
      * @param messageTemplate Обновленный шаблон уведомлений
-     * @param tenantCode      Код тенанта к которому принадлежит шаблон
      */
     @Transactional
-    public void updateTemplate(Integer id, MessageTemplate messageTemplate, String tenantCode) {
+    public void updateTemplate(String tenantCode, Integer id, MessageTemplate messageTemplate) {
         dsl
                 .update(MESSAGE_TEMPLATE)
                 .set(MESSAGE_TEMPLATE.NAME, messageTemplate.getName())
@@ -151,11 +151,11 @@ public class MessageTemplateService {
     /**
      * Удаление шаблона уведомлений
      *
+     * @param tenantCode Код тенанта
      * @param id Идентификатор шаблона уведомлений
-     * @param tenantCode Код тенанта к которому принадлежит шаблон
      */
     @Transactional
-    public void deleteTemplate(Integer id, String tenantCode) {
+    public void deleteTemplate(String tenantCode, Integer id) {
         dsl
                 .deleteFrom(MESSAGE_TEMPLATE)
                 .where(MESSAGE_TEMPLATE.ID.eq(id), MESSAGE_TEMPLATE.TENANT_CODE.eq(tenantCode))
@@ -165,11 +165,11 @@ public class MessageTemplateService {
     /**
      * Получение шаблона уведомления по идентификатору
      *
+     * @param tenantCode Код тенанта
      * @param id Идентификатор шаблона уведомления
      * @return Шаблон уведомления
-     * @param tenantCode Код тенанта к которому принадлежит шаблон
      */
-    public MessageTemplate getTemplate(Integer id, String tenantCode) {
+    public MessageTemplate getTemplate(String tenantCode, Integer id) {
         MessageTemplateRecord messageTemplateRecord = dsl
                 .selectFrom(MESSAGE_TEMPLATE)
                 .where(MESSAGE_TEMPLATE.ID.eq(id), MESSAGE_TEMPLATE.TENANT_CODE.eq(tenantCode))
@@ -180,11 +180,11 @@ public class MessageTemplateService {
     /**
      * Получение шаблона уведомления по коду
      *
+     * @param tenantCode Код тенанта
      * @param code Код шаблона уведомления
      * @return Шаблон уведомления
-     * @param tenantCode Код тенанта к которому принадлежит шаблон
      */
-    public MessageTemplate getTemplate(String code, String tenantCode) {
+    public MessageTemplate getTemplate(String tenantCode, String code) {
         MessageTemplateRecord messageTemplateRecord = dsl
                 .selectFrom(MESSAGE_TEMPLATE)
                 .where(MESSAGE_TEMPLATE.CODE.eq(code), MESSAGE_TEMPLATE.TENANT_CODE.eq(tenantCode))

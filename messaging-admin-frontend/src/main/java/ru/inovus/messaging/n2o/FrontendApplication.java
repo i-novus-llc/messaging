@@ -20,11 +20,6 @@ public class FrontendApplication {
     }
 
     @Bean
-    public UserMessageViewPageNameBinder pageNameBinder() {
-        return new UserMessageViewPageNameBinder();
-    }
-
-    @Bean
     public GatewayPrincipalExtractor gatewayPrincipalExtractor() {
         return new GatewayPrincipalExtractor();
     }
