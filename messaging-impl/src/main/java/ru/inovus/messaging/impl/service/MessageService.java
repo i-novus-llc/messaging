@@ -52,6 +52,7 @@ public class MessageService {
         message.setChannel(channel);
         message.setRecipientType(record.getRecipientType());
         message.setTenantCode(record.getTenantCode());
+        message.setTemplateCode(record.getTemplateCode());
         return message;
     };
 

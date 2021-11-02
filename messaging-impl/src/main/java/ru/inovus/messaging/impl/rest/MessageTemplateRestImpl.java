@@ -28,16 +28,16 @@ public class MessageTemplateRestImpl implements MessageTemplateRest {
 
     @Override
     public void updateTemplate(String tenantCode, Integer id, MessageTemplate messageTemplate) {
-        messageTemplateService.updateTemplate(id, messageTemplate);
+        messageTemplateService.updateTemplate(id, messageTemplate, tenantCode);
     }
 
     @Override
     public void deleteTemplate(String tenantCode, Integer id) {
-        messageTemplateService.deleteTemplate(id);
+        messageTemplateService.deleteTemplate(id, tenantCode);
     }
 
     @Override
     public MessageTemplate getTemplate(String tenantCode, Integer id) {
-        return messageTemplateService.getTemplate(id);
+        return messageTemplateService.getTemplate(id, tenantCode);
     }
 }

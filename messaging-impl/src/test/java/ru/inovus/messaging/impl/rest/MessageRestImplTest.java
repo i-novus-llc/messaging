@@ -1,37 +1,38 @@
 package ru.inovus.messaging.impl.rest;
 
 import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
+import org.junit.Assert;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.inovus.messaging.TestApp;
 import ru.inovus.messaging.api.criteria.MessageCriteria;
-import ru.inovus.messaging.api.criteria.ProviderRecipientCriteria;
-import ru.inovus.messaging.api.criteria.RecipientCriteria;
-import ru.inovus.messaging.api.model.*;
+import ru.inovus.messaging.api.model.Message;
+import ru.inovus.messaging.api.model.MessageOutbox;
+import ru.inovus.messaging.api.model.Recipient;
+import ru.inovus.messaging.api.model.TemplateMessageOutbox;
 import ru.inovus.messaging.api.model.enums.AlertType;
 import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.model.enums.Severity;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
-import ru.inovus.messaging.impl.RecipientProvider;
+import ru.inovus.messaging.impl.service.MessageService;
 import ru.inovus.messaging.impl.service.RecipientService;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApp.class,
@@ -44,61 +45,90 @@ public class MessageRestImplTest {
     private MessageRestImpl messageRest;
 
     @Autowired
-    private RecipientService recipientService;
+    private MessageService messageService;
 
     @MockBean
     private MqProvider mqProvider;
 
     @MockBean
-    private RecipientProvider recipientProvider;
+    private RecipientService recipientService;
 
-    private final String TENANT_CODE = "tenant";
+    @Captor
+    ArgumentCaptor<Message> messageArgumentCaptor;
+
+    private String TENANT_CODE = "tenant";
+
+    @BeforeEach
+    public void before() {
+        Mockito.when(recipientService.getRecipientsByUsername(any())).thenReturn(List.of(getRecipient()));
+    }
 
     @Test
-    public void testCreateMessageFromTemplate() {
-        MessageOutbox messageOutbox = new MessageOutbox();
-        MessageCriteria criteria = new MessageCriteria();
-        TemplateMessageOutbox templateMessage = new TemplateMessageOutbox();
-        messageOutbox.setTemplateMessageOutbox(templateMessage);
+    public void testTemplatedMessage() {
+        messageRest.sendMessage(TENANT_CODE, getTemplatedMessage());
+
+        Mockito.verify(mqProvider).publish(messageArgumentCaptor.capture(), any());
+        Message capturedMessage = messageArgumentCaptor.getValue();
+
+        Assert.assertEquals(capturedMessage.getCaption(), "Message template 1 Первый тестовый параметр второй параметр для теста Первый тестовый параметр");
+        Assert.assertEquals(capturedMessage.getText(), "Some text with второй параметр для теста Первый тестовый параметр второй параметр для теста");
+        Assert.assertEquals(capturedMessage.getSeverity(), Severity.INFO);
+        Assert.assertEquals(capturedMessage.getRecipients().get(0).getName(), "тестовый пользователь");
+        Assert.assertEquals(capturedMessage.getRecipients().get(0).getUsername(), "testUser");
+        Assert.assertEquals(capturedMessage.getRecipients().get(0).getEmail(), "email@mail.novus");
+        Assert.assertEquals(capturedMessage.getTenantCode(), TENANT_CODE);
+        Assert.assertEquals(capturedMessage.getAlertType(), AlertType.POPUP);
+
+        Message dbStoredMessage = messageService.getMessage(UUID.fromString(capturedMessage.getId()));
+        Assert.assertEquals(dbStoredMessage.getCaption(), capturedMessage.getCaption());
+        Assert.assertEquals(dbStoredMessage.getText(), capturedMessage.getText());
+        Assert.assertEquals(dbStoredMessage.getSeverity(), capturedMessage.getSeverity());
+        Assert.assertEquals(dbStoredMessage.getRecipients().get(0).getName(), capturedMessage.getRecipients().get(0).getName());
+        Assert.assertEquals(dbStoredMessage.getRecipients().get(0).getUsername(), capturedMessage.getRecipients().get(0).getUsername());
+        Assert.assertEquals(dbStoredMessage.getTenantCode(), capturedMessage.getTenantCode());
+        Assert.assertEquals(dbStoredMessage.getAlertType(), capturedMessage.getAlertType());
+        Assert.assertEquals(dbStoredMessage.getChannel().getId(), "web");
+        Assert.assertEquals(dbStoredMessage.getTemplateCode(), "mt1");
+        Assert.assertEquals(dbStoredMessage.getRecipientType(), RecipientType.RECIPIENT);
+        Assert.assertEquals(dbStoredMessage.getSentAt(), LocalDateTime.parse("2007-12-03T10:15:30"));
+    }
+
+    @Test
+    public void testEmptyTemplateCodeAndWrongTenant() {
 
         // template with empty templateCode shouldn't create message
-        long count = messageRest.getMessages(TENANT_CODE, criteria).getTotalElements();
-        messageRest.sendMessage(TENANT_CODE, messageOutbox);
-        assertThat(messageRest.getMessages(TENANT_CODE, criteria).getTotalElements(), is(count));
+        long count = messageRest.getMessages(TENANT_CODE, new MessageCriteria()).getTotalElements();
 
-        // create message from template
-        doNothing().when(mqProvider).publish(any(Object.class), anyString());
-        when(recipientProvider.getRecipients(any(ProviderRecipientCriteria.class))).thenAnswer(
-            answer -> {
-                ProviderRecipient recipient = new ProviderRecipient();
-                recipient.setUsername("user1");
-                return new PageImpl<>(Collections.singletonList(recipient));
-            }
-        );
+        MessageOutbox outboxNullTemplateCode = getTemplatedMessage();
+        outboxNullTemplateCode.getTemplateMessageOutbox().setTemplateCode(null);
+        messageRest.sendMessage(TENANT_CODE, outboxNullTemplateCode);
+        assertThat(messageRest.getMessages(TENANT_CODE, new MessageCriteria()).getTotalElements(), is(count));
+        Mockito.verify(mqProvider, Mockito.never()).publish(messageArgumentCaptor.capture(), any());
 
-        templateMessage.setTemplateCode("mt3");
-        templateMessage.setSentAt(LocalDateTime.of(2022, 1, 15, 0, 0, 0));
-        templateMessage.setUserNameList(Collections.singletonList("user1"));
-        templateMessage.setPlaceholders(Map.of("{name}", "user1", "{count}", 25000));
+        // template with wrongTenant shouldn't create message
+        MessageOutbox outbox = getTemplatedMessage();
+        messageRest.sendMessage("wrong_tenant_code", outbox);
+        assertThat(messageRest.getMessages(TENANT_CODE, new MessageCriteria()).getTotalElements(), is(count));
+        Mockito.verify(mqProvider, Mockito.never()).publish(messageArgumentCaptor.capture(), any());
+    }
 
-        messageRest.sendMessage(TENANT_CODE, messageOutbox);
-        criteria.setSentAtBegin(LocalDateTime.of(2022, 1, 15, 0, 0, 0));
-        criteria.setSentAtEnd(LocalDateTime.of(2022, 1, 15, 0, 0, 0));
-        Page<Message> messages = messageRest.getMessages(TENANT_CODE, criteria);
-        assertThat(messages.getTotalElements(), is(1L));
-        Message createdMessage = messages.getContent().get(0);
-        assertThat(createdMessage.getCaption(), is("Congratulations, user1"));
-        assertThat(createdMessage.getText(), is("You win $25000!"));
-        assertThat(createdMessage.getSeverity(), is(Severity.ERROR));
-        assertThat(createdMessage.getAlertType(), is(AlertType.HIDDEN));
-        assertThat(createdMessage.getSentAt(), is(LocalDateTime.of(2022, 1, 15, 0, 0, 0)));
-        assertThat(createdMessage.getChannel().getId(), is("email"));
-        assertThat(createdMessage.getRecipientType(), is(RecipientType.RECIPIENT));
+    private MessageOutbox getTemplatedMessage() {
+        TemplateMessageOutbox templateMessageOutbox = new TemplateMessageOutbox();
+        templateMessageOutbox.setTemplateCode("mt1");
+        templateMessageOutbox.setSentAt(LocalDateTime.parse("2007-12-03T10:15:30"));
+        templateMessageOutbox.setUserNameList(List.of("testUser"));
+        templateMessageOutbox.setPlaceholders(Map.of("%{param1}", "Первый тестовый параметр",
+                "%{param2}", "второй параметр для теста"));
 
-        RecipientCriteria recipientCriteria = new RecipientCriteria();
-        recipientCriteria.setMessageId(UUID.fromString(createdMessage.getId()));
-        Page<Recipient> recipients = recipientService.getRecipients(TENANT_CODE, recipientCriteria);
-        assertThat(recipients.getTotalElements(), is(1L));
-        assertThat(recipients.getContent().get(0).getUsername(), is("user1"));
+        MessageOutbox messageOutbox = new MessageOutbox();
+        messageOutbox.setTemplateMessageOutbox(templateMessageOutbox);
+        return messageOutbox;
+    }
+
+    private Recipient getRecipient() {
+        Recipient recipient = new Recipient("testUser");
+        recipient.setName("тестовый пользователь");
+        recipient.setEmail("email@mail.novus");
+        return recipient;
     }
 }

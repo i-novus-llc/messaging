@@ -21,7 +21,7 @@
             <!-- message templates -->
             INSERT INTO messaging.message_template (id, name, code, caption, text, alert_type,
             severity, enabled, channel_code, tenant_code) VALUES
-            (1, 'msg_template1', 'mt1', 'Message template 1', 'Some text', 'POPUP', 'INFO', true, 'web', 'tenant'),
+            (1, 'msg_template1', 'mt1', 'Message template 1 %{param1} %{param2} %{param1}', 'Some text with %{param2} %{param1} %{param2}', 'POPUP', 'INFO', true, 'web', 'tenant'),
             (2, 'msg_template2', 'mt2', 'Message template 2', 'Some text2', 'HIDDEN', 'INFO', false, 'email', 'tenant'),
             (3, 'msg_template3', 'mt3', 'Congratulations, {name}', 'You win ${count}!', 'HIDDEN', 'ERROR', true, 'email', 'tenant');
             SELECT setval('messaging.message_template_id_seq', 4, false);

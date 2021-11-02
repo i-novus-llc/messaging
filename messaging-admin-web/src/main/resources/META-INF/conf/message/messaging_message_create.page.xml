@@ -8,8 +8,16 @@
                     <input-select id="template" label="Шаблон" query-id="messaging_msg_template" search-field-id="name"
                                   label-field-id="name"/>
                 </row>
+                <input-select id="infoType" label="Информирование" required="true"
+                              query-id="messaging_channels">
+                    <dependencies>
+                        <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return template.infoType;</set-value>
+                    </dependencies>
+                </input-select>
                 <row>
-                    <select id="severity" label="Уровень важности" required="true">
+                </row>
+                <row>
+                    <select id="severity" label="Уровень важности">
                         <options>
                             <option id="SEVERE" name="Важный"/>
                             <option id="ERROR" name="Ошибка"/>
@@ -17,49 +25,35 @@
                             <option id="INFO" name="Информация"/>
                         </options>
                         <dependencies>
-                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return
-                                template.severity;
-                            </set-value>
+                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return template.severity;</set-value>
+                            <visibility on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</visibility>
+                            <requiring on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</requiring>
                         </dependencies>
                     </select>
-                </row>
-                <row>
-                    <input-select id="infoType" label="Информирование" required="true"
-                                  query-id="messaging_channels">
-                        <dependencies>
-                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return
-                                template.infoType;
-                            </set-value>
-                        </dependencies>
-                    </input-select>
-                    <select id="alertType" label="Способ отображения" required="true">
+                    <select id="alertType" label="Способ отображения">
                         <options>
                             <option id="BLOCKER" name="Блокирующее уведомление"/>
                             <option id="POPUP" name="Всплывающее уведомление"/>
                             <option id="HIDDEN" name="Лента уведомлений"/>
                         </options>
                         <dependencies>
-                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return
-                                template.alertType;
-                            </set-value>
+                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return template.alertType;</set-value>
+                            <visibility on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</visibility>
+                            <requiring on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</requiring>
                         </dependencies>
                     </select>
                 </row>
                 <row>
                     <text-area id="caption" label="Заголовок уведомления" max-rows="3" required="true">
                         <dependencies>
-                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return
-                                template.caption;
-                            </set-value>
+                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return template.caption;</set-value>
                         </dependencies>
                     </text-area>
                 </row>
                 <row>
                     <text-area id="text" label="Текст уведомления" max-rows="5" required="true">
                         <dependencies>
-                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return
-                                template.text;
-                            </set-value>
+                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return template.text;</set-value>
                         </dependencies>
                     </text-area>
                 </row>
