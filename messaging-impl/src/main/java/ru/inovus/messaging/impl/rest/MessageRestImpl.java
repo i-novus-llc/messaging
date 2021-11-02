@@ -150,6 +150,7 @@ public class MessageRestImpl implements MessageRest {
         newMessage.setCaption(message.getCaption());
         newMessage.setText(message.getText());
         newMessage.setSeverity(message.getSeverity());
+        newMessage.setAlertType(message.getAlertType());
         newMessage.setRecipients(message.getRecipients());
         newMessage.setTenantCode(message.getTenantCode());
         return newMessage;
