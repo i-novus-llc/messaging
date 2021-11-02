@@ -105,6 +105,7 @@ public class WebChannelTest {
 
         // create message
         Message message = new Message();
+        message.setId("72f643c6-e0fc-4c66-8a77-ea0e3652aa81");
         message.setCaption("Test caption");
         message.setText("Message");
         message.setTenantCode(TENANT_CODE);
