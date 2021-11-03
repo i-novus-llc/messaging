@@ -9,6 +9,8 @@
                 <checkbox id="enabled" label="Включить" default-value="true" unchecked="false"/>
             </row>
             <row>
+                <input-select id="infoType" label="Информирование" required="true"
+                              query-id="messaging_channels"/>
                 <input-select id="severity" label="Уровень важности" required="true">
                     <options>
                         <option id="SEVERE" name="Важный"/>
@@ -16,6 +18,10 @@
                         <option id="WARNING" name="Предупреждение"/>
                         <option id="INFO" name="Информация"/>
                     </options>
+                    <dependencies>
+                        <visibility on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</visibility>
+                        <requiring on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</requiring>
+                    </dependencies>
                 </input-select>
                 <input-select id="alertType" label="Способ отображения" required="true">
                     <options>
@@ -23,9 +29,11 @@
                         <option id="POPUP" name="Всплывающее уведомление"/>
                         <option id="HIDDEN" name="Лента уведомлений"/>
                     </options>
+                    <dependencies>
+                        <visibility on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</visibility>
+                        <requiring on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</requiring>
+                    </dependencies>
                 </input-select>
-                <input-select id="infoType" label="Информирование" required="true"
-                              query-id="messaging_channels"/>
             </row>
             <row>
                 <text-area id="caption" label="Заголовок уведомления" max-rows="3" required="true"/>

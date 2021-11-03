@@ -18,6 +18,9 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Реализация провайдера очереди объектов на Kafka
+ */
 public class KafkaMqProvider implements MqProvider {
 
     private Map<Serializable, MessageListenerContainer> containers = new ConcurrentHashMap<>();
@@ -41,8 +44,8 @@ public class KafkaMqProvider implements MqProvider {
     }
 
     @Override
-    public void publish(Object queueObject, String mqDestinationName) {
-        kafkaTemplate.send(mqDestinationName, String.valueOf(System.currentTimeMillis()), queueObject);
+    public void publish(Object object, String queueName) {
+        kafkaTemplate.send(queueName, String.valueOf(System.currentTimeMillis()), object);
     }
 
     @Override
@@ -62,14 +65,14 @@ public class KafkaMqProvider implements MqProvider {
         return container;
     }
 
-    private Map<String, Object> getConsumerConfigs(MqConsumer topicMqConsumer) {
+    private Map<String, Object> getConsumerConfigs(MqConsumer mqConsumer) {
         Map<String, Object> consumerConfigs = properties.buildConsumerProperties();
         consumerConfigs.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         consumerConfigs.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ObjectSerializer.class);
         consumerConfigs.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-        String groupId = topicMqConsumer.mqName();
-        if (topicMqConsumer instanceof TopicMqConsumer)
-            groupId += "." + ((TopicMqConsumer) topicMqConsumer).tenantCode + "." + ((TopicMqConsumer) topicMqConsumer).authToken;
+        String groupId = mqConsumer.mqName();
+        if (mqConsumer instanceof TopicMqConsumer)
+            groupId += "." + ((TopicMqConsumer) mqConsumer).tenantCode + "." + ((TopicMqConsumer) mqConsumer).authToken;
         consumerConfigs.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
 
         return consumerConfigs;

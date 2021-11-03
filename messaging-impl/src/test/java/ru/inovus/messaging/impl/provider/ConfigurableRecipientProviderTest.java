@@ -1,4 +1,4 @@
-package ru.inovus.messaging;
+package ru.inovus.messaging.impl.provider;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +16,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.RestTemplate;
 import ru.inovus.messaging.api.criteria.ProviderRecipientCriteria;
 import ru.inovus.messaging.api.model.ProviderRecipient;
-import ru.inovus.messaging.impl.provider.ConfigurableRecipientProvider;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;

@@ -1,9 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <simple-page xmlns="http://n2oapp.net/framework/config/schema/page-3.0">
-    <form query-id="messaging_feed" id="user_view">
-        <pre-filters>
-            <eq field-id="id" param="id"/>
-        </pre-filters>
+    <form query-id="messaging_feed">
         <fields>
             <row>
                 <input-select id="severity" label="Уровень важности" enabled="false">
@@ -22,5 +19,8 @@
                 <html id="text" label="Текст уведомления"/>
             </row>
         </fields>
+        <pre-filters>
+            <eq field-id="id" param="id"/>
+        </pre-filters>
     </form>
 </simple-page>
