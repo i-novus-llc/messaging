@@ -43,7 +43,6 @@ public class MessageController {
                                    @DestinationVariable("username") String username,
                                    @DestinationVariable("systemId") String systemId) {
         simpMessagingTemplate.convertAndSend("/user/" + username + "/exchange/" + systemId + "/message", message);
-        sendFeedCount(systemId, username);
     }
 
     @MessageMapping("/{systemId}/message.markreadall")
