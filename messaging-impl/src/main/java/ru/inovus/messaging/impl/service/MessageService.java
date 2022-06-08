@@ -68,7 +68,7 @@ public class MessageService {
     public Message createMessage(Message message, Recipient... recipients) {
         UUID id = UUID.randomUUID();
         if (message.getSentAt() == null)
-            message.setSentAt(LocalDateTime.now(Clock.systemUTC()));
+            message.setSentAt(LocalDateTime.now());
 
         dsl
                 .insertInto(MESSAGE)
