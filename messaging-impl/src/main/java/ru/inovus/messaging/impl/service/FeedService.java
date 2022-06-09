@@ -59,6 +59,7 @@ public class FeedService {
         List<Condition> conditions = new ArrayList<>();
         conditions.add(CHANNEL.IS_INTERNAL.eq(Boolean.TRUE));
         conditions.add(MESSAGE.TENANT_CODE.eq(tenantCode));
+        conditions.add(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username));
         Optional.ofNullable(criteria.getSeverity())
                 .ifPresent(severity -> conditions.add(MESSAGE.SEVERITY.eq(severity)));
         Optional.ofNullable(criteria.getSentAtBegin())
@@ -70,8 +71,7 @@ public class FeedService {
                 .select(MESSAGE.fields())
                 .select(MESSAGE_RECIPIENT.fields())
                 .from(MESSAGE)
-                .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID)
-                        .and(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username)))
+                .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID))
                 .leftJoin(CHANNEL).on(CHANNEL.CODE.eq(MESSAGE.CHANNEL_CODE))
                 .where(conditions);
         int count = dsl.fetchCount(query);
