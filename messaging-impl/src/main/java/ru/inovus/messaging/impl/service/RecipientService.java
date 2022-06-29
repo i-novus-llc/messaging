@@ -27,6 +27,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 import static org.jooq.impl.DSL.exists;
 import static ru.inovus.messaging.impl.jooq.Tables.*;
 
@@ -181,7 +182,7 @@ public class RecipientService {
             return null;
         } else {
             ProviderRecipient providerRecipient = recipients.get(0);
-            recipient.setName(providerRecipient.getFio() + " (" + username + ")");
+            recipient.setName(nonNull(providerRecipient.getFio()) ? providerRecipient.getFio() + " (" + username + ")" : username);
             recipient.setUsername(providerRecipient.getUsername());
             recipient.setEmail(providerRecipient.getEmail());
         }
