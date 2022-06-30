@@ -13,10 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import ru.inovus.messaging.api.criteria.ProviderRecipientCriteria;
 import ru.inovus.messaging.api.criteria.RecipientCriteria;
-import ru.inovus.messaging.api.model.FeedCount;
-import ru.inovus.messaging.api.model.MessageStatus;
-import ru.inovus.messaging.api.model.ProviderRecipient;
-import ru.inovus.messaging.api.model.Recipient;
+import ru.inovus.messaging.api.model.*;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.impl.RecipientProvider;
@@ -27,6 +24,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 import static org.jooq.impl.DSL.exists;
 import static ru.inovus.messaging.impl.jooq.Tables.*;
 
@@ -95,6 +93,21 @@ public class RecipientService {
                 .offset((int) criteria.getOffset())
                 .fetch(MAPPER);
         return new PageImpl<>(collection, criteria, count);
+    }
+
+    /**
+     * Получение всех получателей уведомлений
+     */
+    public List<Recipient> getAll() {
+        ProviderRecipientCriteria criteria = new ProviderRecipientCriteria();
+        Page<ProviderRecipient> providerRecipientPage = recipientProvider.getRecipients(criteria);
+        List<ProviderRecipient> providerRecipients = new ArrayList<>(providerRecipientPage.getContent());
+        while (providerRecipientPage.hasNext()) {
+            criteria = (ProviderRecipientCriteria) criteria.next();
+            providerRecipientPage = recipientProvider.getRecipients(criteria);
+            providerRecipients.addAll(providerRecipientPage.getContent());
+        }
+        return providerRecipients.stream().map(this::toRecipient).collect(Collectors.toList());
     }
 
     /**
@@ -170,7 +183,6 @@ public class RecipientService {
      * @return Получатель уведомления
      */
     private Recipient getRecipientByUsername(String username) {
-        Recipient recipient = new Recipient();
         ProviderRecipientCriteria userCriteria = new ProviderRecipientCriteria();
         userCriteria.setUsername(username);
         userCriteria.setPageNumber(0);
@@ -179,14 +191,8 @@ public class RecipientService {
         if (CollectionUtils.isEmpty(recipients)) {
             log.warn("User with username: {} not found in user provider", username);
             return null;
-        } else {
-            ProviderRecipient providerRecipient = recipients.get(0);
-            recipient.setName(providerRecipient.getFio() + " (" + username + ")");
-            recipient.setUsername(providerRecipient.getUsername());
-            recipient.setEmail(providerRecipient.getEmail());
         }
-
-        return recipient;
+        return toRecipient(recipients.get(0));
     }
 
     /**
@@ -204,5 +210,19 @@ public class RecipientService {
             return (SortField<?>) (s.getDirection().equals(Sort.Direction.ASC) ?
                     field.asc() : field.desc());
         }).collect(Collectors.toList());
+    }
+
+    private String getRecipientName(ProviderRecipient providerRecipient) {
+        return nonNull(providerRecipient.getFio())
+                ? providerRecipient.getFio() + " (" + providerRecipient.getUsername() + ")"
+                : providerRecipient.getUsername();
+    }
+
+    private Recipient toRecipient(ProviderRecipient providerRecipient) {
+        Recipient recipient = new Recipient();
+        recipient.setName(getRecipientName(providerRecipient));
+        recipient.setUsername(providerRecipient.getUsername());
+        recipient.setEmail(providerRecipient.getEmail());
+        return recipient;
     }
 }
