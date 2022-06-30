@@ -12,6 +12,7 @@ import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.channel.api.AbstractChannel;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 
+import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,7 +35,6 @@ public class EmailChannel extends AbstractChannel {
         this.emailSender = emailSender;
     }
 
-
     public void send(Message message) {
         log.info("Sending email " + message);
         MessageStatus messageStatus = new MessageStatus();
@@ -52,9 +52,7 @@ public class EmailChannel extends AbstractChannel {
                 helper.setTo(recipientsEmailList.toArray(String[]::new));
                 helper.setSubject(message.getCaption());
                 helper.setText(message.getText(), true);
-                JavaMailSenderImpl javaMailSender = (JavaMailSenderImpl) emailSender;
-                if (!StringUtils.isEmpty(javaMailSender.getUsername()))
-                    helper.setFrom(javaMailSender.getUsername());
+                setFrom(helper);
                 emailSender.send(mail);
                 messageStatus.setStatus(MessageStatusType.SENT);
                 sendStatus(messageStatus);
@@ -69,5 +67,11 @@ public class EmailChannel extends AbstractChannel {
             messageStatus.setErrorMessage("There are no recipient's email addresses to send");
             sendStatus(messageStatus);
         }
+    }
+
+    private void setFrom(MimeMessageHelper helper) throws MessagingException {
+        JavaMailSenderImpl javaMailSender = (JavaMailSenderImpl) emailSender;
+        if (!StringUtils.isEmpty(javaMailSender.getUsername()))
+            helper.setFrom(javaMailSender.getUsername());
     }
 }
