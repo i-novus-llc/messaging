@@ -2,6 +2,7 @@ package ru.inovus.messaging.channel.email;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.util.StringUtils;
 import ru.inovus.messaging.api.model.Message;
@@ -14,6 +15,8 @@ import ru.inovus.messaging.channel.api.queue.MqProvider;
 import javax.mail.internet.MimeMessage;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.util.Objects.nonNull;
 
 /**
  * Реализация канала отправки уведомлений по Email
@@ -49,7 +52,9 @@ public class EmailChannel extends AbstractChannel {
                 helper.setTo(recipientsEmailList.toArray(String[]::new));
                 helper.setSubject(message.getCaption());
                 helper.setText(message.getText(), true);
-
+                JavaMailSenderImpl javaMailSender = (JavaMailSenderImpl) emailSender;
+                if (!StringUtils.isEmpty(javaMailSender.getUsername()))
+                    helper.setFrom(javaMailSender.getUsername());
                 emailSender.send(mail);
                 messageStatus.setStatus(MessageStatusType.SENT);
                 sendStatus(messageStatus);
