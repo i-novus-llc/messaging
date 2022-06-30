@@ -14,9 +14,7 @@ import ru.inovus.messaging.impl.service.MessageService;
 import ru.inovus.messaging.impl.service.MessageTemplateService;
 import ru.inovus.messaging.impl.service.RecipientService;
 
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Controller
@@ -55,7 +53,9 @@ public class MessageRestImpl implements MessageRest {
     public void sendMessage(String tenantCode, final MessageOutbox messageOutbox) {
         if (messageOutbox.getMessage() != null) {
             messageOutbox.getMessage().setTenantCode(tenantCode);
-            recipientService.enrichRecipient(messageOutbox.getMessage().getRecipients());
+            if (CollectionUtils.isEmpty(messageOutbox.getMessage().getRecipients()))
+                messageOutbox.getMessage().setRecipients(recipientService.getAll());
+            else recipientService.enrichRecipient(messageOutbox.getMessage().getRecipients());
             save(messageOutbox.getMessage());
             send(messageOutbox.getMessage());
         } else if (messageOutbox.getTemplateMessageOutbox() != null) {

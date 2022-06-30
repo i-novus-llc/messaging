@@ -67,12 +67,25 @@
                 </row>
             </set>
             <row>
-                <input-select id="users" type="checkboxes" label="Получатели" required="true"
+                <radio-group id="allRecipients" label="Получатели" inline="true">
+                    <options>
+                        <option id="1" name="Получатели"/>
+                        <option id="2" name="Все"/>
+                    </options>
+                    <default-value id="1" name="Получатели"/>
+                </radio-group>
+            </row>
+            <row>
+                <input-select id="users" type="checkboxes" label="Получатели"
                               query-id="messaging_recipient" label-field-id="name" search-field-id="name">
                     <dependencies>
-                        <visibility on="recipientType">
-                            recipientType.id == 'RECIPIENT'
+                        <requiring on="allRecipients">
+                            allRecipients.id == 1
+                        </requiring>
+                        <visibility on="recipientType, allRecipients">
+                            (recipientType.id == 'RECIPIENT' &amp;&amp; allRecipients.id == 1)
                         </visibility>
+                        <reset on="allRecipients">true</reset>
                     </dependencies>
                 </input-select>
             </row>
