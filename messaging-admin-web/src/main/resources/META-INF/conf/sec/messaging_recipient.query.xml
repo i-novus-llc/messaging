@@ -17,7 +17,7 @@
             </filters>
         </field>
         <field id="name" domain="string">
-            <select mapping="#this[fio]+ ' (' + #this[username] + ')'"/>
+            <select mapping="#this[fio] != null ? (#this[fio] + ' (' + #this[username] + ')') : #this[username]"/>
             <filters>
                 <like filter-id="name">name={name}</like>
             </filters>
