@@ -13,11 +13,13 @@ public class EmailChannelConfiguration {
 
     @Value("${novus.messaging.queue.status}")
     private String statusQueueName;
+    @Value("${spring.mail.username}")
+    private String senderUserName;
 
     @Bean
     EmailChannel emailChannel(EmailChannelProperties emailChannelProperties,
                               MqProvider mqProvider,
                               JavaMailSender emailSender) {
-        return new EmailChannel(emailChannelProperties.getQueue(), statusQueueName, mqProvider, emailSender);
+        return new EmailChannel(emailChannelProperties.getQueue(), statusQueueName, mqProvider, emailSender, senderUserName);
     }
 }

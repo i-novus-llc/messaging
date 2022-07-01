@@ -2,7 +2,6 @@ package ru.inovus.messaging.channel.email;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.util.StringUtils;
 import ru.inovus.messaging.api.model.Message;
@@ -12,12 +11,9 @@ import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.channel.api.AbstractChannel;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 
-import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static java.util.Objects.nonNull;
 
 /**
  * Реализация канала отправки уведомлений по Email
@@ -26,13 +22,16 @@ import static java.util.Objects.nonNull;
 public class EmailChannel extends AbstractChannel {
 
     private final JavaMailSender emailSender;
+    private final String senderUserName;
 
     public EmailChannel(String messageQueueName,
                         String statusQueueName,
                         MqProvider mqProvider,
-                        JavaMailSender emailSender) {
+                        JavaMailSender emailSender,
+                        String senderUserName) {
         super(mqProvider, messageQueueName, statusQueueName);
         this.emailSender = emailSender;
+        this.senderUserName = senderUserName;
     }
 
     public void send(Message message) {
@@ -52,7 +51,7 @@ public class EmailChannel extends AbstractChannel {
                 helper.setTo(recipientsEmailList.toArray(String[]::new));
                 helper.setSubject(message.getCaption());
                 helper.setText(message.getText(), true);
-                setFrom(helper);
+                helper.setFrom(senderUserName);
                 emailSender.send(mail);
                 messageStatus.setStatus(MessageStatusType.SENT);
                 sendStatus(messageStatus);
@@ -67,11 +66,5 @@ public class EmailChannel extends AbstractChannel {
             messageStatus.setErrorMessage("There are no recipient's email addresses to send");
             sendStatus(messageStatus);
         }
-    }
-
-    private void setFrom(MimeMessageHelper helper) throws MessagingException {
-        JavaMailSenderImpl javaMailSender = (JavaMailSenderImpl) emailSender;
-        if (!StringUtils.isEmpty(javaMailSender.getUsername()))
-            helper.setFrom(javaMailSender.getUsername());
     }
 }
