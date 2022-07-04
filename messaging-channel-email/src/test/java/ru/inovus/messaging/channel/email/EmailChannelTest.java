@@ -37,7 +37,8 @@ import static org.mockito.Mockito.*;
         classes = {TestApp.class},
         properties = {
                 "novus.messaging.queue.status=test-status-queue",
-                "novus.messaging.channel.email.queue=test-email-queue"})
+                "novus.messaging.channel.email.queue=test-email-queue",
+                "spring.mail.username=test-user"})
 @EmbeddedKafka
 @ContextConfiguration(classes = KafkaMqProvider.class)
 public class EmailChannelTest {

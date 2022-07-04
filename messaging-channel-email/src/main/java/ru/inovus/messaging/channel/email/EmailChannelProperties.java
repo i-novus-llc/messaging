@@ -11,4 +11,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 )
 public class EmailChannelProperties {
     private String queue = "email-queue";
+    private String from;
 }

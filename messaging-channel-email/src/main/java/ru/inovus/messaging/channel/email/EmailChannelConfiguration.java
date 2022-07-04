@@ -5,6 +5,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.util.StringUtils;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 
 @Configuration
@@ -13,11 +14,14 @@ public class EmailChannelConfiguration {
 
     @Value("${novus.messaging.queue.status}")
     private String statusQueueName;
+    @Value("${spring.mail.username}")
+    private String senderUserName;
 
     @Bean
     EmailChannel emailChannel(EmailChannelProperties emailChannelProperties,
                               MqProvider mqProvider,
                               JavaMailSender emailSender) {
-        return new EmailChannel(emailChannelProperties.getQueue(), statusQueueName, mqProvider, emailSender);
+        return new EmailChannel(emailChannelProperties.getQueue(), statusQueueName, mqProvider, emailSender,
+                StringUtils.isEmpty(emailChannelProperties.getFrom())? senderUserName : emailChannelProperties.getFrom());
     }
 }

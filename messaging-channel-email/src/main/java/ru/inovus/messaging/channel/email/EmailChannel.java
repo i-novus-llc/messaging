@@ -22,15 +22,17 @@ import java.util.stream.Collectors;
 public class EmailChannel extends AbstractChannel {
 
     private final JavaMailSender emailSender;
+    private final String senderUserName;
 
     public EmailChannel(String messageQueueName,
                         String statusQueueName,
                         MqProvider mqProvider,
-                        JavaMailSender emailSender) {
+                        JavaMailSender emailSender,
+                        String senderUserName) {
         super(mqProvider, messageQueueName, statusQueueName);
         this.emailSender = emailSender;
+        this.senderUserName = senderUserName;
     }
-
 
     public void send(Message message) {
         log.info("Sending email " + message);
@@ -49,7 +51,7 @@ public class EmailChannel extends AbstractChannel {
                 helper.setTo(recipientsEmailList.toArray(String[]::new));
                 helper.setSubject(message.getCaption());
                 helper.setText(message.getText(), true);
-
+                helper.setFrom(senderUserName);
                 emailSender.send(mail);
                 messageStatus.setStatus(MessageStatusType.SENT);
                 sendStatus(messageStatus);

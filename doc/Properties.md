@@ -15,6 +15,7 @@
 ## Настройки Email канала
 
 - `novus.messaging.channel.email.queue` - имя очереди уведомлений email канала (по умолчанию: `email-queue`)
+- `novus.messaging.channel.email.from` - имя отправителя (по умолчанию: `spring.mail.username`)
 
 ## Настройки Web канала
 
