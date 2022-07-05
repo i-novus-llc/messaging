@@ -8,17 +8,21 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.inovus.messaging.TestApp;
 import ru.inovus.messaging.api.criteria.RecipientCriteria;
 import ru.inovus.messaging.api.model.FeedCount;
 import ru.inovus.messaging.api.model.MessageStatus;
+import ru.inovus.messaging.api.model.ProviderRecipient;
 import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.api.queue.QueueMqConsumer;
+import ru.inovus.messaging.impl.RecipientProvider;
 
 import java.util.List;
 import java.util.UUID;
@@ -26,6 +30,8 @@ import java.util.concurrent.CountDownLatch;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApp.class,
@@ -43,6 +49,9 @@ public class RecipientServiceTest {
 
     @Autowired
     private MqProvider mqProvider;
+
+    @MockBean
+    private RecipientProvider recipientProvider;
 
     @Value("${novus.messaging.queue.feed-count}")
     private String feedCountQueue;
@@ -64,6 +73,21 @@ public class RecipientServiceTest {
         // order by id desc
         assertThat(recipients.getContent().get(0).getId(), is(2L));
         assertThat(recipients.getContent().get(1).getId(), is(1L));
+    }
+
+    @Test
+    public void testGetAll() {
+        when(recipientProvider.getRecipients(any())).thenReturn(getProviderRecipientsPage());
+        List<Recipient> recipients = service.getAll();
+        assertThat(recipients.size(), is(2));
+        Recipient recipient = recipients.get(0);
+        assertThat(recipient.getUsername(), is("firstUsername"));
+        assertThat(recipient.getName(), is("Капитошкин Аркадий Арсеньевич (firstUsername)"));
+        assertThat(recipient.getEmail(), is("test1@test.ru"));
+        recipient = recipients.get(1);
+        assertThat(recipient.getUsername(), is("secondUsername"));
+        assertThat(recipient.getName(), is("secondUsername"));
+        assertThat(recipient.getEmail(), is("test2@test.ru"));
     }
 
     @Test
@@ -144,5 +168,18 @@ public class RecipientServiceTest {
         assertThat(feedCount[0].getTenantCode(), is(TENANT_CODE));
         assertThat(feedCount[0].getUsername(), is("web2"));
         assertThat(feedCount[0].getCount(), is(0));
+    }
+
+    private Page<ProviderRecipient> getProviderRecipientsPage() {
+        ProviderRecipient firstUser = new ProviderRecipient();
+        firstUser.setEmail("test1@test.ru");
+        firstUser.setUsername("firstUsername");
+        firstUser.setFio("Капитошкин Аркадий Арсеньевич");
+
+        ProviderRecipient secondUser = new ProviderRecipient();
+        secondUser.setEmail("test2@test.ru");
+        secondUser.setUsername("secondUsername");
+
+        return new PageImpl<ProviderRecipient>(List.of(firstUser, secondUser));
     }
 }
