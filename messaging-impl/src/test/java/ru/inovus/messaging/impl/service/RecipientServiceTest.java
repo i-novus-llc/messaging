@@ -180,6 +180,6 @@ public class RecipientServiceTest {
         secondUser.setEmail("test2@test.ru");
         secondUser.setUsername("secondUsername");
 
-        return new PageImpl<ProviderRecipient>(List.of(firstUser, secondUser));
+        return new PageImpl(List.of(firstUser, secondUser));
     }
 }
