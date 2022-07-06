@@ -13,14 +13,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.inovus.messaging.TestApp;
 import ru.inovus.messaging.api.criteria.MessageCriteria;
-import ru.inovus.messaging.api.model.Message;
-import ru.inovus.messaging.api.model.MessageOutbox;
-import ru.inovus.messaging.api.model.Recipient;
-import ru.inovus.messaging.api.model.TemplateMessageOutbox;
+import ru.inovus.messaging.api.model.*;
 import ru.inovus.messaging.api.model.enums.AlertType;
 import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.model.enums.Severity;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
+import ru.inovus.messaging.impl.RecipientProvider;
 import ru.inovus.messaging.impl.service.MessageService;
 import ru.inovus.messaging.impl.service.RecipientService;
 
@@ -62,6 +60,7 @@ public class MessageRestImplTest {
     @BeforeEach
     public void before() {
         when(recipientService.getRecipientsByUsername(any())).thenReturn(List.of(getRecipient()));
+        when(recipientService.getAll()).thenReturn(getRecipients());
     }
 
     @Test
@@ -96,6 +95,26 @@ public class MessageRestImplTest {
     }
 
     @Test
+    public void testEmptyRecipientsMessage() {
+        messageRest.sendMessage(TENANT_CODE, getEmptyRecipientsMessage());
+
+        Mockito.verify(mqProvider).publish(messageArgumentCaptor.capture(), any());
+        Message publishedMessage = messageArgumentCaptor.getValue();
+
+        assertThat(publishedMessage.getTenantCode(), is(TENANT_CODE));
+        assertThat(publishedMessage.getText(), is("test text"));
+        assertThat(publishedMessage.getSeverity(), is(Severity.INFO));
+        assertThat(publishedMessage.getAlertType(), is(AlertType.POPUP));
+        assertThat(publishedMessage.getRecipients().size(), is(2));
+        Recipient recipient = publishedMessage.getRecipients().get(0);
+        assertThat(recipient.getUsername(), is("firstUsername"));
+        assertThat(recipient.getEmail(), is("test1@test.ru"));
+        recipient = publishedMessage.getRecipients().get(1);
+        assertThat(recipient.getUsername(), is("secondUsername"));
+        assertThat(recipient.getEmail(), is("test2@test.ru"));
+    }
+
+    @Test
     public void testEmptyTemplateCodeAndWrongTenant() {
         // template with empty templateCode shouldn't create message
         long count = messageRest.getMessages(TENANT_CODE, new MessageCriteria()).getTotalElements();
@@ -125,10 +144,34 @@ public class MessageRestImplTest {
         return messageOutbox;
     }
 
+    private MessageOutbox getEmptyRecipientsMessage() {
+        Message message = new Message();
+        message.setText("test text");
+        message.setSeverity(Severity.INFO);
+        message.setAlertType(AlertType.POPUP);
+        message.setRecipientType(RecipientType.RECIPIENT);
+        message.setChannel(new Channel("web", "web", "web_queue"));
+        MessageOutbox messageOutbox = new MessageOutbox();
+        messageOutbox.setMessage(message);
+        return messageOutbox;
+    }
+
     private Recipient getRecipient() {
         Recipient recipient = new Recipient("testUser");
         recipient.setName("Test User");
         recipient.setEmail("email@mail.novus");
         return recipient;
+    }
+
+    private List<Recipient> getRecipients() {
+        Recipient firstUser = new Recipient();
+        firstUser.setEmail("test1@test.ru");
+        firstUser.setUsername("firstUsername");
+
+        Recipient secondUser = new Recipient();
+        secondUser.setEmail("test2@test.ru");
+        secondUser.setUsername("secondUsername");
+
+        return List.of(firstUser, secondUser);
     }
 }
