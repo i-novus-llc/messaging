@@ -228,11 +228,11 @@ public class MessageTemplateService {
         if (nonNull(id))
             condition = condition.and(MESSAGE_TEMPLATE.ID.notEqual(id));
 
-        boolean isNonUniqueNameOrCode = dsl.fetchExists(dsl.selectOne()
+        boolean alreadyExists = dsl.fetchExists(dsl.selectOne()
                 .from(MESSAGE_TEMPLATE)
                 .where(condition));
 
-        if (isNonUniqueNameOrCode)
+        if (alreadyExists)
             throw new UserException(messageHelper.obtainMessage("messaging.exception.messageTemplate.alreadyExists"));
     }
 }
