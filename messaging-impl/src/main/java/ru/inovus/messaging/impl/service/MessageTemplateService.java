@@ -1,5 +1,6 @@
 package ru.inovus.messaging.impl.service;
 
+import net.n2oapp.platform.i18n.UserException;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
 import org.jooq.*;
@@ -13,6 +14,7 @@ import ru.inovus.messaging.api.criteria.MessageTemplateCriteria;
 import ru.inovus.messaging.api.model.Channel;
 import ru.inovus.messaging.api.model.MessageTemplate;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageTemplateRecord;
+import ru.inovus.messaging.impl.util.MessageHelper;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.nonNull;
 import static ru.inovus.messaging.impl.jooq.Sequences.MESSAGE_TEMPLATE_ID_SEQ;
 import static ru.inovus.messaging.impl.jooq.Tables.MESSAGE_TEMPLATE;
 
@@ -34,6 +37,9 @@ public class MessageTemplateService {
 
     @Autowired
     private ChannelService channelService;
+
+    @Autowired
+    private MessageHelper messageHelper;
 
     RecordMapper<Record, MessageTemplate> MAPPER = rec -> {
         MessageTemplateRecord record = rec.into(MESSAGE_TEMPLATE);
@@ -104,6 +110,7 @@ public class MessageTemplateService {
      */
     @Transactional
     public MessageTemplate createTemplate(String tenantCode, MessageTemplate messageTemplate) {
+        validateMessageTemplate(messageTemplate, null);
         Integer id = dsl.nextval(MESSAGE_TEMPLATE_ID_SEQ).intValue();
         messageTemplate.setId(id);
 
@@ -134,6 +141,7 @@ public class MessageTemplateService {
      */
     @Transactional
     public void updateTemplate(String tenantCode, Integer id, MessageTemplate messageTemplate) {
+        validateMessageTemplate(messageTemplate, id);
         dsl
                 .update(MESSAGE_TEMPLATE)
                 .set(MESSAGE_TEMPLATE.NAME, messageTemplate.getName())
@@ -152,7 +160,7 @@ public class MessageTemplateService {
      * Удаление шаблона уведомлений
      *
      * @param tenantCode Код тенанта
-     * @param id Идентификатор шаблона уведомлений
+     * @param id         Идентификатор шаблона уведомлений
      */
     @Transactional
     public void deleteTemplate(String tenantCode, Integer id) {
@@ -166,7 +174,7 @@ public class MessageTemplateService {
      * Получение шаблона уведомления по идентификатору
      *
      * @param tenantCode Код тенанта
-     * @param id Идентификатор шаблона уведомления
+     * @param id         Идентификатор шаблона уведомления
      * @return Шаблон уведомления
      */
     public MessageTemplate getTemplate(String tenantCode, Integer id) {
@@ -181,7 +189,7 @@ public class MessageTemplateService {
      * Получение шаблона уведомления по коду
      *
      * @param tenantCode Код тенанта
-     * @param code Код шаблона уведомления
+     * @param code       Код шаблона уведомления
      * @return Шаблон уведомления
      */
     public MessageTemplate getTemplate(String tenantCode, String code) {
@@ -207,5 +215,24 @@ public class MessageTemplateService {
             return (SortField<?>) (s.getDirection().equals(Sort.Direction.ASC) ?
                     field.asc() : field.desc());
         }).collect(Collectors.toList());
+    }
+
+    /**
+     * Проверка шаблона на уникальность имени или кода
+     *
+     * @param messageTemplate Шаблон уведомлений
+     * @param id              Идентификатор шаблона уведомлений
+     */
+    private void validateMessageTemplate(MessageTemplate messageTemplate, Integer id) {
+        Condition condition = MESSAGE_TEMPLATE.NAME.eq(messageTemplate.getName()).or(MESSAGE_TEMPLATE.CODE.eq(messageTemplate.getCode()));
+        if (nonNull(id))
+            condition = condition.and(MESSAGE_TEMPLATE.ID.notEqual(id));
+
+        boolean alreadyExists = dsl.fetchExists(dsl.selectOne()
+                .from(MESSAGE_TEMPLATE)
+                .where(condition));
+
+        if (alreadyExists)
+            throw new UserException(messageHelper.obtainMessage("messaging.exception.messageTemplate.alreadyExists"));
     }
 }
