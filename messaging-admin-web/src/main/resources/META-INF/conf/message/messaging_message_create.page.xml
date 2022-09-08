@@ -11,7 +11,9 @@
                 <input-select id="infoType" label="Информирование" required="true"
                               query-id="messaging_channels">
                     <dependencies>
-                        <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return template.infoType;</set-value>
+                        <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return
+                            template.infoType;
+                        </set-value>
                     </dependencies>
                 </input-select>
                 <row>
@@ -25,7 +27,9 @@
                             <option id="INFO" name="Информация"/>
                         </options>
                         <dependencies>
-                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return template.severity;</set-value>
+                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return
+                                template.severity;
+                            </set-value>
                             <visibility on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</visibility>
                             <requiring on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</requiring>
                         </dependencies>
@@ -37,7 +41,9 @@
                             <option id="HIDDEN" name="Лента уведомлений"/>
                         </options>
                         <dependencies>
-                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return template.alertType;</set-value>
+                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return
+                                template.alertType;
+                            </set-value>
                             <visibility on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</visibility>
                             <requiring on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</requiring>
                         </dependencies>
@@ -46,49 +52,96 @@
                 <row>
                     <text-area id="caption" label="Заголовок уведомления" max-rows="3" required="true">
                         <dependencies>
-                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return template.caption;</set-value>
+                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return
+                                template.caption;
+                            </set-value>
                         </dependencies>
                     </text-area>
                 </row>
                 <row>
                     <text-area id="text" label="Текст уведомления" max-rows="5" required="true">
                         <dependencies>
-                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return template.text;</set-value>
+                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return
+                                template.text;
+                            </set-value>
                         </dependencies>
                     </text-area>
                 </row>
                 <row>
-                    <radio-group id="recipientType" label="Тип получателей" inline="true" visible="false">
+                    <!--todo как-то блокировать, по настройке бэкендевской-->
+                    <radio-group id="recipientType" label="Тип получателей" inline="true">
                         <default-value id="RECIPIENT" name="Пользователи"/>
                         <options>
                             <option id="RECIPIENT" name="Пользователи"/>
+                            <option id="USER_GROUP_BY_ROLE" name="Роль"/>
+                            <option id="USER_GROUP_BY_REGION" name="Регион"/>
+                            <option id="USER_GROUP_BY_ORGANIZATION" name="Мед.организация"/>
+                            <option id="ALL" name="Все"/>
                         </options>
                     </radio-group>
                 </row>
+                <row>
+                    <input-select id="roles" type="checkboxes" label="Укажите роль"
+                                  query-id="messaging_role" label-field-id="name" search-field-id="name">
+                        <dependencies>
+                            <requiring on="recipientType">
+                                recipientType.id == 'USER_GROUP_BY_ROLE'
+                            </requiring>
+                            <visibility on="recipientType">
+                                recipientType.id == 'USER_GROUP_BY_ROLE'
+                            </visibility>
+                            <reset on="recipientType">return true;</reset>
+                        </dependencies>
+                    </input-select>
+                    <input-select id="regions" type="checkboxes" label="Укажите регион"
+                                  query-id="messaging_region" label-field-id="name" search-field-id="name">
+                        <dependencies>
+                            <requiring on="recipientType">
+                                recipientType.id == 'USER_GROUP_BY_REGION'
+                            </requiring>
+                            <visibility on="recipientType">
+                                recipientType.id == 'USER_GROUP_BY_REGION'
+                            </visibility>
+                            <reset on="recipientType">return true;</reset>
+                        </dependencies>
+                    </input-select>
+                    <input-select id="organizations" type="checkboxes" label="Укажите организацию"
+                                  query-id="messaging_organization" label-field-id="shortName" search-field-id="shortName">
+                        <dependencies>
+                            <requiring on="recipientType">
+                                recipientType.id == 'USER_GROUP_BY_ORGANIZATION'
+                            </requiring>
+                            <visibility on="recipientType">
+                                recipientType.id == 'USER_GROUP_BY_ORGANIZATION'
+                            </visibility>
+                            <reset on="recipientType">return true;</reset>
+                        </dependencies>
+                    </input-select>
+                </row>
             </set>
-            <row>
-                <radio-group id="allRecipients" label="Получатели" inline="true">
-                    <options>
-                        <option id="1" name="Получатели"/>
-                        <option id="2" name="Все"/>
-                    </options>
-                    <default-value id="1" name="Получатели"/>
-                </radio-group>
-            </row>
-            <row>
-                <input-select id="users" type="checkboxes" label="Получатели"
-                              query-id="messaging_recipient" label-field-id="name" search-field-id="name">
-                    <dependencies>
-                        <requiring on="allRecipients">
-                            allRecipients.id == 1
-                        </requiring>
-                        <visibility on="recipientType, allRecipients">
-                            (recipientType.id == 'RECIPIENT' &amp;&amp; allRecipients.id == 1)
-                        </visibility>
-                        <reset on="allRecipients">true</reset>
-                    </dependencies>
-                </input-select>
-            </row>
+            <!--            <row>-->
+            <!--                <radio-group id="allRecipients" label="Получатели" inline="true">-->
+            <!--                    <options>-->
+            <!--                        <option id="2" name="Все"/>-->
+            <!--                        <option id="1" name="Пользователи"/>-->
+            <!--                    </options>-->
+            <!--                    <default-value id="1" name="Получатели"/>-->
+            <!--                </radio-group>-->
+            <!--            </row>-->
+            <!--            <row>-->
+            <!--                <input-select id="users" type="checkboxes" label="Получатели"-->
+            <!--                              query-id="messaging_recipient" label-field-id="name" search-field-id="name">-->
+            <!--                    <dependencies>-->
+            <!--                        <requiring on="allRecipients">-->
+            <!--                            allRecipients.id == 1-->
+            <!--                        </requiring>-->
+            <!--                        <visibility on="recipientType, allRecipients">-->
+            <!--                            (recipientType.id == 'RECIPIENT' &amp;&amp; allRecipients.id == 1)-->
+            <!--                        </visibility>-->
+            <!--                        <reset on="allRecipients">true</reset>-->
+            <!--                    </dependencies>-->
+            <!--                </input-select>-->
+            <!--            </row>-->
         </fields>
     </form>
 </simple-page>

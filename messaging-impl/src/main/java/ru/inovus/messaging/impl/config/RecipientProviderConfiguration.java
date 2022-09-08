@@ -7,9 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ResourceLoader;
 import ru.inovus.messaging.impl.RecipientProvider;
-import ru.inovus.messaging.impl.provider.ConfigurableRecipientProvider;
-import ru.inovus.messaging.impl.provider.SecurityAdminRecipientProvider;
-import ru.inovus.messaging.impl.provider.UserRestClient;
+import ru.inovus.messaging.impl.provider.*;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -27,12 +25,13 @@ public class RecipientProviderConfiguration {
 
     @Configuration
     @ConditionalOnProperty(value = "novus.messaging.recipient-provider.type", havingValue = "security")
-    @EnableFeignClients(clients = {UserRestClient.class})
+    @EnableFeignClients(clients = {UserRestClient.class, RolesRestClient.class, RegionRestClient.class, OrganizationRestClient.class})
     static public class SecurityAdminConfiguration {
 
         @Bean
-        public RecipientProvider recipientProvider(UserRestClient userRestService) {
-            return new SecurityAdminRecipientProvider(userRestService);
+        public RecipientProvider recipientProvider(UserRestClient userRestService, RolesRestClient rolesRestService,
+                                                   RegionRestClient regionRestService, OrganizationRestClient organizationRestService) {
+            return new SecurityAdminRecipientProvider(userRestService, rolesRestService, regionRestService, organizationRestService);
         }
     }
 }
