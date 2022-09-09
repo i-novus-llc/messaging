@@ -25,7 +25,20 @@
         <field id="email">
             <select mapping="[email]"/>
         </field>
-
+        <field id="roleCodes">
+            <filters>
+                <in filter-id="roleCodes"/>
+            </filters>
+        </field>
+        <field id="regionId">
+            <filters>
+                <eq filter-id="regionId"/>
+            </filters>
+        </field>
+        <field id="organizations">
+            <filters>
+                <in filter-id="organizations"/>
+            </filters>
+        </field>
     </fields>
-
 </query>

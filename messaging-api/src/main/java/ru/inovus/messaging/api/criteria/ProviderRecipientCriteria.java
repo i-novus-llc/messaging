@@ -20,6 +20,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.ws.rs.QueryParam;
+import java.util.List;
 
 @Getter
 @Setter
@@ -36,4 +37,16 @@ public class ProviderRecipientCriteria extends BaseMessagingCriteria {
     @QueryParam("fio")
     @ApiParam("ФИО получателя")
     private String fio;
+
+    @QueryParam("roleCodes")
+    @ApiParam("Список кодов ролей")
+    private List<String> roleCodes;
+
+    @QueryParam("regionId")
+    @ApiParam("id региона")
+    private Integer regionId;
+
+    @QueryParam("organizations")
+    @ApiParam("Список идентификаторов организаций")
+    private List<Integer> organizations;
 }

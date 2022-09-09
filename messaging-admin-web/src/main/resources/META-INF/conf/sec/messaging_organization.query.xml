@@ -14,5 +14,8 @@
                 <like filter-id="shortName">name={shortName}</like>
             </filters>
         </field>
+        <field id="code" domain="string">
+            <select/>
+        </field>
     </fields>
 </query>

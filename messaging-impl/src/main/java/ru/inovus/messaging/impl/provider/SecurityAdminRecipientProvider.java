@@ -44,6 +44,9 @@ public class SecurityAdminRecipientProvider implements RecipientProvider {
         restUserCriteria.setPageNumber(criteria.getPageNumber());
         restUserCriteria.setPageSize(criteria.getPageSize());
         restUserCriteria.setFio(criteria.getName());
+        restUserCriteria.setRoleCodes(criteria.getRoleCodes());
+        restUserCriteria.setRegionId(criteria.getRegionId());
+        restUserCriteria.setOrganizations(criteria.getOrganizations());
         Page<net.n2oapp.security.admin.api.model.User> userPage = userRestService.findAll(restUserCriteria);
         return userPage.getContent().isEmpty() ? Page.empty() :
                 new PageImpl<>(userPage.getContent().stream().map(this::mapSecurityUser).collect(Collectors.toList()), userPage.getPageable(), userPage.getTotalElements());
@@ -51,18 +54,24 @@ public class SecurityAdminRecipientProvider implements RecipientProvider {
 
     public Page<Role> getRoles(SecurityBaseCriteria criteria) {
         RestRoleCriteria restRoleCriteria = new RestRoleCriteria();
+        restRoleCriteria.setPageNumber(criteria.getPageNumber());
+        restRoleCriteria.setPageSize(criteria.getPageSize());
         restRoleCriteria.setName(criteria.getName());
         return roleRestService.findAll(restRoleCriteria);
     }
 
     public Page<Region> getRegions(SecurityBaseCriteria criteria) {
         RestRegionCriteria restRegionCriteria = new RestRegionCriteria();
+        restRegionCriteria.setPageNumber(criteria.getPageNumber());
+        restRegionCriteria.setPageSize(criteria.getPageSize());
         restRegionCriteria.setName(criteria.getName());
         return regionRestService.getAll(restRegionCriteria);
     }
 
     public Page<Organization> getMedOrganizations(SecurityBaseCriteria criteria) {
         RestOrganizationCriteria restRegionCriteria = new RestOrganizationCriteria();
+        restRegionCriteria.setPageNumber(criteria.getPageNumber());
+        restRegionCriteria.setPageSize(criteria.getPageSize());
         restRegionCriteria.setName(criteria.getName());
         return organizationRestService.getAll(restRegionCriteria);
     }

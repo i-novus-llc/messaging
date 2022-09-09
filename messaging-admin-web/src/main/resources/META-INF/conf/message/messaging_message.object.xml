@@ -13,6 +13,10 @@
                 <field id="alertType.id" mapping="['message.alertType']" domain="string"/>
                 <field id="infoType" mapping="['message.channel']" domain="object"/>
                 <field id="recipientType.id" mapping="['message.recipientType']" domain="string"/>
+                <field id="roles*.name" mapping="['message.roleCodes']"/>
+                <field id="region.code" mapping="['message.regionCode']" domain="integer"/>
+                <field id="organizations*.code" mapping="['message.organizations']"/>
+<!--                //todo-->
                 <field id="users*.username" mapping="['message.recipients*.username']"/>
             </in>
         </operation>
