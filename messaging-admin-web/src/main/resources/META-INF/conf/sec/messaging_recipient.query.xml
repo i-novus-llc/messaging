@@ -27,17 +27,17 @@
         </field>
         <field id="roleCodes">
             <filters>
-                <in filter-id="roleCodes"/>
+                <in filter-id="roleCodes">roleCodes={roleCodes}</in>
             </filters>
         </field>
         <field id="regionId">
             <filters>
-                <eq filter-id="regionId"/>
+                <eq filter-id="regionId">regionId={regionId}</eq>
             </filters>
         </field>
-        <field id="organizations">
+        <field id="organizationId">
             <filters>
-                <in filter-id="organizations"/>
+                <eq filter-id="organizationId">organizationId={organizationId}</eq>
             </filters>
         </field>
     </fields>

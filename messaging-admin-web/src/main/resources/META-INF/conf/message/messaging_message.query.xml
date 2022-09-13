@@ -74,6 +74,18 @@
         <field id="users" domain="object">
             <select mapping="['recipients']"/>
         </field>
+
+        <field id="role" domain="string">
+            <select mapping="['role']"/>
+        </field>
+
+        <field id="region" domain="string">
+            <select mapping="['region']"/>
+        </field>
+
+        <field id="organization" domain="string">
+            <select mapping="['organization']"/>
+        </field>
     </fields>
 
 </query>

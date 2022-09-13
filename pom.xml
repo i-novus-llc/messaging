@@ -15,8 +15,8 @@
     </parent>
 
     <properties>
-        <n2o.version>7.16.13</n2o.version>
-        <access.version>5.0.13</access.version>
+        <n2o.version>7.20.21</n2o.version>
+        <access.version>6.1.1</access.version>
         <config.server.enable>false</config.server.enable>
         <audit.version>2.4.27</audit.version>
         <jacoco.skip>true</jacoco.skip>

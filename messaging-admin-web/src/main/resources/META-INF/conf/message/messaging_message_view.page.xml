@@ -8,7 +8,7 @@
                     <eq field-id="id" param="id"/>
                 </pre-filters>
                 <fields>
-                    <set>
+                    <set field-label-location="left" field-label-align="left" field-label-width="220px">
                         <row>
                             <input-select id="infoType" label="Информирование" enabled="false"/>
                             <input-select id="severity" label="Уровень важности" enabled="false">
@@ -31,6 +31,11 @@
                         </row>
                         <row>
                             <output-text id="sentAt" label="Дата отправки" enabled="false" format="date DD.MM.YYYY HH:mm:ss"/>
+                        </row>
+                        <row>
+                            <output-text id="role" label="Роль" visible="{role!=null}"/>
+                            <output-text id="region" label="Регион" visible="{region!=null}"/>
+                            <output-text id="organization" label="Организация" visible="{organization!=null}"/>
                         </row>
                     </set>
                 </fields>

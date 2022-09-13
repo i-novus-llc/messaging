@@ -79,7 +79,6 @@
                                 <option id="USER_GROUP_BY_ROLE" name="Роль"/>
                                 <option id="USER_GROUP_BY_REGION" name="Регион"/>
                                 <option id="USER_GROUP_BY_ORGANIZATION" name="Мед.организация"/>
-                                <option id="ALL" name="Все"/>
                             </options>
                         </radio-group>
                     </row>
@@ -108,7 +107,7 @@
                                 <reset on="recipientType">return true;</reset>
                             </dependencies>
                         </input-select>
-                        <input-select id="organizations" type="checkboxes" label="Укажите организацию"
+                        <input-select id="organization" type="single" label="Укажите организацию"
                                       query-id="messaging_organization" label-field-id="shortName"
                                       search-field-id="shortName">
                             <dependencies>
@@ -125,12 +124,13 @@
                 </set>
             </fields>
         </form>
-        <table id="recipients" selection="checkbox" query-id="messaging_recipient" object-id="messaging_message" depends-on="create"
+        <table id="recipients" selection="checkbox" query-id="messaging_recipient" object-id="messaging_message"
+               depends-on="create"
                fetch-on-init="true">
             <pre-filters>
                 <in field-id="roleCodes" values="{roles*.name}"/>
                 <eq field-id="regionId" value="{region.id}"/>
-                <in field-id="organizations" values="{organizations*.code}" />
+                <eq field-id="organizationId" value="{organization.id}"/>
             </pre-filters>
             <columns>
                 <column text-field-id="name" label="Пользователь"/>

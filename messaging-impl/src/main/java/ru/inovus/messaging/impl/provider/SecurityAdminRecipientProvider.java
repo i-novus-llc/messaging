@@ -46,7 +46,7 @@ public class SecurityAdminRecipientProvider implements RecipientProvider {
         restUserCriteria.setFio(criteria.getName());
         restUserCriteria.setRoleCodes(criteria.getRoleCodes());
         restUserCriteria.setRegionId(criteria.getRegionId());
-        restUserCriteria.setOrganizations(criteria.getOrganizations());
+        restUserCriteria.setOrganizationId(criteria.getOrganizationId());
         Page<net.n2oapp.security.admin.api.model.User> userPage = userRestService.findAll(restUserCriteria);
         return userPage.getContent().isEmpty() ? Page.empty() :
                 new PageImpl<>(userPage.getContent().stream().map(this::mapSecurityUser).collect(Collectors.toList()), userPage.getPageable(), userPage.getTotalElements());

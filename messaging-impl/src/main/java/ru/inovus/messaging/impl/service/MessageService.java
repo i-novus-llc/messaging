@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import ru.inovus.messaging.api.criteria.MessageCriteria;
 import ru.inovus.messaging.api.model.Channel;
 import ru.inovus.messaging.api.model.Message;
@@ -16,7 +17,6 @@ import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.impl.jooq.tables.records.ChannelRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
 
-import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +53,9 @@ public class MessageService {
         message.setRecipientType(record.getRecipientType());
         message.setTenantCode(record.getTenantCode());
         message.setTemplateCode(record.getTemplateCode());
+        message.setRole(record.getRole());
+        message.setRegion(record.getRegion());
+        message.setOrganization(record.getOrganization());
         return message;
     };
 
@@ -73,12 +76,15 @@ public class MessageService {
         dsl
                 .insertInto(MESSAGE)
                 .columns(MESSAGE.ID, MESSAGE.CAPTION, MESSAGE.TEXT, MESSAGE.SEVERITY, MESSAGE.ALERT_TYPE,
-                        MESSAGE.SENT_AT, MESSAGE.TENANT_CODE,
-                        MESSAGE.RECIPIENT_TYPE, MESSAGE.TEMPLATE_CODE, MESSAGE.CHANNEL_CODE)
+                        MESSAGE.SENT_AT, MESSAGE.TENANT_CODE, MESSAGE.RECIPIENT_TYPE, MESSAGE.TEMPLATE_CODE,
+                        MESSAGE.CHANNEL_CODE, MESSAGE.ROLE, MESSAGE.ORGANIZATION, MESSAGE.REGION)
                 .values(id, message.getCaption(), message.getText(), message.getSeverity(), message.getAlertType(),
                         message.getSentAt(), message.getTenantCode(),
                         message.getRecipientType(), message.getTemplateCode(),
-                        message.getChannel() != null ? message.getChannel().getId() : null)
+                        message.getChannel() != null ? message.getChannel().getId() : null,
+                        !CollectionUtils.isEmpty(message.getRoles()) ? String.join(", ", message.getRoles()) : null,
+                        message.getOrganization(),
+                        message.getRegion())
                 .returning()
                 .fetch().get(0).getId();
         message.setId(id.toString());

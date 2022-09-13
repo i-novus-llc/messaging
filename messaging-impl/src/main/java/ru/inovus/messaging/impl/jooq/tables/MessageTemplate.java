@@ -27,7 +27,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class MessageTemplate extends TableImpl<MessageTemplateRecord> {
 
-    private static final long serialVersionUID = -985629237;
+    private static final long serialVersionUID = 378279949;
 
     /**
      * The reference instance of <code>messaging.message_template</code>
@@ -60,12 +60,12 @@ public class MessageTemplate extends TableImpl<MessageTemplateRecord> {
     /**
      * The column <code>messaging.message_template.severity</code>. Важность уведомления
      */
-    public final TableField<MessageTemplateRecord, Severity> SEVERITY = createField(DSL.name("severity"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Важность уведомления", new SeverityConverter());
+    public final TableField<MessageTemplateRecord, Severity> SEVERITY = createField(DSL.name("severity"), org.jooq.impl.SQLDataType.VARCHAR, this, "Важность уведомления", new SeverityConverter());
 
     /**
      * The column <code>messaging.message_template.alert_type</code>. Способ отображения уведомления
      */
-    public final TableField<MessageTemplateRecord, AlertType> ALERT_TYPE = createField(DSL.name("alert_type"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Способ отображения уведомления", new AlertTypeConverter());
+    public final TableField<MessageTemplateRecord, AlertType> ALERT_TYPE = createField(DSL.name("alert_type"), org.jooq.impl.SQLDataType.VARCHAR, this, "Способ отображения уведомления", new AlertTypeConverter());
 
     /**
      * The column <code>messaging.message_template.name</code>. Наименование шаблона уведомления
