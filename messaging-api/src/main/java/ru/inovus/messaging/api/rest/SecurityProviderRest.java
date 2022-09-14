@@ -27,7 +27,7 @@ public interface SecurityProviderRest {
 
     @GET
     @Path("/regions")
-    @ApiOperation("Получение списка медицинских организаций")
+    @ApiOperation("Получение списка регионов")
     @ApiResponse(code = 200, message = "Список регионов")
     Page<Region> getRegions(@BeanParam SecurityBaseCriteria criteria);
 

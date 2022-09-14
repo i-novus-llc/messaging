@@ -25,11 +25,11 @@ public class RecipientProviderConfiguration {
 
     @Configuration
     @ConditionalOnProperty(value = "novus.messaging.recipient-provider.type", havingValue = "security")
-    @EnableFeignClients(clients = {UserRestClient.class, RolesRestClient.class, RegionRestClient.class, OrganizationRestClient.class})
+    @EnableFeignClients(clients = {UserRestClient.class, RoleRestClient.class, RegionRestClient.class, OrganizationRestClient.class})
     static public class SecurityAdminConfiguration {
 
         @Bean
-        public RecipientProvider recipientProvider(UserRestClient userRestService, RolesRestClient rolesRestService,
+        public RecipientProvider recipientProvider(UserRestClient userRestService, RoleRestClient rolesRestService,
                                                    RegionRestClient regionRestService, OrganizationRestClient organizationRestService) {
             return new SecurityAdminRecipientProvider(userRestService, rolesRestService, regionRestService, organizationRestService);
         }
