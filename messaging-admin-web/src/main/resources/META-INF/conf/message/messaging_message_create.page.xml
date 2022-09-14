@@ -123,6 +123,16 @@
                     </row>
                 </set>
             </fields>
+            <toolbar place="topLeft">
+                <button id="save" label="Отправить" color="primary">
+                    <invoke operation-id="send" close-on-success="true" object-id="messaging_message">
+                        <form-param id="recipients" ref-widget-id="recipients" ref-model="multi"/>
+                    </invoke>
+                </button>
+                <button id="cancel" label="Отменить">
+                    <close/>
+                </button>
+            </toolbar>
         </form>
         <table id="recipients" selection="checkbox" query-id="messaging_recipient" object-id="messaging_message"
                depends-on="create"
@@ -138,26 +148,3 @@
         </table>
     </regions>
 </page>
-        <!--            <row>-->
-        <!--                <radio-group id="allRecipients" label="Получатели" inline="true">-->
-        <!--                    <options>-->
-        <!--                        <option id="2" name="Все"/>-->
-        <!--                        <option id="1" name="Пользователи"/>-->
-        <!--                    </options>-->
-        <!--                    <default-value id="1" name="Получатели"/>-->
-        <!--                </radio-group>-->
-        <!--            </row>-->
-        <!--            <row>-->
-        <!--                <input-select id="users" type="checkboxes" label="Получатели"-->
-        <!--                              query-id="messaging_recipient" label-field-id="name" search-field-id="name">-->
-        <!--                    <dependencies>-->
-        <!--                        <requiring on="allRecipients">-->
-        <!--                            allRecipients.id == 1-->
-        <!--                        </requiring>-->
-        <!--                        <visibility on="recipientType, allRecipients">-->
-        <!--                            (recipientType.id == 'RECIPIENT' &amp;&amp; allRecipients.id == 1)-->
-        <!--                        </visibility>-->
-        <!--                        <reset on="allRecipients">true</reset>-->
-        <!--                    </dependencies>-->
-        <!--                </input-select>-->
-        <!--            </row>-->

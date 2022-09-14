@@ -1,6 +1,7 @@
 package ru.inovus.messaging.impl.rest;
 
 import lombok.extern.slf4j.Slf4j;
+import net.n2oapp.platform.i18n.UserException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
@@ -13,6 +14,7 @@ import ru.inovus.messaging.impl.service.ChannelService;
 import ru.inovus.messaging.impl.service.MessageService;
 import ru.inovus.messaging.impl.service.MessageTemplateService;
 import ru.inovus.messaging.impl.service.RecipientService;
+import ru.inovus.messaging.impl.util.MessageHelper;
 
 import java.util.*;
 
@@ -24,17 +26,19 @@ public class MessageRestImpl implements MessageRest {
     private final RecipientService recipientService;
     private final ChannelService channelService;
     private final MqProvider mqProvider;
+    private final MessageHelper messageHelper;
 
     public MessageRestImpl(MessageService messageService,
                            MessageTemplateService messageTemplateService,
                            RecipientService recipientService,
                            ChannelService channelService,
-                           MqProvider mqProvider) {
+                           MqProvider mqProvider, MessageHelper messageHelper) {
         this.messageService = messageService;
         this.messageTemplateService = messageTemplateService;
         this.recipientService = recipientService;
         this.channelService = channelService;
         this.mqProvider = mqProvider;
+        this.messageHelper = messageHelper;
     }
 
     @Override
@@ -53,9 +57,9 @@ public class MessageRestImpl implements MessageRest {
     public void sendMessage(String tenantCode, final MessageOutbox messageOutbox) {
         if (messageOutbox.getMessage() != null) {
             messageOutbox.getMessage().setTenantCode(tenantCode);
-            if (CollectionUtils.isEmpty(messageOutbox.getMessage().getRecipients()))
-                messageOutbox.getMessage().setRecipients(recipientService.getAll());
-            else recipientService.enrichRecipient(messageOutbox.getMessage().getRecipients());
+            if (!CollectionUtils.isEmpty(messageOutbox.getMessage().getRecipients()))
+                recipientService.enrichRecipient(messageOutbox.getMessage().getRecipients());
+            else throw new UserException(messageHelper.obtainMessage("messaging.exception.message.recipients.empty"));
             save(messageOutbox.getMessage());
             send(messageOutbox.getMessage());
         } else if (messageOutbox.getTemplateMessageOutbox() != null) {

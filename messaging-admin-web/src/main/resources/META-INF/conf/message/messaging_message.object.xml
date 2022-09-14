@@ -16,9 +16,7 @@
                 <field id="roles*.name" mapping="['message.roles']"/>
                 <field id="region.name" mapping="['message.region']" domain="string"/>
                 <field id="organization.fullName" mapping="['message.organization']"/>
-<!--                todo-->
-<!--                <field id="recipients*.name" mapping="['message.recipients*.name']"/>-->
-                <field id="recipients" mapping="['message.recipients']"/>
+                <field id="recipients*.username" mapping="['message.recipients*.username']"/>
             </in>
         </operation>
     </operations>
