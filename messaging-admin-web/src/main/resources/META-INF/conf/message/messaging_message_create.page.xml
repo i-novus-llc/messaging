@@ -4,10 +4,9 @@
     <regions>
         <form id="create" query-id="messaging_message">
             <fields>
-                <set>
+                <set field-label-location="left" field-label-align="left" field-label-width="220px">
                     <row>
-                        <input-select id="template" label="Шаблон" query-id="messaging_msg_template"
-                                      search-field-id="name"
+                        <input-select id="template" label="Шаблон" query-id="messaging_msg_template" search-field-id="name"
                                       label-field-id="name"/>
                     </row>
                     <input-select id="infoType" label="Информирование" required="true"
@@ -32,8 +31,7 @@
                                 <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return
                                     template.severity;
                                 </set-value>
-                                <visibility on="infoType">'${novus.messaging.web-channel-id}' === infoType.id
-                                </visibility>
+                                <visibility on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</visibility>
                                 <requiring on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</requiring>
                             </dependencies>
                         </select>
@@ -47,8 +45,7 @@
                                 <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return
                                     template.alertType;
                                 </set-value>
-                                <visibility on="infoType">'${novus.messaging.web-channel-id}' === infoType.id
-                                </visibility>
+                                <visibility on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</visibility>
                                 <requiring on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</requiring>
                             </dependencies>
                         </select>
@@ -72,6 +69,7 @@
                         </text-area>
                     </row>
                     <row>
+                        <hidden id="recipientProvider" default-value="${novus.messaging.recipient-provider.type}"/>
                         <radio-group id="recipientType" label="Тип получателей" inline="true" required="true">
                             <default-value id="RECIPIENT" name="Пользователи"/>
                             <options>
@@ -80,6 +78,9 @@
                                 <option id="USER_GROUP_BY_REGION" name="Регион"/>
                                 <option id="USER_GROUP_BY_ORGANIZATION" name="Мед.организация"/>
                             </options>
+                            <dependencies>
+                                <enabling on="recipientProvider">recipientProvider === 'security'</enabling>
+                            </dependencies>
                         </radio-group>
                     </row>
                     <row>
@@ -109,7 +110,7 @@
                         </input-select>
                         <input-select id="organization" type="single" label="Укажите организацию"
                                       query-id="messaging_organization" label-field-id="shortName"
-                                      search-field-id="shortName">
+                                      search-field-id="shortName" >
                             <dependencies>
                                 <requiring on="recipientType">
                                     recipientType.id == 'USER_GROUP_BY_ORGANIZATION'

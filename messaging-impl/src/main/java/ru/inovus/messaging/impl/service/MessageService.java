@@ -13,7 +13,6 @@ import ru.inovus.messaging.api.model.Channel;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
-import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.impl.jooq.tables.records.ChannelRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
 
@@ -89,7 +88,7 @@ public class MessageService {
                 .fetch().get(0).getId();
         message.setId(id.toString());
 
-        if (recipients != null && RecipientType.RECIPIENT.equals(message.getRecipientType())) {
+        if (recipients != null) {
             for (Recipient recipient : recipients) {
                 dsl
                         .insertInto(MESSAGE_RECIPIENT)

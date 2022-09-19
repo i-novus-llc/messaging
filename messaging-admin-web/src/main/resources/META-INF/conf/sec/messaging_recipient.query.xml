@@ -40,5 +40,20 @@
                 <eq filter-id="organizationId">organizationId={organizationId}</eq>
             </filters>
         </field>
+<!--        <field id="roleCodes">-->
+<!--            <filters>-->
+<!--                <in filter-id="roleCodes*.name">roleCodes={roleCodes*.name}</in>-->
+<!--            </filters>-->
+<!--        </field>-->
+<!--        <field id="regionId">-->
+<!--            <filters>-->
+<!--                <eq filter-id="regionId.id">regionId={regionId.id}</eq>-->
+<!--            </filters>-->
+<!--        </field>-->
+<!--        <field id="organizationId">-->
+<!--            <filters>-->
+<!--                <eq filter-id="organizationId.id">organizationId={organizationId.id}</eq>-->
+<!--            </filters>-->
+<!--        </field>-->
     </fields>
 </query>
