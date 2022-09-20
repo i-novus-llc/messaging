@@ -15,9 +15,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import ru.inovus.messaging.api.criteria.ProviderRecipientCriteria;
 import ru.inovus.messaging.api.criteria.SecurityBaseCriteria;
+import ru.inovus.messaging.api.model.BaseResponse;
 import ru.inovus.messaging.api.model.ProviderRecipient;
 import ru.inovus.messaging.impl.RecipientProvider;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -74,6 +77,28 @@ public class SecurityAdminRecipientProvider implements RecipientProvider {
         restRegionCriteria.setPageSize(criteria.getPageSize());
         restRegionCriteria.setName(criteria.getName());
         return organizationRestService.getAll(restRegionCriteria);
+    }
+
+    public List<BaseResponse> getRoles(String joinedRoles) {
+        String[] roles = joinedRoles.split(", ");
+        if (roles.length == 0) return null;
+
+        return Arrays.stream(roles)
+                .map(role -> roleRestService.getById(Integer.valueOf(role)))
+                .map(role -> new BaseResponse(role.getId(), role.getName()))
+                .collect(Collectors.toList());
+    }
+
+    public BaseResponse getRegion(String name) {
+        SecurityBaseCriteria criteria = new SecurityBaseCriteria();
+        criteria.setName(name);
+        return getRegions(criteria).getContent().stream()
+                .map(region -> new BaseResponse(region.getId(), region.getName())).findFirst().orElse(null);
+    }
+
+    public BaseResponse getMedOrganization(Integer id) {
+        Organization organization = organizationRestService.get(id);
+        return new BaseResponse(organization.getId(), organization.getFullName());
     }
 
     private ProviderRecipient mapSecurityUser(net.n2oapp.security.admin.api.model.User securityUser) {

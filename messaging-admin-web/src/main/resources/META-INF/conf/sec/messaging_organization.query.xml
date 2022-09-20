@@ -8,17 +8,11 @@
         <field id="id">
             <select/>
         </field>
-        <field id="shortName" domain="string">
-            <select/>
+        <field id="name" domain="string">
+            <select mapping="['fullName']"/>
             <filters>
-                <like filter-id="shortName">name={shortName}</like>
+                <like filter-id="name">name={name}</like>
             </filters>
-        </field>
-        <field id="fullName" domain="string">
-            <select/>
-        </field>
-        <field id="code" domain="string">
-            <select/>
         </field>
     </fields>
 </query>

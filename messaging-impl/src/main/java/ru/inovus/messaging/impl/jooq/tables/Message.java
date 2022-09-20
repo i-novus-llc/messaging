@@ -32,7 +32,7 @@ import java.util.UUID;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Message extends TableImpl<MessageRecord> {
 
-    private static final long serialVersionUID = 1896099076;
+    private static final long serialVersionUID = 1235575093;
 
     /**
      * The reference instance of <code>messaging.message</code>
@@ -100,7 +100,7 @@ public class Message extends TableImpl<MessageRecord> {
     /**
      * The column <code>messaging.message.organization</code>. Организации, сотрудникам которых отправлено уведомление
      */
-    public final TableField<MessageRecord, String> ORGANIZATION = createField(DSL.name("organization"), org.jooq.impl.SQLDataType.VARCHAR, this, "Организации, сотрудникам которых отправлено уведомление");
+    public final TableField<MessageRecord, Integer> ORGANIZATION = createField(DSL.name("organization"), org.jooq.impl.SQLDataType.INTEGER, this, "Организации, сотрудникам которых отправлено уведомление");
 
     /**
      * The column <code>messaging.message.role</code>. Роли, которым отправлено уведомление
@@ -108,9 +108,9 @@ public class Message extends TableImpl<MessageRecord> {
     public final TableField<MessageRecord, String> ROLE = createField(DSL.name("role"), org.jooq.impl.SQLDataType.VARCHAR, this, "Роли, которым отправлено уведомление");
 
     /**
-     * The column <code>messaging.message.region</code>. Регион, сотрудникам которого отправлено уведомление
+     * The column <code>messaging.message.region</code>.
      */
-    public final TableField<MessageRecord, String> REGION = createField(DSL.name("region"), org.jooq.impl.SQLDataType.VARCHAR, this, "Регион, сотрудникам которого отправлено уведомление");
+    public final TableField<MessageRecord, String> REGION = createField(DSL.name("region"), org.jooq.impl.SQLDataType.VARCHAR, this, "");
 
     /**
      * Create a <code>messaging.message</code> table reference
@@ -216,7 +216,7 @@ public class Message extends TableImpl<MessageRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Row13<UUID, String, String, Severity, AlertType, LocalDateTime, String, RecipientType, String, String, String, String, String> fieldsRow() {
+    public Row13<UUID, String, String, Severity, AlertType, LocalDateTime, String, RecipientType, String, String, Integer, String, String> fieldsRow() {
         return (Row13) super.fieldsRow();
     }
 }

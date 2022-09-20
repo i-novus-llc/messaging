@@ -8,20 +8,25 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import ru.inovus.messaging.api.criteria.MessageCriteria;
+import ru.inovus.messaging.api.model.BaseResponse;
 import ru.inovus.messaging.api.model.Channel;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.impl.jooq.tables.records.ChannelRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
+import ru.inovus.messaging.impl.provider.SecurityAdminRecipientProvider;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import static java.util.Objects.nonNull;
 import static ru.inovus.messaging.impl.jooq.Sequences.MESSAGE_RECIPIENT_ID_SEQ;
 import static ru.inovus.messaging.impl.jooq.Tables.*;
 
@@ -34,7 +39,10 @@ public class MessageService {
     @Autowired
     private DSLContext dsl;
 
-    private static final RecordMapper<Record, Message> MAPPER = rec -> {
+    @Autowired(required = false)
+    private SecurityAdminRecipientProvider provider;
+
+    private final RecordMapper<Record, Message> MAPPER = rec -> {
         MessageRecord record = rec.into(MESSAGE);
         Message message = new Message();
         message.setId(String.valueOf(record.getId()));
@@ -52,9 +60,17 @@ public class MessageService {
         message.setRecipientType(record.getRecipientType());
         message.setTenantCode(record.getTenantCode());
         message.setTemplateCode(record.getTemplateCode());
-        message.setRole(record.getRole());
-        message.setRegion(record.getRegion());
-        message.setOrganization(record.getOrganization());
+        List<BaseResponse> roles = nonNull(provider) && StringUtils.hasText(record.getRole()) ? provider.getRoles(record.getRole()) : null;
+        if (!CollectionUtils.isEmpty(roles)) {
+            message.setRole(roles.stream().map(BaseResponse::getName).collect(Collectors.joining(", ")));
+            message.setRoles(roles);
+        }
+        message.setRegion(nonNull(provider) && StringUtils.hasText(record.getRegion())
+                ? provider.getRegion(record.getRegion())
+                : null);
+        message.setOrganization(nonNull(provider) && nonNull(record.getOrganization())
+                ? provider.getMedOrganization(record.getOrganization())
+                : null);
         return message;
     };
 
@@ -81,9 +97,9 @@ public class MessageService {
                         message.getSentAt(), message.getTenantCode(),
                         message.getRecipientType(), message.getTemplateCode(),
                         message.getChannel() != null ? message.getChannel().getId() : null,
-                        !CollectionUtils.isEmpty(message.getRoles()) ? String.join(", ", message.getRoles()) : null,
-                        message.getOrganization(),
-                        message.getRegion())
+                        joinRoles(message.getRoles()),
+                        nonNull(message.getOrganization()) ? message.getOrganization().getId() : null,
+                        nonNull(message.getRegion()) ? message.getRegion().getName() : null)
                 .returning()
                 .fetch().get(0).getId();
         message.setId(id.toString());
@@ -164,5 +180,11 @@ public class MessageService {
                 });
         message.setRecipients(recipients);
         return message;
+    }
+
+    private String joinRoles(List<BaseResponse> roles) {
+        return !CollectionUtils.isEmpty(roles)
+                ? roles.stream().map(role -> role.getId().toString()).collect(Collectors.joining(", "))
+                : null;
     }
 }

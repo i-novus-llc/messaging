@@ -18,6 +18,8 @@ import ru.inovus.messaging.impl.util.MessageHelper;
 
 import java.util.*;
 
+import static java.util.Objects.nonNull;
+
 @Slf4j
 @Controller
 public class MessageRestImpl implements MessageRest {
@@ -57,15 +59,31 @@ public class MessageRestImpl implements MessageRest {
     public void sendMessage(String tenantCode, final MessageOutbox messageOutbox) {
         if (messageOutbox.getMessage() != null) {
             messageOutbox.getMessage().setTenantCode(tenantCode);
-            if (!CollectionUtils.isEmpty(messageOutbox.getMessage().getRecipients()))
-                recipientService.enrichRecipient(messageOutbox.getMessage().getRecipients());
-            else throw new UserException(messageHelper.obtainMessage("messaging.exception.message.recipients.empty"));
+            setRecipients(tenantCode, messageOutbox);
             save(messageOutbox.getMessage());
             send(messageOutbox.getMessage());
         } else if (messageOutbox.getTemplateMessageOutbox() != null) {
             messageOutbox.getTemplateMessageOutbox().setTenantCode(tenantCode);
             buildAndSendMessage(messageOutbox.getTemplateMessageOutbox());
         }
+    }
+
+    /**
+     * Выбор источника получателей и обогащение
+     *
+     * @param messageOutbox Уведомление
+     */
+    private void setRecipients(String tenantCode, MessageOutbox messageOutbox) {
+        Message newMessage = messageOutbox.getMessage();
+        if (nonNull(newMessage.getId())) {
+            Message oldMessage = getMessage(tenantCode, UUID.fromString(newMessage.getId()));
+            if (!CollectionUtils.isEmpty(oldMessage.getRecipients())) {
+                newMessage.setRecipients(oldMessage.getRecipients());
+            }
+        }
+        if (!CollectionUtils.isEmpty(newMessage.getRecipients()))
+            recipientService.enrichRecipient(newMessage.getRecipients());
+        else throw new UserException(messageHelper.obtainMessage("messaging.exception.message.recipients.empty"));
     }
 
     /**

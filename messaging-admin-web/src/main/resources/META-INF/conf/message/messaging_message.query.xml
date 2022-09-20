@@ -75,17 +75,20 @@
             <select mapping="['recipients']"/>
         </field>
 
-        <field id="role" domain="string">
-            <select mapping="['role']"/>
+        <field id="role">
+            <select/>
         </field>
 
-        <field id="region" domain="string">
-            <select mapping="['region']"/>
+        <field id="roles">
+            <select/>
         </field>
 
-        <field id="organization" domain="string">
-            <select mapping="['organization']"/>
+        <field id="region">
+            <select/>
+        </field>
+
+        <field id="organization">
+            <select/>
         </field>
     </fields>
-
 </query>

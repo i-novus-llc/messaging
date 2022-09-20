@@ -62,17 +62,17 @@ public class Message implements Serializable {
     @ApiModelProperty("Тип получателей уведомления")
     private RecipientType recipientType;
 
-    @ApiModelProperty("Список кодов ролей")
-    private List<String> roles;
+    @ApiModelProperty("Список ролей")
+    private List<BaseResponse> roles;
 
     @ApiModelProperty("Роли для UI")
     private String role;
 
     @ApiModelProperty("Регион")
-    private String region;
+    private BaseResponse region;
 
     @ApiModelProperty("Организация")
-    private String organization;
+    private BaseResponse organization;
 
     @ApiModelProperty("Список получателей")
     private List<Recipient> recipients;
