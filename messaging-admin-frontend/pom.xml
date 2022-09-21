@@ -18,6 +18,7 @@
         <backend.default.path>http://localhost:8080/api</backend.default.path>
         <config.server.enable>false</config.server.enable>
         <jacoco.skip>false</jacoco.skip>
+        <proxy.version>1.11</proxy.version>
     </properties>
 
     <dependencies>
@@ -111,6 +112,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mitre.dsmiley.httpproxy</groupId>
+            <artifactId>smiley-http-proxy-servlet</artifactId>
+            <version>${proxy.version}</version>
         </dependency>
 
     </dependencies>

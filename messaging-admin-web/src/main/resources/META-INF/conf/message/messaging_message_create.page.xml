@@ -69,6 +69,20 @@
                         </text-area>
                     </row>
                     <row>
+                        <hidden id="fileAttachEnabled" default-value="${novus.messaging.file-attach.enabled}"/>
+                        <file-upload id="file" value-field-id="fileName" label-field-id="fileName"
+                                     show-size="false"
+                                     accept="${file.valid.format.for.upload}"
+                                     upload-url="${server.servlet.context-path}/proxy/api/upload"
+                                     delete-url="${server.servlet.context-path}/proxy/api"
+                                     label="Вложение">
+                            <dependencies>
+                                <visibility on="fileAttachEnabled">fileAttachEnabled</visibility>
+                            </dependencies>
+                        </file-upload>
+<!--todo вывести список приложенных файлов при повторении возможно в виде табл-->
+                    </row>
+                    <row>
                         <hidden id="recipientProvider" default-value="${novus.messaging.recipient-provider.type}"/>
                         <radio-group id="recipientType" label="Тип получателей" inline="true" required="true" enabled="{typeof id == 'undefined' || id == null}">
                             <default-value id="RECIPIENT" name="Пользователи"/>
