@@ -6,8 +6,10 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ResourceLoader;
+import ru.inovus.messaging.api.rest.SecurityProviderRest;
 import ru.inovus.messaging.impl.RecipientProvider;
 import ru.inovus.messaging.impl.provider.*;
+import ru.inovus.messaging.impl.rest.SecurityProviderRestImpl;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -32,6 +34,11 @@ public class RecipientProviderConfiguration {
         public RecipientProvider recipientProvider(UserRestClient userRestService, RoleRestClient rolesRestService,
                                                    RegionRestClient regionRestService, OrganizationRestClient organizationRestService) {
             return new SecurityAdminRecipientProvider(userRestService, rolesRestService, regionRestService, organizationRestService);
+        }
+
+        @Bean
+        public SecurityProviderRest securityProviderRest(SecurityAdminRecipientProvider recipientProvider) {
+            return new SecurityProviderRestImpl(recipientProvider);
         }
     }
 }
