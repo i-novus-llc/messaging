@@ -12,8 +12,8 @@
                     <input-select id="infoType" label="Информирование" required="true"
                                   query-id="messaging_channels" enabled="{typeof id == 'undefined' || id == null}">
                         <dependencies>
-                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return
-                                template.infoType;
+                            <set-value on="template">
+                                if (typeof template != 'undefined' &amp;&amp; template) return template.infoType;;
                             </set-value>
                         </dependencies>
                     </input-select>
@@ -28,8 +28,8 @@
                                 <option id="INFO" name="Информация"/>
                             </options>
                             <dependencies>
-                                <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return
-                                    template.severity;
+                                <set-value on="template">
+                                    if (typeof template != 'undefined' &amp;&amp; template) return template.severity;
                                 </set-value>
                                 <visibility on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</visibility>
                                 <requiring on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</requiring>
@@ -42,8 +42,8 @@
                                 <option id="HIDDEN" name="Лента уведомлений"/>
                             </options>
                             <dependencies>
-                                <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return
-                                    template.alertType;
+                                <set-value on="template">
+                                    if (typeof template != 'undefined' &amp;&amp; template) return template.alertType;
                                 </set-value>
                                 <visibility on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</visibility>
                                 <requiring on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</requiring>
@@ -53,8 +53,8 @@
                     <row>
                         <text-area id="caption" label="Заголовок уведомления" max-rows="3" required="true" enabled="{typeof id == 'undefined' || id == null}">
                             <dependencies>
-                                <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return
-                                    template.caption;
+                                <set-value on="template">
+                                    if (typeof template != 'undefined' &amp;&amp; template) return template.caption;
                                 </set-value>
                             </dependencies>
                         </text-area>
@@ -62,8 +62,8 @@
                     <row>
                         <text-area id="text" label="Текст уведомления" max-rows="5" required="true" enabled="{typeof id == 'undefined' || id == null}">
                             <dependencies>
-                                <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return
-                                    template.text;
+                                <set-value on="template">
+                                    if (typeof template != 'undefined' &amp;&amp; template) return template.text;
                                 </set-value>
                             </dependencies>
                         </text-area>
