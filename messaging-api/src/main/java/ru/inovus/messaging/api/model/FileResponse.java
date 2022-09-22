@@ -15,7 +15,7 @@ public class FileResponse {
 
     @ApiModelProperty("Название файла")
     private String fileName;
-
-    @ApiModelProperty("Ссылка на файл")
-    private String URL;
+//todo надоли?
+//    @ApiModelProperty("Ссылка на файл")
+//    private String URL;
 }

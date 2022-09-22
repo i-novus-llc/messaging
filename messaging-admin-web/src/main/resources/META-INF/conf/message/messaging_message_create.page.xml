@@ -71,6 +71,7 @@
                     <row>
                         <hidden id="fileAttachEnabled" default-value="${novus.messaging.attachment.enabled}"/>
                         <file-upload id="file" value-field-id="fileName" label-field-id="fileName"
+                                     multi="true"
                                      show-size="false"
                                      accept="${novus.messaging.attachment.file-type}"
                                      upload-url="${server.servlet.context-path}/proxy/api/upload"
@@ -80,7 +81,7 @@
                                 <visibility on="fileAttachEnabled">fileAttachEnabled</visibility>
                             </dependencies>
                         </file-upload>
-<!--todo вывести список приложенных файлов при повторении возможно в виде табл-->
+                        <!--todo вывести список приложенных файлов при повторении возможно в виде табл-->
                     </row>
                     <row>
                         <hidden id="recipientProvider" default-value="${novus.messaging.recipient-provider.type}"/>
