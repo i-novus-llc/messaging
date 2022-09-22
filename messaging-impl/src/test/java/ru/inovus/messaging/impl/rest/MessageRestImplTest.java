@@ -18,6 +18,7 @@ import ru.inovus.messaging.api.model.*;
 import ru.inovus.messaging.api.model.enums.AlertType;
 import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.model.enums.Severity;
+import ru.inovus.messaging.api.rest.SecurityProviderRest;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.impl.service.MessageService;
 import ru.inovus.messaging.impl.service.RecipientService;
@@ -55,6 +56,9 @@ public class MessageRestImplTest {
 
     @MockBean
     private RecipientService recipientService;
+
+    @MockBean
+    private SecurityProviderRest securityProviderRest;
 
     @Captor
     ArgumentCaptor<Message> messageArgumentCaptor;
