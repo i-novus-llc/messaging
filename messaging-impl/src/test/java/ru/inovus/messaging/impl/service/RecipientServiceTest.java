@@ -20,6 +20,7 @@ import ru.inovus.messaging.api.model.MessageStatus;
 import ru.inovus.messaging.api.model.ProviderRecipient;
 import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
+import ru.inovus.messaging.api.rest.SecurityProviderRest;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.api.queue.QueueMqConsumer;
 import ru.inovus.messaging.impl.RecipientProvider;
@@ -52,6 +53,9 @@ public class RecipientServiceTest {
 
     @MockBean
     private RecipientProvider recipientProvider;
+
+    @MockBean
+    private SecurityProviderRest securityProviderRest;
 
     @Value("${novus.messaging.queue.feed-count}")
     private String feedCountQueue;
