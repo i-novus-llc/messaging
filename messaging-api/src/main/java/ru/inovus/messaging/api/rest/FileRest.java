@@ -27,10 +27,10 @@ public interface FileRest {
     @Path("/{id}/download")
     @ApiOperation("Скачивание файла")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    Response download(@ApiParam(value = "Идентификатор файла") @PathParam("id") UUID id); //todo fileName?
+    Response download(@ApiParam(value = "Идентификатор файла") @PathParam("id") UUID id); //todo fileName? или не нужно?
 
     @DELETE
-    @Path("/delete/{fileName}")
+    @Path("/{fileName}")
     @ApiOperation("Удаление обязательного документа из MinIO")
     Response delete(@PathParam("fileName") String fileName);
 }

@@ -69,10 +69,10 @@
                         </text-area>
                     </row>
                     <row>
-                        <hidden id="fileAttachEnabled" default-value="${novus.messaging.file-attach.enabled}"/>
+                        <hidden id="fileAttachEnabled" default-value="${novus.messaging.attachment.enabled}"/>
                         <file-upload id="file" value-field-id="fileName" label-field-id="fileName"
                                      show-size="false"
-                                     accept="${file.valid.format.for.upload}"
+                                     accept="${novus.messaging.attachment.file-type}"
                                      upload-url="${server.servlet.context-path}/proxy/api/upload"
                                      delete-url="${server.servlet.context-path}/proxy/api"
                                      label="Вложение">
