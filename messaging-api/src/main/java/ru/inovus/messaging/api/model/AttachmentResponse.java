@@ -5,17 +5,19 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @ApiModel("Файл")
-public class FileResponse {
+public class AttachmentResponse {
 
     @ApiModelProperty("Идентификатор файла")
-    private String id;
+    private UUID id;
 
-    @ApiModelProperty("Название файла")
+    @ApiModelProperty("Название файла в хранилище")
     private String fileName;
-//todo надоли?
-//    @ApiModelProperty("Ссылка на файл")
-//    private String URL;
+
+    @ApiModelProperty("Название файла для UI")
+    private String shortFileName;
 }

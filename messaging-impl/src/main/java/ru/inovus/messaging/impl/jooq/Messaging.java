@@ -20,12 +20,17 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Messaging extends SchemaImpl {
 
-    private static final long serialVersionUID = -1675329121;
+    private static final long serialVersionUID = 1005769240;
 
     /**
      * The reference instance of <code>messaging</code>
      */
     public static final Messaging MESSAGING = new Messaging();
+
+    /**
+     * Вложения
+     */
+    public final Attachment ATTACHMENT = Attachment.ATTACHMENT;
 
     /**
      * Каналы отправки уведомлений
@@ -76,6 +81,7 @@ public class Messaging extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.<Table<?>>asList(
+            Attachment.ATTACHMENT,
             Channel.CHANNEL,
             Message.MESSAGE,
             MessageRecipient.MESSAGE_RECIPIENT,

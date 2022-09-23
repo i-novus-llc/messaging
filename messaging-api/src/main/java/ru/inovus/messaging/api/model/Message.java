@@ -82,4 +82,7 @@ public class Message implements Serializable {
 
     @JsonIgnore
     private String tenantCode;
+
+    @ApiModelProperty("Вложения")
+    private List<AttachmentResponse> attachments;
 }

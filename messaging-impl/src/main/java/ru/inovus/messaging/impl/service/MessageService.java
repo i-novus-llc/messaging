@@ -42,6 +42,9 @@ public class MessageService {
     @Autowired(required = false)
     private SecurityAdminRecipientProvider provider;
 
+    @Autowired
+    private AttachmentService attachmentService;
+
     private final RecordMapper<Record, Message> MAPPER = rec -> {
         MessageRecord record = rec.into(MESSAGE);
         Message message = new Message();
@@ -115,6 +118,8 @@ public class MessageService {
                         .execute();
             }
         }
+
+        attachmentService.create(message.getAttachments(), id);
         return message;
     }
 
@@ -179,7 +184,27 @@ public class MessageService {
                     return recipient;
                 });
         message.setRecipients(recipients);
+        message.setAttachments(attachmentService.findAll(messageId));
         return message;
+    }
+
+    /**
+     * Конструирование уведомления для публикации в очередь
+     *
+     * @param message Уведомление
+     * @return
+     */
+    public Message constructMessage(Message message) {
+        Message newMessage = new Message();
+        newMessage.setId(message.getId());
+        newMessage.setCaption(message.getCaption());
+        newMessage.setText(message.getText());
+        newMessage.setSeverity(message.getSeverity());
+        newMessage.setAlertType(message.getAlertType());
+        newMessage.setRecipients(message.getRecipients());
+        newMessage.setTenantCode(message.getTenantCode());
+        newMessage.setAttachments(attachmentService.findAll(UUID.fromString(message.getId())));
+        return newMessage;
     }
 
     private String joinRoles(List<BaseResponse> roles) {

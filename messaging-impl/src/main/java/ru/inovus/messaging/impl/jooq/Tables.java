@@ -4,6 +4,7 @@
 package ru.inovus.messaging.impl.jooq;
 
 
+import ru.inovus.messaging.impl.jooq.tables.Attachment;
 import ru.inovus.messaging.impl.jooq.tables.Channel;
 import ru.inovus.messaging.impl.jooq.tables.Message;
 import ru.inovus.messaging.impl.jooq.tables.MessageRecipient;
@@ -16,6 +17,11 @@ import ru.inovus.messaging.impl.jooq.tables.Tenant;
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tables {
+
+    /**
+     * Вложения
+     */
+    public static final Attachment ATTACHMENT = Attachment.ATTACHMENT;
 
     /**
      * Каналы отправки уведомлений

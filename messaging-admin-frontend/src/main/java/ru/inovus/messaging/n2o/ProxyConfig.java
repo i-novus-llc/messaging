@@ -15,7 +15,7 @@ import java.util.Map;
 public class ProxyConfig {
     @Bean
     public ServletRegistrationBean<ProxyServlet> proxyInputDataServiceServlet(
-            @Value("${messaging.backend.path}" + "/files") String inputDataUrl) {
+            @Value("${messaging.backend.path}" + "/attachments") String inputDataUrl) {
         ServletRegistrationBean<ProxyServlet> bean =
                 new ServletRegistrationBean<>(new ProxyServlet(), "/proxy/api/*");
         Map<String, String> params = new HashMap<>();

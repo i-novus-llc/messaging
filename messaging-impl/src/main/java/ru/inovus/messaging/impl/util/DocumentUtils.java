@@ -43,9 +43,9 @@ public class DocumentUtils {
     public void checkFileExtension(String fileName) {
         if (!hasText(fileName))
             return;
-        String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
+        String suffix = fileName.substring(fileName.lastIndexOf("."));
         if (!fileExtensionList.contains(suffix.toLowerCase()))
-            throw new UserException(new Message("cg.exception.file.not.valid.format.for.upload", fileExtensionList));
+            throw new UserException(new Message("messaging.exception.file.notValidFormat", fileExtensionList));
     }
 
     private String replaceInvalidCharacters(String source) {

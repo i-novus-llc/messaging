@@ -1,0 +1,195 @@
+package ru.inovus.messaging.impl.service;
+
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.S3Object;
+import lombok.RequiredArgsConstructor;
+import net.n2oapp.platform.i18n.Message;
+import net.n2oapp.platform.i18n.UserException;
+import org.apache.cxf.jaxrs.ext.multipart.Attachment;
+import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.RecordMapper;
+import org.jooq.SelectConditionStep;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.http.ContentDisposition;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+import ru.inovus.messaging.api.criteria.RecipientCriteria;
+import ru.inovus.messaging.api.model.AttachmentResponse;
+import ru.inovus.messaging.impl.jooq.tables.records.AttachmentRecord;
+import ru.inovus.messaging.impl.util.DocumentUtils;
+
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import static java.util.Objects.nonNull;
+import static org.springframework.util.StringUtils.hasText;
+import static ru.inovus.messaging.impl.jooq.Tables.ATTACHMENT;
+import static ru.inovus.messaging.impl.util.DocumentUtils.DATE_TIME_PREFIX_LENGTH;
+
+/**
+ * Сервис работы с прикрепляемыми файлами.
+ */
+@Service
+@RequiredArgsConstructor
+public class AttachmentService {
+
+    private final DSLContext dsl;
+    private final AmazonS3 s3client;
+    private final DocumentUtils documentUtils;
+
+    @Value("${novus.messaging.attachment.s3.bucket-name}")
+    private String bucketName;
+
+    private final RecordMapper<Record, AttachmentResponse> MAPPER = rec -> {
+        AttachmentRecord record = rec.into(ATTACHMENT);
+        AttachmentResponse response = new AttachmentResponse();
+        response.setId(response.getId());
+        response.setShortFileName(record.getFile().substring(DATE_TIME_PREFIX_LENGTH));
+        response.setFileName(record.getFile());
+        return response;
+    };
+
+    public Page<AttachmentResponse> findAll(RecipientCriteria criteria) {
+        SelectConditionStep<Record> query = dsl
+                .select(ATTACHMENT.fields())
+                .from(ATTACHMENT)
+                .where(ATTACHMENT.MESSAGE_ID.cast(UUID.class).eq(criteria.getMessageId()));
+
+        int count = dsl.fetchCount(query);
+
+        List<AttachmentResponse> attachments = query
+                .limit(criteria.getPageSize())
+                .offset(criteria.getOffset())
+                .fetch(MAPPER);
+        return new PageImpl<>(attachments, criteria, count);
+    }
+
+    public List<AttachmentResponse> findAll(UUID messageId) {
+        return dsl
+                .select(ATTACHMENT.fields())
+                .from(ATTACHMENT)
+                .where(ATTACHMENT.MESSAGE_ID.cast(UUID.class).eq(messageId))
+                .fetch(MAPPER);
+
+    }
+
+    public AttachmentResponse upload(Attachment attachment) {
+
+        String fileName = documentUtils.getFileName(attachment);
+        if (StringUtils.isEmpty(fileName)) return null;
+        documentUtils.checkFileExtension(fileName);
+        fileName = documentUtils.getFileNameWithDateTime(fileName);
+
+        InputStream is;
+
+        try {
+            is = attachment.getDataHandler().getInputStream();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e.getMessage(), e);
+        }
+
+        createBucketIfNotExist();
+        upload(fileName, is);
+
+        UUID id = UUID.randomUUID();
+        AttachmentResponse fileResponse = new AttachmentResponse();
+        fileResponse.setId(id);
+        fileResponse.setFileName(fileName);
+        fileResponse.setShortFileName(fileName.substring(DATE_TIME_PREFIX_LENGTH));
+        return fileResponse;
+    }
+
+    public Response download(UUID id) {
+        Response response = Response.status(Response.Status.NOT_FOUND).build();
+
+        Record record = dsl
+                .select(ATTACHMENT.fields())
+                .from(ATTACHMENT)
+                .where(ATTACHMENT.ID.cast(UUID.class).eq(id))
+                .fetchOne();
+
+        if (nonNull(record)) {
+            AttachmentRecord attachment = record.into(ATTACHMENT);
+            String fileName = attachment.getFile();
+            if (hasText(fileName)) {
+                InputStream is = downloadIS(fileName);
+                response = Response
+                        .ok(is, MediaType.APPLICATION_OCTET_STREAM)
+                        .header(
+                                HttpHeaders.CONTENT_DISPOSITION,
+                                ContentDisposition.builder("attachment")
+                                        .filename(fileName.substring(DATE_TIME_PREFIX_LENGTH), StandardCharsets.UTF_8)
+                                        .build()
+                                        .toString())
+                        .build();
+            }
+        }
+        return response;
+    }
+
+    public Response delete(String fileName) {
+        try {
+            s3client.deleteObject(bucketName, fileName);
+            return Response.accepted().build();
+        } catch (Exception e) {
+            throw new UserException(new Message("messaging.exception.file.remove"), e);
+        }
+    }
+
+    public void create(List<AttachmentResponse> files, UUID messageId) {
+        if (!CollectionUtils.isEmpty(files)) {
+            List<AttachmentRecord> attachments = files
+                    .stream()
+                    .map(file -> new AttachmentRecord(UUID.randomUUID(), messageId, file.getFileName(), LocalDateTime.now()))
+                    .collect(Collectors.toList());
+            dsl.batchInsert(attachments).execute();
+//            dsl
+//                    .insertInto(ATTACHMENT)
+//                    .columns(ATTACHMENT.ID, ATTACHMENT.MESSAGE_ID, ATTACHMENT.FILE, ATTACHMENT.CREATED_AT)
+//
+//                    .values(id, messageId, response.getFullFileName(), LocalDateTime.now())
+//                    .values()
+//                    .returning()
+//                    .fetch().get(0).getId();
+        }
+    }
+
+    private void upload(String fileName, InputStream file) {
+        try {
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setCacheControl("max-age=2592000, must-revalidate");
+            metadata.setContentLength(file.available());
+            s3client.putObject(bucketName, fileName, file, metadata);
+        } catch (Exception e) {
+            throw new UserException("messaging.exception.file.upload", e);
+        }
+    }
+
+    private InputStream downloadIS(String fileName) {
+        try {
+            S3Object s3object = s3client.getObject(bucketName, fileName);
+            return s3object.getObjectContent();
+        } catch (Exception e) {
+            throw new UserException(new Message("messaging.exception.file.download"), e);
+        }
+    }
+
+    private void createBucketIfNotExist() {
+        if (!s3client.doesBucketExistV2(bucketName))
+            s3client.createBucket(bucketName);
+    }
+}
