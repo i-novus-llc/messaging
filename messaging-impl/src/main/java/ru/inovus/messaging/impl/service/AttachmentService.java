@@ -64,14 +64,9 @@ public class AttachmentService {
     };
 
     public Page<AttachmentResponse> findAll(RecipientCriteria criteria) {
-        SelectConditionStep<Record> query = dsl
-                .select(ATTACHMENT.fields())
-                .from(ATTACHMENT)
-                .where(ATTACHMENT.MESSAGE_ID.cast(UUID.class).eq(criteria.getMessageId()));
+        int count = dsl.fetchCount(getFindByMessageIdQuery(criteria.getMessageId()));
 
-        int count = dsl.fetchCount(query);
-
-        List<AttachmentResponse> attachments = query
+        List<AttachmentResponse> attachments = getFindByMessageIdQuery(criteria.getMessageId())
                 .limit(criteria.getPageSize())
                 .offset(criteria.getOffset())
                 .fetch(MAPPER);
@@ -79,12 +74,7 @@ public class AttachmentService {
     }
 
     public List<AttachmentResponse> findAll(UUID messageId) {
-        return dsl
-                .select(ATTACHMENT.fields())
-                .from(ATTACHMENT)
-                .where(ATTACHMENT.MESSAGE_ID.cast(UUID.class).eq(messageId))
-                .fetch(MAPPER);
-
+        return getFindByMessageIdQuery(messageId).fetch(MAPPER);
     }
 
     public AttachmentResponse upload(Attachment attachment) {
@@ -166,6 +156,13 @@ public class AttachmentService {
 //                    .returning()
 //                    .fetch().get(0).getId();
         }
+    }
+
+    private SelectConditionStep<Record> getFindByMessageIdQuery(UUID messageId) {
+        return dsl
+                .select(ATTACHMENT.fields())
+                .from(ATTACHMENT)
+                .where(ATTACHMENT.MESSAGE_ID.cast(UUID.class).eq(messageId));
     }
 
     private void upload(String fileName, InputStream file) {
