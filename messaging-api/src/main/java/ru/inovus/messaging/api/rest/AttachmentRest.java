@@ -26,7 +26,7 @@ public interface AttachmentRest {
     Page<AttachmentResponse> findAll(@BeanParam RecipientCriteria criteria);
 
     @POST
-    @Path("/upload")
+    @Path("/")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @ApiOperation("Загрузка файла")
     @ApiImplicitParams({

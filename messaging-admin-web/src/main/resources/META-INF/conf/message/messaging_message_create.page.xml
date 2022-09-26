@@ -69,8 +69,8 @@
                         </text-area>
                     </row>
                     <row>
-                        <hidden id="fileAttachEnabled" default-value="${novus.messaging.attachment.enabled}"/>
-                        <file-upload id="file" value-field-id="fileName" label-field-id="shortFileName"
+                        <hidden id="attachEnabled" default-value="${novus.messaging.attachment.enabled}"/>
+                        <file-upload id="attachments" value-field-id="fileName" label-field-id="shortFileName"
                                      multi="true"
                                      show-size="false"
                                      accept="${novus.messaging.attachment.file-type}"
@@ -78,7 +78,7 @@
                                      delete-url="${server.servlet.context-path}/proxy/api"
                                      label="Вложение">
                             <dependencies>
-                                <visibility on="fileAttachEnabled">fileAttachEnabled</visibility>
+                                <visibility on="attachEnabled">attachEnabled</visibility>
                             </dependencies>
                         </file-upload>
                         <!--todo вывести список приложенных файлов при повторении возможно в виде табл-->
@@ -142,7 +142,7 @@
                 </set>
             </fields>
             <toolbar place="topLeft">
-                <button id="save" label="Отправить" color="primary">
+                <button id="save" label="Сохранить" color="primary">
                     <invoke operation-id="send" close-on-success="true" object-id="messaging_message">
                         <form-param id="recipients" ref-widget-id="recipients" ref-model="multi"/>
                     </invoke>

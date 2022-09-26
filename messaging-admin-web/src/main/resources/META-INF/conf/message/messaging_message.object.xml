@@ -18,6 +18,7 @@
                 <field id="region" mapping="['message.region']"/>
                 <field id="organization" mapping="['message.organization']"/>
                 <field id="recipients*.username" mapping="['message.recipients*.username']"/>
+                <field id="attachments" mapping="['message.attachments']"/>
             </in>
         </operation>
     </operations>

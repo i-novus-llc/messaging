@@ -57,7 +57,7 @@ public class AttachmentService {
     private final RecordMapper<Record, AttachmentResponse> MAPPER = rec -> {
         AttachmentRecord record = rec.into(ATTACHMENT);
         AttachmentResponse response = new AttachmentResponse();
-        response.setId(response.getId());
+        response.setId(record.getId());
         response.setShortFileName(record.getFile().substring(DATE_TIME_PREFIX_LENGTH));
         response.setFileName(record.getFile());
         return response;
@@ -95,9 +95,7 @@ public class AttachmentService {
         createBucketIfNotExist();
         upload(fileName, is);
 
-        UUID id = UUID.randomUUID();
         AttachmentResponse fileResponse = new AttachmentResponse();
-        fileResponse.setId(id);
         fileResponse.setFileName(fileName);
         fileResponse.setShortFileName(fileName.substring(DATE_TIME_PREFIX_LENGTH));
         return fileResponse;
@@ -144,17 +142,9 @@ public class AttachmentService {
         if (!CollectionUtils.isEmpty(files)) {
             List<AttachmentRecord> attachments = files
                     .stream()
-                    .map(file -> new AttachmentRecord(UUID.randomUUID(), messageId, file.getFileName(), LocalDateTime.now()))
+                    .map(attachment -> new AttachmentRecord(UUID.randomUUID(), messageId, attachment.getFileName(), LocalDateTime.now()))
                     .collect(Collectors.toList());
             dsl.batchInsert(attachments).execute();
-//            dsl
-//                    .insertInto(ATTACHMENT)
-//                    .columns(ATTACHMENT.ID, ATTACHMENT.MESSAGE_ID, ATTACHMENT.FILE, ATTACHMENT.CREATED_AT)
-//
-//                    .values(id, messageId, response.getFullFileName(), LocalDateTime.now())
-//                    .values()
-//                    .returning()
-//                    .fetch().get(0).getId();
         }
     }
 
