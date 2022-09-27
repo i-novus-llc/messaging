@@ -71,6 +71,7 @@
                     <row>
                         <hidden id="attachEnabled" default-value="${novus.messaging.attachment.enabled}"/>
                         <file-upload id="attachments" value-field-id="fileName" label-field-id="shortFileName"
+                                     enabled="{typeof id == 'undefined' || id == null}"
                                      multi="true"
                                      show-size="false"
                                      accept="${novus.messaging.attachment.file-type}"
@@ -81,7 +82,6 @@
                                 <visibility on="attachEnabled">attachEnabled</visibility>
                             </dependencies>
                         </file-upload>
-                        <!--todo вывести список приложенных файлов при повторении возможно в виде табл-->
                     </row>
                     <row>
                         <hidden id="recipientProvider" default-value="${novus.messaging.recipient-provider.type}"/>

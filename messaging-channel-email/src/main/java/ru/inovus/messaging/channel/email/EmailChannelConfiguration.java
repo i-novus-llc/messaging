@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.util.StringUtils;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
+import ru.inovus.messaging.impl.service.AttachmentService;
 
 @Configuration
 @EnableConfigurationProperties({EmailChannelProperties.class})
@@ -20,8 +21,9 @@ public class EmailChannelConfiguration {
     @Bean
     EmailChannel emailChannel(EmailChannelProperties emailChannelProperties,
                               MqProvider mqProvider,
-                              JavaMailSender emailSender) {
+                              JavaMailSender emailSender,
+                              AttachmentService attachmentService) {
         return new EmailChannel(emailChannelProperties.getQueue(), statusQueueName, mqProvider, emailSender,
-                StringUtils.isEmpty(emailChannelProperties.getFrom())? senderUserName : emailChannelProperties.getFrom());
+                StringUtils.isEmpty(emailChannelProperties.getFrom())? senderUserName : emailChannelProperties.getFrom(), attachmentService);
     }
 }

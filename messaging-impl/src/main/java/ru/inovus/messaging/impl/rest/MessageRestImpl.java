@@ -14,6 +14,7 @@ import ru.inovus.messaging.impl.service.*;
 import ru.inovus.messaging.impl.util.MessageHelper;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
 
@@ -78,7 +79,9 @@ public class MessageRestImpl implements MessageRest {
                 newMessage.setRecipients(oldMessage.getRecipients());
             }
             if (!CollectionUtils.isEmpty(oldMessage.getAttachments())) {
-                newMessage.setAttachments(oldMessage.getAttachments());
+                newMessage.setAttachments(oldMessage.getAttachments().stream()
+                        .peek(message -> message.setId(null))
+                        .collect(Collectors.toList()));
             }
         }
         if (!CollectionUtils.isEmpty(newMessage.getRecipients()))

@@ -5,12 +5,13 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 @Getter
 @Setter
 @ApiModel("Файл")
-public class AttachmentResponse {
+public class AttachmentResponse implements Serializable {
 
     @ApiModelProperty("Идентификатор файла")
     private UUID id;

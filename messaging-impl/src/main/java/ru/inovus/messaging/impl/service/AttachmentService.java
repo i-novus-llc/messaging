@@ -148,6 +148,15 @@ public class AttachmentService {
         }
     }
 
+    public InputStream downloadIS(String fileName) {
+        try {
+            S3Object s3object = s3client.getObject(bucketName, fileName);
+            return s3object.getObjectContent();
+        } catch (Exception e) {
+            throw new UserException(new Message("messaging.exception.file.download"), e);
+        }
+    }
+
     private SelectConditionStep<Record> getFindByMessageIdQuery(UUID messageId) {
         return dsl
                 .select(ATTACHMENT.fields())
@@ -163,15 +172,6 @@ public class AttachmentService {
             s3client.putObject(bucketName, fileName, file, metadata);
         } catch (Exception e) {
             throw new UserException("messaging.exception.file.upload", e);
-        }
-    }
-
-    private InputStream downloadIS(String fileName) {
-        try {
-            S3Object s3object = s3client.getObject(bucketName, fileName);
-            return s3object.getObjectContent();
-        } catch (Exception e) {
-            throw new UserException(new Message("messaging.exception.file.download"), e);
         }
     }
 

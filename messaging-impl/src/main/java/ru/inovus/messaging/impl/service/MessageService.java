@@ -184,7 +184,6 @@ public class MessageService {
                     return recipient;
                 });
         message.setRecipients(recipients);
-        // todo надо ли???
         message.setAttachments(attachmentService.findAll(messageId));
         return message;
     }
