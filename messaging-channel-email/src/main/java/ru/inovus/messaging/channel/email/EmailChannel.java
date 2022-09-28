@@ -89,5 +89,6 @@ public class EmailChannel extends AbstractChannel {
                 ByteArrayDataSource dataSource = new ByteArrayDataSource(is, "application/octet-stream");
                 helper.addAttachment(attachedFileName, dataSource);
             }
-        }    }
+        }
+    }
 }

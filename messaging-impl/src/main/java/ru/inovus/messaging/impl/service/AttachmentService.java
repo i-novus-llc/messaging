@@ -132,17 +132,18 @@ public class AttachmentService {
     }
 
     public Response delete(String fileName) {
-        try {
-            s3client.deleteObject(bucketName, fileName);
-            return Response.accepted().build();
-        } catch (Exception e) {
-            throw new UserException(new Message("messaging.exception.file.remove"), e);
+        if (hasText(fileName)) {
+            try {
+                s3client.deleteObject(bucketName, fileName);
+            } catch (Exception e) {
+                throw new UserException(new Message("messaging.exception.file.remove"), e);
+            }
         }
+        return Response.ok().build();
     }
 
     public void create(List<AttachmentResponse> files, UUID messageId) {
-        if (!CollectionUtils.isEmpty(files)) {
-
+        if (!CollectionUtils.isEmpty(files) && nonNull(messageId)) {
             if (files.size() > maxFileCount)
                 throw new UserException(new Message("messaging.exception.file.count", maxFileCount));
 
