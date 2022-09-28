@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.util.AwsHostNameUtils;
+import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import ru.inovus.messaging.api.rest.AttachmentRest;
 import ru.inovus.messaging.impl.rest.AttachmentRestImpl;
 import ru.inovus.messaging.impl.service.AttachmentService;
+import ru.inovus.messaging.impl.util.DocumentUtils;
 
 @Configuration
 @ConditionalOnProperty(value = "novus.messaging.attachment.enabled", havingValue = "true")
@@ -22,6 +24,11 @@ public class FileRestConfiguration {
     @Bean
     AttachmentRest fileRest(AttachmentService fileService) {
         return new AttachmentRestImpl(fileService);
+    }
+
+    @Bean
+    AttachmentService attachmentService(DSLContext dsl, AmazonS3 s3client, DocumentUtils documentUtils) {
+        return new AttachmentService(dsl, s3client, documentUtils);
     }
 
     @Bean
@@ -36,5 +43,10 @@ public class FileRestConfiguration {
                 .withPathStyleAccessEnabled(true)
                 .withEndpointConfiguration(endpointConfiguration)
                 .build();
+    }
+
+    @Bean
+    DocumentUtils documentUtils() {
+        return new DocumentUtils();
     }
 }

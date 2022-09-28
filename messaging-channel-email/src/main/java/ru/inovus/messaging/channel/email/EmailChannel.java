@@ -23,6 +23,8 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.nonNull;
+
 /**
  * Реализация канала отправки уведомлений по Email
  */
@@ -82,7 +84,7 @@ public class EmailChannel extends AbstractChannel {
     }
 
     private void setAttachments(Message message, MimeMessageHelper helper) throws MessagingException, IOException {
-        if (!CollectionUtils.isEmpty(message.getAttachments())) {
+        if (!CollectionUtils.isEmpty(message.getAttachments()) && nonNull(attachmentService)) {
             for (AttachmentResponse attachment : message.getAttachments()) {
                 String attachedFileName = MimeUtility.encodeText(attachment.getShortFileName());
                 InputStream is = attachmentService.downloadIS(attachment.getFileName());

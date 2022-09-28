@@ -1,10 +1,10 @@
 package ru.inovus.messaging.impl.util;
 
+import lombok.RequiredArgsConstructor;
 import net.n2oapp.platform.i18n.Message;
 import net.n2oapp.platform.i18n.UserException;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,7 +17,7 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.springframework.util.StringUtils.hasText;
 
-@Component
+@RequiredArgsConstructor
 public class DocumentUtils {
 
     private static final String DATE_TIME_FORMAT = "dd.MM.yyyy_HH:mm:ss";

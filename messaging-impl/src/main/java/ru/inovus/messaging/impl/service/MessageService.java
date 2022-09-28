@@ -42,7 +42,7 @@ public class MessageService {
     @Autowired(required = false)
     private SecurityAdminRecipientProvider provider;
 
-    @Autowired
+    @Autowired(required = false)
     private AttachmentService attachmentService;
 
     private final RecordMapper<Record, Message> MAPPER = rec -> {
@@ -119,7 +119,7 @@ public class MessageService {
             }
         }
 
-        attachmentService.create(message.getAttachments(), id);
+        Optional.ofNullable(attachmentService).ifPresent(as ->  as.create(message.getAttachments(), id));
         return message;
     }
 
@@ -184,7 +184,7 @@ public class MessageService {
                     return recipient;
                 });
         message.setRecipients(recipients);
-        message.setAttachments(attachmentService.findAll(messageId));
+        Optional.ofNullable(attachmentService).ifPresent(as ->  message.setAttachments(as.findAll(messageId)));
         return message;
     }
 
@@ -203,7 +203,7 @@ public class MessageService {
         newMessage.setAlertType(message.getAlertType());
         newMessage.setRecipients(message.getRecipients());
         newMessage.setTenantCode(message.getTenantCode());
-        newMessage.setAttachments(attachmentService.findAll(UUID.fromString(message.getId())));
+        Optional.ofNullable(attachmentService).ifPresent(as ->  newMessage.setAttachments(as.findAll(UUID.fromString(message.getId()))));
         return newMessage;
     }
 

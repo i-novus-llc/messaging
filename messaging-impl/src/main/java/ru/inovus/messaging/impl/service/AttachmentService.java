@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ContentDisposition;
-import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import ru.inovus.messaging.api.criteria.RecipientCriteria;
@@ -43,7 +42,6 @@ import static ru.inovus.messaging.impl.util.DocumentUtils.DATE_TIME_PREFIX_LENGT
 /**
  * Сервис работы с прикрепляемыми файлами.
  */
-@Service
 @RequiredArgsConstructor
 public class AttachmentService {
 
