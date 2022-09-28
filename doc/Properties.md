@@ -3,6 +3,14 @@
 - `novus.messaging.queue.status` - имя очереди статусов отправки уведомлений (по умолчанию `novus-messaging-status`)
 - `novus.messaging.queue.feed-count` - имя очереди количества непрочитанных уведомлений (по умолчанию `novus-messaging-feed`)
 - `novus.messaging.tenant-code` - код текущего тенанта (по умолчанию `default`)
+- `novus.messaging.attachment.enabled` - включение возможности прикрепления вложений к уведомлениям (по умолчанию `false`)
+- `novus.messaging.attachment.file-type` - допустимый формат файлов вложений
+- `novus.messaging.attachment.file-size` - максимально допустимый размер прикладываемого файла в МБ
+- `novus.messaging.attachment.file-count` - максимально допустимое количество прикладываемых файлов
+- `novus.messaging.attachment.s3.endpoint` - адрес сервиса хранения файлов регистра, поддерживающего протокол S3, в котором будут храниться приложенные файлы
+- `novus.messaging.attachment.s3.access-key` - ключ доступа к сервису хранения
+- `novus.messaging.attachment.s3.secret-key` - секретный ключ к сервису хранения
+- `novus.messaging.attachment.s3.bucket-name` - имя корзины в сервисе хранения
 
 ## Настройки провайдеров
 
