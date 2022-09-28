@@ -53,6 +53,8 @@ public class AttachmentService {
 
     @Value("${novus.messaging.attachment.s3.bucket-name}")
     private String bucketName;
+    @Value("${novus.messaging.attachment.file-count}")
+    private Integer maxFileCount;
 
     private final RecordMapper<Record, AttachmentResponse> MAPPER = rec -> {
         AttachmentRecord record = rec.into(ATTACHMENT);
@@ -78,7 +80,6 @@ public class AttachmentService {
     }
 
     public AttachmentResponse upload(Attachment attachment) {
-
         String fileName = documentUtils.getFileName(attachment);
         if (StringUtils.isEmpty(fileName)) return null;
         documentUtils.checkFileExtension(fileName);
@@ -88,6 +89,7 @@ public class AttachmentService {
 
         try {
             is = attachment.getDataHandler().getInputStream();
+            documentUtils.checkFileSize(is);
         } catch (IOException e) {
             throw new UncheckedIOException(e.getMessage(), e);
         }
@@ -140,6 +142,10 @@ public class AttachmentService {
 
     public void create(List<AttachmentResponse> files, UUID messageId) {
         if (!CollectionUtils.isEmpty(files)) {
+
+            if (files.size() > maxFileCount)
+                throw new UserException(new Message("messaging.exception.file.count", maxFileCount));
+
             List<AttachmentRecord> attachments = files
                     .stream()
                     .map(attachment -> new AttachmentRecord(UUID.randomUUID(), messageId, attachment.getFileName(), LocalDateTime.now()))

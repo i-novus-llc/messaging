@@ -6,11 +6,14 @@ import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.springframework.util.StringUtils.hasText;
 
@@ -23,6 +26,8 @@ public class DocumentUtils {
 
     @Value("${novus.messaging.attachment.file-type}")
     private List<String> fileExtensionList;
+    @Value("${novus.messaging.attachment.file-size}")
+    private Integer maxFileSize;
 
     public String getFileNameWithDateTime(String fileName) {
         if (!hasText(fileName))
@@ -41,11 +46,18 @@ public class DocumentUtils {
     }
 
     public void checkFileExtension(String fileName) {
-        if (!hasText(fileName))
-            return;
+        if (!hasText(fileName)) return;
         String suffix = fileName.substring(fileName.lastIndexOf("."));
         if (!fileExtensionList.contains(suffix.toLowerCase()))
             throw new UserException(new Message("messaging.exception.file.notValidFormat", fileExtensionList));
+    }
+
+    public void checkFileSize(InputStream is) throws IOException {
+        if (isNull(is)) return;
+        int size = is.available();
+        size = size / (1024 * 1024);
+        if (size > maxFileSize)
+            throw new UserException(new Message("messaging.exception.file.size", maxFileSize));
     }
 
     private String replaceInvalidCharacters(String source) {
