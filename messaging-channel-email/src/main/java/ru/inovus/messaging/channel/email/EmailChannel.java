@@ -10,9 +10,9 @@ import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.MessageStatus;
 import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
+import ru.inovus.messaging.api.rest.AttachmentRest;
 import ru.inovus.messaging.channel.api.AbstractChannel;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
-import ru.inovus.messaging.impl.service.AttachmentService;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -33,14 +33,14 @@ public class EmailChannel extends AbstractChannel {
 
     private final JavaMailSender emailSender;
     private final String senderUserName;
-    private final AttachmentService attachmentService;
+    private final AttachmentRest attachmentService;
 
     public EmailChannel(String messageQueueName,
                         String statusQueueName,
                         MqProvider mqProvider,
                         JavaMailSender emailSender,
                         String senderUserName,
-                        AttachmentService attachmentService) {
+                        AttachmentRest attachmentService) {
         super(mqProvider, messageQueueName, statusQueueName);
         this.emailSender = emailSender;
         this.senderUserName = senderUserName;

@@ -9,6 +9,7 @@ import ru.inovus.messaging.api.rest.AttachmentRest;
 import ru.inovus.messaging.impl.service.AttachmentService;
 
 import javax.ws.rs.core.Response;
+import java.io.InputStream;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -34,5 +35,10 @@ public class AttachmentRestImpl implements AttachmentRest {
     @Override
     public Response delete(String fileName) {
         return fileService.delete(fileName);
+    }
+
+    @Override
+    public InputStream downloadIS(String fileName) {
+        return fileService.downloadIS(fileName);
     }
 }

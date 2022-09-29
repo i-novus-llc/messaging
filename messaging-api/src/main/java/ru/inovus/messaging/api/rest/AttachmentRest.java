@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.InputStream;
 import java.util.UUID;
 
 @Api(value = "Операции над прикрепленными файлами", authorizations = @Authorization(value = "oauth2"))
@@ -44,4 +45,6 @@ public interface AttachmentRest {
     @Path("/{fileName}")
     @ApiOperation("Удаление файла")
     Response delete(@PathParam("fileName") String fileName);
+
+    InputStream downloadIS(String fileName);
 }
