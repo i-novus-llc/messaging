@@ -12,6 +12,7 @@
   * `novus.messaging.attachment.s3.access-key` - ключ доступа к сервису хранения
   * `novus.messaging.attachment.s3.secret-key` - секретный ключ к сервису хранения
   * `novus.messaging.attachment.s3.bucket-name` - имя корзины в сервисе хранения
+*  В модулях `messaging-admin-web`, `messaging-web` UI поля ссылок и загрузки вложений отправляют запрос на `адрес_frontend_модуля/proxy/api/attachments`, который необходимо перенаправить на `адрес_backend_модуля/api/attachments` прокси клиентом. Например: https://github.com/mitre/HTTP-Proxy-Servlet
 
 #### 4.1.1
 
