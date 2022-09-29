@@ -40,7 +40,7 @@ import static ru.inovus.messaging.impl.jooq.Tables.ATTACHMENT;
 import static ru.inovus.messaging.impl.util.DocumentUtils.DATE_TIME_PREFIX_LENGTH;
 
 /**
- * Сервис работы с прикрепляемыми файлами.
+ * Сервис работы с вложениями
  */
 @RequiredArgsConstructor
 public class AttachmentService {
@@ -102,8 +102,6 @@ public class AttachmentService {
     }
 
     public Response download(UUID id) {
-        Response response = Response.status(Response.Status.NOT_FOUND).build();
-
         Record record = dsl
                 .select(ATTACHMENT.fields())
                 .from(ATTACHMENT)
@@ -115,7 +113,7 @@ public class AttachmentService {
             String fileName = attachment.getFile();
             if (hasText(fileName)) {
                 InputStream is = downloadIS(fileName);
-                response = Response
+                return Response
                         .ok(is, MediaType.APPLICATION_OCTET_STREAM)
                         .header(
                                 HttpHeaders.CONTENT_DISPOSITION,
@@ -126,7 +124,7 @@ public class AttachmentService {
                         .build();
             }
         }
-        return response;
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
     public Response delete(String fileName) {
@@ -145,8 +143,7 @@ public class AttachmentService {
             if (files.size() > maxFileCount)
                 throw new UserException(new Message("messaging.exception.file.count", maxFileCount));
 
-            List<AttachmentRecord> attachments = files
-                    .stream()
+            List<AttachmentRecord> attachments = files.stream()
                     .map(attachment -> new AttachmentRecord(UUID.randomUUID(), messageId, attachment.getFileName(), LocalDateTime.now()))
                     .collect(Collectors.toList());
             dsl.batchInsert(attachments).execute();

@@ -19,11 +19,11 @@ import ru.inovus.messaging.impl.util.DocumentUtils;
 
 @Configuration
 @ConditionalOnProperty(value = "novus.messaging.attachment.enabled", havingValue = "true")
-public class FileRestConfiguration {
+public class AttachmentRestConfiguration {
 
     @Bean
-    AttachmentRest fileRest(AttachmentService fileService) {
-        return new AttachmentRestImpl(fileService);
+    AttachmentRest attachmentRest(AttachmentService attachmentService) {
+        return new AttachmentRestImpl(attachmentService);
     }
 
     @Bean

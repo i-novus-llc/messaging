@@ -14,22 +14,21 @@ import javax.ws.rs.core.Response;
 import java.io.InputStream;
 import java.util.UUID;
 
-@Api(value = "Операции над прикрепленными файлами", authorizations = @Authorization(value = "oauth2"))
+@Api(value = "Операции над вложениями", authorizations = @Authorization(value = "oauth2"))
 @Path("/attachments")
 public interface AttachmentRest {
 
     @GET
     @Path("/")
-    @ApiOperation("Получение списка прикрепленных файлов")
-    @ApiResponse(code = 200, message = "Список прикрепленных файлов")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation("Получение списка вложений")
     Page<AttachmentResponse> findAll(@BeanParam RecipientCriteria criteria);
 
     @POST
     @Path("/")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @ApiOperation("Загрузка файла")
+    @ApiOperation("Загрузка вложения")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "file", value = "Файл", required = true, dataType = "java.io.File", paramType = "form")
     })
@@ -37,13 +36,13 @@ public interface AttachmentRest {
 
     @GET
     @Path("/{id}")
-    @ApiOperation("Скачивание файла")
+    @ApiOperation("Скачивание вложения")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     Response download(@ApiParam(value = "Идентификатор файла") @PathParam("id") UUID id);
 
     @DELETE
     @Path("/{fileName}")
-    @ApiOperation("Удаление файла")
+    @ApiOperation("Удаление вложения")
     Response delete(@PathParam("fileName") String fileName);
 
     InputStream downloadIS(String fileName);

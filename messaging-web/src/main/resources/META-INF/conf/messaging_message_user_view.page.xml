@@ -19,20 +19,20 @@
                 <row>
                     <html id="text" label="Текст уведомления"/>
                 </row>
-                <hidden id="attachEnabled" default-value="${novus.messaging.attachment.enabled}"/>
+                <hidden id="attachmentEnabled" default-value="${novus.messaging.attachment.enabled}"/>
             </fields>
             <pre-filters>
                 <eq field-id="id" param="id"/>
             </pre-filters>
         </form>
-        <table query-id="messaging_attachment" visible="{attachEnabled}" depends-on="feed_view" selection="none">
+        <table query-id="messaging_attachment" visible="{attachmentEnabled}" depends-on="feed_view" selection="none">
             <pre-filters>
                 <eq field-id="messageId" param="id"/>
             </pre-filters>
             <columns>
                 <column text-field-id="shortFileName" label="Вложения">
                     <link>
-                        <a href="${server.servlet.context-path}/proxy/api/{id}" target="newWindow"/>
+                        <a href="${server.servlet.context-path}/proxy/api/attachments/{id}" target="newWindow"/>
                     </link>
                 </column>
             </columns>

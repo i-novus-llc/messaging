@@ -69,17 +69,17 @@
                         </text-area>
                     </row>
                     <row>
-                        <hidden id="attachEnabled" default-value="${novus.messaging.attachment.enabled}"/>
+                        <hidden id="attachmentEnabled" default-value="${novus.messaging.attachment.enabled}"/>
                         <file-upload id="attachments" value-field-id="fileName" label-field-id="shortFileName"
                                      enabled="{typeof id == 'undefined' || id == null}"
                                      multi="true"
                                      show-size="false"
                                      accept="${novus.messaging.attachment.file-type}"
-                                     upload-url="${server.servlet.context-path}/proxy/api"
-                                     delete-url="${server.servlet.context-path}/proxy/api"
+                                     upload-url="${server.servlet.context-path}/proxy/api/attachments"
+                                     delete-url="${server.servlet.context-path}/proxy/api/attachments"
                                      label="Вложение">
                             <dependencies>
-                                <visibility on="attachEnabled">attachEnabled</visibility>
+                                <visibility on="attachmentEnabled">attachmentEnabled</visibility>
                             </dependencies>
                         </file-upload>
                     </row>

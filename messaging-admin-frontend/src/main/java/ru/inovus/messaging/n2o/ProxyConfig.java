@@ -17,7 +17,7 @@ public class ProxyConfig {
     public ServletRegistrationBean<ProxyServlet> proxyInputDataServiceServlet(
             @Value("${messaging.backend.path}" + "/attachments") String inputDataUrl) {
         ServletRegistrationBean<ProxyServlet> bean =
-                new ServletRegistrationBean<>(new ProxyServlet(), "/proxy/api/*");
+                new ServletRegistrationBean<>(new ProxyServlet(), "/proxy/api/attachments/*");
         Map<String, String> params = new HashMap<>();
         params.put("targetUri", inputDataUrl);
         params.put(ProxyServlet.P_LOG, "true");
