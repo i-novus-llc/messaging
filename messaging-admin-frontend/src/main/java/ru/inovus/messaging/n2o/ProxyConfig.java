@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-@ConditionalOnProperty(value = "novus.messaging.file-attach.enabled", havingValue = "true")
+@ConditionalOnProperty(value = "novus.messaging.attachment.enabled", havingValue = "true")
 public class ProxyConfig {
     @Bean
     public ServletRegistrationBean<ProxyServlet> proxyInputDataServiceServlet(
