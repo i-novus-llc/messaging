@@ -12,19 +12,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.inovus.messaging.api.rest.AttachmentRest;
-import ru.inovus.messaging.impl.rest.AttachmentRestImpl;
 import ru.inovus.messaging.impl.service.AttachmentService;
 import ru.inovus.messaging.impl.util.DocumentUtils;
 
 @Configuration
 @ConditionalOnProperty(value = "novus.messaging.attachment.enabled", havingValue = "true")
 public class AttachmentRestConfiguration {
-
-    @Bean
-    AttachmentRest attachmentRest(AttachmentService attachmentService) {
-        return new AttachmentRestImpl(attachmentService);
-    }
 
     @Bean
     AttachmentService attachmentService(DSLContext dsl, AmazonS3 s3client, DocumentUtils documentUtils) {

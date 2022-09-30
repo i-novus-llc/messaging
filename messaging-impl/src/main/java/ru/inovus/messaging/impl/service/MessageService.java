@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import ru.inovus.messaging.api.MessageAttachment;
 import ru.inovus.messaging.api.criteria.MessageCriteria;
 import ru.inovus.messaging.api.model.BaseResponse;
 import ru.inovus.messaging.api.model.Channel;
@@ -43,7 +44,7 @@ public class MessageService {
     private SecurityAdminRecipientProvider provider;
 
     @Autowired(required = false)
-    private AttachmentService attachmentService;
+    private MessageAttachment attachmentService;
 
     private final RecordMapper<Record, Message> MAPPER = rec -> {
         MessageRecord record = rec.into(MESSAGE);
@@ -119,7 +120,7 @@ public class MessageService {
             }
         }
 
-        Optional.ofNullable(attachmentService).ifPresent(as ->  as.create(message.getAttachments(), id));
+        Optional.ofNullable(attachmentService).ifPresent(as -> as.create(message.getAttachments(), id));
         return message;
     }
 
@@ -184,27 +185,8 @@ public class MessageService {
                     return recipient;
                 });
         message.setRecipients(recipients);
-        Optional.ofNullable(attachmentService).ifPresent(as ->  message.setAttachments(as.findAll(messageId)));
+        Optional.ofNullable(attachmentService).ifPresent(as -> message.setAttachments(as.findAll(messageId)));
         return message;
-    }
-
-    /**
-     * Конструирование уведомления для публикации в очередь
-     *
-     * @param message Уведомление
-     * @return
-     */
-    public Message constructMessage(Message message) {
-        Message newMessage = new Message();
-        newMessage.setId(message.getId());
-        newMessage.setCaption(message.getCaption());
-        newMessage.setText(message.getText());
-        newMessage.setSeverity(message.getSeverity());
-        newMessage.setAlertType(message.getAlertType());
-        newMessage.setRecipients(message.getRecipients());
-        newMessage.setTenantCode(message.getTenantCode());
-        Optional.ofNullable(attachmentService).ifPresent(as ->  newMessage.setAttachments(as.findAll(UUID.fromString(message.getId()))));
-        return newMessage;
     }
 
     private String joinRoles(List<BaseResponse> roles) {

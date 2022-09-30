@@ -5,15 +5,23 @@ import net.n2oapp.platform.i18n.UserException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
+import ru.inovus.messaging.api.MessageAttachment;
 import ru.inovus.messaging.api.criteria.MessageCriteria;
 import ru.inovus.messaging.api.model.*;
 import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.rest.MessageRest;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
-import ru.inovus.messaging.impl.service.*;
+import ru.inovus.messaging.impl.service.ChannelService;
+import ru.inovus.messaging.impl.service.MessageService;
+import ru.inovus.messaging.impl.service.MessageTemplateService;
+import ru.inovus.messaging.impl.service.RecipientService;
 import ru.inovus.messaging.impl.util.MessageHelper;
 
-import java.util.*;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
@@ -27,18 +35,22 @@ public class MessageRestImpl implements MessageRest {
     private final ChannelService channelService;
     private final MqProvider mqProvider;
     private final MessageHelper messageHelper;
+    private MessageAttachment attachmentService;
 
     public MessageRestImpl(MessageService messageService,
                            MessageTemplateService messageTemplateService,
                            RecipientService recipientService,
                            ChannelService channelService,
-                           MqProvider mqProvider, MessageHelper messageHelper) {
+                           MqProvider mqProvider,
+                           MessageHelper messageHelper,
+                           @Nullable MessageAttachment attachmentService) {
         this.messageService = messageService;
         this.messageTemplateService = messageTemplateService;
         this.recipientService = recipientService;
         this.channelService = channelService;
         this.mqProvider = mqProvider;
         this.messageHelper = messageHelper;
+        this.attachmentService = attachmentService;
     }
 
     @Override
@@ -124,7 +136,11 @@ public class MessageRestImpl implements MessageRest {
      */
     private void send(Message message) {
         Channel channel = channelService.getChannel(message.getChannel().getId());
-        mqProvider.publish(messageService.constructMessage(message), channel.getQueueName());
+
+        Message newMessage = message.clone();
+        Optional.ofNullable(attachmentService).ifPresent(as -> newMessage.setAttachments(as.findAll(UUID.fromString(message.getId()))));
+
+        mqProvider.publish(newMessage, channel.getQueueName());
     }
 
     /**

@@ -5,12 +5,12 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import ru.inovus.messaging.api.MessageAttachment;
 import ru.inovus.messaging.api.model.AttachmentResponse;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.MessageStatus;
 import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
-import ru.inovus.messaging.api.rest.AttachmentRest;
 import ru.inovus.messaging.channel.api.AbstractChannel;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 
@@ -33,18 +33,19 @@ public class EmailChannel extends AbstractChannel {
 
     private final JavaMailSender emailSender;
     private final String senderUserName;
-    private final AttachmentRest attachmentService;
+    private final MessageAttachment attachmentService;
 
     public EmailChannel(String messageQueueName,
                         String statusQueueName,
                         MqProvider mqProvider,
                         JavaMailSender emailSender,
                         String senderUserName,
-                        AttachmentRest attachmentService) {
+                        MessageAttachment attachmentService) {
         super(mqProvider, messageQueueName, statusQueueName);
         this.emailSender = emailSender;
         this.senderUserName = senderUserName;
         this.attachmentService = attachmentService;
+        System.setProperty("mail.mime.splitlongparameters", "false");
     }
 
     public void send(Message message) {
@@ -59,7 +60,6 @@ public class EmailChannel extends AbstractChannel {
                 .collect(Collectors.toList());
         if (!recipientsEmailList.isEmpty()) {
             try {
-                System.setProperty("mail.mime.splitlongparameters", "false");
                 MimeMessage mail = emailSender.createMimeMessage();
                 MimeMessageHelper helper = new MimeMessageHelper(mail, true, "UTF-8");
                 helper.setTo(recipientsEmailList.toArray(String[]::new));
@@ -87,7 +87,7 @@ public class EmailChannel extends AbstractChannel {
         if (!CollectionUtils.isEmpty(message.getAttachments()) && nonNull(attachmentService)) {
             for (AttachmentResponse attachment : message.getAttachments()) {
                 String attachedFileName = MimeUtility.encodeText(attachment.getShortFileName());
-                InputStream is = attachmentService.downloadIS(attachment.getFileName());
+                InputStream is = attachmentService.download(attachment.getFileName());
                 ByteArrayDataSource dataSource = new ByteArrayDataSource(is, "application/octet-stream");
                 helper.addAttachment(attachedFileName, dataSource);
             }

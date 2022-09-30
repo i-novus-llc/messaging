@@ -17,8 +17,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ContentDisposition;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import ru.inovus.messaging.api.MessageAttachment;
 import ru.inovus.messaging.api.criteria.RecipientCriteria;
 import ru.inovus.messaging.api.model.AttachmentResponse;
+import ru.inovus.messaging.api.rest.AttachmentRest;
 import ru.inovus.messaging.impl.jooq.tables.records.AttachmentRecord;
 import ru.inovus.messaging.impl.util.DocumentUtils;
 
@@ -43,7 +45,7 @@ import static ru.inovus.messaging.impl.util.DocumentUtils.DATE_TIME_PREFIX_LENGT
  * Сервис работы с вложениями
  */
 @RequiredArgsConstructor
-public class AttachmentService {
+public class AttachmentService implements AttachmentRest, MessageAttachment {
 
     private final DSLContext dsl;
     private final AmazonS3 s3client;
@@ -112,7 +114,7 @@ public class AttachmentService {
             AttachmentRecord attachment = record.into(ATTACHMENT);
             String fileName = attachment.getFile();
             if (hasText(fileName)) {
-                InputStream is = downloadIS(fileName);
+                InputStream is = download(fileName);
                 return Response
                         .ok(is, MediaType.APPLICATION_OCTET_STREAM)
                         .header(
@@ -125,6 +127,15 @@ public class AttachmentService {
             }
         }
         return Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+    public InputStream download(String fileName) {
+        try {
+            S3Object s3object = s3client.getObject(bucketName, fileName);
+            return s3object.getObjectContent();
+        } catch (Exception e) {
+            throw new UserException(new Message("messaging.exception.file.download"), e);
+        }
     }
 
     public Response delete(String fileName) {
@@ -147,15 +158,6 @@ public class AttachmentService {
                     .map(attachment -> new AttachmentRecord(UUID.randomUUID(), messageId, attachment.getFileName(), LocalDateTime.now()))
                     .collect(Collectors.toList());
             dsl.batchInsert(attachments).execute();
-        }
-    }
-
-    public InputStream downloadIS(String fileName) {
-        try {
-            S3Object s3object = s3client.getObject(bucketName, fileName);
-            return s3object.getObjectContent();
-        } catch (Exception e) {
-            throw new UserException(new Message("messaging.exception.file.download"), e);
         }
     }
 

@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.Nullable;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.util.StringUtils;
-import ru.inovus.messaging.api.rest.AttachmentRest;
+import ru.inovus.messaging.api.MessageAttachment;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 
 @Configuration
@@ -23,7 +23,7 @@ public class EmailChannelConfiguration {
     EmailChannel emailChannel(EmailChannelProperties emailChannelProperties,
                               MqProvider mqProvider,
                               JavaMailSender emailSender,
-                              @Nullable AttachmentRest attachmentService) {
+                              @Nullable MessageAttachment attachmentService) {
         return new EmailChannel(emailChannelProperties.getQueue(), statusQueueName, mqProvider, emailSender,
                 StringUtils.isEmpty(emailChannelProperties.getFrom())? senderUserName : emailChannelProperties.getFrom(), attachmentService);
     }
