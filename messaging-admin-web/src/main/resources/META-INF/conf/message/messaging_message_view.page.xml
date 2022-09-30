@@ -42,7 +42,7 @@
                 </fields>
             </form>
         </region>
-        <table query-id="messaging_attachment" visible="{attachmentEnabled}" depends-on="view" selection="none">
+        <table query-id="messaging_attachment" visible="{attachmentEnabled == true}" depends-on="view" selection="none">
             <pre-filters>
                 <eq field-id="messageId" param="id"/>
             </pre-filters>

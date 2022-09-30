@@ -25,7 +25,7 @@
                 <eq field-id="id" param="id"/>
             </pre-filters>
         </form>
-        <table query-id="messaging_attachment" visible="{attachmentEnabled}" depends-on="feed_view" selection="none">
+        <table query-id="messaging_attachment" visible="{attachmentEnabled == true}" depends-on="feed_view" selection="none">
             <pre-filters>
                 <eq field-id="messageId" param="id"/>
             </pre-filters>

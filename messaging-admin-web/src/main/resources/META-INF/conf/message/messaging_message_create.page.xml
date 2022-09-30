@@ -79,7 +79,7 @@
                                      delete-url="${server.servlet.context-path}/proxy/api/attachments"
                                      label="Вложение">
                             <dependencies>
-                                <visibility on="attachmentEnabled">attachmentEnabled</visibility>
+                                <visibility on="attachmentEnabled">attachmentEnabled == true</visibility>
                             </dependencies>
                         </file-upload>
                     </row>
