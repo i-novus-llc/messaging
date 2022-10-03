@@ -8,6 +8,9 @@
         <object-access object-id="messaging_message" operations="*"/>
         <object-access object-id="messaging_user" operations="*"/>
         <object-access object-id="messaging_msg_template" operations="*"/>
+        <object-access object-id="messaging_region"/>
+        <object-access object-id="messaging_organization"/>
+        <object-access object-id="messaging_role"/>
     </permit-all>
 
 </access>
