@@ -1,5 +1,6 @@
 package ru.inovus.messaging.impl.rest;
 
+import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,10 +18,11 @@ import ru.inovus.messaging.api.model.*;
 import ru.inovus.messaging.api.model.enums.AlertType;
 import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.model.enums.Severity;
+import ru.inovus.messaging.api.rest.SecurityProviderRest;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
-import ru.inovus.messaging.impl.RecipientProvider;
 import ru.inovus.messaging.impl.service.MessageService;
 import ru.inovus.messaging.impl.service.RecipientService;
+import ru.inovus.messaging.impl.util.MessageHelper;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,6 +31,7 @@ import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -45,11 +48,17 @@ public class MessageRestImplTest {
     @Autowired
     private MessageService messageService;
 
+    @Autowired
+    private MessageHelper messageHelper;
+
     @MockBean
     private MqProvider mqProvider;
 
     @MockBean
     private RecipientService recipientService;
+
+    @MockBean
+    private SecurityProviderRest securityProviderRest;
 
     @Captor
     ArgumentCaptor<Message> messageArgumentCaptor;
@@ -96,22 +105,10 @@ public class MessageRestImplTest {
 
     @Test
     public void testEmptyRecipientsMessage() {
-        messageRest.sendMessage(TENANT_CODE, getEmptyRecipientsMessage());
-
-        Mockito.verify(mqProvider).publish(messageArgumentCaptor.capture(), any());
-        Message publishedMessage = messageArgumentCaptor.getValue();
-
-        assertThat(publishedMessage.getTenantCode(), is(TENANT_CODE));
-        assertThat(publishedMessage.getText(), is("test text"));
-        assertThat(publishedMessage.getSeverity(), is(Severity.INFO));
-        assertThat(publishedMessage.getAlertType(), is(AlertType.POPUP));
-        assertThat(publishedMessage.getRecipients().size(), is(2));
-        Recipient recipient = publishedMessage.getRecipients().get(0);
-        assertThat(recipient.getUsername(), is("firstUsername"));
-        assertThat(recipient.getEmail(), is("test1@test.ru"));
-        recipient = publishedMessage.getRecipients().get(1);
-        assertThat(recipient.getUsername(), is("secondUsername"));
-        assertThat(recipient.getEmail(), is("test2@test.ru"));
+        Exception exception = assertThrows(UserException.class, () -> {
+            messageRest.sendMessage(TENANT_CODE, getEmptyRecipientsMessage());
+        });
+        assertThat(exception.getMessage(), is(messageHelper.obtainMessage("messaging.exception.message.recipients.empty")));
     }
 
     @Test

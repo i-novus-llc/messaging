@@ -2,6 +2,9 @@ package ru.inovus.messaging.impl.provider;
 
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
+import net.n2oapp.security.admin.rest.api.OrganizationRestService;
+import net.n2oapp.security.admin.rest.api.RegionRestService;
+import net.n2oapp.security.admin.rest.api.RoleRestService;
 import net.n2oapp.security.admin.rest.api.UserRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
 import org.junit.Before;
@@ -25,6 +28,12 @@ public class SecurityRecipientProviderTest {
 
     @Mock
     private UserRestService userRestService;
+    @Mock
+    private RoleRestService roleRestService;
+    @Mock
+    private RegionRestService regionRestService;
+    @Mock
+    private OrganizationRestService organizationRestService;
 
 
     @Before
@@ -54,7 +63,7 @@ public class SecurityRecipientProviderTest {
         PageImpl userPage = new PageImpl(List.of(user1, user2), new ProviderRecipientCriteria(), 2);
         Mockito.when(userRestService.findAll(new RestUserCriteria())).thenReturn(userPage);
 
-        recipientProvider = new SecurityAdminRecipientProvider(userRestService);
+        recipientProvider = new SecurityAdminRecipientProvider(userRestService, roleRestService, regionRestService, organizationRestService);
         MockitoAnnotations.initMocks(this);
     }
 

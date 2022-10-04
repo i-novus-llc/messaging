@@ -7,15 +7,18 @@
                 <rest method="POST">${messaging.backend.path}/${novus.messaging.tenant-code}/messages</rest>
             </invocation>
             <in>
+                <field id="id" mapping="['message.id']"/>
                 <field id="caption" mapping="['message.caption']" domain="string"/>
                 <field id="text" mapping="['message.text']" domain="string"/>
                 <field id="severity.id" mapping="['message.severity']" domain="string"/>
                 <field id="alertType.id" mapping="['message.alertType']" domain="string"/>
                 <field id="infoType" mapping="['message.channel']" domain="object"/>
                 <field id="recipientType.id" mapping="['message.recipientType']" domain="string"/>
-                <field id="users*.username" mapping="['message.recipients*.username']"/>
+                <field id="roles" mapping="['message.roles']"/>
+                <field id="region" mapping="['message.region']"/>
+                <field id="organization" mapping="['message.organization']"/>
+                <field id="recipients*.username" mapping="['message.recipients*.username']"/>
             </in>
         </operation>
     </operations>
-
 </object>
