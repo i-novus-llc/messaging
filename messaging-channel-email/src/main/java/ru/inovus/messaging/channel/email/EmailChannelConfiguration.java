@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.lang.Nullable;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.util.StringUtils;
+import ru.inovus.messaging.api.MessageAttachment;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 
 @Configuration
@@ -20,8 +22,9 @@ public class EmailChannelConfiguration {
     @Bean
     EmailChannel emailChannel(EmailChannelProperties emailChannelProperties,
                               MqProvider mqProvider,
-                              JavaMailSender emailSender) {
+                              JavaMailSender emailSender,
+                              @Nullable MessageAttachment attachmentService) {
         return new EmailChannel(emailChannelProperties.getQueue(), statusQueueName, mqProvider, emailSender,
-                StringUtils.isEmpty(emailChannelProperties.getFrom())? senderUserName : emailChannelProperties.getFrom());
+                StringUtils.isEmpty(emailChannelProperties.getFrom())? senderUserName : emailChannelProperties.getFrom(), attachmentService);
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import ru.inovus.messaging.api.MessageAttachment;
 import ru.inovus.messaging.api.criteria.MessageCriteria;
 import ru.inovus.messaging.api.model.BaseResponse;
 import ru.inovus.messaging.api.model.Channel;
@@ -41,6 +42,9 @@ public class MessageService {
 
     @Autowired(required = false)
     private SecurityAdminRecipientProvider provider;
+
+    @Autowired(required = false)
+    private MessageAttachment attachmentService;
 
     private final RecordMapper<Record, Message> MAPPER = rec -> {
         MessageRecord record = rec.into(MESSAGE);
@@ -115,6 +119,8 @@ public class MessageService {
                         .execute();
             }
         }
+
+        Optional.ofNullable(attachmentService).ifPresent(as -> as.create(message.getAttachments(), id));
         return message;
     }
 
@@ -179,6 +185,7 @@ public class MessageService {
                     return recipient;
                 });
         message.setRecipients(recipients);
+        Optional.ofNullable(attachmentService).ifPresent(as -> message.setAttachments(as.findAll(messageId)));
         return message;
     }
 

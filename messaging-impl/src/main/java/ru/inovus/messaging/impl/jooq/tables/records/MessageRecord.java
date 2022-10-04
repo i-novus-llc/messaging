@@ -24,7 +24,7 @@ import java.util.UUID;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements Record13<UUID, String, String, Severity, AlertType, LocalDateTime, String, RecipientType, String, String, Integer, String, String> {
 
-    private static final long serialVersionUID = 815899403;
+    private static final long serialVersionUID = -491039795;
 
     /**
      * Setter for <code>messaging.message.id</code>. Уникальный идентификатор
@@ -195,14 +195,14 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
     }
 
     /**
-     * Setter for <code>messaging.message.region</code>.
+     * Setter for <code>messaging.message.region</code>. Регион, сотрудникам которого отправлено уведомление
      */
     public void setRegion(String value) {
         set(12, value);
     }
 
     /**
-     * Getter for <code>messaging.message.region</code>.
+     * Getter for <code>messaging.message.region</code>. Регион, сотрудникам которого отправлено уведомление
      */
     public String getRegion() {
         return (String) get(12);

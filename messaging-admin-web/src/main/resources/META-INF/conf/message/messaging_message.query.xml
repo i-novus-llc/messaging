@@ -90,5 +90,9 @@
         <field id="organization">
             <select/>
         </field>
+
+        <field id="attachments">
+            <select/>
+        </field>
     </fields>
 </query>

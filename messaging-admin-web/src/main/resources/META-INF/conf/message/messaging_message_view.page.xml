@@ -38,9 +38,22 @@
                             <output-text id="organization.name" label="Организация" visible="{organization!=null}"/>
                         </row>
                     </set>
+                    <hidden id="attachmentEnabled" default-value="${novus.messaging.attachment.enabled}"/>
                 </fields>
             </form>
         </region>
+        <table query-id="messaging_attachment" visible="{attachmentEnabled == true}" depends-on="view" selection="none">
+            <pre-filters>
+                <eq field-id="messageId" param="id"/>
+            </pre-filters>
+            <columns>
+                <column text-field-id="shortFileName" label="Вложения">
+                    <link>
+                        <a href="${server.servlet.context-path}/proxy/api/attachments/{id}" target="newWindow"/>
+                    </link>
+                </column>
+            </columns>
+        </table>
         <table query-id="recipient" depends-on="view" detail-field-id="messageId" name="Получатели">
             <columns>
                 <column text-field-id="statusTime">

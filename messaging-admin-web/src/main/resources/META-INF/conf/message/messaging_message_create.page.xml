@@ -69,6 +69,21 @@
                         </text-area>
                     </row>
                     <row>
+                        <hidden id="attachmentEnabled" default-value="${novus.messaging.attachment.enabled}"/>
+                        <file-upload id="attachments" value-field-id="fileName" label-field-id="shortFileName"
+                                     enabled="{typeof id == 'undefined' || id == null}"
+                                     multi="true"
+                                     show-size="false"
+                                     accept="${novus.messaging.attachment.file-type}"
+                                     upload-url="${server.servlet.context-path}/proxy/api/attachments"
+                                     delete-url="${server.servlet.context-path}/proxy/api/attachments"
+                                     label="Вложение">
+                            <dependencies>
+                                <visibility on="attachmentEnabled">attachmentEnabled == true</visibility>
+                            </dependencies>
+                        </file-upload>
+                    </row>
+                    <row>
                         <hidden id="recipientProvider" default-value="${novus.messaging.recipient-provider.type}"/>
                         <radio-group id="recipientType" label="Тип получателей" inline="true" required="true" enabled="{typeof id == 'undefined' || id == null}">
                             <default-value id="RECIPIENT" name="Пользователи"/>
@@ -127,7 +142,7 @@
                 </set>
             </fields>
             <toolbar place="topLeft">
-                <button id="save" label="Отправить" color="primary">
+                <button id="save" label="Сохранить" color="primary">
                     <invoke operation-id="send" close-on-success="true" object-id="messaging_message">
                         <form-param id="recipients" ref-widget-id="recipients" ref-model="multi"/>
                     </invoke>

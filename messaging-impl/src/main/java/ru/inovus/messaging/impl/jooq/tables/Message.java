@@ -32,7 +32,7 @@ import java.util.UUID;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Message extends TableImpl<MessageRecord> {
 
-    private static final long serialVersionUID = 1235575093;
+    private static final long serialVersionUID = -570944441;
 
     /**
      * The reference instance of <code>messaging.message</code>
@@ -108,9 +108,9 @@ public class Message extends TableImpl<MessageRecord> {
     public final TableField<MessageRecord, String> ROLE = createField(DSL.name("role"), org.jooq.impl.SQLDataType.VARCHAR, this, "Роли, которым отправлено уведомление");
 
     /**
-     * The column <code>messaging.message.region</code>.
+     * The column <code>messaging.message.region</code>. Регион, сотрудникам которого отправлено уведомление
      */
-    public final TableField<MessageRecord, String> REGION = createField(DSL.name("region"), org.jooq.impl.SQLDataType.VARCHAR, this, "");
+    public final TableField<MessageRecord, String> REGION = createField(DSL.name("region"), org.jooq.impl.SQLDataType.VARCHAR, this, "Регион, сотрудникам которого отправлено уведомление");
 
     /**
      * Create a <code>messaging.message</code> table reference

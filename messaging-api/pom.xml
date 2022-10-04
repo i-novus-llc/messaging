@@ -18,6 +18,16 @@
     <dependencies>
         <dependency>
             <groupId>net.n2oapp.platform</groupId>
+            <artifactId>n2o-platform-starter-jaxrs-server</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.swagger</groupId>
+                    <artifactId>swagger-jaxrs</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-jaxrs-commons</artifactId>
         </dependency>
         <dependency>
