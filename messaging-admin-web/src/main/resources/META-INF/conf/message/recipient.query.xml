@@ -32,5 +32,9 @@
         <field id="status" name="Статус">
             <select mapping="['status.name']"/>
         </field>
+
+        <field id="checked">
+            <select default-value="true"/>
+        </field>
     </fields>
 </query>
