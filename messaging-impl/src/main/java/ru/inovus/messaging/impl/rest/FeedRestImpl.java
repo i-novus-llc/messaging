@@ -3,6 +3,7 @@ package ru.inovus.messaging.impl.rest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import ru.inovus.messaging.api.criteria.FeedCriteria;
 import ru.inovus.messaging.api.model.Feed;
 import ru.inovus.messaging.api.model.FeedCount;
@@ -32,6 +33,7 @@ public class FeedRestImpl implements FeedRest {
     }
 
     @Override
+    @CrossOrigin(origins = "*")
     public FeedCount getFeedCount(String tenantCode, String username) {
         return feedService.getFeedCount(tenantCode, username);
     }
