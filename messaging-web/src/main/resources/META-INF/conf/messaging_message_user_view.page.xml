@@ -3,23 +3,25 @@
     <regions>
         <form id="feed_view" query-id="messaging_feed">
             <fields>
-                <row>
-                    <input-select id="severity" label="Уровень важности" enabled="false">
-                        <options>
-                            <option id="SEVERE" name="Важный"/>
-                            <option id="ERROR" name="Ошибка"/>
-                            <option id="WARNING" name="Предупреждение"/>
-                            <option id="INFO" name="Информация"/>
-                        </options>
-                    </input-select>
-                </row>
-                <row>
-                    <html id="caption" label="Заголовок уведомления"/>
-                </row>
-                <row>
-                    <html id="text" label="Текст уведомления"/>
-                </row>
-                <hidden id="attachmentEnabled" default-value="${novus.messaging.attachment.enabled}"/>
+                <set field-label-location="left" field-label-align="left" field-label-width="220px">
+                    <row>
+                        <input-select id="severity" label="Уровень важности" enabled="false">
+                            <options>
+                                <option id="SEVERE" name="Важный"/>
+                                <option id="ERROR" name="Ошибка"/>
+                                <option id="WARNING" name="Предупреждение"/>
+                                <option id="INFO" name="Информация"/>
+                            </options>
+                        </input-select>
+                    </row>
+                    <row>
+                        <html id="caption" label="Заголовок уведомления"/>
+                    </row>
+                    <row>
+                        <html id="text" label="Текст уведомления"/>
+                    </row>
+                    <hidden id="attachmentEnabled" default-value="${novus.messaging.attachment.enabled}"/>
+                </set>
             </fields>
             <pre-filters>
                 <eq field-id="id" param="id"/>
