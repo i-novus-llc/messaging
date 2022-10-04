@@ -15,5 +15,6 @@ CREATE SEQUENCE IF NOT EXISTS messaging.attachment_id_seq OWNED BY messaging.att
 
 ALTER TABLE messaging.attachment ADD CONSTRAINT attachment_message_id_fk FOREIGN KEY (message_id) REFERENCES messaging.message(id);
 
-INSERT INTO messaging.channel (code, name, queue_name, is_internal) VALUES ('email', 'Email', 'email-queue', false);
-INSERT INTO messaging.channel (code, name, queue_name, is_internal) VALUES ('web', 'Web', 'web-queue', true);
+INSERT INTO messaging.channel (code, name, queue_name, is_internal)
+VALUES ('email', 'Email', 'email-queue', false),
+I      ('web', 'Web', 'web-queue', true);
