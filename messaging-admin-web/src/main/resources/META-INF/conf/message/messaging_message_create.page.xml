@@ -7,7 +7,11 @@
                 <set field-label-location="left" field-label-align="left" field-label-width="220px">
                     <row>
                         <input-select id="template" label="Шаблон" query-id="messaging_msg_template" search-field-id="name"
-                                      label-field-id="name" enabled="{typeof id == 'undefined' || id == null}"/>
+                                      label-field-id="name" enabled="{typeof id == 'undefined' || id == null}">
+                            <pre-filters>
+                                <eq field-id="enabled" value="true"/>
+                            </pre-filters>
+                        </input-select>
                     </row>
                     <input-select id="infoType" label="Информирование" required="true"
                                   query-id="messaging_channels" enabled="{typeof id == 'undefined' || id == null}">

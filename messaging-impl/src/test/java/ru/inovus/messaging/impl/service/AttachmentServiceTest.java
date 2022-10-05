@@ -25,7 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApp.class,
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = "novus.messaging.attachment.enabled: true")
 @TestPropertySource("classpath:application.properties")
 @EnableEmbeddedPg
 public class AttachmentServiceTest {
