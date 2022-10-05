@@ -2,8 +2,7 @@ package ru.inovus.messaging.impl.provider;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.io.DefaultResourceLoader;
@@ -12,7 +11,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.client.RestTemplate;
 import ru.inovus.messaging.api.criteria.ProviderRecipientCriteria;
 import ru.inovus.messaging.api.model.ProviderRecipient;
@@ -26,12 +25,10 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 public class ConfigurableRecipientProviderTest {
 
     private ConfigurableRecipientProvider userRoleProvider;
-
-    @Mock
     private RestTemplate restTemplate;
 
     @Before
@@ -45,6 +42,7 @@ public class ConfigurableRecipientProviderTest {
 
     @Test
     public void testGetUsers() {
+        restTemplate = Mockito.mock(RestTemplate.class);
         Map<String, Object> mockResponse = new HashMap<>();
         mockResponse.put("ment", Map.of("content", List.of(userResponse(), userWithoutRoleResponse())));
         mockResponse.put("totalMent", 666);
