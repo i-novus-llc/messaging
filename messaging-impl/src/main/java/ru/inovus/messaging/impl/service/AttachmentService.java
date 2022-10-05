@@ -37,6 +37,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
+import static org.jooq.impl.DSL.noCondition;
 import static org.springframework.util.StringUtils.hasText;
 import static ru.inovus.messaging.impl.jooq.Tables.ATTACHMENT;
 import static ru.inovus.messaging.impl.util.DocumentUtils.DATE_TIME_PREFIX_LENGTH;
@@ -165,7 +166,9 @@ public class AttachmentService implements AttachmentRest, MessageAttachment {
         return dsl
                 .select(ATTACHMENT.fields())
                 .from(ATTACHMENT)
-                .where(ATTACHMENT.MESSAGE_ID.cast(UUID.class).eq(messageId));
+                .where(nonNull(messageId)
+                        ? ATTACHMENT.MESSAGE_ID.cast(UUID.class).eq(messageId)
+                        : noCondition());
     }
 
     private void upload(String fileName, InputStream file) {
