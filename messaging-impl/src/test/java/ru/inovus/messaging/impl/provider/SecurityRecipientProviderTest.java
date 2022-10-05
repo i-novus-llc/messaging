@@ -12,12 +12,13 @@ import net.n2oapp.security.admin.rest.api.criteria.RestOrganizationCriteria;
 import net.n2oapp.security.admin.rest.api.criteria.RestRegionCriteria;
 import net.n2oapp.security.admin.rest.api.criteria.RestRoleCriteria;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.inovus.messaging.api.criteria.ProviderRecipientCriteria;
 import ru.inovus.messaging.api.criteria.SecurityBaseCriteria;
 import ru.inovus.messaging.api.model.ProviderRecipient;
@@ -26,7 +27,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
 public class SecurityRecipientProviderTest {
     private SecurityAdminRecipientProvider recipientProvider;
 
@@ -35,7 +36,7 @@ public class SecurityRecipientProviderTest {
     private RegionRestService regionRestService;
     private OrganizationRestService organizationRestService;
 
-    @Before
+    @BeforeEach
     public void before() {
         userRestService = Mockito.mock(UserRestService.class);
         roleRestService = Mockito.mock(RoleRestService.class);
