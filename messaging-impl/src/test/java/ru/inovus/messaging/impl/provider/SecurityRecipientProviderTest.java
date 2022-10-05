@@ -14,12 +14,11 @@ import net.n2oapp.security.admin.rest.api.criteria.RestRoleCriteria;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.inovus.messaging.api.criteria.ProviderRecipientCriteria;
 import ru.inovus.messaging.api.criteria.SecurityBaseCriteria;
 import ru.inovus.messaging.api.model.ProviderRecipient;
@@ -28,21 +27,22 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 public class SecurityRecipientProviderTest {
     private SecurityAdminRecipientProvider recipientProvider;
 
-    @Mock
     private UserRestService userRestService;
-    @Mock
     private RoleRestService roleRestService;
-    @Mock
     private RegionRestService regionRestService;
-    @Mock
     private OrganizationRestService organizationRestService;
 
     @Before
     public void before() {
+        userRestService = Mockito.mock(UserRestService.class);
+        roleRestService = Mockito.mock(RoleRestService.class);
+        regionRestService = Mockito.mock(RegionRestService.class);
+        organizationRestService = Mockito.mock(OrganizationRestService.class);
+
         User user1 = new User();
         user1.setUsername("username1");
         user1.setFio("fio1");
