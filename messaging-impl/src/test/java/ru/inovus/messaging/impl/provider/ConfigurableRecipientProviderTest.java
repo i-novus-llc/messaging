@@ -1,21 +1,19 @@
-package ru.inovus.messaging.impl;
+package ru.inovus.messaging.impl.provider;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.client.RestTemplate;
 import ru.inovus.messaging.api.criteria.ProviderRecipientCriteria;
 import ru.inovus.messaging.api.model.ProviderRecipient;
-import ru.inovus.messaging.impl.provider.ConfigurableRecipientProvider;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -26,7 +24,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 
-@ExtendWith(SpringExtension.class)
+@SpringBootTest
 public class ConfigurableRecipientProviderTest {
 
     private ConfigurableRecipientProvider userRoleProvider;

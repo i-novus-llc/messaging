@@ -1,4 +1,4 @@
-package ru.inovus.messaging.impl;
+package ru.inovus.messaging.impl.provider;
 
 import net.n2oapp.security.admin.api.model.Organization;
 import net.n2oapp.security.admin.api.model.Region;
@@ -14,21 +14,19 @@ import net.n2oapp.security.admin.rest.api.criteria.RestRoleCriteria;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.inovus.messaging.api.criteria.ProviderRecipientCriteria;
 import ru.inovus.messaging.api.criteria.SecurityBaseCriteria;
 import ru.inovus.messaging.api.model.ProviderRecipient;
-import ru.inovus.messaging.impl.provider.SecurityAdminRecipientProvider;
 
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-@ExtendWith(SpringExtension.class)
+@SpringBootTest
 public class SecurityRecipientProviderTest {
     private SecurityAdminRecipientProvider recipientProvider;
 
