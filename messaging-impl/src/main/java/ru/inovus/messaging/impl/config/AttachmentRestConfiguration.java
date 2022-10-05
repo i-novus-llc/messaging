@@ -15,6 +15,8 @@ import org.springframework.context.annotation.Configuration;
 import ru.inovus.messaging.impl.service.AttachmentService;
 import ru.inovus.messaging.impl.util.DocumentUtils;
 
+import java.util.List;
+
 @Configuration
 @ConditionalOnProperty(value = "novus.messaging.attachment.enabled", havingValue = "true")
 public class AttachmentRestConfiguration {
@@ -39,7 +41,8 @@ public class AttachmentRestConfiguration {
     }
 
     @Bean
-    DocumentUtils documentUtils() {
-        return new DocumentUtils();
+    DocumentUtils documentUtils(@Value("${novus.messaging.attachment.file-type}") List<String> fileExtensionList,
+                                @Value("${novus.messaging.attachment.file-size}") Integer maxFileSize) {
+        return new DocumentUtils(fileExtensionList, maxFileSize);
     }
 }

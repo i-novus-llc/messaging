@@ -1,10 +1,8 @@
 package ru.inovus.messaging.impl.util;
 
-import lombok.RequiredArgsConstructor;
 import net.n2oapp.platform.i18n.Message;
 import net.n2oapp.platform.i18n.UserException;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,17 +15,20 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.springframework.util.StringUtils.hasText;
 
-@RequiredArgsConstructor
+
 public class DocumentUtils {
 
     private static final String DATE_TIME_FORMAT = "dd.MM.yyyy_HH:mm:ss";
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIME_FORMAT);
+    public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIME_FORMAT);
     public static final int DATE_TIME_PREFIX_LENGTH = DATE_TIME_FORMAT.length() + 1;
 
-    @Value("${novus.messaging.attachment.file-type}")
     private List<String> fileExtensionList;
-    @Value("${novus.messaging.attachment.file-size}")
     private Integer maxFileSize;
+
+    public DocumentUtils(List<String> fileExtensionList, Integer maxFileSize) {
+        this.fileExtensionList = fileExtensionList;
+        this.maxFileSize = maxFileSize;
+    }
 
     public String getFileNameWithDateTime(String fileName) {
         if (!hasText(fileName))
@@ -60,7 +61,7 @@ public class DocumentUtils {
             throw new UserException(new Message("messaging.exception.file.size", maxFileSize));
     }
 
-    private String replaceInvalidCharacters(String source) {
+    public String replaceInvalidCharacters(String source) {
         return source.trim().replaceAll("((:\\/)|(:\\\\)|[ :\\/\\\\])", "_");
     }
 }
