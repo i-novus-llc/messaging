@@ -1,4 +1,4 @@
-package ru.inovus.messaging.impl.provider;
+package ru.inovus.messaging.impl;
 
 import net.n2oapp.security.admin.api.model.Organization;
 import net.n2oapp.security.admin.api.model.Region;
@@ -22,6 +22,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.inovus.messaging.api.criteria.ProviderRecipientCriteria;
 import ru.inovus.messaging.api.criteria.SecurityBaseCriteria;
 import ru.inovus.messaging.api.model.ProviderRecipient;
+import ru.inovus.messaging.impl.provider.SecurityAdminRecipientProvider;
 
 import java.util.List;
 
