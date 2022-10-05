@@ -46,7 +46,7 @@ public class DocumentUtilsTest {
         String fileName = documentUtils.getFileNameWithDateTime("filename");
         String date = fileName.substring(0, DATE_TIME_PREFIX_LENGTH - 1);
         assertDoesNotThrow(() -> LocalDateTime.from(formatter.parse(date)));
-        fileName = documentUtils.getFileName(null);
+        fileName = documentUtils.getFileNameWithDateTime(null);
         assertThat(fileName,nullValue());
     }
 
