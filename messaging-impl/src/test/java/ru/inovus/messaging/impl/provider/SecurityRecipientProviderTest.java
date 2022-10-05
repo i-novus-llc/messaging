@@ -18,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.inovus.messaging.api.criteria.ProviderRecipientCriteria;
 import ru.inovus.messaging.api.criteria.SecurityBaseCriteria;
@@ -28,6 +29,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 @ExtendWith(SpringExtension.class)
+@TestPropertySource("classpath:application.properties")
 public class SecurityRecipientProviderTest {
     private SecurityAdminRecipientProvider recipientProvider;
 
