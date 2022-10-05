@@ -19,6 +19,7 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.*;
 import static ru.inovus.messaging.impl.util.DocumentUtils.DATE_TIME_PREFIX_LENGTH;
 import static ru.inovus.messaging.impl.util.DocumentUtils.formatter;
@@ -45,24 +46,30 @@ public class DocumentUtilsTest {
         String fileName = documentUtils.getFileNameWithDateTime("filename");
         String date = fileName.substring(0, DATE_TIME_PREFIX_LENGTH - 1);
         assertDoesNotThrow(() -> LocalDateTime.from(formatter.parse(date)));
+        fileName = documentUtils.getFileName(null);
+        assertThat(fileName,nullValue());
     }
 
     @Test
     void getFileNameTest() {
         String fileName = documentUtils.getFileName(createAttachment());
         assertThat(fileName, is(VALID_FILE_NAME));
+        fileName = documentUtils.getFileName(null);
+        assertThat(fileName,nullValue());
     }
 
     @Test
     void checkFileExtensionTest() {
         assertDoesNotThrow(() -> documentUtils.checkFileExtension(VALID_FILE_NAME));
         assertThrows(UserException.class, () -> documentUtils.checkFileExtension(INVALID_FILE_NAME));
+        assertDoesNotThrow(() -> documentUtils.checkFileExtension(null));
     }
 
     @Test
     void checkFileSizeTest() {
         assertDoesNotThrow(() -> documentUtils.checkFileSize(new ByteArrayInputStream(new byte[10])));
         assertThrows(UserException.class, () -> documentUtils.checkFileSize(new ByteArrayInputStream(new byte[maxFileSize * 1024 * 1024 * 2])));
+        assertDoesNotThrow(() -> documentUtils.checkFileSize(null));
     }
 
     @Test
