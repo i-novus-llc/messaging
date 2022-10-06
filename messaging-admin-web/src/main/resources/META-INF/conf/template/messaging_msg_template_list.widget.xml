@@ -52,7 +52,7 @@
             <toolbar>
                 <button id="delete" icon="fa fa-trash" description="Удалить"
                         confirm-text="После подтверждения шаблон будет удален. Удалить шаблон?">
-                    <invoke operation-id="delete"/>
+                    <invoke operation-id="delete" message-on-success="false"/>
                 </button>
             </toolbar>
         </column>
