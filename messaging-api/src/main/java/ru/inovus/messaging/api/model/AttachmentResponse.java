@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.UUID;
 
 @Getter
@@ -21,4 +22,20 @@ public class AttachmentResponse implements Serializable {
 
     @ApiModelProperty("Название файла для UI")
     private String shortFileName;
+
+    @ApiModelProperty("Размер файла в байтах")
+    private Integer fileSize;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AttachmentResponse that = (AttachmentResponse) o;
+        return Objects.equals(shortFileName, that.shortFileName) && Objects.equals(fileSize, that.fileSize);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(shortFileName, fileSize);
+    }
 }

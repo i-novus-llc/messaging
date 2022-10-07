@@ -32,8 +32,7 @@ import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
@@ -87,10 +86,11 @@ public class AttachmentService implements AttachmentRest, MessageAttachment {
         fileName = documentUtils.getFileNameWithDateTime(fileName);
 
         InputStream is;
+        Integer fileSize;
 
         try {
             is = attachment.getDataHandler().getInputStream();
-            documentUtils.checkFileSize(is);
+            fileSize = documentUtils.checkFileSize(is);
         } catch (IOException e) {
             throw new UncheckedIOException(e.getMessage(), e);
         }
@@ -101,6 +101,7 @@ public class AttachmentService implements AttachmentRest, MessageAttachment {
         AttachmentResponse fileResponse = new AttachmentResponse();
         fileResponse.setFileName(fileName);
         fileResponse.setShortFileName(fileName.substring(DATE_TIME_PREFIX_LENGTH));
+        fileResponse.setFileSize(fileSize);
         return fileResponse;
     }
 
@@ -152,14 +153,34 @@ public class AttachmentService implements AttachmentRest, MessageAttachment {
 
     public void create(List<AttachmentResponse> files, UUID messageId) {
         if (!CollectionUtils.isEmpty(files) && nonNull(messageId)) {
-            if (files.size() > maxFileCount)
-                throw new UserException(new Message("messaging.exception.file.count", maxFileCount));
-
+            validateAttachments(files);
             List<AttachmentRecord> attachments = files.stream()
                     .map(attachment -> new AttachmentRecord(UUID.randomUUID(), messageId, attachment.getFileName(), LocalDateTime.now()))
                     .collect(Collectors.toList());
             dsl.batchInsert(attachments).execute();
         }
+    }
+
+    private void validateAttachments(List<AttachmentResponse> files) {
+        if (files.size() > maxFileCount)
+            throw new UserException(new Message("messaging.exception.file.count", maxFileCount));
+        validateDuplicates(files);
+    }
+
+    private void validateDuplicates(List<AttachmentResponse> files) {
+        Set<AttachmentResponse> checkedAttachments = new HashSet<>();
+        Set<AttachmentResponse> duplicates = new HashSet<>();
+
+        for (AttachmentResponse attachment : files) {
+            if (checkedAttachments.contains(attachment))
+                duplicates.add(attachment);
+            else checkedAttachments.add(attachment);
+        }
+
+        if (!CollectionUtils.isEmpty(duplicates))
+            throw new UserException(new Message("messaging.exception.file.duplicate", duplicates.stream()
+                    .map(AttachmentResponse::getShortFileName)
+                    .collect(Collectors.joining(", "))));
     }
 
     private SelectConditionStep<Record> getFindByMessageIdQuery(UUID messageId) {

@@ -74,22 +74,25 @@
                     </row>
                     <row>
                         <hidden id="attachmentEnabled" default-value="${novus.messaging.attachment.enabled}"/>
-                        <file-upload id="attachments" value-field-id="fileName" label-field-id="shortFileName"
-                                     enabled="{typeof id == 'undefined' || id == null}"
-                                     multi="true"
-                                     show-size="false"
-                                     accept="${novus.messaging.attachment.file-type}"
-                                     upload-url="${server.servlet.context-path}/proxy/api/attachments"
-                                     delete-url="${server.servlet.context-path}/proxy/api/attachments"
-                                     label="Вложение">
-                            <dependencies>
-                                <visibility on="attachmentEnabled">attachmentEnabled == true</visibility>
-                            </dependencies>
-                        </file-upload>
+                        <col size="6">
+                            <file-upload id="attachments" value-field-id="fileName" label-field-id="shortFileName"
+                                         enabled="{typeof id == 'undefined' || id == null}"
+                                         multi="true"
+                                         show-size="false"
+                                         accept="${novus.messaging.attachment.file-type}"
+                                         upload-url="${server.servlet.context-path}/proxy/api/attachments"
+                                         delete-url="${server.servlet.context-path}/proxy/api/attachments"
+                                         label="Вложение">
+                                <dependencies>
+                                    <visibility on="attachmentEnabled">attachmentEnabled == true</visibility>
+                                </dependencies>
+                            </file-upload>
+                        </col>
                     </row>
                     <row>
                         <hidden id="recipientProvider" default-value="${novus.messaging.recipient-provider.type}"/>
-                        <radio-group id="recipientType" label="Тип получателей" inline="true" required="true" enabled="{typeof id == 'undefined' || id == null}">
+                        <radio-group id="recipientType" label="Тип получателей" inline="true" required="true"
+                                     enabled="{typeof id == 'undefined' || id == null}">
                             <default-value id="RECIPIENT" name="Пользователи"/>
                             <options>
                                 <option id="RECIPIENT" name="Пользователи"/>
@@ -143,6 +146,16 @@
                             </dependencies>
                         </input-select>
                     </row>
+                    <row>
+                        <checkbox id="fioVisibility" default-value="false" label="Поиск по ФИО"/>
+                    </row>
+                    <row>
+                        <input-text id="fio" visible="{fioVisibility}" label="Поиск по ФИО">
+                            <dependencies>
+                                <reset on="fioVisibility">true</reset>
+                            </dependencies>
+                        </input-text>
+                    </row>
                 </set>
             </fields>
             <toolbar place="topLeft">
@@ -162,6 +175,7 @@
                 <in field-id="roleCodes" values="{roles*.name}"/>
                 <eq field-id="regionId" value="{region.id}"/>
                 <eq field-id="organizationId" value="{organization.id}"/>
+                <like field-id="name" value="{fio}"/>
             </pre-filters>
             <columns>
                 <column text-field-id="name" label="Пользователь"/>

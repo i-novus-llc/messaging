@@ -53,12 +53,12 @@ public class DocumentUtils {
             throw new UserException(new Message("messaging.exception.file.notValidFormat", fileExtensionList));
     }
 
-    public void checkFileSize(InputStream is) throws IOException {
-        if (isNull(is)) return;
+    public Integer checkFileSize(InputStream is) throws IOException {
+        if (isNull(is)) return null;
         int size = is.available();
-        size = size / (1024 * 1024);
-        if (size > maxFileSize)
+        if ((size / (1024 * 1024)) > maxFileSize)
             throw new UserException(new Message("messaging.exception.file.size", maxFileSize));
+        return size;
     }
 
     public String replaceInvalidCharacters(String source) {
