@@ -89,6 +89,14 @@ public class AttachmentServiceTest {
     }
 
     @Test
+    void fileDuplicateTest() {
+        AttachmentResponse firstAttachment = getNewAttachment(FIRST_FILE_NAME);
+        firstAttachment.setFileSize(100);
+        assertThrows(UserException.class, () -> service.create(List.of(firstAttachment, firstAttachment),
+                THIRD_MESSAGE_ID));
+    }
+
+    @Test
     void uploadTest() {
         when(s3client.doesBucketExistV2(any())).thenReturn(true);
         when(s3client.putObject(anyString(), anyString(), any(), any())).thenReturn(null);
@@ -102,7 +110,7 @@ public class AttachmentServiceTest {
         List<AttachmentResponse> responsesList = service.findAll(SECOND_MESSAGE_ID);
         Response response = service.download(responsesList.get(0).getId());
         assertThat(response.getStatus(), is(Response.Status.OK.getStatusCode()));
-        assertTrue(((String)response.getHeaders().get("Content-Disposition").get(0)).contains(THIRD_FILE_NAME));
+        assertTrue(((String) response.getHeaders().get("Content-Disposition").get(0)).contains(THIRD_FILE_NAME));
     }
 
     @Test
