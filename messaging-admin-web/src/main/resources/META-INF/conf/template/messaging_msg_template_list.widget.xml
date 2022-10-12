@@ -48,17 +48,24 @@
         <column text-field-id="enabled" label="Включено">
             <checkbox/>
         </column>
+        <column label="Действие">
+            <toolbar>
+                <button id="delete" icon="fa fa-trash" description="Удалить"
+                        confirm-text="После подтверждения шаблон будет удален. Удалить шаблон?">
+                    <invoke operation-id="delete"/>
+                </button>
+            </toolbar>
+        </column>
     </columns>
     <toolbar>
-        <button label="Добавить" id="create" model="filter" icon="fa fa-plus">
+        <button id="create" model="filter" label="Создать" color="primary" type="text">
             <show-modal page-id="messaging_msg_template" submit-operation-id="create" upload="defaults"/>
         </button>
-        <button label="Изменить" id="update" model="resolve" icon="fa fa-edit">
-            <show-modal page-id="messaging_msg_template" submit-operation-id="update"
-                        close-after-submit="true" detail-field-id="id"/>
-        </button>
-        <button label="Удалить" id="delete" model="resolve" icon="fa fa-remove">
-            <invoke operation-id="delete"/>
-        </button>
     </toolbar>
+    <rows>
+        <click>
+            <show-modal page-id="messaging_msg_template" submit-operation-id="update"
+                        detail-field-id="id"/>
+        </click>
+    </rows>
 </table>

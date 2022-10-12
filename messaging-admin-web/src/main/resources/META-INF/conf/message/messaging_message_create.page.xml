@@ -1,94 +1,194 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-3.0"
-             name="Создание уведомления">
-    <form id="create" query-id="messaging_message">
-        <fields>
-            <set>
-                <row>
-                    <input-select id="template" label="Шаблон" query-id="messaging_msg_template" search-field-id="name"
-                                  label-field-id="name"/>
-                </row>
-                <input-select id="infoType" label="Информирование" required="true"
-                              query-id="messaging_channels">
-                    <dependencies>
-                        <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return template.infoType;</set-value>
-                    </dependencies>
-                </input-select>
-                <row>
-                </row>
-                <row>
-                    <select id="severity" label="Уровень важности">
-                        <options>
-                            <option id="SEVERE" name="Важный"/>
-                            <option id="ERROR" name="Ошибка"/>
-                            <option id="WARNING" name="Предупреждение"/>
-                            <option id="INFO" name="Информация"/>
-                        </options>
+<page xmlns="http://n2oapp.net/framework/config/schema/page-3.0"
+      name="Создание уведомления">
+    <regions>
+        <form id="create" query-id="messaging_message">
+            <fields>
+                <set field-label-location="left" field-label-align="left" field-label-width="220px">
+                    <row>
+                        <input-select id="template" label="Шаблон" query-id="messaging_msg_template" search-field-id="name"
+                                      label-field-id="name" enabled="{typeof id == 'undefined' || id == null}">
+                            <pre-filters>
+                                <eq field-id="enabled" value="true"/>
+                            </pre-filters>
+                        </input-select>
+                    </row>
+                    <input-select id="infoType" label="Информирование" required="true"
+                                  query-id="messaging_channels" enabled="{typeof id == 'undefined' || id == null}">
                         <dependencies>
-                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return template.severity;</set-value>
-                            <visibility on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</visibility>
-                            <requiring on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</requiring>
+                            <set-value on="template">
+                                if (typeof template != 'undefined' &amp;&amp; template) return template.infoType;;
+                            </set-value>
                         </dependencies>
-                    </select>
-                    <select id="alertType" label="Способ отображения">
-                        <options>
-                            <option id="BLOCKER" name="Блокирующее уведомление"/>
-                            <option id="POPUP" name="Всплывающее уведомление"/>
-                            <option id="HIDDEN" name="Лента уведомлений"/>
-                        </options>
-                        <dependencies>
-                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return template.alertType;</set-value>
-                            <visibility on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</visibility>
-                            <requiring on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</requiring>
-                        </dependencies>
-                    </select>
-                </row>
-                <row>
-                    <text-area id="caption" label="Заголовок уведомления" max-rows="3" required="true">
-                        <dependencies>
-                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return template.caption;</set-value>
-                        </dependencies>
-                    </text-area>
-                </row>
-                <row>
-                    <text-area id="text" label="Текст уведомления" max-rows="5" required="true">
-                        <dependencies>
-                            <set-value on="template">if (typeof template != 'undefined' &amp;&amp; template) return template.text;</set-value>
-                        </dependencies>
-                    </text-area>
-                </row>
-                <row>
-                    <radio-group id="recipientType" label="Тип получателей" inline="true" visible="false">
-                        <default-value id="RECIPIENT" name="Пользователи"/>
-                        <options>
-                            <option id="RECIPIENT" name="Пользователи"/>
-                        </options>
-                    </radio-group>
-                </row>
-            </set>
-            <row>
-                <radio-group id="allRecipients" label="Получатели" inline="true">
-                    <options>
-                        <option id="1" name="Получатели"/>
-                        <option id="2" name="Все"/>
-                    </options>
-                    <default-value id="1" name="Получатели"/>
-                </radio-group>
-            </row>
-            <row>
-                <input-select id="users" type="checkboxes" label="Получатели"
-                              query-id="messaging_recipient" label-field-id="name" search-field-id="name">
-                    <dependencies>
-                        <requiring on="allRecipients">
-                            allRecipients.id == 1
-                        </requiring>
-                        <visibility on="recipientType, allRecipients">
-                            (recipientType.id == 'RECIPIENT' &amp;&amp; allRecipients.id == 1)
-                        </visibility>
-                        <reset on="allRecipients">true</reset>
-                    </dependencies>
-                </input-select>
-            </row>
-        </fields>
-    </form>
-</simple-page>
+                    </input-select>
+                    <row>
+                    </row>
+                    <row>
+                        <select id="severity" label="Уровень важности" enabled="{typeof id == 'undefined' || id == null}">
+                            <options>
+                                <option id="SEVERE" name="Важный"/>
+                                <option id="ERROR" name="Ошибка"/>
+                                <option id="WARNING" name="Предупреждение"/>
+                                <option id="INFO" name="Информация"/>
+                            </options>
+                            <dependencies>
+                                <set-value on="template">
+                                    if (typeof template != 'undefined' &amp;&amp; template) return template.severity;
+                                </set-value>
+                                <visibility on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</visibility>
+                                <requiring on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</requiring>
+                            </dependencies>
+                        </select>
+                        <select id="alertType" label="Способ отображения" enabled="{typeof id == 'undefined' || id == null}">
+                            <options>
+                                <option id="BLOCKER" name="Блокирующее уведомление"/>
+                                <option id="POPUP" name="Всплывающее уведомление"/>
+                                <option id="HIDDEN" name="Лента уведомлений"/>
+                            </options>
+                            <dependencies>
+                                <set-value on="template">
+                                    if (typeof template != 'undefined' &amp;&amp; template) return template.alertType;
+                                </set-value>
+                                <visibility on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</visibility>
+                                <requiring on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</requiring>
+                            </dependencies>
+                        </select>
+                    </row>
+                    <row>
+                        <text-area id="caption" label="Заголовок уведомления" max-rows="3" required="true" enabled="{typeof id == 'undefined' || id == null}">
+                            <dependencies>
+                                <set-value on="template">
+                                    if (typeof template != 'undefined' &amp;&amp; template) return template.caption;
+                                </set-value>
+                            </dependencies>
+                        </text-area>
+                    </row>
+                    <row>
+                        <text-area id="text" label="Текст уведомления" max-rows="5" required="true" enabled="{typeof id == 'undefined' || id == null}">
+                            <dependencies>
+                                <set-value on="template">
+                                    if (typeof template != 'undefined' &amp;&amp; template) return template.text;
+                                </set-value>
+                            </dependencies>
+                        </text-area>
+                    </row>
+                    <row>
+                        <hidden id="attachmentEnabled" default-value="${novus.messaging.attachment.enabled}"/>
+                        <col size="6">
+                            <file-upload id="attachments" value-field-id="fileName" label-field-id="shortFileName"
+                                         enabled="{typeof id == 'undefined' || id == null}"
+                                         multi="true"
+                                         show-size="false"
+                                         accept="${novus.messaging.attachment.file-type}"
+                                         upload-url="${server.servlet.context-path}/proxy/api/attachments"
+                                         delete-url="${server.servlet.context-path}/proxy/api/attachments"
+                                         label="Вложение">
+                                <dependencies>
+                                    <visibility on="attachmentEnabled">attachmentEnabled == true</visibility>
+                                </dependencies>
+                            </file-upload>
+                        </col>
+                    </row>
+                    <row>
+                        <hidden id="recipientProvider" default-value="${novus.messaging.recipient-provider.type}"/>
+                        <radio-group id="recipientType" label="Тип получателей" inline="true" required="true"
+                                     enabled="{typeof id == 'undefined' || id == null}">
+                            <default-value id="RECIPIENT" name="Пользователи"/>
+                            <options>
+                                <option id="RECIPIENT" name="Пользователи"/>
+                                <option id="USER_GROUP_BY_ROLE" name="Роль"/>
+                                <option id="USER_GROUP_BY_REGION" name="Регион"/>
+                                <option id="USER_GROUP_BY_ORGANIZATION" name="Мед.организация"/>
+                            </options>
+                            <dependencies>
+                                <enabling on="recipientProvider">recipientProvider === 'security'</enabling>
+                            </dependencies>
+                        </radio-group>
+                    </row>
+                    <row>
+                        <input-select id="roles" type="checkboxes" label="Укажите роль"
+                                      query-id="messaging_role" label-field-id="name" search-field-id="name"
+                                      enabled="{typeof id == 'undefined' || id == null}">
+                            <dependencies>
+                                <requiring on="recipientType">
+                                    recipientType.id == 'USER_GROUP_BY_ROLE'
+                                </requiring>
+                                <visibility on="recipientType">
+                                    recipientType.id == 'USER_GROUP_BY_ROLE'
+                                </visibility>
+                                <reset on="recipientType" apply-on-init="false">return true;</reset>
+                            </dependencies>
+                        </input-select>
+                        <input-select id="region" type="single" label="Укажите регион"
+                                      query-id="messaging_region" label-field-id="name" search-field-id="name"
+                                      enabled="{typeof id == 'undefined' || id == null}">
+                            <dependencies>
+                                <requiring on="recipientType">
+                                    recipientType.id == 'USER_GROUP_BY_REGION'
+                                </requiring>
+                                <visibility on="recipientType">
+                                    recipientType.id == 'USER_GROUP_BY_REGION'
+                                </visibility>
+                                <reset on="recipientType" apply-on-init="false">return true;</reset>
+                            </dependencies>
+                        </input-select>
+                        <input-select id="organization" type="single" label="Укажите организацию"
+                                      query-id="messaging_organization" label-field-id="name"
+                                      search-field-id="name" enabled="{typeof id == 'undefined' || id == null}">
+                            <dependencies>
+                                <requiring on="recipientType">
+                                    recipientType.id == 'USER_GROUP_BY_ORGANIZATION'
+                                </requiring>
+                                <visibility on="recipientType">
+                                    recipientType.id == 'USER_GROUP_BY_ORGANIZATION'
+                                </visibility>
+                                <reset on="recipientType" apply-on-init="false">return true;</reset>
+                            </dependencies>
+                        </input-select>
+                    </row>
+                    <row>
+                        <checkbox id="fioVisibility" default-value="false" label="Поиск по ФИО"/>
+                    </row>
+                    <row>
+                        <input-text id="fio" visible="{fioVisibility}" label="Поиск по ФИО">
+                            <dependencies>
+                                <reset on="fioVisibility">true</reset>
+                            </dependencies>
+                        </input-text>
+                    </row>
+                </set>
+            </fields>
+            <toolbar place="topLeft">
+                <button id="save" label="Сохранить" color="primary">
+                    <invoke operation-id="send" close-on-success="true" object-id="messaging_message">
+                        <form-param id="recipients" ref-widget-id="recipients" ref-model="multi"/>
+                    </invoke>
+                </button>
+                <button id="cancel" label="Отменить">
+                    <close/>
+                </button>
+            </toolbar>
+        </form>
+        <table id="recipients" selection="checkbox" query-id="messaging_recipient" object-id="messaging_message"
+               depends-on="create" fetch-on-init="true" visible="{typeof id == 'undefined' || id == null}">
+            <pre-filters>
+                <in field-id="roleCodes" values="{roles*.name}"/>
+                <eq field-id="regionId" value="{region.id}"/>
+                <eq field-id="organizationId" value="{organization.id}"/>
+                <like field-id="name" value="{fio}"/>
+            </pre-filters>
+            <columns>
+                <column text-field-id="name" label="Пользователь"/>
+            </columns>
+        </table>
+        <table id="repeatedRecipients" query-id="recipient" depends-on="create" detail-field-id="messageId"
+               fetch-on-init="true" visible="{id != null}">
+            <columns>
+                <column id="checked">
+                    <checkbox/>
+                </column>
+                <column text-field-id="name" label="Пользователь"/>
+            </columns>
+        </table>
+    </regions>
+</page>

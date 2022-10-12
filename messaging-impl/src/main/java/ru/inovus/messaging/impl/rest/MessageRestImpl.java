@@ -1,9 +1,11 @@
 package ru.inovus.messaging.impl.rest;
 
 import lombok.extern.slf4j.Slf4j;
+import net.n2oapp.platform.i18n.UserException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
+import ru.inovus.messaging.api.MessageAttachment;
 import ru.inovus.messaging.api.criteria.MessageCriteria;
 import ru.inovus.messaging.api.model.*;
 import ru.inovus.messaging.api.model.enums.RecipientType;
@@ -13,8 +15,16 @@ import ru.inovus.messaging.impl.service.ChannelService;
 import ru.inovus.messaging.impl.service.MessageService;
 import ru.inovus.messaging.impl.service.MessageTemplateService;
 import ru.inovus.messaging.impl.service.RecipientService;
+import ru.inovus.messaging.impl.util.MessageHelper;
 
-import java.util.*;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import static java.util.Objects.nonNull;
 
 @Slf4j
 @Controller
@@ -24,17 +34,23 @@ public class MessageRestImpl implements MessageRest {
     private final RecipientService recipientService;
     private final ChannelService channelService;
     private final MqProvider mqProvider;
+    private final MessageHelper messageHelper;
+    private MessageAttachment attachmentService;
 
     public MessageRestImpl(MessageService messageService,
                            MessageTemplateService messageTemplateService,
                            RecipientService recipientService,
                            ChannelService channelService,
-                           MqProvider mqProvider) {
+                           MqProvider mqProvider,
+                           MessageHelper messageHelper,
+                           @Nullable MessageAttachment attachmentService) {
         this.messageService = messageService;
         this.messageTemplateService = messageTemplateService;
         this.recipientService = recipientService;
         this.channelService = channelService;
         this.mqProvider = mqProvider;
+        this.messageHelper = messageHelper;
+        this.attachmentService = attachmentService;
     }
 
     @Override
@@ -53,15 +69,36 @@ public class MessageRestImpl implements MessageRest {
     public void sendMessage(String tenantCode, final MessageOutbox messageOutbox) {
         if (messageOutbox.getMessage() != null) {
             messageOutbox.getMessage().setTenantCode(tenantCode);
-            if (CollectionUtils.isEmpty(messageOutbox.getMessage().getRecipients()))
-                messageOutbox.getMessage().setRecipients(recipientService.getAll());
-            else recipientService.enrichRecipient(messageOutbox.getMessage().getRecipients());
+            setRecipientsAndAttachments(tenantCode, messageOutbox);
             save(messageOutbox.getMessage());
             send(messageOutbox.getMessage());
         } else if (messageOutbox.getTemplateMessageOutbox() != null) {
             messageOutbox.getTemplateMessageOutbox().setTenantCode(tenantCode);
             buildAndSendMessage(messageOutbox.getTemplateMessageOutbox());
         }
+    }
+
+    /**
+     * Выбор источника получателей, вложений и обогащение
+     *
+     * @param messageOutbox Уведомление
+     */
+    private void setRecipientsAndAttachments(String tenantCode, MessageOutbox messageOutbox) {
+        Message newMessage = messageOutbox.getMessage();
+        if (nonNull(newMessage.getId())) {
+            Message oldMessage = getMessage(tenantCode, UUID.fromString(newMessage.getId()));
+            if (!CollectionUtils.isEmpty(oldMessage.getRecipients())) {
+                newMessage.setRecipients(oldMessage.getRecipients());
+            }
+            if (!CollectionUtils.isEmpty(oldMessage.getAttachments())) {
+                newMessage.setAttachments(oldMessage.getAttachments().stream()
+                        .peek(message -> message.setId(null))
+                        .collect(Collectors.toList()));
+            }
+        }
+        if (!CollectionUtils.isEmpty(newMessage.getRecipients()))
+            recipientService.enrichRecipient(newMessage.getRecipients());
+        else throw new UserException(messageHelper.obtainMessage("messaging.exception.message.recipients.empty"));
     }
 
     /**
@@ -99,7 +136,11 @@ public class MessageRestImpl implements MessageRest {
      */
     private void send(Message message) {
         Channel channel = channelService.getChannel(message.getChannel().getId());
-        mqProvider.publish(constructMessage(message), channel.getQueueName());
+
+        Message newMessage = message.clone();
+        Optional.ofNullable(attachmentService).ifPresent(as -> newMessage.setAttachments(as.findAll(UUID.fromString(message.getId()))));
+
+        mqProvider.publish(newMessage, channel.getQueueName());
     }
 
     /**
@@ -136,23 +177,5 @@ public class MessageRestImpl implements MessageRest {
         for (Map.Entry<String, Object> placeHolder : placeholders.entrySet())
             text = text.replace(placeHolder.getKey(), placeHolder.getValue().toString());
         return text;
-    }
-
-    /**
-     * Конструирование уведомления для публикации в очередь
-     *
-     * @param message Уведомление
-     * @return
-     */
-    private Message constructMessage(Message message) {
-        Message newMessage = new Message();
-        newMessage.setId(message.getId());
-        newMessage.setCaption(message.getCaption());
-        newMessage.setText(message.getText());
-        newMessage.setSeverity(message.getSeverity());
-        newMessage.setAlertType(message.getAlertType());
-        newMessage.setRecipients(message.getRecipients());
-        newMessage.setTenantCode(message.getTenantCode());
-        return newMessage;
     }
 }

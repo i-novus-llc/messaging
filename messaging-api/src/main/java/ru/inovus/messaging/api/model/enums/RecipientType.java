@@ -22,7 +22,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  */
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum RecipientType {
-    RECIPIENT("Пользователь");
+    RECIPIENT("Пользователь"),
+    USER_GROUP_BY_ROLE("Пользователи, отфильтрованные по роли"),
+    USER_GROUP_BY_REGION("Пользователи, отфильтрованные по региону"),
+    USER_GROUP_BY_ORGANIZATION("Пользователи, отфильтрованные по медицинской организации");
 
     private String name;
 

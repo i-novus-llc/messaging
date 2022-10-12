@@ -35,7 +35,7 @@
             </in>
         </operation>
 
-        <operation id="delete" confirm="true">
+        <operation id="delete" confirm="true" success-text="Данные удалены">
             <invocation>
                 <rest method="DELETE">${messaging.backend.path}/${novus.messaging.tenant-code}/templates/{id}</rest>
             </invocation>

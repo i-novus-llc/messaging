@@ -296,3 +296,19 @@ databaseChangeLog:
             encoding: utf8
             path: sql/MESSAGING-231.sql
             relativeToChangelogFile: true
+  - changeSet:
+      id: EGISZNRPLATFORM-1028
+      author: anigmatullin
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/EGISZNRPLATFORM-1028.sql
+            relativeToChangelogFile: true
+  - changeSet:
+      id: EGISZNRPLATFORM-1047
+      author: anigmatullin
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/EGISZNRPLATFORM-1047.sql
+            relativeToChangelogFile: true

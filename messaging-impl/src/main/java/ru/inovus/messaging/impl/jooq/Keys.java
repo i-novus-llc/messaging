@@ -9,11 +9,13 @@ import org.jooq.TableField;
 import org.jooq.UniqueKey;
 import org.jooq.impl.Internal;
 
+import ru.inovus.messaging.impl.jooq.tables.Attachment;
 import ru.inovus.messaging.impl.jooq.tables.Channel;
 import ru.inovus.messaging.impl.jooq.tables.Message;
 import ru.inovus.messaging.impl.jooq.tables.MessageRecipient;
 import ru.inovus.messaging.impl.jooq.tables.MessageTemplate;
 import ru.inovus.messaging.impl.jooq.tables.Tenant;
+import ru.inovus.messaging.impl.jooq.tables.records.AttachmentRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.ChannelRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecipientRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
@@ -37,6 +39,7 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final UniqueKey<AttachmentRecord> ATTACHMENT_PKEY = UniqueKeys0.ATTACHMENT_PKEY;
     public static final UniqueKey<ChannelRecord> CHANNEL_PKEY = UniqueKeys0.CHANNEL_PKEY;
     public static final UniqueKey<MessageRecord> MESSAGE_PKEY = UniqueKeys0.MESSAGE_PKEY;
     public static final UniqueKey<MessageRecipientRecord> MESSAGE_RECIPIENT_PKEY = UniqueKeys0.MESSAGE_RECIPIENT_PKEY;
@@ -48,6 +51,7 @@ public class Keys {
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final ForeignKey<AttachmentRecord, MessageRecord> ATTACHMENT__ATTACHMENT_MESSAGE_ID_FK = ForeignKeys0.ATTACHMENT__ATTACHMENT_MESSAGE_ID_FK;
     public static final ForeignKey<MessageRecord, TenantRecord> MESSAGE__MESSAGE_TENANT_CODE_FKEY = ForeignKeys0.MESSAGE__MESSAGE_TENANT_CODE_FKEY;
     public static final ForeignKey<MessageRecord, ChannelRecord> MESSAGE__MESSAGE_CHANNEL_CODE_CHANNEL_CODE_FK = ForeignKeys0.MESSAGE__MESSAGE_CHANNEL_CODE_CHANNEL_CODE_FK;
     public static final ForeignKey<MessageRecipientRecord, MessageRecord> MESSAGE_RECIPIENT__MESSAGE_RECIPIENT_MESSAGE_ID_FKEY = ForeignKeys0.MESSAGE_RECIPIENT__MESSAGE_RECIPIENT_MESSAGE_ID_FKEY;
@@ -59,6 +63,7 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     private static class UniqueKeys0 {
+        public static final UniqueKey<AttachmentRecord> ATTACHMENT_PKEY = Internal.createUniqueKey(Attachment.ATTACHMENT, "attachment_pkey", new TableField[] { Attachment.ATTACHMENT.ID }, true);
         public static final UniqueKey<ChannelRecord> CHANNEL_PKEY = Internal.createUniqueKey(Channel.CHANNEL, "channel_pkey", new TableField[] { Channel.CHANNEL.CODE }, true);
         public static final UniqueKey<MessageRecord> MESSAGE_PKEY = Internal.createUniqueKey(Message.MESSAGE, "message_pkey", new TableField[] { Message.MESSAGE.ID }, true);
         public static final UniqueKey<MessageRecipientRecord> MESSAGE_RECIPIENT_PKEY = Internal.createUniqueKey(MessageRecipient.MESSAGE_RECIPIENT, "message_recipient_pkey", new TableField[] { MessageRecipient.MESSAGE_RECIPIENT.ID }, true);
@@ -68,6 +73,7 @@ public class Keys {
     }
 
     private static class ForeignKeys0 {
+        public static final ForeignKey<AttachmentRecord, MessageRecord> ATTACHMENT__ATTACHMENT_MESSAGE_ID_FK = Internal.createForeignKey(Keys.MESSAGE_PKEY, Attachment.ATTACHMENT, "attachment_message_id_fk", new TableField[] { Attachment.ATTACHMENT.MESSAGE_ID }, true);
         public static final ForeignKey<MessageRecord, TenantRecord> MESSAGE__MESSAGE_TENANT_CODE_FKEY = Internal.createForeignKey(Keys.TENANT_PKEY, Message.MESSAGE, "message_tenant_code_fkey", new TableField[] { Message.MESSAGE.TENANT_CODE }, true);
         public static final ForeignKey<MessageRecord, ChannelRecord> MESSAGE__MESSAGE_CHANNEL_CODE_CHANNEL_CODE_FK = Internal.createForeignKey(Keys.CHANNEL_PKEY, Message.MESSAGE, "message_channel_code_channel_code_fk", new TableField[] { Message.MESSAGE.CHANNEL_CODE }, true);
         public static final ForeignKey<MessageRecipientRecord, MessageRecord> MESSAGE_RECIPIENT__MESSAGE_RECIPIENT_MESSAGE_ID_FKEY = Internal.createForeignKey(Keys.MESSAGE_PKEY, MessageRecipient.MESSAGE_RECIPIENT, "message_recipient_message_id_fkey", new TableField[] { MessageRecipient.MESSAGE_RECIPIENT.MESSAGE_ID }, true);

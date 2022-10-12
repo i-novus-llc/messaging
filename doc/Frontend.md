@@ -30,3 +30,31 @@
 ## Фронтенд приложение
 В дополнении, в проект входит запускаемый модуль `messaging-admin-frontend`,
 содержащий все выше указанные модули UI.
+
+## Перенаправление запросов на загрузку/скачивание/удаление вложений
+При включенной возможности прикрепления вложений к уведомлениям `novus.messaging.attachment.enabled=true` на UI появятся поля для загрузки и скачивания вложений. Необходимо настроить перенапраление запросов на backend сервис. Запрос на `адрес_frontend_модуля/proxy/api/attachments` необходимо перенаправить на `адрес_backend_модуля/api/attachments` прокси-клиентом.
+
+Пример настройки прокси-клиента:
+
+```xml
+<dependency>
+  <groupId>org.mitre.dsmiley.httpproxy</groupId>
+  <artifactId>smiley-http-proxy-servlet</artifactId>
+  <version>${proxy.version}</version>
+</dependency>
+```
+
+```java
+    @Bean
+    public ServletRegistrationBean<ProxyServlet> proxyInputDataServiceServlet(
+            @Value("${messaging.backend.path}" + "/attachments") String inputDataUrl) {
+        ServletRegistrationBean<ProxyServlet> bean =
+                new ServletRegistrationBean<>(new ProxyServlet(), "/proxy/api/attachments/*");
+        Map<String, String> params = new HashMap<>();
+        params.put("targetUri", inputDataUrl);
+        params.put(ProxyServlet.P_LOG, "true");
+        params.put(ProxyServlet.P_PRESERVECOOKIES, "true");
+        bean.setInitParameters(params);
+        return bean;
+    }
+```

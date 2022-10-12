@@ -8,7 +8,7 @@
                     <eq field-id="id" param="id"/>
                 </pre-filters>
                 <fields>
-                    <set>
+                    <set field-label-location="left" field-label-align="left" field-label-width="220px">
                         <row>
                             <input-select id="infoType" label="Информирование" enabled="false"/>
                             <input-select id="severity" label="Уровень важности" enabled="false">
@@ -32,10 +32,28 @@
                         <row>
                             <output-text id="sentAt" label="Дата отправки" enabled="false" format="date DD.MM.YYYY HH:mm:ss"/>
                         </row>
+                        <row>
+                            <output-text id="role" label="Роль" visible="{role!=null}"/>
+                            <output-text id="region.name" label="Регион" visible="{region!=null}"/>
+                            <output-text id="organization.name" label="Организация" visible="{organization!=null}"/>
+                        </row>
                     </set>
+                    <hidden id="attachmentEnabled" default-value="${novus.messaging.attachment.enabled}"/>
                 </fields>
             </form>
         </region>
+        <table query-id="messaging_attachment" visible="{attachmentEnabled == true}" depends-on="view" selection="none">
+            <pre-filters>
+                <eq field-id="messageId" param="id"/>
+            </pre-filters>
+            <columns>
+                <column text-field-id="shortFileName" label="Вложения">
+                    <link>
+                        <a href="${server.servlet.context-path}/proxy/api/attachments/{id}" target="newWindow"/>
+                    </link>
+                </column>
+            </columns>
+        </table>
         <table query-id="recipient" depends-on="view" detail-field-id="messageId" name="Получатели">
             <columns>
                 <column text-field-id="statusTime">

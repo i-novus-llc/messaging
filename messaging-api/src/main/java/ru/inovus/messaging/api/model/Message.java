@@ -62,6 +62,18 @@ public class Message implements Serializable {
     @ApiModelProperty("Тип получателей уведомления")
     private RecipientType recipientType;
 
+    @ApiModelProperty("Список ролей")
+    private List<BaseResponse> roles;
+
+    @ApiModelProperty("Роли для UI")
+    private String role;
+
+    @ApiModelProperty("Регион")
+    private BaseResponse region;
+
+    @ApiModelProperty("Организация")
+    private BaseResponse organization;
+
     @ApiModelProperty("Список получателей")
     private List<Recipient> recipients;
 
@@ -70,4 +82,20 @@ public class Message implements Serializable {
 
     @JsonIgnore
     private String tenantCode;
+
+    @ApiModelProperty("Вложения")
+    private List<AttachmentResponse> attachments;
+
+    @Override
+    public Message clone() {
+        Message newMessage = new Message();
+        newMessage.setId(this.getId());
+        newMessage.setCaption(this.getCaption());
+        newMessage.setText(this.getText());
+        newMessage.setSeverity(this.getSeverity());
+        newMessage.setAlertType(this.getAlertType());
+        newMessage.setRecipients(List.copyOf(this.recipients));
+        newMessage.setTenantCode(this.getTenantCode());
+        return newMessage;
+    }
 }

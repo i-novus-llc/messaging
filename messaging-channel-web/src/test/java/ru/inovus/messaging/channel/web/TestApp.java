@@ -1,5 +1,7 @@
 package ru.inovus.messaging.channel.web;
 
+import net.n2oapp.platform.jaxrs.autoconfigure.JaxRsServerAutoConfiguration;
+import org.apache.cxf.spring.boot.autoconfigure.CxfAutoConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
@@ -14,7 +16,9 @@ import ru.inovus.messaging.channel.web.configuration.EnableWebChannel;
 @SpringBootApplication(exclude = {
         SecurityAutoConfiguration.class,
         UserDetailsServiceAutoConfiguration.class,
-        KafkaAutoConfiguration.class})
+        KafkaAutoConfiguration.class,
+        JaxRsServerAutoConfiguration.class,
+        CxfAutoConfiguration.class})
 @Import({WebSecurityTestConfiguration.class, EmbeddedKafkaTestConfiguration.class})
 @EnableWebSecurity
 @EnableWebChannel
