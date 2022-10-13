@@ -31,8 +31,8 @@ public class RecipientProviderConfiguration {
     static public class SecurityAdminConfiguration {
 
         @Bean
-        public RecipientProvider recipientProvider(UserRestClient userRestService, RoleRestClient rolesRestService,
-                                                   RegionRestClient regionRestService, OrganizationRestClient organizationRestService) {
+        public SecurityAdminRecipientProvider recipientProvider(UserRestClient userRestService, RoleRestClient rolesRestService,
+                                                                RegionRestClient regionRestService, OrganizationRestClient organizationRestService) {
             return new SecurityAdminRecipientProvider(userRestService, rolesRestService, regionRestService, organizationRestService);
         }
 
