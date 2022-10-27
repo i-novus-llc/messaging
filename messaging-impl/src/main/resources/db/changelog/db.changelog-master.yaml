@@ -305,7 +305,7 @@ databaseChangeLog:
             path: sql/EGISZNRPLATFORM-1028.sql
             relativeToChangelogFile: true
   - changeSet:
-      id: EGISZNRPLATFORM-1047
+      id: EGISZNRPLATFORM-1108
       author: anigmatullin
       changes:
         - sqlFile:
