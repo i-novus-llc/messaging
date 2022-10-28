@@ -1,5 +1,6 @@
 package ru.inovus.messaging.impl.util;
 
+import lombok.Getter;
 import net.n2oapp.platform.i18n.Message;
 import net.n2oapp.platform.i18n.UserException;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
@@ -16,18 +17,19 @@ import static java.util.Objects.nonNull;
 import static org.springframework.util.StringUtils.hasText;
 
 
+@Getter
 public class DocumentUtils {
-
-    private static final String DATE_TIME_FORMAT = "dd.MM.yyyy_HH:mm:ss";
-    public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIME_FORMAT);
-    public static final int DATE_TIME_PREFIX_LENGTH = DATE_TIME_FORMAT.length() + 1;
 
     private List<String> fileExtensionList;
     private Integer maxFileSize;
+    private String dateTimeFormat;
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateTimeFormat);
+    private int dateTimePrefixLength = dateTimeFormat.length() + 1;
 
-    public DocumentUtils(List<String> fileExtensionList, Integer maxFileSize) {
+    public DocumentUtils(List<String> fileExtensionList, Integer maxFileSize, String dateTimeFormat) {
         this.fileExtensionList = fileExtensionList;
         this.maxFileSize = maxFileSize;
+        this.dateTimeFormat = dateTimeFormat;
     }
 
     public String getFileNameWithDateTime(String fileName) {

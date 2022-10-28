@@ -21,8 +21,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.*;
-import static ru.inovus.messaging.impl.util.DocumentUtils.DATE_TIME_PREFIX_LENGTH;
-import static ru.inovus.messaging.impl.util.DocumentUtils.formatter;
 
 @ExtendWith(SpringExtension.class)
 @TestPropertySource("classpath:application.properties")
@@ -33,19 +31,21 @@ public class DocumentUtilsTest {
     private List<String> fileExtensionList;
     @Value("${novus.messaging.attachment.file-size}")
     private Integer maxFileSize;
+    @Value("${novus.messaging.attachment.file-prefix-format}")
+    private String dateTimeFormat;
 
     private DocumentUtils documentUtils;
 
     @BeforeEach
     void setDocumentUtils() {
-        documentUtils = new DocumentUtils(fileExtensionList, maxFileSize);
+        documentUtils = new DocumentUtils(fileExtensionList, maxFileSize, dateTimeFormat);
     }
 
     @Test
     void getFileNameWithDateTimeTest() {
         String fileName = documentUtils.getFileNameWithDateTime("filename");
-        String date = fileName.substring(0, DATE_TIME_PREFIX_LENGTH - 1);
-        assertDoesNotThrow(() -> LocalDateTime.from(formatter.parse(date)));
+        String date = fileName.substring(0, documentUtils.getDateTimePrefixLength() - 1);
+        assertDoesNotThrow(() -> LocalDateTime.from(documentUtils.getFormatter().parse(date)));
         fileName = documentUtils.getFileNameWithDateTime(null);
         assertThat(fileName, nullValue());
     }

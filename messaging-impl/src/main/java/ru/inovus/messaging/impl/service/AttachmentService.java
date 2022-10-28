@@ -39,7 +39,6 @@ import static java.util.Objects.nonNull;
 import static org.jooq.impl.DSL.noCondition;
 import static org.springframework.util.StringUtils.hasText;
 import static ru.inovus.messaging.impl.jooq.Tables.ATTACHMENT;
-import static ru.inovus.messaging.impl.util.DocumentUtils.DATE_TIME_PREFIX_LENGTH;
 
 /**
  * Сервис работы с вложениями
@@ -60,7 +59,7 @@ public class AttachmentService implements AttachmentRest, MessageAttachment {
         AttachmentRecord record = rec.into(ATTACHMENT);
         AttachmentResponse response = new AttachmentResponse();
         response.setId(record.getId());
-        response.setShortFileName(record.getFile().substring(DATE_TIME_PREFIX_LENGTH));
+        response.setShortFileName(record.getFile().substring(documentUtils.getDateTimePrefixLength()));
         response.setFileName(record.getFile());
         return response;
     };
@@ -100,7 +99,7 @@ public class AttachmentService implements AttachmentRest, MessageAttachment {
 
         AttachmentResponse fileResponse = new AttachmentResponse();
         fileResponse.setFileName(fileName);
-        fileResponse.setShortFileName(fileName.substring(DATE_TIME_PREFIX_LENGTH));
+        fileResponse.setShortFileName(fileName.substring(documentUtils.getDateTimePrefixLength()));
         fileResponse.setFileSize(fileSize);
         return fileResponse;
     }
@@ -122,7 +121,7 @@ public class AttachmentService implements AttachmentRest, MessageAttachment {
                         .header(
                                 HttpHeaders.CONTENT_DISPOSITION,
                                 ContentDisposition.builder("attachment")
-                                        .filename(fileName.substring(DATE_TIME_PREFIX_LENGTH), StandardCharsets.UTF_8)
+                                        .filename(fileName.substring(documentUtils.getDateTimePrefixLength()), StandardCharsets.UTF_8)
                                         .build()
                                         .toString())
                         .build();

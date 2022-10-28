@@ -42,7 +42,8 @@ public class AttachmentRestConfiguration {
 
     @Bean
     DocumentUtils documentUtils(@Value("${novus.messaging.attachment.file-type}") List<String> fileExtensionList,
-                                @Value("${novus.messaging.attachment.file-size}") Integer maxFileSize) {
-        return new DocumentUtils(fileExtensionList, maxFileSize);
+                                @Value("${novus.messaging.attachment.file-size}") Integer maxFileSize,
+                                @Value("${novus.messaging.attachment.file-prefix-format}") String dateTimeFormat) {
+        return new DocumentUtils(fileExtensionList, maxFileSize, dateTimeFormat);
     }
 }
