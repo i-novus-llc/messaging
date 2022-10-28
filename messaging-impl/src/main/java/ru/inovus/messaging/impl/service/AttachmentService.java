@@ -81,7 +81,7 @@ public class AttachmentService implements AttachmentRest, MessageAttachment {
         String fileName = documentUtils.getFileName(attachment);
         if (StringUtils.isEmpty(fileName)) return null;
         documentUtils.checkFileExtension(fileName);
-        fileName = documentUtils.getFileNameWithDateTime(fileName);
+        fileName = documentUtils.getFileNameWithDateTimePrefix(fileName);
 
         InputStream is;
         Integer fileSize;

@@ -122,7 +122,7 @@ public class AttachmentServiceTest {
     private AttachmentResponse getNewAttachment(String fileName) {
         AttachmentResponse attachmentResponse = new AttachmentResponse();
         attachmentResponse.setId(UUID.randomUUID());
-        attachmentResponse.setFileName(documentUtils.getFileNameWithDateTime(fileName));
+        attachmentResponse.setFileName(documentUtils.getFileNameWithDateTimePrefix(fileName));
         attachmentResponse.setShortFileName(fileName);
         return attachmentResponse;
     }

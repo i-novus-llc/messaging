@@ -43,10 +43,10 @@ public class DocumentUtilsTest {
 
     @Test
     void getFileNameWithDateTimeTest() {
-        String fileName = documentUtils.getFileNameWithDateTime("filename");
+        String fileName = documentUtils.getFileNameWithDateTimePrefix("filename");
         String date = fileName.substring(0, documentUtils.getDateTimePrefixLength() - 1);
         assertDoesNotThrow(() -> LocalDateTime.from(documentUtils.getFormatter().parse(date)));
-        fileName = documentUtils.getFileNameWithDateTime(null);
+        fileName = documentUtils.getFileNameWithDateTimePrefix(null);
         assertThat(fileName, nullValue());
     }
 

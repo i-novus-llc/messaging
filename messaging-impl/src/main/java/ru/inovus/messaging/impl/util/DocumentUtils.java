@@ -32,7 +32,7 @@ public class DocumentUtils {
         this.dateTimeFormat = dateTimeFormat;
     }
 
-    public String getFileNameWithDateTime(String fileName) {
+    public String getFileNameWithDateTimePrefix(String fileName) {
         if (!hasText(fileName))
             return null;
         return String.format("%s_%s", formatter.format(LocalDateTime.now()), fileName);
