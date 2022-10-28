@@ -23,13 +23,15 @@ public class DocumentUtils {
     private List<String> fileExtensionList;
     private Integer maxFileSize;
     private String dateTimeFormat;
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateTimeFormat);
-    private Integer dateTimePrefixLength = dateTimeFormat.length() + 1;
+    private DateTimeFormatter formatter;
+    private Integer dateTimePrefixLength;
 
     public DocumentUtils(List<String> fileExtensionList, Integer maxFileSize, String dateTimeFormat) {
         this.fileExtensionList = fileExtensionList;
         this.maxFileSize = maxFileSize;
         this.dateTimeFormat = dateTimeFormat;
+        this.formatter = DateTimeFormatter.ofPattern(this.dateTimeFormat);
+        this.dateTimePrefixLength = this.dateTimeFormat.length() + 1;
     }
 
     public String getFileNameWithDateTimePrefix(String fileName) {
