@@ -22,8 +22,10 @@ import java.util.List;
 public class AttachmentRestConfiguration {
 
     @Bean
-    AttachmentService attachmentService(DSLContext dsl, AmazonS3 s3client, DocumentUtils documentUtils) {
-        return new AttachmentService(dsl, s3client, documentUtils);
+    AttachmentService attachmentService(DSLContext dsl, AmazonS3 s3client, DocumentUtils documentUtils,
+                                        @Value("${novus.messaging.attachment.s3.bucket-name}") String bucketName,
+                                        @Value("${novus.messaging.attachment.file-count}") Integer maxFileCount) {
+        return new AttachmentService(dsl, s3client, documentUtils, bucketName, maxFileCount);
     }
 
     @Bean

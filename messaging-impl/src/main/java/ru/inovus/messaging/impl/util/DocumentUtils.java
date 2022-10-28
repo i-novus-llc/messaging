@@ -24,7 +24,7 @@ public class DocumentUtils {
     private Integer maxFileSize;
     private String dateTimeFormat;
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateTimeFormat);
-    private int dateTimePrefixLength = dateTimeFormat.length() + 1;
+    private Integer dateTimePrefixLength = dateTimeFormat.length() + 1;
 
     public DocumentUtils(List<String> fileExtensionList, Integer maxFileSize, String dateTimeFormat) {
         this.fileExtensionList = fileExtensionList;
