@@ -3,7 +3,6 @@ package ru.inovus.messaging.impl.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
-import lombok.AllArgsConstructor;
 import net.n2oapp.platform.i18n.Message;
 import net.n2oapp.platform.i18n.UserException;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
@@ -11,6 +10,8 @@ import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.RecordMapper;
 import org.jooq.SelectConditionStep;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ContentDisposition;
@@ -45,13 +46,17 @@ import static ru.inovus.messaging.impl.jooq.Tables.ATTACHMENT;
 /**
  * Сервис работы с вложениями
  */
-@AllArgsConstructor
 public class AttachmentService implements AttachmentRest, MessageAttachment {
 
+    @Autowired
     private DSLContext dsl;
+    @Autowired
     private AmazonS3 s3client;
+    @Autowired
     private DocumentUtils documentUtils;
+    @Value("${novus.messaging.attachment.s3.bucket-name:messaging}")
     private String bucketName;
+    @Value("${novus.messaging.attachment.file-count:5}")
     private Integer maxFileCount;
 
     private final RecordMapper<Record, AttachmentResponse> MAPPER = rec -> {

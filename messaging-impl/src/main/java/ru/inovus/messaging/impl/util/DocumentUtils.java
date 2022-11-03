@@ -4,7 +4,10 @@ import lombok.Getter;
 import net.n2oapp.platform.i18n.Message;
 import net.n2oapp.platform.i18n.UserException;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -17,19 +20,21 @@ import static java.util.Objects.nonNull;
 import static org.springframework.util.StringUtils.hasText;
 
 
+@Controller
 @Getter
 public class DocumentUtils {
 
+    @Value("${novus.messaging.attachment.file-type:}")
     private List<String> fileExtensionList;
+    @Value("${novus.messaging.attachment.file-size:10}")
     private Integer maxFileSize;
+    @Value("${novus.messaging.attachment.file-prefix-format:dd.MM.yyyy_HH:mm:ss}")
     private String dateTimeFormat;
     private DateTimeFormatter formatter;
     private Integer dateTimePrefixLength;
 
-    public DocumentUtils(List<String> fileExtensionList, Integer maxFileSize, String dateTimeFormat) {
-        this.fileExtensionList = fileExtensionList;
-        this.maxFileSize = maxFileSize;
-        this.dateTimeFormat = dateTimeFormat;
+    @PostConstruct
+    void initialize() {
         this.formatter = DateTimeFormatter.ofPattern(this.dateTimeFormat);
         this.dateTimePrefixLength = this.dateTimeFormat.length() + 1;
     }

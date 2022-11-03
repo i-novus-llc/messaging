@@ -2,20 +2,23 @@ package ru.inovus.messaging.impl.utils;
 
 import com.sun.istack.ByteArrayDataSource;
 import net.n2oapp.platform.i18n.UserException;
+import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.impl.MetadataMap;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import ru.inovus.messaging.TestApp;
 import ru.inovus.messaging.impl.util.DocumentUtils;
 
 import javax.activation.DataHandler;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -23,23 +26,20 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
+@SpringBootTest(classes = TestApp.class,
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = "novus.messaging.attachment.enabled: false")
 @TestPropertySource("classpath:application.properties")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@EnableEmbeddedPg
 public class DocumentUtilsTest {
     private static final String VALID_FILE_NAME = "test_file_name.pdf";
     private static final String INVALID_FILE_NAME = "test_file_name.xml";
-    @Value("#{'${novus.messaging.attachment.file-type}'.split(',')}")
-    private List<String> fileExtensionList;
+
     @Value("${novus.messaging.attachment.file-size}")
     private Integer maxFileSize;
-    @Value("${novus.messaging.attachment.file-prefix-format}")
-    private String dateTimeFormat;
-
+    @Autowired
     private DocumentUtils documentUtils;
-
-    @BeforeEach
-    void setDocumentUtils() {
-        documentUtils = new DocumentUtils(fileExtensionList, maxFileSize, dateTimeFormat);
-    }
 
     @Test
     void getFileNameWithDateTimeTest() {
