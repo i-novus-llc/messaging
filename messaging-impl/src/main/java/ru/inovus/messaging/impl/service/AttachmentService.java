@@ -3,7 +3,6 @@ package ru.inovus.messaging.impl.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
-import lombok.RequiredArgsConstructor;
 import net.n2oapp.platform.i18n.Message;
 import net.n2oapp.platform.i18n.UserException;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
@@ -11,6 +10,7 @@ import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.RecordMapper;
 import org.jooq.SelectConditionStep;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -32,35 +32,38 @@ import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
 import static org.jooq.impl.DSL.noCondition;
 import static org.springframework.util.StringUtils.hasText;
 import static ru.inovus.messaging.impl.jooq.Tables.ATTACHMENT;
-import static ru.inovus.messaging.impl.util.DocumentUtils.DATE_TIME_PREFIX_LENGTH;
 
 /**
  * Сервис работы с вложениями
  */
-@RequiredArgsConstructor
 public class AttachmentService implements AttachmentRest, MessageAttachment {
 
-    private final DSLContext dsl;
-    private final AmazonS3 s3client;
-    private final DocumentUtils documentUtils;
-
-    @Value("${novus.messaging.attachment.s3.bucket-name}")
+    @Autowired
+    private DSLContext dsl;
+    @Autowired
+    private AmazonS3 s3client;
+    @Autowired
+    private DocumentUtils documentUtils;
+    @Value("${novus.messaging.attachment.s3.bucket-name:messaging}")
     private String bucketName;
-    @Value("${novus.messaging.attachment.file-count}")
+    @Value("${novus.messaging.attachment.file-count:5}")
     private Integer maxFileCount;
 
     private final RecordMapper<Record, AttachmentResponse> MAPPER = rec -> {
         AttachmentRecord record = rec.into(ATTACHMENT);
         AttachmentResponse response = new AttachmentResponse();
         response.setId(record.getId());
-        response.setShortFileName(record.getFile().substring(DATE_TIME_PREFIX_LENGTH));
+        response.setShortFileName(record.getFile().substring(documentUtils.getDateTimePrefixLength()));
         response.setFileName(record.getFile());
         return response;
     };
@@ -83,7 +86,7 @@ public class AttachmentService implements AttachmentRest, MessageAttachment {
         String fileName = documentUtils.getFileName(attachment);
         if (StringUtils.isEmpty(fileName)) return null;
         documentUtils.checkFileExtension(fileName);
-        fileName = documentUtils.getFileNameWithDateTime(fileName);
+        fileName = documentUtils.getFileNameWithDateTimePrefix(fileName);
 
         InputStream is;
         Integer fileSize;
@@ -100,7 +103,7 @@ public class AttachmentService implements AttachmentRest, MessageAttachment {
 
         AttachmentResponse fileResponse = new AttachmentResponse();
         fileResponse.setFileName(fileName);
-        fileResponse.setShortFileName(fileName.substring(DATE_TIME_PREFIX_LENGTH));
+        fileResponse.setShortFileName(fileName.substring(documentUtils.getDateTimePrefixLength()));
         fileResponse.setFileSize(fileSize);
         return fileResponse;
     }
@@ -122,7 +125,7 @@ public class AttachmentService implements AttachmentRest, MessageAttachment {
                         .header(
                                 HttpHeaders.CONTENT_DISPOSITION,
                                 ContentDisposition.builder("attachment")
-                                        .filename(fileName.substring(DATE_TIME_PREFIX_LENGTH), StandardCharsets.UTF_8)
+                                        .filename(fileName.substring(documentUtils.getDateTimePrefixLength()), StandardCharsets.UTF_8)
                                         .build()
                                         .toString())
                         .build();
