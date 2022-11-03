@@ -8,6 +8,7 @@
   * `novus.messaging.attachment.file-type` - допустимый формат файлов вложений
   * `novus.messaging.attachment.file-size` - максимально допустимый размер прикладываемого файла в МБ
   * `novus.messaging.attachment.file-count` - максимально допустимое количество прикладываемых файлов
+  * `novus.messaging.attachment.file-prefix-format` - datetime формат префикса для имени файла, используемого в сервисе хранения
   * `novus.messaging.attachment.s3.endpoint` - адрес сервиса хранения файлов регистра, поддерживающего протокол S3, в котором будут храниться приложенные файлы
   * `novus.messaging.attachment.s3.access-key` - ключ доступа к сервису хранения
   * `novus.messaging.attachment.s3.secret-key` - секретный ключ к сервису хранения
