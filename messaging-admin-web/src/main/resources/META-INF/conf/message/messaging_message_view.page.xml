@@ -11,12 +11,24 @@
                     <set field-label-location="left" field-label-align="left" field-label-width="220px">
                         <row>
                             <input-select id="infoType" label="Информирование" enabled="false"/>
+                        </row>
+                        <row>
                             <input-select id="severity" label="Уровень важности" enabled="false">
                                 <options>
                                     <option id="SEVERE" name="Важный"/>
                                     <option id="ERROR" name="Ошибка"/>
                                     <option id="WARNING" name="Предупреждение"/>
                                     <option id="INFO" name="Информация"/>
+                                </options>
+                                <dependencies>
+                                    <visibility on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</visibility>
+                                </dependencies>
+                            </input-select>
+                            <input-select id="alertType" label="Способ отображения" enabled="false">
+                                <options>
+                                    <option id="BLOCKER" name="Блокирующее уведомление"/>
+                                    <option id="POPUP" name="Всплывающее уведомление"/>
+                                    <option id="HIDDEN" name="Лента уведомлений"/>
                                 </options>
                                 <dependencies>
                                     <visibility on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</visibility>
