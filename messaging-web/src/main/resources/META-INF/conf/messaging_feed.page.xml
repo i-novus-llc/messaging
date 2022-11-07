@@ -35,8 +35,7 @@
             </click>
         </rows>
         <toolbar>
-            <button label="Пометить все прочитанными" icon="fa fa-check-square-o"
-                    disable-on-empty-model="false">
+            <button label="Пометить все прочитанными" disable-on-empty-model="false" color="primary">
                 <invoke operation-id="readAll"/>
             </button>
         </toolbar>
