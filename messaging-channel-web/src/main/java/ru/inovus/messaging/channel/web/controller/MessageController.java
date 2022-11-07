@@ -11,6 +11,7 @@ import ru.inovus.messaging.api.model.FeedCount;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.MessageStatus;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
+import ru.inovus.messaging.api.rest.FeedRest;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 
 import java.security.Principal;
@@ -27,12 +28,16 @@ public class MessageController {
 
     private final MqProvider mqProvider;
 
+    private final FeedRest feedRest;
+
     public MessageController(@Value("${novus.messaging.queue.status}") String statusQueueName,
                              MqProvider mqProvider,
-                             SimpMessagingTemplate simpMessagingTemplate) {
+                             SimpMessagingTemplate simpMessagingTemplate,
+                             FeedRest feedRest) {
         this.statusQueueName = statusQueueName;
         this.mqProvider = mqProvider;
         this.simpMessagingTemplate = simpMessagingTemplate;
+        this.feedRest = feedRest;
     }
 
     /**
@@ -43,6 +48,18 @@ public class MessageController {
     public void sendFeedCount(FeedCount feedCount) {
         String destination = "/user/" + feedCount.getUsername() + "/exchange/" + feedCount.getTenantCode() + "/message.count";
         simpMessagingTemplate.convertAndSend(destination, feedCount.getCount());
+    }
+
+    /**
+     * Запросить количество непрочитанных сообщений
+     *
+     * @param tenantCode Идентификатор системы, в которой находится пользователь
+     * @param principal  Информация о пользователе
+     */
+    @MessageMapping("/{tenantCode}/message.getcount")
+    public void getFeedCount(@DestinationVariable("tenantCode") String tenantCode, Principal principal) {
+        FeedCount feedCount = feedRest.getFeedCount(tenantCode, principal.getName());
+        sendFeedCount(feedCount);
     }
 
     /**
