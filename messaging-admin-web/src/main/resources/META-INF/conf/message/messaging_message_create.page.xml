@@ -164,7 +164,7 @@
                         <form-param id="recipients" ref-widget-id="recipients" ref-model="multi"/>
                     </invoke>
                 </button>
-                <button id="cancel" label="Отменить">
+                <button id="cancel" label="Закрыть">
                     <close/>
                 </button>
             </toolbar>

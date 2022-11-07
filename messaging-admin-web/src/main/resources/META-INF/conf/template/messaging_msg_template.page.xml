@@ -3,44 +3,54 @@
              name="Шаблон уведомления">
     <form id="message_template" query-id="messaging_msg_template">
         <fields>
-            <row>
-                <input-text id="name" label="Наименование шаблона" required="true"/>
-                <input-text id="code" label="Код шаблона" required="true"/>
-                <checkbox id="enabled" label="Включить" default-value="true" unchecked="false"/>
-            </row>
-            <row>
-                <input-select id="infoType" label="Информирование" required="true"
-                              query-id="messaging_channels"/>
-                <input-select id="severity" label="Уровень важности" required="true">
-                    <options>
-                        <option id="SEVERE" name="Важный"/>
-                        <option id="ERROR" name="Ошибка"/>
-                        <option id="WARNING" name="Предупреждение"/>
-                        <option id="INFO" name="Информация"/>
-                    </options>
-                    <dependencies>
-                        <visibility on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</visibility>
-                        <requiring on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</requiring>
-                    </dependencies>
-                </input-select>
-                <input-select id="alertType" label="Способ отображения" required="true">
-                    <options>
-                        <option id="BLOCKER" name="Блокирующее уведомление"/>
-                        <option id="POPUP" name="Всплывающее уведомление"/>
-                        <option id="HIDDEN" name="Лента уведомлений"/>
-                    </options>
-                    <dependencies>
-                        <visibility on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</visibility>
-                        <requiring on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</requiring>
-                    </dependencies>
-                </input-select>
-            </row>
-            <row>
-                <text-area id="caption" label="Заголовок уведомления" max-rows="3" required="true"/>
-            </row>
-            <row>
-                <text-area id="text" label="Текст уведомления" max-rows="5" required="true"/>
-            </row>
+            <set field-label-location="left" field-label-align="left" field-label-width="220px">
+                <row>
+                    <input-text id="name" label="Наименование шаблона" required="true"/>
+                </row>
+                <row>
+                    <input-text id="code" label="Код шаблона" required="true"/>
+                </row>
+                <row>
+                    <checkbox id="enabled" label="Включить" default-value="true" unchecked="false"/>
+                </row>
+                <row>
+                    <input-select id="infoType" label="Информирование" required="true"
+                                  query-id="messaging_channels"/>
+                </row>
+                <row>
+                    <input-select id="severity" label="Уровень важности" required="true">
+                        <options>
+                            <option id="SEVERE" name="Важный"/>
+                            <option id="ERROR" name="Ошибка"/>
+                            <option id="WARNING" name="Предупреждение"/>
+                            <option id="INFO" name="Информация"/>
+                        </options>
+                        <dependencies>
+                            <visibility on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</visibility>
+                            <requiring on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</requiring>
+                        </dependencies>
+                    </input-select>
+                </row>
+                <row>
+                    <input-select id="alertType" label="Способ отображения" required="true">
+                        <options>
+                            <option id="BLOCKER" name="Блокирующее уведомление"/>
+                            <option id="POPUP" name="Всплывающее уведомление"/>
+                            <option id="HIDDEN" name="Лента уведомлений"/>
+                        </options>
+                        <dependencies>
+                            <visibility on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</visibility>
+                            <requiring on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</requiring>
+                        </dependencies>
+                    </input-select>
+                </row>
+                <row>
+                    <text-area id="caption" label="Заголовок уведомления" max-rows="3" required="true"/>
+                </row>
+                <row>
+                    <text-area id="text" label="Текст уведомления" max-rows="5" required="true"/>
+                </row>
+            </set>
         </fields>
     </form>
 </simple-page>
