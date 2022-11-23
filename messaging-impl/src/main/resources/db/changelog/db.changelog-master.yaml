@@ -297,7 +297,7 @@ databaseChangeLog:
             path: sql/MESSAGING-231.sql
             relativeToChangelogFile: true
   - changeSet:
-      id: EGISZNRPLATFORM-1028
+      id: EGISZNRPLATFORM-1175
       author: anigmatullin
       changes:
         - sqlFile:
