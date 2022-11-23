@@ -1,4 +1,5 @@
 ALTER TABLE messaging.message DROP CONSTRAINT IF EXISTS message_recipient_type_check;
+UPDATE messaging.message SET recipient_type = 'RECIPIENT' WHERE recipient_type = 'USER' OR recipient_type = 'ALL';
 ALTER TABLE messaging.message ADD CONSTRAINT message_recipient_type_check CHECK (recipient_type IN ('RECIPIENT','USER_GROUP_BY_ROLE', 'USER_GROUP_BY_REGION', 'USER_GROUP_BY_ORGANIZATION'));
 
 ALTER TABLE messaging.message ADD COLUMN IF NOT EXISTS organization INTEGER;
