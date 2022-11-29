@@ -172,7 +172,7 @@
         <table id="recipients" selection="checkbox" query-id="messaging_recipient" object-id="messaging_message"
                depends-on="create" fetch-on-init="true" visible="{typeof id == 'undefined' || id == null}">
             <pre-filters>
-                <in field-id="roleCodes" values="{roles*.name}"/>
+                <in field-id="roleCodes" values="{roles*.code}"/>
                 <eq field-id="regionId" value="{region.id}"/>
                 <eq field-id="organizationId" value="{organization.id}"/>
                 <like field-id="name" value="{fio}"/>
