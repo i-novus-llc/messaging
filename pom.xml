@@ -5,7 +5,7 @@
     <groupId>ru.i-novus.messaging</groupId>
     <artifactId>messaging-pom</artifactId>
     <packaging>pom</packaging>
-    <version>4.2.3</version>
+    <version>4.2.4-SNAPSHOT</version>
 
     <parent>
         <groupId>net.n2oapp.platform</groupId>
@@ -33,7 +33,7 @@
         <connection>scm:git:https://git.i-novus.ru/platform/messaging.git</connection>
         <url>https://git.i-novus.ru/platform/messaging</url>
         <developerConnection>scm:git:https://git.i-novus.ru/platform/messaging.git</developerConnection>
-        <tag>4.2.3</tag>
+        <tag>4.2.0</tag>
     </scm>
 
     <licenses>
