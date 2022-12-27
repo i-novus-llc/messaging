@@ -53,15 +53,5 @@ services:
       restart_policy:
         max_attempts: 3
 
-  react:
-    ports:
-    - "80"
-    deploy:
-      resources:
-        limits:
-          memory: 200M
-      restart_policy:
-        max_attempts: 3
-
 volumes:
   messaging-db-data:
