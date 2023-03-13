@@ -29,7 +29,7 @@
                         <column label="Действие">
                             <toolbar>
                                 <button id="repeat" icon="fa fa-refresh" description="Повторить уведомление">
-                                    <open-page page-id="messaging_message_create"
+                                    <open-page page-id="messaging_message_repeat"
                                                detail-field-id="id"/>
                                 </button>
                             </toolbar>
