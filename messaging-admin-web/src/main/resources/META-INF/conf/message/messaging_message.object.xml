@@ -19,6 +19,7 @@
                 <field id="organization" mapping="['message.organization']"/>
                 <field id="recipients*.username" mapping="['message.recipients*.username']"/>
                 <field id="attachments" mapping="['message.attachments']"/>
+                <field id="template.code" mapping="['message.templateCode']"/>
             </in>
         </operation>
     </operations>
