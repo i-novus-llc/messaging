@@ -94,5 +94,9 @@
         <field id="attachments">
             <select/>
         </field>
+
+        <field id="templateCode">
+            <select/>
+        </field>
     </fields>
 </query>
