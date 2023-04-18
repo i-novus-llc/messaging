@@ -43,7 +43,7 @@ public class MessagingFeedPageBinder implements BaseMetadataBinder<Page> {
         df.setValues(data);
         ModelLink ml = new ModelLink(df);
 
-        page.getModels().put(String.format("%s['%s']", ReduxModel.FILTER.name().toLowerCase(),
+        page.getModels().put(String.format("%s['%s']", ReduxModel.filter.name().toLowerCase(),
                 ((SimplePage) page).getWidget().getId()), ml);
         return page;
     }
