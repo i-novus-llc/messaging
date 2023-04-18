@@ -1,6 +1,6 @@
 package ru.inovus.messaging.impl.service;
 
-import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
+import net.n2oapp.platform.test.autoconfigure.pg.EnableEmbeddedPg;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
