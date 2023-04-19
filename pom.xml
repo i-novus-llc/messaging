@@ -16,11 +16,12 @@
 
     <properties>
         <n2o.version>7.23.69</n2o.version>
-        <access.version>6.1.1</access.version>
+<!--  todo release      -->
+        <access.version>7.1.0-SNAPSHOT</access.version>
         <config.server.enable>false</config.server.enable>
         <audit.version>2.4.27</audit.version>
         <jacoco.skip>true</jacoco.skip>
-        <spring-kafka.version>2.6.4</spring-kafka.version>
+        <spring-kafka.version>2.9.2</spring-kafka.version>
         <lombok.version>1.18.20</lombok.version>
         <amazonaws.version>1.12.305</amazonaws.version>
     </properties>
