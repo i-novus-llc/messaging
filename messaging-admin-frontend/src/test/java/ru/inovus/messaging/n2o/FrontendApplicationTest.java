@@ -8,7 +8,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = FrontendApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = { "spring.config.import=optional:consul:" })
+        properties = { "SPRING_CONFIG_IMPORT='optional:consul:'" })
 public class FrontendApplicationTest {
     @Test
     public void contextLoads() {
