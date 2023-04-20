@@ -52,7 +52,7 @@ public class UserService extends KeycloakUserService {
         user.setEmail((String) extractFromMap(userAttributeKeys.email, map));
         user.setPatronymic((String) extractFromMap(userAttributeKeys.patronymic, map));
 
-        //todo enrich user and synchronize with security-admin backend
+        //todo 7.x.x security backend. Enrich user and synchronize with security-admin backend
         return user;
     }
 }

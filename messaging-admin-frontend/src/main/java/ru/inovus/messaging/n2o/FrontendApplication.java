@@ -23,11 +23,6 @@ public class FrontendApplication {
         SpringApplication.run(FrontendApplication.class, args);
     }
 
-//    @Bean
-//    public GatewayPrincipalExtractor gatewayPrincipalExtractor() {
-//        return new GatewayPrincipalExtractor();
-//    }
-
     @Bean
     public UserService keycloakUserService(UserDetailsService userDetailsService, UserAttributeKeys userAttributeKeys) {
         UserService userService = new UserService(userAttributeKeys, userDetailsService, "keycloak");
