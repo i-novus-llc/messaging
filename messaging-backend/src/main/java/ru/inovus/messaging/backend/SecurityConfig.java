@@ -19,7 +19,7 @@ public class SecurityConfig extends N2oPlatformResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/api/**").permitAll()
+                .antMatchers("/api/info", "/api/api-docs", "/api/swagger**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .csrf().disable()
