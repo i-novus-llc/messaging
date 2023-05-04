@@ -19,10 +19,8 @@ public class SecurityConfig extends N2oPlatformResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .anyRequest()
-                .permitAll()
-              //  .antMatchers("/api/info", "/api/api-docs", "/api/swagger**").permitAll()
-              //  .anyRequest().authenticated()
+                .antMatchers("/api/**").permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .csrf().disable()
                 .sessionManagement()
@@ -35,7 +33,7 @@ public class SecurityConfig extends N2oPlatformResourceServerConfigurerAdapter {
         CorsConfiguration cors = new CorsConfiguration();
         cors.addAllowedOrigin(CorsConfiguration.ALL);
         cors.addAllowedHeader(CorsConfiguration.ALL);
-        cors.setAllowedMethods(Arrays.asList("GET", "POST", "OPTION"));
+        cors.setAllowedMethods(Arrays.asList("GET", "POST", "OPTION", "DELETE"));
         source.registerCorsConfiguration("/api/**", cors);
         return source;
     }
