@@ -1,15 +1,24 @@
 package ru.inovus.messaging.n2o;
 
 import net.n2oapp.security.auth.OpenIdSecurityCustomizer;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 
+import static java.util.Objects.nonNull;
+
 @Configuration
 public class SecurityConfig extends OpenIdSecurityCustomizer {
+
+    private static final String AUTHORIZATION_HEADER_NAME = "Authorization";
+    private static final String AUTHORIZATION_HEADER_PREFIX = "Bearer ";
 
     @Bean
     protected SessionAuthenticationStrategy sessionAuthenticationStrategy() {
@@ -21,6 +30,19 @@ public class SecurityConfig extends OpenIdSecurityCustomizer {
         super.configureHttpSecurity(http);
         http.authorizeRequests().anyRequest().authenticated().and().oauth2Login();
         //todo 7.x.x security backend server
+    }
+
+    @Bean
+    public RestTemplateBuilder restTemplateBuilder() {
+        //add token to header restTemplate in n2o restDataProviderEngine
+        return new RestTemplateBuilder().additionalInterceptors((request, body, execution) -> {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (nonNull(authentication) && authentication.getPrincipal() instanceof DefaultOidcUser) {
+                DefaultOidcUser principal = (DefaultOidcUser) authentication.getPrincipal();
+                request.getHeaders().add(AUTHORIZATION_HEADER_NAME, AUTHORIZATION_HEADER_PREFIX + principal.getIdToken().getTokenValue());
+            }
+            return execution.execute(request, body);
+        });
     }
 }
 
