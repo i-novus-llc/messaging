@@ -17,9 +17,6 @@ import static java.util.Objects.nonNull;
 @Configuration
 public class SecurityConfig extends OpenIdSecurityCustomizer {
 
-    private static final String AUTHORIZATION_HEADER_NAME = "Authorization";
-    private static final String AUTHORIZATION_HEADER_PREFIX = "Bearer ";
-
     @Bean
     protected SessionAuthenticationStrategy sessionAuthenticationStrategy() {
         return new RegisterSessionAuthenticationStrategy(new SessionRegistryImpl());
@@ -39,7 +36,7 @@ public class SecurityConfig extends OpenIdSecurityCustomizer {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (nonNull(authentication) && authentication.getPrincipal() instanceof DefaultOidcUser) {
                 DefaultOidcUser principal = (DefaultOidcUser) authentication.getPrincipal();
-                request.getHeaders().add(AUTHORIZATION_HEADER_NAME, AUTHORIZATION_HEADER_PREFIX + principal.getIdToken().getTokenValue());
+                request.getHeaders().setBearerAuth(principal.getIdToken().getTokenValue());
             }
             return execution.execute(request, body);
         });
