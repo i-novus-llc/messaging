@@ -2,7 +2,7 @@ package ru.inovus.messaging.impl.utils;
 
 import com.sun.istack.ByteArrayDataSource;
 import net.n2oapp.platform.i18n.UserException;
-import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
+import net.n2oapp.platform.test.autoconfigure.pg.EnableEmbeddedPg;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.impl.MetadataMap;
 import org.junit.jupiter.api.Test;

@@ -1,49 +1,45 @@
 package ru.inovus.messaging.n2o;
 
-import net.n2oapp.security.auth.OpenIdSecurityConfigurerAdapter;
-import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2SsoProperties;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoRestTemplateFactory;
+import net.n2oapp.security.auth.OpenIdSecurityCustomizer;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
-import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
-import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+
+import static java.util.Objects.nonNull;
 
 @Configuration
-@EnableWebSecurity
-public class SecurityConfig extends OpenIdSecurityConfigurerAdapter {
+public class SecurityConfig extends OpenIdSecurityCustomizer {
 
-    @Override
-    protected void authorize(ExpressionUrlAuthorizationConfigurer<HttpSecurity>
-                                     .ExpressionInterceptUrlRegistry url) throws Exception {
-        //все запросы авторизованы
-        url.anyRequest().authenticated()
-                .and()
-//                .logout().addLogoutHandler(auditLogoutHandler)
-//                .and()
-                .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
-    }
-
-    private OAuth2ClientAuthenticationProcessingFilter ssoFilter() {
-        OAuth2SsoProperties ssoProps = this.getApplicationContext().getBean(OAuth2SsoProperties.class);
-
-        OAuth2ClientAuthenticationProcessingFilter ssoFilter =
-                new OAuth2ClientAuthenticationProcessingFilter(ssoProps.getLoginPath());
-//        ssoFilter.setAuthenticationSuccessHandler(auditAuthenticationSuccessHandler);
-        ssoFilter.setRestTemplate(this.getApplicationContext()
-                .getBean(UserInfoRestTemplateFactory.class).getUserInfoRestTemplate());
-        ssoFilter.setTokenServices(this.getApplicationContext()
-                .getBean(ResourceServerTokenServices.class));
-        ssoFilter.setApplicationEventPublisher(this.getApplicationContext());
-        ssoFilter.setAuthenticationSuccessHandler(new RefererRedirectionAuthenticationSuccessHandler());
-        return ssoFilter;
+    @Bean
+    protected SessionAuthenticationStrategy sessionAuthenticationStrategy() {
+        return new RegisterSessionAuthenticationStrategy(new SessionRegistryImpl());
     }
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        super.configure(http);
+    protected void configureHttpSecurity(HttpSecurity http) throws Exception {
+        super.configureHttpSecurity(http);
+        http.authorizeRequests().anyRequest().authenticated().and().oauth2Login();
+        //todo 7.x.x security backend server
+    }
+
+    @Bean
+    public RestTemplateBuilder restTemplateBuilder() {
+        //add token to header restTemplate in n2o restDataProviderEngine
+        return new RestTemplateBuilder().additionalInterceptors((request, body, execution) -> {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (nonNull(authentication) && authentication.getPrincipal() instanceof DefaultOidcUser) {
+                DefaultOidcUser principal = (DefaultOidcUser) authentication.getPrincipal();
+                request.getHeaders().setBearerAuth(principal.getIdToken().getTokenValue());
+            }
+            return execution.execute(request, body);
+        });
     }
 }
 

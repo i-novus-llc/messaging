@@ -1,7 +1,7 @@
 package ru.inovus.messaging.impl.rest;
 
 import net.n2oapp.platform.i18n.UserException;
-import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
+import net.n2oapp.platform.test.autoconfigure.pg.EnableEmbeddedPg;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

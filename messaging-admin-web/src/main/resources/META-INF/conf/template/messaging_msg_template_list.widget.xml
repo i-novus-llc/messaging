@@ -59,7 +59,7 @@
     </columns>
     <toolbar>
         <button id="create" model="filter" label="Создать" color="primary" type="text">
-            <show-modal page-id="messaging_msg_template" submit-operation-id="create" upload="defaults"/>
+            <show-modal page-id="messaging_msg_template" submit-operation-id="create" upload="defaults" route="/create_template"/>
         </button>
     </toolbar>
     <rows>

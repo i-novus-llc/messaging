@@ -1,7 +1,6 @@
 package ru.inovus.messaging.n2o;
 
 import net.n2oapp.security.admin.rest.client.AdminRestClientConfiguration;
-import net.n2oapp.security.auth.common.GatewayPrincipalExtractor;
 import net.n2oapp.security.auth.common.User;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,11 +16,6 @@ public class FrontendApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(FrontendApplication.class, args);
-    }
-
-    @Bean
-    public GatewayPrincipalExtractor gatewayPrincipalExtractor() {
-        return new GatewayPrincipalExtractor();
     }
 
     @Bean

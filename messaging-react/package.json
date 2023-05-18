@@ -9,10 +9,9 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
-    "n2o-auth": "7.16.13",
-    "n2o-framework": "7.16.13",
-    "n2o-notifications": "7.16.13",
-    "react-scripts": "2.1.5"
+    "n2o-framework": "7.23.69",
+    "react-scripts": "2.1.5",
+    "redux-thunk": "^2.4.2"
   },
   "peerDependencies": {
     "react": "*",

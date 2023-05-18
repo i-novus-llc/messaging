@@ -1,9 +1,14 @@
 <access xmlns="http://n2oapp.net/framework/config/schema/access-2.0">
-    <role id="admin">
-        <url-access pattern="${messaging.user.admin.url}"/>
-    </role>
-
     <permit-all>
+        <page-access page-id="profile"/>
+        <page-access page-id="messaging_templates"/>
+        <page-access page-id="messaging_feed"/>
+        <page-access page-id="messaging_message_create"/>
+        <page-access page-id="messaging_message_repeat"/>
+        <page-access page-id="messaging_message_user_view"/>
+        <page-access page-id="messaging_message_view"/>
+        <page-access page-id="messaging_msg_template"/>
+        <page-access page-id="index"/>
         <object-access object-id="messaging_feed" operations="*"/>
         <object-access object-id="messaging_message" operations="*"/>
         <object-access object-id="messaging_user" operations="*"/>
@@ -12,5 +17,4 @@
         <object-access object-id="messaging_organization"/>
         <object-access object-id="messaging_role"/>
     </permit-all>
-
 </access>

@@ -36,9 +36,6 @@ public enum MessageStatusType {
      */
     @JsonIgnore
     public MessageStatusType getPrevStatus() {
-        return switch (this) {
-            case SCHEDULED, SENT, FAILED -> SCHEDULED;
-            case READ -> SENT;
-        };
+        return this == READ ? SENT : SCHEDULED;
     }
 }
