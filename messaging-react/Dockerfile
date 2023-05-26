@@ -1,5 +1,5 @@
 # Stage 1 - build sources
-FROM node:14.15.4-alpine3.11 as build-deps
+FROM node:16.20.0-alpine3.17 as build-deps
 WORKDIR /usr/src/app
 COPY package.json public src .env yarn.lock ./
 ARG NPM_REGISTRY
