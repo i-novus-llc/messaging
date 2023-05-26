@@ -67,15 +67,5 @@
             <artifactId>messaging-support-kafka</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
-
-    <profiles>
-        <profile>
-            <id>production</id>
-            <properties>
-                <config.server.enable>true</config.server.enable>
-            </properties>
-        </profile>
-    </profiles>
 </project>

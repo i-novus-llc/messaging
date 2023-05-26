@@ -60,16 +60,5 @@
             <version>1.5</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
-
-    <profiles>
-        <profile>
-            <id>production</id>
-            <properties>
-                <config.server.enable>true</config.server.enable>
-            </properties>
-        </profile>
-    </profiles>
-
 </project>
