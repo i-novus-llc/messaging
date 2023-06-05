@@ -15,8 +15,8 @@
 2. Добавьте скрипт в БД messaging со следующей строкой:
 
 ```roomsql
-INSERT INTO messaging.channel (code, name, queue_name, is_internal, tenant_code) 
-       VALUES ('web', 'Web', 'web-queue', true, 'my_tenant')
+INSERT INTO messaging.channel (code, name, queue_name, is_internal) 
+       VALUES ('web', 'Web', 'web-queue', true)
 ```
 
 - `code` - Уникальный код канала

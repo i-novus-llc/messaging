@@ -1,7 +1,25 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<application xmlns="http://n2oapp.net/framework/config/schema/application-2.0">
+<application xmlns="http://n2oapp.net/framework/config/schema/application-2.0"
+             xmlns:sec="http://n2oapp.net/framework/config/schema/security-1.0">
     <header title="Уведомления" class="inverse">
-        <nav ref-id="messaging"/>
-        <extra-menu ref-id="user"/>
+        <nav>
+            <menu-item>
+                <open-page page-id="messaging_templates" route="messaging_templates"/>
+            </menu-item>
+            <menu-item>
+                <open-page page-id="messaging_feed" route="messaging_feed"/>
+            </menu-item>
+        </nav>
+        <extra-menu>
+            <dropdown-menu label="#{username}" icon="fa fa-user" sec:permit-all="true">
+                <menu-item>
+                    <open-page page-id="profile" route="/profile" label="Профиль"/>
+                </menu-item>
+                <menu-item>
+                    <a label="Выход" href="logout"/>
+                </menu-item>
+            </dropdown-menu>
+        </extra-menu>
+
     </header>
 </application>
