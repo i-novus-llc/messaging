@@ -11,12 +11,12 @@
             </menu-item>
         </nav>
         <extra-menu>
-            <dropdown-menu label="#{username}" icon="fa fa-user" sec:permit-all="true">
-                <menu-item>
-                    <open-page page-id="profile" route="/profile" label="Профиль"/>
+            <dropdown-menu name="#{username}" icon="fa fa-user" sec:permit-all="true">
+                <menu-item name="Профиль">
+                    <open-page page-id="profile" route="/profile" />
                 </menu-item>
-                <menu-item>
-                    <a label="Выход" href="logout"/>
+                <menu-item name="Выход">
+                    <a href="logout"/>
                 </menu-item>
             </dropdown-menu>
         </extra-menu>
