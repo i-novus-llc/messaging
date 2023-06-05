@@ -39,16 +39,13 @@ public class SecurityConfig extends OpenIdSecurityCustomizer {
             @Override
             public Object get(String param) {
                 if ("token".equals(param)) {
-                    OidcUser details = null;
                     SecurityContext context = SecurityContextHolder.getContext();
                     if (context != null) {
                         Authentication authentication = context.getAuthentication();
                         if (authentication != null) {
-                            details = (OidcUser) authentication.getPrincipal();
+                            if (authentication.getPrincipal() != null)
+                                return ((OidcUser) authentication.getPrincipal()).getIdToken().getTokenValue();
                         }
-                    }
-                    if (details != null) {
-                        return details.getIdToken().getTokenValue();
                     }
                 }
                 return super.get(param);
