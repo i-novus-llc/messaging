@@ -70,14 +70,13 @@ public class MyChannel extends AbstractChannel {
 
  ```roomsql
  INSERT INTO messaging.channel (code, name, queue_name, is_internal, tenant_code) 
-        VALUES ('my_ch', 'My Channel', 'my-channel-queue', false, 'my_tenant')
+        VALUES ('my_ch', 'My Channel', 'my-channel-queue', false)
  ```
 
 - `code` - Уникальный код канала
 - `name` - Имя канала, отображаемое на UI
 - `queue_name` - Имя очереди канала (`my-channel-queue`)
 - `is_internal` - Признак того, что канал является внутрисистемным
-- `my_tenant` - Код тенанта, к которому относится канал (по умолчанию использовать `default`)
 
 
 

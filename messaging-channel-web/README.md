@@ -23,7 +23,6 @@ INSERT INTO messaging.channel (code, name, queue_name, is_internal)
 - `name` - Имя канала, отображаемое на UI
 - `queue_name` - Имя очереди канала (должно совпадать с настройкой `novus.messaging.channel.web.queue`)
 - `is_internal` - Признак того, что канал является внутрисистемным
-- `my_tenant` - Код тенанта, к которому относится канал (по умолчанию использовать `default`)
 
 3. Подключите аннотацию `@EnableWebChannel` к вашему приложению
 
