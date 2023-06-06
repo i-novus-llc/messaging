@@ -1,6 +1,7 @@
 package ru.inovus.messaging.n2o;
 
 import net.n2oapp.framework.engine.data.rest.SpringRestDataProviderEngine;
+import net.n2oapp.security.auth.context.SpringSecurityUserContext;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,9 @@ public class FrontendApplicationTest {
     @Autowired
     private SpringRestDataProviderEngine springRestDataProviderEngine;
 
+    @Autowired
+    private SpringSecurityUserContext springSecurityUserContext;
+
     @Test
     void contextLoads() {
     }
@@ -47,6 +51,13 @@ public class FrontendApplicationTest {
         MockRestServiceServer testServer = createTestServer(restTemplate);
         restTemplate.getForObject("/test", Object.class);
         testServer.verify();
+    }
+
+    @Test
+    void tokenInConfigRequestTest(){
+        mockSecurityContext();
+        String token = (String) springSecurityUserContext.get("token");
+        assert token.equals("test_token");
     }
 
     private RestTemplate getN2oRestTemplate() throws Exception {
