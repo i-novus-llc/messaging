@@ -43,8 +43,7 @@ public class SecurityConfig extends OpenIdSecurityCustomizer {
                     if (context != null) {
                         Authentication authentication = context.getAuthentication();
                         if (authentication != null) {
-                            if (authentication.getPrincipal() != null)
-                                return ((OidcUser) authentication.getPrincipal()).getIdToken().getTokenValue();
+                            return ((OidcUser) authentication.getPrincipal()).getIdToken().getTokenValue();
                         }
                     }
                 }
