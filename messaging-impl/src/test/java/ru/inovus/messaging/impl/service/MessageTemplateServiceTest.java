@@ -112,7 +112,7 @@ public class MessageTemplateServiceTest {
         newTemplate.setCode("test");
         newTemplate.setCaption("caption");
         newTemplate.setText("text");
-        newTemplate.setSeverity(Severity.ERROR);
+        newTemplate.setSeverity(Severity.DANGER);
         newTemplate.setAlertType(AlertType.BLOCKER);
         newTemplate.setChannel(new Channel("web", "Web", "web_queue"));
         newTemplate.setEnabled(true);

@@ -3,11 +3,11 @@ services:
   db:
     image: postgres:9.6.11-alpine
     volumes:
-    - messaging-db-data:/var/lib/postgresql/data/pgdata
+      - messaging-db-data:/var/lib/postgresql/data/pgdata
     environment:
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
-    - "5432"
+      - "5432"
     deploy:
       resources:
         limits:
@@ -17,19 +17,27 @@ services:
         max_attempts: 3
       placement:
         constraints:
-        - node.labels.type == db
+          - node.labels.type == db
 
   messaging-backend:
     environment:
       SPRING_CLOUD_CONSUL_CONFIG_FORMAT: YAML
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db/postgres
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db/messaging
+      SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_USER_NAME_ATTRIBUTE: preferred_username
       SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
+      NOVUS_MESSAGING_RECIPIENT_PROVIDER_URL: http://yandex.develop:8278/api
+      NOVUS_MESSAGING_RECIPIENT_PROVIDER_TYPE: security
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: http://kafka:9092
+      SPRING_MAIL_USERNAME: someuser
+      SPRING_MAIL_HOST: maildev.i-novus.ru
       JAVA_OPTS: -Xmx200m
       SERVER_PORT: 8080
+      SPRING_REDIS_HOST: redis
     depends_on:
-    - db
+      - redis
+      - db
     ports:
-    - "8112:8080"
+      - "8112:8080"
     deploy:
       resources:
         limits:
@@ -42,17 +50,19 @@ services:
     environment:
       SPRING_CLOUD_CONSUL_CONFIG_FORMAT: YAML
       SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
-      SECURITY_OAUTH2_AUTH_SERVER_URI: http://yandex.develop:8278
-      SECURITY_OAUTH2_CLIENT_CLIENT_ID: frontend
-      SECURITY_OAUTH2_CLIENT_CLIENT_SECRET: ca12a678-b275-499b-a778-750bad4d0a77
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_ADMIN_WEB_CLIENT_ID: localhost
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_ADMIN_WEB_CLIENT_SECRET: 494f2352-b552-4888-82fa-e2087beafd0d
       ACCESS_SERVICE_URL: http://yandex.develop:8278/api
+      ACCESS_KEYCLOAK_SERVER_URL: https://keycloak.i-novus.ru/auth
       MESSAGING_BACKEND_PATH: http://messaging-backend:8080/api
-      MESSAGING_USER_ADMIN_URL: http://yandex.develop:8277
+      N2O_CONFIG_WS_ENDPOINT: http://messaging-backend:8080/ws
+      SPRING_REDIS_HOST: redis
       JAVA_OPTS: -Xmx200m
     depends_on:
-    - messaging-backend
+      - messaging-backend
+      - redis
     ports:
-    - "8111:8080"
+      - "8111:8080"
     deploy:
       resources:
         limits:
@@ -63,7 +73,7 @@ services:
 
   react:
     ports:
-    - "8110:80"
+      - "8110:80"
     deploy:
       resources:
         limits:
@@ -77,7 +87,7 @@ services:
   zookeeper:
     image: 'bitnami/zookeeper:3.7.0'
     ports:
-    - '8113:2181'
+      - '8113:2181'
     deploy:
       resources:
         limits:
@@ -91,7 +101,7 @@ services:
   kafka:
     image: 'bitnami/kafka:2.8.1'
     ports:
-    - '8114:9092'
+      - '8114:9092'
     deploy:
       resources:
         limits:
@@ -107,6 +117,18 @@ services:
       ALLOW_PLAINTEXT_LISTENER: "yes"
     depends_on:
       - zookeeper
+
+  redis:
+    image: 'redis:7.0.11-alpine'
+    ports:
+      - '8115:6379'
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.75'
+      restart_policy:
+        max_attempts: 3
 
 volumes:
   messaging-db-data:

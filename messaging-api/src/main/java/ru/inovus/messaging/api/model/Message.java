@@ -47,6 +47,8 @@ public class Message implements Serializable {
     @ApiModelProperty("Уровень важности уведомления")
     private Severity severity;
 
+    private String severityId;
+
     @ApiModelProperty("Способ отображения уведомления")
     private AlertType alertType;
 

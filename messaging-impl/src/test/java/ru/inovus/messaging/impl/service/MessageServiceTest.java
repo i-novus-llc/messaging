@@ -61,11 +61,11 @@ public class MessageServiceTest {
 
         // filter by severity
         criteria = new MessageCriteria();
-        criteria.setSeverity(Severity.ERROR);
+        criteria.setSeverity(Severity.DANGER);
         messages = service.getMessages(TENANT_CODE, criteria);
         assertThat(messages.getTotalElements(), is(1L));
         assertThat(messages.getContent().get(0).getText(), is("Message1"));
-        assertThat(messages.getContent().get(0).getSeverity(), is(Severity.ERROR));
+        assertThat(messages.getContent().get(0).getSeverity(), is(Severity.DANGER));
 
         // filter by channel code
         criteria = new MessageCriteria();

@@ -20,8 +20,8 @@
                 <row>
                     <input-select id="severity" label="Уровень важности" required="true">
                         <options>
-                            <option id="SEVERE" name="Важный"/>
-                            <option id="ERROR" name="Ошибка"/>
+                            <option id="PRIMARY" name="Важный"/>
+                            <option id="DANGER" name="Ошибка"/>
                             <option id="WARNING" name="Предупреждение"/>
                             <option id="INFO" name="Информация"/>
                         </options>

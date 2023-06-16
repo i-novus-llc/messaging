@@ -23,12 +23,12 @@
             severity, enabled, channel_code, tenant_code) VALUES
             (1, 'msg_template1', 'mt1', 'Message template 1', 'Some text', 'POPUP', 'INFO', true, 'web', 'tenant'),
             (2, 'msg_template2', 'mt2', 'Message template 2', 'Some text2', 'HIDDEN', 'INFO', false, 'email', 'tenant'),
-            (3, 'msg_template3', 'mt3', 'Congratulations, %{name}', 'Hello, %{name}. You win $%{count}!', 'HIDDEN', 'ERROR', true, 'email', 'tenant');
+            (3, 'msg_template3', 'mt3', 'Congratulations, %{name}', 'Hello, %{name}. You win $%{count}!', 'HIDDEN', 'DANGER', true, 'email', 'tenant');
             SELECT setval('messaging.message_template_id_seq', 4, false);
 
             <!-- messages and recipients -->
             INSERT INTO messaging.message (id, text, severity, alert_type, tenant_code, sent_at, recipient_type, channel_code)
-            VALUES ('a2bd666b-1684-4005-a10f-f14224f66d0a', 'Message1', 'ERROR', 'POPUP', 'tenant', '2021-08-15 00:00:00', 'RECIPIENT', 'web');
+            VALUES ('a2bd666b-1684-4005-a10f-f14224f66d0a', 'Message1', 'DANGER', 'POPUP', 'tenant', '2021-08-15 00:00:00', 'RECIPIENT', 'web');
             INSERT INTO messaging.message_recipient (id, message_id, recipient_username, status)
             VALUES (1, 'a2bd666b-1684-4005-a10f-f14224f66d0a', 'web1', 'SCHEDULED');
             INSERT INTO messaging.message_recipient (id, message_id, recipient_username, status)
@@ -43,7 +43,7 @@
 
             <!-- messages for tenant3 (for testing feed) -->
             INSERT INTO messaging.message (id, text, severity, alert_type, tenant_code, sent_at, recipient_type, channel_code)
-            VALUES ('6aa72600-1290-41ae-8429-e36ce46f60af', 'Message3', 'ERROR', 'POPUP', 'tenant3', '2021-08-15 00:00:00', 'RECIPIENT', 'web');
+            VALUES ('6aa72600-1290-41ae-8429-e36ce46f60af', 'Message3', 'DANGER', 'POPUP', 'tenant3', '2021-08-15 00:00:00', 'RECIPIENT', 'web');
             INSERT INTO messaging.message_recipient (id, message_id, recipient_username, status)
             VALUES (5, '6aa72600-1290-41ae-8429-e36ce46f60af', 'user', 'SENT');
 
@@ -53,7 +53,7 @@
             VALUES (6, '340751ba-1065-4ae4-b715-956560263684', 'user', 'SENT');
 
             INSERT INTO messaging.message (id, text, severity, alert_type, tenant_code, sent_at, recipient_type, channel_code)
-            VALUES ('442bb484-1690-436f-b38c-9638b280a1cd', 'Message5', 'ERROR', 'POPUP', 'tenant3', '2021-12-15 00:00:00', 'RECIPIENT', 'web');
+            VALUES ('442bb484-1690-436f-b38c-9638b280a1cd', 'Message5', 'DANGER', 'POPUP', 'tenant3', '2021-12-15 00:00:00', 'RECIPIENT', 'web');
             INSERT INTO messaging.message_recipient (id, message_id, recipient_username, status)
             VALUES (7, '442bb484-1690-436f-b38c-9638b280a1cd', 'user', 'SENT');
             SELECT setval('messaging.message_recipient_id_seq', 8, false);
