@@ -22,7 +22,7 @@ services:
   messaging-backend:
     environment:
       SPRING_CLOUD_CONSUL_CONFIG_FORMAT: YAML
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db/messaging
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db/postgres
       SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_USER_NAME_ATTRIBUTE: preferred_username
       SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
       NOVUS_MESSAGING_RECIPIENT_PROVIDER_URL: http://yandex.develop:8278/api
