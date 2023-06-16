@@ -21,6 +21,7 @@ services:
 
   messaging-backend:
     environment:
+      SPRING_CLOUD_CONSUL_CONFIG_PREFIX: messaging
       SPRING_CLOUD_CONSUL_CONFIG_FORMAT: YAML
       SPRING_DATASOURCE_URL: jdbc:postgresql://db/postgres
       SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_USER_NAME_ATTRIBUTE: preferred_username
@@ -48,6 +49,7 @@ services:
 
   messaging-frontend:
     environment:
+      SPRING_CLOUD_CONSUL_CONFIG_PREFIX: messaging
       SPRING_CLOUD_CONSUL_CONFIG_FORMAT: YAML
       SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
       SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_ADMIN_WEB_CLIENT_ID: localhost
