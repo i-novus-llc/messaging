@@ -3,7 +3,7 @@ services:
   db:
     image: 'inovus/postgres:14'
     volumes:
-      - messaging-db-data:/var/lib/postgresql/data/pgdata
+      - messaging-db-pg14:/var/lib/postgresql/data/pgdata
     environment:
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
@@ -133,4 +133,4 @@ services:
         max_attempts: 3
 
 volumes:
-  messaging-db-data:
+  messaging-db-pg14:
