@@ -2,6 +2,14 @@ databaseChangeLog:
   - include:
       file: quartz-db/changelog/quartz-init.xml
   - changeSet:
+      id: uuid-ossp
+      author: aarifullin
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/uuid-ossp.sql
+            relativeToChangelogFile: true
+  - changeSet:
       id: 1
       author: mhafizov
       changes:
@@ -313,7 +321,7 @@ databaseChangeLog:
             path: sql/EGISZNRPLATFORM-1047.sql
             relativeToChangelogFile: true
   - changeSet:
-      id: MESSAGING-246.sql
+      id: MESSAGING-246
       author: aarifullin
       changes:
         - sqlFile:
