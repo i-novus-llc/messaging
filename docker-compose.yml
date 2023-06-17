@@ -56,7 +56,7 @@ services:
       ACCESS_SERVICE_URL: http://yandex.develop:8278/api
       ACCESS_KEYCLOAK_SERVER_URL: https://keycloak.i-novus.ru/auth
       MESSAGING_BACKEND_PATH: http://messaging-backend:8080/api
-      N2O_CONFIG_WS_ENDPOINT: http://messaging-backend:8080/ws
+      N2O_CONFIG_WS_ENDPOINT: http://yandex.develop:8112/ws
       SPRING_REDIS_HOST: redis
       JAVA_OPTS: -Xmx200m
     depends_on:
