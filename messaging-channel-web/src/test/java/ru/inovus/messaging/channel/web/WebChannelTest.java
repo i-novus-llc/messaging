@@ -12,7 +12,6 @@ import net.n2oapp.framework.config.metadata.pack.*;
 import net.n2oapp.framework.config.selective.CompileInfo;
 import net.n2oapp.framework.config.test.N2oTestBase;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,10 +52,7 @@ import ru.inovus.messaging.mq.support.kafka.KafkaMqProvider;
 
 import java.lang.reflect.Type;
 import java.security.Principal;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 
@@ -110,6 +106,7 @@ public class WebChannelTest extends N2oTestBase {
         List<Transport> transports = Collections.singletonList(new WebSocketTransport(new StandardWebSocketClient()));
         stompClient = new WebSocketStompClient(new SockJsClient(transports));
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+        builder.scan();
     }
 
     @Override
@@ -120,11 +117,11 @@ public class WebChannelTest extends N2oTestBase {
         ((N2oWebSocketController) webSocketController).setPipeline(N2oPipelineSupport.readPipeline(environment));
         builder.packs(new N2oPagesPack(), new N2oApplicationPack(), new N2oWidgetsPack(), new N2oFieldSetsPack(),
                 new N2oControlsPack(), new N2oActionsPack());
-        builder.sources(new CompileInfo("/messaging.application.xml"));
+        builder.sources(new CompileInfo("messaging.application.xml"));
     }
 
     @Test
-    @Disabled
+
     public void testSendMessage() throws Exception {
         // publish session subscribe event
         publisher.publishEvent(createSessionSubscribeEvent());
@@ -157,34 +154,35 @@ public class WebChannelTest extends N2oTestBase {
         mqProvider.unsubscribe(dummyConsumer.subscriber());
 
         // expected message on client
-        Message receivedMessage = (Message) completableFuture.get();
+        Map receivedMessage = (Map) completableFuture.get();
         stompSession.disconnect();
 
-        assertThat(receivedMessage.getCaption(), is(message.getCaption()));
-        assertThat(receivedMessage.getText(), is(message.getText()));
+        assertThat(getPayloadData(receivedMessage).get("title"), is(message.getCaption()));
+        assertThat(getPayloadData(receivedMessage).get("text"), is(message.getText()));
     }
 
-    @Test @Disabled
+    @Test
     public void testSendFeedCount() throws Exception {
         // create feed count
         FeedCount feedCount = new FeedCount(TENANT_CODE, USERNAME, 5);
 
         // publish message to feedCount queue and wait for sending to stomp
         StompSession stompSession = getStompSessionWithHeaders();
-        stompSession.subscribe("/user" + properties.getPrivateDestPrefix() + "/" + TENANT_CODE + "/message.count", new TestReceivedFeedCountHandler());
+        stompSession.subscribe("/user" + properties.getPrivateDestPrefix() + "/" + TENANT_CODE + "/message.count", new TestReceivedMessageHandler());
 
         latch = new CountDownLatch(1);
         mqProvider.publish(feedCount, feedCountQueue);
         latch.await();
 
         // expected message on client
-        Integer receivedFeedCount = (Integer) completableFuture.get();
+        Map receivedFeedCount = (Map) completableFuture.get();
         stompSession.disconnect();
 
-        assertThat(receivedFeedCount, is(feedCount.getCount()));
+        assertThat(getPayloadData(receivedFeedCount).get("text"), is(feedCount.getCount().toString()));
+
     }
 
-    @Test @Disabled
+    @Test
     public void testSendMessageStatusSuccess() throws Exception {
         // publish session subscribe event
         publisher.publishEvent(createSessionSubscribeEvent());
@@ -216,7 +214,7 @@ public class WebChannelTest extends N2oTestBase {
         assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.SENT));
     }
 
-    @Test @Disabled
+    @Test
     public void testMarkReadMessage() throws Exception {
         StompSession stompSession = getStompSessionWithHeaders();
         assertThat(stompSession, notNullValue());
@@ -245,7 +243,7 @@ public class WebChannelTest extends N2oTestBase {
         assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.READ));
     }
 
-    @Test @Disabled
+    @Test
     public void testMarkReadAllMessage() throws Exception {
         StompSession stompSession = getStompSessionWithHeaders();
         assertThat(stompSession, notNullValue());
@@ -308,7 +306,7 @@ public class WebChannelTest extends N2oTestBase {
 
         @Override
         public Type getPayloadType(StompHeaders headers) {
-            return Message.class;
+            return Map.class;
         }
 
         @Override
@@ -318,17 +316,7 @@ public class WebChannelTest extends N2oTestBase {
         }
     }
 
-    private class TestReceivedFeedCountHandler implements StompFrameHandler {
-
-        @Override
-        public Type getPayloadType(StompHeaders headers) {
-            return Integer.class;
-        }
-
-        @Override
-        public void handleFrame(StompHeaders headers, Object payload) {
-            completableFuture.complete(payload);
-            latch.countDown();
-        }
-    }
+   private Map getPayloadData(Map map){
+       return ((Map) ((ArrayList) (((Map) map.get("payload")).get("alerts"))).get(0));
+   }
 }

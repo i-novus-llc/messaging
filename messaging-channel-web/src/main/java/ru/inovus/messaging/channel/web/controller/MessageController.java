@@ -15,6 +15,7 @@ import ru.inovus.messaging.api.rest.FeedRest;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 
 import java.security.Principal;
+import java.util.Map;
 
 /**
  * Контроллер для отправки/получения уведомлений через WebSocket
@@ -47,7 +48,7 @@ public class MessageController {
      */
     public void sendFeedCount(FeedCount feedCount) {
         String destination = "/exchange/" + feedCount.getTenantCode() + "/message.count";
-        webSocketController.convertAndSendToUser(feedCount.getUsername(), destination, feedCount.getCount());
+        webSocketController.convertAndSendToUser(feedCount.getUsername(), destination, Map.of("message_count",feedCount.getCount()));
     }
 
     /**
