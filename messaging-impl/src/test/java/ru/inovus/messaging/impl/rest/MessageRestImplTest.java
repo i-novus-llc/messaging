@@ -81,7 +81,7 @@ public class MessageRestImplTest {
 
         assertThat(publishedMessage.getCaption(), is("Congratulations, User"));
         assertThat(publishedMessage.getText(), is("Hello, User. You win $25000!"));
-        assertThat(publishedMessage.getSeverity(), is(Severity.ERROR));
+        assertThat(publishedMessage.getSeverity(), is(Severity.DANGER));
         Recipient recipient = publishedMessage.getRecipients().get(0);
         assertThat(recipient.getName(), is("Test User"));
         assertThat(recipient.getUsername(), is("testUser"));

@@ -24,8 +24,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public enum Severity {
     INFO("Информация"),
     WARNING("Предупреждение"),
-    ERROR("Ошибка"),
-    SEVERE("Важный");
+    DANGER("Ошибка"),
+    PRIMARY("Важный");
 
     private String name;
 

@@ -5,6 +5,8 @@ import net.n2oapp.security.auth.context.SpringSecurityUserContext;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -37,6 +39,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 @SpringBootTest(classes = FrontendApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("dev")
+@SpringBootApplication(exclude = RedisAutoConfiguration.class)
 public class FrontendApplicationTest {
 
     @Autowired

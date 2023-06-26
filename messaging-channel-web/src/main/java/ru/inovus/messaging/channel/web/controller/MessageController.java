@@ -1,11 +1,11 @@
 package ru.inovus.messaging.channel.web.controller;
 
+import net.n2oapp.framework.boot.stomp.WebSocketController;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import ru.inovus.messaging.api.model.FeedCount;
 import ru.inovus.messaging.api.model.Message;
@@ -15,6 +15,7 @@ import ru.inovus.messaging.api.rest.FeedRest;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 
 import java.security.Principal;
+import java.util.Map;
 
 /**
  * Контроллер для отправки/получения уведомлений через WebSocket
@@ -24,7 +25,7 @@ public class MessageController {
 
     private String statusQueueName;
 
-    private final SimpMessagingTemplate simpMessagingTemplate;
+    private final WebSocketController webSocketController;
 
     private final MqProvider mqProvider;
 
@@ -32,11 +33,11 @@ public class MessageController {
 
     public MessageController(@Value("${novus.messaging.queue.status}") String statusQueueName,
                              MqProvider mqProvider,
-                             SimpMessagingTemplate simpMessagingTemplate,
+                             WebSocketController webSocketController,
                              FeedRest feedRest) {
         this.statusQueueName = statusQueueName;
         this.mqProvider = mqProvider;
-        this.simpMessagingTemplate = simpMessagingTemplate;
+        this.webSocketController = webSocketController;
         this.feedRest = feedRest;
     }
 
@@ -46,8 +47,8 @@ public class MessageController {
      * @param feedCount Информация о непрочитанных уведомлениях пользователя
      */
     public void sendFeedCount(FeedCount feedCount) {
-        String destination = "/user/" + feedCount.getUsername() + "/exchange/" + feedCount.getTenantCode() + "/message.count";
-        simpMessagingTemplate.convertAndSend(destination, feedCount.getCount());
+        String destination = "/exchange/" + feedCount.getTenantCode() + "/message.count";
+        webSocketController.convertAndSendToUser(feedCount.getUsername(), destination, Map.of("message_count",feedCount.getCount()));
     }
 
     /**
@@ -77,8 +78,9 @@ public class MessageController {
         status.setMessageId(message.getId());
         status.setUsername(username);
         try {
-            String destination = "/user/" + username + "/exchange/" + tenantCode + "/message";
-            simpMessagingTemplate.convertAndSend(destination, message);
+            String destination = "/exchange/" + tenantCode + "/message";
+            message.setSeverityId(message.getSeverity().getId().toLowerCase());
+            webSocketController.convertAndSendToUser(username, destination, message);
             status.setStatus(MessageStatusType.SENT);
             mqProvider.publish(status, statusQueueName);
         } catch (MessagingException e) {

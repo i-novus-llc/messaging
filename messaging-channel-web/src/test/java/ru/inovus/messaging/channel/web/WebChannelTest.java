@@ -3,6 +3,14 @@ package ru.inovus.messaging.channel.web;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import net.n2oapp.framework.api.MetadataEnvironment;
+import net.n2oapp.framework.boot.stomp.N2oWebSocketController;
+import net.n2oapp.framework.boot.stomp.WebSocketController;
+import net.n2oapp.framework.config.N2oApplicationBuilder;
+import net.n2oapp.framework.config.compile.pipeline.N2oPipelineSupport;
+import net.n2oapp.framework.config.metadata.pack.*;
+import net.n2oapp.framework.config.selective.CompileInfo;
+import net.n2oapp.framework.config.test.N2oTestBase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,6 +43,7 @@ import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.MessageStatus;
 import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
+import ru.inovus.messaging.api.model.enums.Severity;
 import ru.inovus.messaging.api.rest.FeedRest;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.api.queue.QueueMqConsumer;
@@ -43,10 +52,7 @@ import ru.inovus.messaging.mq.support.kafka.KafkaMqProvider;
 
 import java.lang.reflect.Type;
 import java.security.Principal;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 
@@ -61,7 +67,7 @@ import static org.hamcrest.Matchers.notNullValue;
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EmbeddedKafka
 @ContextConfiguration(classes = KafkaMqProvider.class)
-public class WebChannelTest {
+public class WebChannelTest extends N2oTestBase {
     private static final String TENANT_CODE = "tenant";
     private static final String USERNAME = "test-user";
 
@@ -73,11 +79,12 @@ public class WebChannelTest {
     private String feedCountQueue;
     @Autowired
     private WebChannelProperties properties;
+    @Autowired
+    private WebSocketController webSocketController;
     @Value("${novus.messaging.queue.status}")
     private String statusQueue;
     @MockBean
     private FeedRest feedRest;
-
 
     @LocalServerPort
     private Integer port;
@@ -90,18 +97,31 @@ public class WebChannelTest {
 
     private CountDownLatch latch;
 
-
     @BeforeEach
-    public void init() {
+    public void init() throws Exception {
+        super.setUp();
         URL = "ws://localhost:" + port + properties.getEndPoint();
         completableFuture = new CompletableFuture<>();
 
         List<Transport> transports = Collections.singletonList(new WebSocketTransport(new StandardWebSocketClient()));
         stompClient = new WebSocketStompClient(new SockJsClient(transports));
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+        builder.scan();
+    }
+
+    @Override
+    protected void configure(N2oApplicationBuilder builder) {
+        super.configure(builder);
+        MetadataEnvironment environment = builder.getEnvironment();
+        ((N2oWebSocketController) webSocketController).setEnvironment(environment);
+        ((N2oWebSocketController) webSocketController).setPipeline(N2oPipelineSupport.readPipeline(environment));
+        builder.packs(new N2oPagesPack(), new N2oApplicationPack(), new N2oWidgetsPack(), new N2oFieldSetsPack(),
+                new N2oControlsPack(), new N2oActionsPack());
+        builder.sources(new CompileInfo("messaging.application.xml"));
     }
 
     @Test
+
     public void testSendMessage() throws Exception {
         // publish session subscribe event
         publisher.publishEvent(createSessionSubscribeEvent());
@@ -111,6 +131,7 @@ public class WebChannelTest {
         message.setId("72f643c6-e0fc-4c66-8a77-ea0e3652aa81");
         message.setCaption("Test caption");
         message.setText("Message");
+        message.setSeverity(Severity.WARNING);
         message.setTenantCode(TENANT_CODE);
         Recipient recipient1 = new Recipient();
         recipient1.setUsername("test-user");
@@ -133,11 +154,11 @@ public class WebChannelTest {
         mqProvider.unsubscribe(dummyConsumer.subscriber());
 
         // expected message on client
-        Message receivedMessage = (Message) completableFuture.get();
+        Map receivedMessage = (Map) completableFuture.get();
         stompSession.disconnect();
 
-        assertThat(receivedMessage.getCaption(), is(message.getCaption()));
-        assertThat(receivedMessage.getText(), is(message.getText()));
+        assertThat(getPayloadData(receivedMessage).get("title"), is(message.getCaption()));
+        assertThat(getPayloadData(receivedMessage).get("text"), is(message.getText()));
     }
 
     @Test
@@ -147,17 +168,18 @@ public class WebChannelTest {
 
         // publish message to feedCount queue and wait for sending to stomp
         StompSession stompSession = getStompSessionWithHeaders();
-        stompSession.subscribe("/user" + properties.getPrivateDestPrefix() + "/" + TENANT_CODE + "/message.count", new TestReceivedFeedCountHandler());
+        stompSession.subscribe("/user" + properties.getPrivateDestPrefix() + "/" + TENANT_CODE + "/message.count", new TestReceivedMessageHandler());
 
         latch = new CountDownLatch(1);
         mqProvider.publish(feedCount, feedCountQueue);
         latch.await();
 
         // expected message on client
-        Integer receivedFeedCount = (Integer) completableFuture.get();
+        Map receivedFeedCount = (Map) completableFuture.get();
         stompSession.disconnect();
 
-        assertThat(receivedFeedCount, is(feedCount.getCount()));
+        assertThat(getPayloadData(receivedFeedCount).get("text"), is(feedCount.getCount().toString()));
+
     }
 
     @Test
@@ -169,6 +191,7 @@ public class WebChannelTest {
         Message message = new Message();
         message.setId("6f711616-1617-11ec-9621-0242ac130003");
         message.setTenantCode(TENANT_CODE);
+        message.setSeverity(Severity.WARNING);
         message.setRecipients(Collections.singletonList(new Recipient(USERNAME)));
 
         final MessageStatus[] receivedStatus = new MessageStatus[1];
@@ -248,7 +271,6 @@ public class WebChannelTest {
         assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.READ));
     }
 
-
     private StompSession getStompSessionWithHeaders() throws InterruptedException, java.util.concurrent.ExecutionException, java.util.concurrent.TimeoutException {
         StompHeaders connectHeaders = new StompHeaders();
         connectHeaders.add("username", USERNAME);
@@ -284,7 +306,7 @@ public class WebChannelTest {
 
         @Override
         public Type getPayloadType(StompHeaders headers) {
-            return Message.class;
+            return Map.class;
         }
 
         @Override
@@ -294,17 +316,7 @@ public class WebChannelTest {
         }
     }
 
-    private class TestReceivedFeedCountHandler implements StompFrameHandler {
-
-        @Override
-        public Type getPayloadType(StompHeaders headers) {
-            return Integer.class;
-        }
-
-        @Override
-        public void handleFrame(StompHeaders headers, Object payload) {
-            completableFuture.complete(payload);
-            latch.countDown();
-        }
-    }
+   private Map getPayloadData(Map map){
+       return ((Map) ((ArrayList) (((Map) map.get("payload")).get("alerts"))).get(0));
+   }
 }

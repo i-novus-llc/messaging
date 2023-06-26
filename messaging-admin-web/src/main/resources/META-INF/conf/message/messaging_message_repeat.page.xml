@@ -14,8 +14,8 @@
                     <row>
                         <select id="severity" label="Уровень важности" enabled="false">
                             <options>
-                                <option id="SEVERE" name="Важный"/>
-                                <option id="ERROR" name="Ошибка"/>
+                                <option id="PRIMARY" name="Важный"/>
+                                <option id="DANGER" name="Ошибка"/>
                                 <option id="WARNING" name="Предупреждение"/>
                                 <option id="INFO" name="Информация"/>
                             </options>
