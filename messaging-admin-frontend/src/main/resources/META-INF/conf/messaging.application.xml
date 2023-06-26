@@ -22,8 +22,6 @@
         </extra-menu>
     </header>
     <events>
-        <stomp-event id="notif" destination="/exchange/default/message">
-            <alert title="{caption}" text="{text}"  color="{severityId}" timeout="7000"/>
-        </stomp-event>
+        <stomp-event id="notif" destination="/exchange/default/message"/>
     </events>
 </application>
