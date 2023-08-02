@@ -10,15 +10,15 @@
     <parent>
         <groupId>net.n2oapp.platform</groupId>
         <artifactId>n2o-boot-platform-parent</artifactId>
-        <version>4.5.0</version>
+        <version>5.0.0</version>
         <relativePath />
     </parent>
 
     <properties>
         <n2o.version>7.16.13</n2o.version>
-        <access.version>6.1.1</access.version>
+        <access.version>6.1.6</access.version>
         <config.server.enable>false</config.server.enable>
-        <audit.version>2.4.27</audit.version>
+        <audit.version>2.4.33</audit.version>
         <jacoco.skip>true</jacoco.skip>
         <spring-kafka.version>2.6.4</spring-kafka.version>
         <lombok.version>1.18.20</lombok.version>
