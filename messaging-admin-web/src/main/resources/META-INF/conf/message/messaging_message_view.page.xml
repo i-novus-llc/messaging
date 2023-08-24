@@ -1,12 +1,21 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<page xmlns="http://n2oapp.net/framework/config/schema/page-3.0"
+<page xmlns="http://n2oapp.net/framework/config/schema/page-4.0"
       name="Просмотр уведомления от {sentAtFormatted}">
+    <datasources>
+        <datasource id="message_ds" query-id="messaging_message">
+            <filters>
+                <eq field-id="id" param="id"/>
+            </filters>
+        </datasource>
+        <datasource id="attachment_ds" query-id="messaging_attachment">
+            <filters>
+                <eq field-id="messageId" param="id"/>
+            </filters>
+        </datasource>
+    </datasources>
     <regions>
         <region place="top">
-            <form id="view" query-id="messaging_message" name="Просмотр уведомления">
-                <pre-filters>
-                    <eq field-id="id" param="id"/>
-                </pre-filters>
+            <form id="view" datasource="message_ds" name="Просмотр уведомления">
                 <fields>
                     <set field-label-location="left" field-label-align="left" field-label-width="220px">
                         <row>
@@ -43,10 +52,7 @@
                 </fields>
             </form>
         </region>
-        <table query-id="messaging_attachment" visible="{attachmentEnabled == true}" depends-on="view" selection="none">
-            <pre-filters>
-                <eq field-id="messageId" param="id"/>
-            </pre-filters>
+        <table datasource="attachment_ds" visible="{attachmentEnabled == true}" depends-on="view" selection="none">
             <columns>
                 <column text-field-id="shortFileName" label="Вложения">
                     <link>
@@ -55,7 +61,7 @@
                 </column>
             </columns>
         </table>
-        <table query-id="recipient" depends-on="view" detail-field-id="messageId" name="Получатели">
+        <table query-id="recipient" detail-field-id="messageId" name="Получатели">
             <columns>
                 <column text-field-id="statusTime">
                     <text format="date DD.MM.YYYY HH:mm:ss"/>

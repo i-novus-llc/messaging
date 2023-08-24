@@ -1,10 +1,14 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<page xmlns="http://n2oapp.net/framework/config/schema/page-3.0"
+<page xmlns="http://n2oapp.net/framework/config/schema/page-4.0"
       name="Настройка уведомлений">
+    <datasources>
+        <datasource id="message_ds" query-id="messaging_message"/>
+        <datasource id="msg_template_ds" query-id="messaging_msg_template"/>
+    </datasources>
     <regions>
         <tabs>
             <tab name="История уведомлений">
-                <table id="message_list" query-id="messaging_message">
+                <table id="message_list" datasource="message_ds">
                     <filters>
                         <row>
                             <input-select id="severity" label="Уровень важности">
@@ -45,14 +49,16 @@
                             <open-page page-id="messaging_message_view"
                                        route="/:id/view"
                                        page-name="Просмотр уведомления от {sentAtFormatted}">
-                                <path-param name="id" value="{id}"/>
+                                <params>
+                                    <path-param name="id" value="{id}"/>
+                                </params>
                             </open-page>
                         </click>
                     </rows>
                 </table>
             </tab>
             <tab name="Шаблоны уведомлений">
-                <table id="templates" ref-id="messaging_msg_template_list"/>
+                <table id="templates" ref-id="messaging_msg_template_list" datasource="msg_template_ds"/>
             </tab>
         </tabs>
     </regions>

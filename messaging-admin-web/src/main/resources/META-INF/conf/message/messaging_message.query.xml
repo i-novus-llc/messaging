@@ -1,102 +1,48 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0"
+<query xmlns="http://n2oapp.net/framework/config/schema/query-5.0"
        object-id="messaging_message">
 
     <list result-mapping="['content']" count-mapping="['totalElements']">
-        <rest filters-separator="&amp;">${messaging.backend.path}/${novus.messaging.tenant-code}/messages?{filters}&amp;{sorting}&amp;size={limit}&amp;page={page}</rest>
+        <rest filters-separator="&amp;">
+            ${messaging.backend.path}/${novus.messaging.tenant-code}/messages?{filters}&amp;{sorting}&amp;size={limit}&amp;page={page}
+        </rest>
     </list>
 
     <unique>
-        <rest>${messaging.backend.path}/${novus.messaging.tenant-code}/messages/{id}</rest>
+        <rest>
+            ${messaging.backend.path}/${novus.messaging.tenant-code}/messages/{id}
+        </rest>
     </unique>
 
+    <filters>
+        <eq field-id="id" filter-id="id">{id}</eq>
+        <eq field-id="severity.id" filter-id="severity.id">severity={severity.id}</eq>
+        <eq field-id="infoType" filter-id="infoType.id">infoType={infoType.id}</eq>
+        <more field-id="sentAt" filter-id="sentAt.begin" domain="localdatetime">sentAtBegin={sentAt.begin}</more>
+        <less field-id="sentAt" filter-id="sentAt.end" normalize="#this.plusDays(1).minusNanos(1)"
+              domain="localdatetime">sentAtEnd={sentAt.end}</less>
+    </filters>
+    
     <fields>
-        <field id="id" domain="string" name="Идентификатор">
-            <select mapping="['id']"/>
-            <filters>
-                <eq filter-id="id">{id}</eq>
-            </filters>
-        </field>
-
-        <field id="severity.id" domain="string">
-            <select mapping="['severity.id']"/>
-            <filters>
-                <eq filter-id="severity.id">severity={severity.id}</eq>
-            </filters>
-        </field>
-        <field id="severity.name" domain="string">
-            <select mapping="['severity.name']"/>
-        </field>
-
-        <field id="infoType">
-            <select mapping="['channel']"/>
-            <filters>
-                <eq filter-id="infoType.id">infoType={infoType.id}</eq>
-            </filters>
-        </field>
-
-        <field id="recipientType.id">
-            <select mapping="['recipientType.id']"/>
-        </field>
-        <field id="recipientType.name">
-            <select mapping="['recipientType.name']"/>
-        </field>
-
-        <field id="alertType.id">
-            <select mapping="['alertType.id']"/>
-        </field>
-        <field id="alertType.name">
-            <select mapping="['alertType.name']"/>
-        </field>
-
-
-        <field id="caption" domain="string">
-            <select mapping="['caption']"/>
-        </field>
-
-        <field id="text" domain="string">
-            <select mapping="['text']"/>
-        </field>
-
-        <field id="sentAt" domain="localdatetime">
-            <select mapping="['sentAt']"/>
-            <filters>
-                <more filter-id="sentAt.begin" domain="localdatetime">sentAtBegin={sentAt.begin}</more>
-                <less filter-id="sentAt.end" normalize="#this.plusDays(1).minusNanos(1)"
-                      domain="localdatetime">sentAtEnd={sentAt.end}</less>
-            </filters>
-        </field>
-
-        <field id="sentAtFormatted" domain="date">
-            <select mapping="['sentAt']" normalize="new java.text.SimpleDateFormat('dd.MM.yyyy HH:mm:ss').format(#this)"/>
-        </field>
-
-        <field id="users" domain="object">
-            <select mapping="['recipients']"/>
-        </field>
-
-        <field id="role">
-            <select/>
-        </field>
-
-        <field id="roles">
-            <select/>
-        </field>
-
-        <field id="region">
-            <select/>
-        </field>
-
-        <field id="organization">
-            <select/>
-        </field>
-
-        <field id="attachments">
-            <select/>
-        </field>
-
-        <field id="templateCode">
-            <select/>
-        </field>
+        <field id="id" domain="string" name="Идентификатор" mapping="['id']"/>
+        <field id="severity.id" domain="string" mapping="['severity.id']"/>
+        <field id="severity.name" domain="string" mapping="['severity.name']"/>
+        <field id="infoType" mapping="['channel']"/>
+        <field id="recipientType.id" mapping="['recipientType.id']"/>
+        <field id="recipientType.name" mapping="['recipientType.name']"/>
+        <field id="alertType.id" mapping="['alertType.id']"/>
+        <field id="alertType.name" mapping="['alertType.name']"/>
+        <field id="caption" domain="string" mapping="['caption']"/>
+        <field id="text" domain="string" mapping="['text']"/>
+        <field id="sentAt" domain="localdatetime" mapping="['sentAt']"/>
+        <field id="sentAtFormatted" domain="date" mapping="['sentAt']" 
+               normalize="new java.text.SimpleDateFormat('dd.MM.yyyy HH:mm:ss').format(#this)"/>
+        <field id="users" domain="object" mapping="['recipients']"/>
+        <field id="role"/>
+        <field id="roles"/>
+        <field id="region"/>
+        <field id="organization"/>
+        <field id="attachments"/>
+        <field id="templateCode"/>
     </fields>
 </query>
