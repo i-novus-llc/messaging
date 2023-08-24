@@ -1,44 +1,26 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0"
+<query xmlns="http://n2oapp.net/framework/config/schema/query-5.0"
        object-id="messaging_user">
 
     <list result-mapping="['content']" count-mapping="['totalElements']">
         <rest filters-separator="&amp;">${messaging.backend.path}/provider_recipients?{filters}&amp;{sorting}&amp;size={limit}&amp;page={page}</rest>
     </list>
 
+    <filters>
+        <eq field-id="username" filter-id="id">username={username}</eq>
+        <like field-id="name" filter-id="name">name={name}</like>
+        <in field-id="roleCodes" filter-id="roleCodes">roleCodes={roleCodes}</in>
+        <eq field-id="regionId" filter-id="regionId">regionId={regionId}</eq>
+        <eq field-id="organizationId" filter-id="organizationId">organizationId={organizationId}</eq>
+    </filters>
+    
     <fields>
-        <field id="id">
-            <select mapping="[username]"/>
-        </field>
-        <field id="username" domain="string">
-            <select mapping="[username]"/>
-            <filters>
-                <eq filter-id="id">username={username}</eq>
-            </filters>
-        </field>
-        <field id="name" domain="string">
-            <select mapping="#this[fio] != null ? (#this[fio] + ' (' + #this[username] + ')') : #this[username]"/>
-            <filters>
-                <like filter-id="name">name={name}</like>
-            </filters>
-        </field>
-        <field id="email">
-            <select mapping="[email]"/>
-        </field>
-        <field id="roleCodes">
-            <filters>
-                <in filter-id="roleCodes">roleCodes={roleCodes}</in>
-            </filters>
-        </field>
-        <field id="regionId">
-            <filters>
-                <eq filter-id="regionId">regionId={regionId}</eq>
-            </filters>
-        </field>
-        <field id="organizationId">
-            <filters>
-                <eq filter-id="organizationId">organizationId={organizationId}</eq>
-            </filters>
-        </field>
+        <field id="id" mapping="['username']"/>
+        <field id="username" domain="string" mapping="['username']"/>
+        <field id="name" domain="string" mapping="#this[fio] != null ? (#this[fio] + ' (' + #this[username] + ')') : #this[username]"/>
+        <field id="email" mapping="['email']"/>
+        <field id="roleCodes" select="false"/>
+        <field id="regionId" select="false"/>
+        <field id="organizationId" select="false"/>
     </fields>
 </query>

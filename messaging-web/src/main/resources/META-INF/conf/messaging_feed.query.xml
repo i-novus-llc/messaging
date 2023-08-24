@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0"
+<query xmlns="http://n2oapp.net/framework/config/schema/query-5.0"
        object-id="messaging_feed">
 
     <list result-mapping="['content']" count-mapping="['totalElements']">
@@ -10,57 +10,24 @@
         <rest>${messaging.backend.path}/${novus.messaging.tenant-code}/feed/{username}/message/{id}/read</rest>
     </unique>
 
+    <filters>
+        <eq field-id="id" filter-id="id">{id}</eq>
+        <eq field-id="severity.id" filter-id="severity.id">severity={severity.id}</eq>
+        <more field-id="sentAt" filter-id="sentAt.begin"  domain="localdatetime">sentAtBegin={sentAt.begin}</more>
+        <less field-id="sentAt" filter-id="sentAt.end" normalize="#this.plusDays(1).minusNanos(1)"  domain="localdatetime">sentAtEnd={sentAt.end}</less>
+        <eq field-id="username" filter-id="username" default-value="#{username}">user={username}</eq>
+    </filters>
+    
     <fields>
-        <field id="id" domain="string" name="Идентификатор">
-            <select/>
-            <filters>
-                <eq filter-id="id">{id}</eq>
-            </filters>
-        </field>
-
-        <field id="severity.id" domain="string">
-            <select mapping="['severity.id']"/>
-            <filters>
-                <eq filter-id="severity.id">severity={severity.id}</eq>
-            </filters>
-        </field>
-        <field id="severity.name" domain="string">
-            <select mapping="['severity.name']"/>
-        </field>
-
-        <field id="caption" domain="string">
-            <select/>
-        </field>
-
-        <field id="text" domain="string">
-            <select/>
-        </field>
-
-        <field id="sentAt" domain="localdatetime">
-            <select mapping="['sentAt']"/>
-            <filters>
-                <more filter-id="sentAt.begin"  domain="localdatetime">sentAtBegin={sentAt.begin}</more>
-                <less filter-id="sentAt.end" normalize="#this.plusDays(1).minusNanos(1)"  domain="localdatetime">sentAtEnd={sentAt.end}</less>
-            </filters>
-        </field>
-
-        <field id="sentAtFormatted" domain="date">
-            <select mapping="['sentAt']" normalize="new java.text.SimpleDateFormat('dd.MM.yyyy HH:mm:ss').format(#this)"/>
-        </field>
-
-        <field id="readAt" domain="date">
-            <select/>
-        </field>
-
-        <field id="isRead" domain="boolean">
-            <select mapping="#this['readAt'] == null ? false : true"/>
-        </field>
-
-        <field id="username" domain="string">
-            <filters>
-                <eq filter-id="username" default-value="#{username}">user={username}</eq>
-            </filters>
-        </field>
+        <field id="id" domain="string" name="Идентификатор"/>
+        <field id="severity.id" domain="string" mapping="['severity.id']"/>
+        <field id="severity.name" domain="string" mapping="['severity.name']"/>
+        <field id="caption" domain="string"/>
+        <field id="text" domain="string"/>
+        <field id="sentAt" domain="localdatetime" mapping="['sentAt']"/>
+        <field id="sentAtFormatted" domain="date" mapping="['sentAt']" normalize="new java.text.SimpleDateFormat('dd.MM.yyyy HH:mm:ss').format(#this)"/>
+        <field id="readAt" domain="date"/>
+        <field id="isRead" domain="boolean" mapping="#this['readAt'] == null ? false : true"/>
+        <field id="username" domain="string" select="false"/>
     </fields>
-
 </query>
