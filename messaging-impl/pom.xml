@@ -57,6 +57,12 @@
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
         </dependency>
+    
+        <dependency>
+            <groupId>com.github.blagerweij</groupId>
+            <artifactId>liquibase-sessionlock</artifactId>
+            <version>1.6.0</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
