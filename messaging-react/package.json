@@ -3,20 +3,23 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "craco start",
+    "build": "craco build"
   },
   "dependencies": {
-    "n2o-framework": "7.23.69",
-    "react-scripts": "2.1.5",
+    "n2o-framework": "7.25.2",
     "redux-thunk": "^2.4.2"
   },
   "peerDependencies": {
     "react": "*",
     "react-dom": "*",
     "react-router-dom": "*"
+  },
+  "devDependencies": {
+    "@craco/craco": "^6.4.5",
+    "craco-esbuild": "^0.5.1",
+    "react-scripts": "4.0.2",
+    "sass": "^1.53.0"
   },
   "eslintConfig": {
     "extends": "react-app"

@@ -9,6 +9,7 @@
         <page-access page-id="messaging_message_view"/>
         <page-access page-id="messaging_msg_template"/>
         <page-access page-id="index"/>
+        <page-access page-id="messaging_feed"/>
         <object-access object-id="messaging_feed" operations="*"/>
         <object-access object-id="messaging_message" operations="*"/>
         <object-access object-id="messaging_user" operations="*"/>

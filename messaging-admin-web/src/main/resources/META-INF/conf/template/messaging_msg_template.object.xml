@@ -8,7 +8,7 @@
             </invocation>
             <in>
                 <field id="name" mapping="['name']" required="true"/>
-                <field id="enabled" mapping="['enabled']" default-value="true"/>
+                <field id="enabled" mapping="['enabled']" default-value="false"/>
                 <field id="severity.id" mapping="['severity']"/>
                 <field id="alertType.id" mapping="['alertType']"/>
                 <field id="infoType" mapping="['channel']"/>

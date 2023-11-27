@@ -1,8 +1,19 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<page xmlns="http://n2oapp.net/framework/config/schema/page-3.0"
+<page xmlns="http://n2oapp.net/framework/config/schema/page-4.0"
       name="Повтор уведомления">
+    <datasources>
+        <datasource id="ds_message" query-id="messaging_message"/>
+        <datasource id="ds_recipient" query-id="recipient">
+            <dependencies>
+                <fetch on="ds_message" model="resolve"/>
+            </dependencies>
+            <filters>
+                <eq field-id="messageId" datasource="ds_message"/>
+            </filters>
+        </datasource>
+    </datasources>
     <regions>
-        <form id="create" query-id="messaging_message">
+        <form id="create" datasource="ds_message">
             <fields>
                 <set field-label-location="left" field-label-align="left" field-label-width="220px">
                     <row>
@@ -112,7 +123,7 @@
             <toolbar place="topLeft">
                 <button id="save" label="Сохранить" color="primary">
                     <invoke operation-id="send" close-on-success="true" object-id="messaging_message">
-                        <form-param id="recipients" ref-widget-id="recipients" ref-model="multi"/>
+                        <form-param id="recipients" datasource="recipients" model="multi"/>
                     </invoke>
                 </button>
                 <button id="cancel" label="Закрыть">
@@ -120,8 +131,7 @@
                 </button>
             </toolbar>
         </form>
-        <table id="repeatedRecipients" query-id="recipient" depends-on="create" detail-field-id="messageId"
-               fetch-on-init="true" visible="true">
+        <table id="repeatedRecipients" datasource="ds_recipient" fetch-on-init="true" visible="true">
             <columns>
                 <column id="checked">
                     <checkbox/>
