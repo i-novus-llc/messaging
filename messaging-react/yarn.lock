@@ -1595,6 +1595,44 @@
     scroll-into-view-if-needed "2.2.26"
     text-mask-addons "3.8.0"
 
+"@i-novus/n2o-components@7.25.8":
+  version "7.25.8"
+  resolved "https://npm.i-novus.ru/@i-novus%2fn2o-components/-/n2o-components-7.25.8.tgz#4d0375fcd51e0c0c93d12e1fbd56372b74451554"
+  integrity sha512-W6ll44gnmgViwikpxB2EBy3I9DdHr5XHV0qn87dG+y6qY4INkUiLEZPFQNObexq4KMPxstHYi2U8ikiydk/FyQ==
+  dependencies:
+    "@fontsource/exo-2" "^4.3.0"
+    bootstrap "~4.3.1"
+    brace "0.11.1"
+    classnames "^2.3.1"
+    copyfiles "^2.4.1"
+    dompurify "3.0.2"
+    draft-js "0.11.7"
+    draftjs-to-html "0.8.4"
+    font-awesome "4.7.0"
+    html-to-draftjs "1.4.0"
+    lodash "^4.17.15"
+    moment "^2.24.0"
+    numeral "2.0.6"
+    rc-drawer "^3.0.2"
+    rc-slider "^8.6.11"
+    rc-switch "4.1.0"
+    rc-tree-select "5.11.0"
+    react "17.0.2"
+    react-ace "9.3.0"
+    react-copy-to-clipboard "^5.0.1"
+    react-dom "17.0.2"
+    react-draft-wysiwyg "1.13.1"
+    react-i18next "11.7.3"
+    react-onclickoutside "6.7.1"
+    react-popper "2.2.4"
+    react-router-dom "5.2.0"
+    react-syntax-highlighter "^11.0.2"
+    react-text-mask "5.5.0"
+    react-textarea-autosize "7.0.4"
+    reactstrap "8.10.1-popper2-beta.0"
+    scroll-into-view-if-needed "2.2.26"
+    text-mask-addons "3.8.0"
+
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@istanbuljs/load-nyc-config/-/load-nyc-config-1.1.0.tgz#fd3db1d59ecf7cf121e80650bb86712f9b55eced"
@@ -10050,10 +10088,10 @@ multicast-dns@^6.0.1:
     dns-packet "^1.3.1"
     thunky "^1.0.2"
 
-n2o-framework@7.25.2:
-  version "7.25.2"
-  resolved "https://registry.yarnpkg.com/n2o-framework/-/n2o-framework-7.25.2.tgz#deffbea3f40239957405288ed5a1196c74221cb2"
-  integrity sha512-5TijTdue9hJBNlBU30Qh0JZr1LOZkfZIS6tXEVlwtJ74CfPN91JmsFM5P1rMVFAKHQ6af2zG60u5fNa59zeoqA==
+n2o-framework@7.25.8:
+  version "7.25.8"
+  resolved "https://npm.i-novus.ru/n2o-framework/-/n2o-framework-7.25.8.tgz#ac9204bc9e198ec92676e07ffb2cf53c117f2e36"
+  integrity sha512-kZ1BjR6MS5VFOg3LvPeY4bqZRr+wzwKR3W96CgdUc7e7lT1t2ZiZoz42nWAvpxS+MSBpZmEPqrrDenmrR9u8UA==
   dependencies:
     "@babel/polyfill" "^7.0.0"
     "@babel/runtime-corejs2" "^7.0.0"
