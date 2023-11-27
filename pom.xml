@@ -15,7 +15,7 @@
     </parent>
 
     <properties>
-        <n2o.version>7.25.2</n2o.version>
+        <n2o.version>7.25.8</n2o.version>
         <access.version>7.0.2</access.version>
         <audit.version>2.4.33</audit.version>
         <jacoco.skip>true</jacoco.skip>
