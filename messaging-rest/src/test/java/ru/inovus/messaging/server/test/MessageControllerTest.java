@@ -22,6 +22,8 @@ import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 import ru.inovus.messaging.api.UnreadMessagesInfo;
 import ru.inovus.messaging.api.model.Message;
+import ru.inovus.messaging.api.queue.DestinationResolver;
+import ru.inovus.messaging.api.queue.MqProvider;
 import ru.inovus.messaging.impl.FeedService;
 import ru.inovus.messaging.server.BackendApplication;
 
@@ -83,6 +85,12 @@ public class MessageControllerTest {
 
     @MockBean
     public FeedService feedService;
+
+    @MockBean
+    public MqProvider mqProvider;
+
+    @MockBean
+    public DestinationResolver destinationResolver;
 
     @Before
     public void init() {
