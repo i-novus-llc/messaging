@@ -6,10 +6,13 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.RestTemplate;
+import ru.inovus.messaging.api.queue.DestinationResolver;
+import ru.inovus.messaging.api.queue.MqProvider;
 import ru.inovus.messaging.server.BackendApplication;
 
 import java.util.Collections;
@@ -28,6 +31,12 @@ public class AuthHeaderForwardingTest {
 
     @LocalServerPort
     private int port;
+
+    @MockBean
+    public MqProvider mqProvider;
+
+    @MockBean
+    public DestinationResolver destinationResolver;
 
     @Test
     public void testHeaderForwarding() {

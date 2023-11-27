@@ -8,7 +8,7 @@
     <parent>
         <groupId>ru.i-novus.messaging</groupId>
         <artifactId>messaging-pom</artifactId>
-        <version>4.0.0</version>
+        <version>3.34.2-SNAPSHOT</version>
     </parent>
 
     <dependencies>
@@ -27,6 +27,11 @@
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.blagerweij</groupId>
+            <artifactId>liquibase-sessionlock</artifactId>
+            <version>1.6.0</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

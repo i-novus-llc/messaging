@@ -8,12 +8,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.inovus.messaging.api.criteria.UserSettingCriteria;
 import ru.inovus.messaging.api.model.AlertType;
 import ru.inovus.messaging.api.model.InfoType;
 import ru.inovus.messaging.api.model.UserSetting;
+import ru.inovus.messaging.api.queue.DestinationResolver;
+import ru.inovus.messaging.api.queue.MqProvider;
 import ru.inovus.messaging.api.rest.UserSettingRest;
 import ru.inovus.messaging.server.BackendApplication;
 
@@ -47,8 +50,14 @@ public class UserSettingServiceTest {
 
     private static final String USER_SETTING_ALERT_TYPE = "BLOCKER";
 
-
     private UserSettingRest userSettingRest;
+
+    @MockBean
+    public MqProvider mqProvider;
+
+    @MockBean
+    public DestinationResolver destinationResolver;
+
 
     @Autowired
     public void setUserSettingRest(UserSettingRest userSettingRest) {

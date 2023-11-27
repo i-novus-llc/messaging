@@ -1,5 +1,6 @@
 package ru.inovus.messaging.impl;
 
+import org.jooq.Record;
 import org.jooq.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
