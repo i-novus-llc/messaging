@@ -39,7 +39,7 @@ public class WebSocketConfiguration extends AbstractSecurityWebSocketMessageBrok
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint(properties.getEndPoint()).setAllowedOrigins("*").withSockJS();
+        registry.addEndpoint(properties.getEndPoint()).setAllowedOriginPatterns("*").withSockJS();
     }
 }
 
