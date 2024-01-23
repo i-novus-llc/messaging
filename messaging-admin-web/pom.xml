@@ -8,7 +8,7 @@
     <parent>
         <groupId>ru.i-novus.messaging</groupId>
         <artifactId>messaging-pom</artifactId>
-        <version>4.2.5</version>
+        <version>4.2.6-SNAPSHOT</version>
     </parent>
 
     <dependencies>
