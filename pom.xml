@@ -10,12 +10,12 @@
     <parent>
         <groupId>net.n2oapp.platform</groupId>
         <artifactId>n2o-boot-platform-parent</artifactId>
-        <version>5.2.0</version>
+        <version>5.3.2</version>
         <relativePath />
     </parent>
 
     <properties>
-        <n2o.version>7.25.8</n2o.version>
+        <n2o.version>7.27.4</n2o.version>
         <access.version>7.0.2</access.version>
         <audit.version>2.4.33</audit.version>
         <jacoco.skip>true</jacoco.skip>

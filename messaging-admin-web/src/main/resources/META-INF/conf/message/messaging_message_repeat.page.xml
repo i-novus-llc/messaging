@@ -2,13 +2,17 @@
 <page xmlns="http://n2oapp.net/framework/config/schema/page-4.0"
       name="Повтор уведомления">
     <datasources>
-        <datasource id="ds_message" query-id="messaging_message"/>
+        <datasource id="ds_message" query-id="messaging_message">
+            <filters>
+                <eq field-id="id" param="id"/>
+            </filters>
+        </datasource>
         <datasource id="ds_recipient" query-id="recipient">
             <dependencies>
                 <fetch on="ds_message" model="resolve"/>
             </dependencies>
             <filters>
-                <eq field-id="messageId" datasource="ds_message"/>
+                <eq field-id="messageId" param="id"/>
             </filters>
         </datasource>
     </datasources>
@@ -108,16 +112,6 @@
                             </dependencies>
                         </input-select>
                     </row>
-                    <row>
-                        <checkbox id="fioVisibility" default-value="false" label="Поиск по ФИО"/>
-                    </row>
-                    <row>
-                        <input-text id="fio" visible="{fioVisibility}" label="Поиск по ФИО">
-                            <dependencies>
-                                <reset on="fioVisibility">true</reset>
-                            </dependencies>
-                        </input-text>
-                    </row>
                 </set>
             </fields>
             <toolbar place="topLeft">
@@ -133,7 +127,7 @@
         </form>
         <table id="repeatedRecipients" datasource="ds_recipient" fetch-on-init="true" visible="true">
             <columns>
-                <column id="checked">
+                <column id="checked" label="">
                     <checkbox/>
                 </column>
                 <column text-field-id="name" label="Пользователь"/>

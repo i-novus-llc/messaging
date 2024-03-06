@@ -12,6 +12,14 @@
                 <eq field-id="messageId" param="id"/>
             </filters>
         </datasource>
+        <datasource id="recipient_ds"  query-id="recipient">
+            <dependencies>
+                <fetch on="message_ds"/>
+            </dependencies>
+            <filters>
+                <eq field-id="messageId" param="id" datasource="message_ds"/>
+            </filters>
+        </datasource>
     </datasources>
     <regions>
         <region place="top">
@@ -40,7 +48,8 @@
                             <text-area id="text" label="Текст уведомления" max-rows="5" enabled="false"/>
                         </row>
                         <row>
-                            <output-text id="sentAt" label="Дата отправки" enabled="false" format="date DD.MM.YYYY HH:mm:ss"/>
+                            <output-text id="sentAt" label="Дата отправки" enabled="false"
+                                         format="date DD.MM.YYYY HH:mm:ss"/>
                         </row>
                         <row>
                             <output-text id="role" label="Роль" visible="{role!=null}"/>
@@ -61,13 +70,13 @@
                 </column>
             </columns>
         </table>
-        <table query-id="recipient" detail-field-id="messageId" name="Получатели">
+        <table datasource="recipient_ds" name="Получатели">
             <columns>
-                <column text-field-id="statusTime">
+                <column text-field-id="statusTime" label="Время установки статуса">
                     <text format="date DD.MM.YYYY HH:mm:ss"/>
                 </column>
-                <column text-field-id="status"/>
-                <column text-field-id="name"/>
+                <column text-field-id="status" label="Статус"/>
+                <column text-field-id="name" label="Получатель"/>
             </columns>
         </table>
     </regions>
