@@ -34,14 +34,18 @@
                             <toolbar>
                                 <button id="repeat" icon="fa fa-refresh" description="Повторить уведомление">
                                     <open-page page-id="messaging_message_repeat"
-                                               detail-field-id="id"/>
+                                               route="/:id/repeat">
+                                        <params>
+                                            <path-param name="id" value="{id}"/>
+                                        </params>
+                                    </open-page>
                                 </button>
                             </toolbar>
                         </column>
                     </columns>
                     <toolbar>
-                        <button id="create" disable-on-empty-model="false" label="Создать" color="primary" type="text">
-                            <open-page page-id="messaging_message_create" upload="defaults"/>
+                        <button id="create" disable-on-empty-model="false" label="Создать" color="primary">
+                            <open-page page-id="messaging_message_create"/>
                         </button>
                     </toolbar>
                     <rows>

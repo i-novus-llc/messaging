@@ -49,22 +49,33 @@
         </column>
         <column label="Действие">
             <toolbar>
-                <button id="delete" icon="fa fa-trash" description="Удалить"
-                        confirm-text="После подтверждения шаблон будет удален. Удалить шаблон?">
+                <button id="delete" icon="fa fa-trash" description="Удалить">
+                    <confirm title="Подтверждение" text="После подтверждения шаблон будет удален. Удалить шаблон?"/>
                     <invoke operation-id="delete"/>
                 </button>
             </toolbar>
         </column>
     </columns>
     <toolbar>
-        <button id="create" model="filter" label="Создать" color="primary" type="text">
-            <show-modal page-id="messaging_msg_template" submit-operation-id="create" upload="defaults" route="/create_template"/>
+        <button id="create" label="Создать" color="primary" disable-on-empty-model="false">
+            <show-modal page-id="messaging_msg_template" submit-operation-id="create" route="/create_template">
+                <datasources>
+                    <datasource id="template_ds" object-id="messaging_msg_template"/>
+                </datasources>
+            </show-modal>
         </button>
     </toolbar>
     <rows>
         <click>
-            <show-modal page-id="messaging_msg_template" submit-operation-id="update"
-                        detail-field-id="id"/>
+            <show-modal page-id="messaging_msg_template" submit-operation-id="update" route="/update_template">
+                <datasources>
+                    <datasource id="template_ds" query-id="messaging_msg_template">
+                        <filters>
+                            <eq field-id="id" value="{id}"/>
+                        </filters>
+                    </datasource>
+                </datasources>
+            </show-modal>
         </click>
     </rows>
 </table>
