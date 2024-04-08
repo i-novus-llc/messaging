@@ -68,8 +68,8 @@ import static org.hamcrest.Matchers.notNullValue;
 @EmbeddedKafka
 @ContextConfiguration(classes = KafkaMqProvider.class)
 public class WebChannelTest extends N2oTestBase {
-    private static final String TENANT_CODE = "tenant";
-    private static final String USERNAME = "test-user";
+    protected static final String TENANT_CODE = "tenant";
+    protected static final String USERNAME = "test-user";
 
     @Autowired
     private MqProvider mqProvider;
@@ -121,7 +121,6 @@ public class WebChannelTest extends N2oTestBase {
     }
 
     @Test
-
     public void testSendMessage() throws Exception {
         // publish session subscribe event
         publisher.publishEvent(createSessionSubscribeEvent());
@@ -157,7 +156,7 @@ public class WebChannelTest extends N2oTestBase {
         Map receivedMessage = (Map) completableFuture.get();
         stompSession.disconnect();
 
-        assertThat(getPayloadData(receivedMessage).get("title"), is(message.getCaption()));
+        assertThat(getTitle(getPayloadData(receivedMessage)), is(message.getCaption()));
         assertThat(getPayloadData(receivedMessage).get("text"), is(message.getText()));
     }
 
@@ -168,18 +167,17 @@ public class WebChannelTest extends N2oTestBase {
 
         // publish message to feedCount queue and wait for sending to stomp
         StompSession stompSession = getStompSessionWithHeaders();
-        stompSession.subscribe("/user" + properties.getPrivateDestPrefix() + "/" + TENANT_CODE + "/message.count", new TestReceivedMessageHandler());
+        subscribeFeedCountStompSession(stompSession);
 
         latch = new CountDownLatch(1);
         mqProvider.publish(feedCount, feedCountQueue);
         latch.await();
 
         // expected message on client
-        Map receivedFeedCount = (Map) completableFuture.get();
+        Object receivedFeedCount = completableFuture.get();
         stompSession.disconnect();
 
-        assertThat(getPayloadData(receivedFeedCount).get("text"), is(feedCount.getCount().toString()));
-
+        assertFeedCount(receivedFeedCount, feedCount);
     }
 
     @Test
@@ -271,6 +269,22 @@ public class WebChannelTest extends N2oTestBase {
         assertThat(receivedStatus[0].getStatus(), is(MessageStatusType.READ));
     }
 
+    protected String getTitle(Map map) {
+        return ((String) map.get("title"));
+    }
+
+    protected Map getPayloadData(Map map) {
+        return ((Map) ((ArrayList) (((Map) map.get("payload")).get("alerts"))).get(0));
+    }
+
+    protected void subscribeFeedCountStompSession(StompSession stompSession) {
+        stompSession.subscribe("/user" + properties.getPrivateDestPrefix() + "/" + TENANT_CODE + "/message.count", new TestReceivedMessageHandler());
+    }
+
+    protected void assertFeedCount(Object receivedFeedCount, FeedCount feedCount) {
+        assertThat(getPayloadData((Map) receivedFeedCount).get("text"), is(feedCount.getCount().toString()));
+    }
+
     private StompSession getStompSessionWithHeaders() throws InterruptedException, java.util.concurrent.ExecutionException, java.util.concurrent.TimeoutException {
         StompHeaders connectHeaders = new StompHeaders();
         connectHeaders.add("username", USERNAME);
@@ -302,7 +316,7 @@ public class WebChannelTest extends N2oTestBase {
         private String name;
     }
 
-    private class TestReceivedMessageHandler implements StompFrameHandler {
+    protected class TestReceivedMessageHandler implements StompFrameHandler {
 
         @Override
         public Type getPayloadType(StompHeaders headers) {
@@ -316,7 +330,4 @@ public class WebChannelTest extends N2oTestBase {
         }
     }
 
-   private Map getPayloadData(Map map){
-       return ((Map) ((ArrayList) (((Map) map.get("payload")).get("alerts"))).get(0));
-   }
 }
