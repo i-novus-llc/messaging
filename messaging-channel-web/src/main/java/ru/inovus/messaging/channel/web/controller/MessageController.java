@@ -48,7 +48,7 @@ public class MessageController {
      */
     public void sendFeedCount(FeedCount feedCount) {
         String destination = "/exchange/" + feedCount.getTenantCode() + "/message.count";
-        webSocketController.convertAndSendToUser(feedCount.getUsername(), destination, Map.of("message_count",feedCount.getCount()));
+        webSocketController.convertAndSendToUser(feedCount.getUsername(), destination, getFeedCountPayload(feedCount));
     }
 
     /**
@@ -124,5 +124,11 @@ public class MessageController {
         status.setUsername(principal.getName());
         status.setStatus(MessageStatusType.READ);
         mqProvider.publish(status, statusQueueName);
+    }
+
+    private Object getFeedCountPayload(FeedCount feedCount) {
+        return webSocketController instanceof DefaultSpringWebSocketController
+                ? feedCount.getCount()
+                : Map.of("message_count", feedCount.getCount());
     }
 }

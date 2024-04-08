@@ -50,6 +50,7 @@ public class Application {
   показываться, если пользователь не был подключен (по умолчанию: `60`)
 - `novus.messaging.channel.web.queue` - имя очереди уведомлений веб канала (по умолчанию: `web-queue`)
 - `novus.messaging.channel.web.topic` - имя топика уведомлений веб канала (по умолчанию: `web-topic`)
+- `novus.messaging.channel.web.controller` - выбор контроллера для отправки уведомлений n2o\default (по умолчанию: `n2o`)
 
 ## Формат сообщений для Web Socket
 
