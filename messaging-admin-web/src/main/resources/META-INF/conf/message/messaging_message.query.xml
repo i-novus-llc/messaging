@@ -35,8 +35,7 @@
         <field id="caption" domain="string" mapping="['caption']"/>
         <field id="text" domain="string" mapping="['text']"/>
         <field id="sentAt" domain="localdatetime" mapping="['sentAt']"/>
-        <field id="sentAtFormatted" domain="date" mapping="['sentAt']" 
-               normalize="new java.text.SimpleDateFormat('dd.MM.yyyy HH:mm:ss').format(#this)"/>
+        <field id="sentAtFormatted" mapping="['sentAt']" normalize="#dateWithOutput(#this, 'dd.MM.yyyy HH:mm:ss')"/>
         <field id="users" domain="object" mapping="['recipients']"/>
         <field id="role"/>
         <field id="roles"/>
