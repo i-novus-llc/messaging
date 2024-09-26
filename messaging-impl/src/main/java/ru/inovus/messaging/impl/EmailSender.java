@@ -27,6 +27,8 @@ public class EmailSender {
     @Autowired
     private MessageService messageService;
 
+    @Value("${spring.mail.username}")
+    private String sender;
     private static final Logger logger = LoggerFactory.getLogger(EmailSender.class);
 
     private JavaMailSender emailSender;
@@ -54,6 +56,7 @@ public class EmailSender {
                 MimeMessage mail = emailSender.createMimeMessage();
                 MimeMessageHelper helper = new MimeMessageHelper(mail, true);
                 helper.setTo(recipientsEmailList.toArray(String[]::new));
+                helper.setFrom(sender);
                 helper.setSubject(message.getMessage().getCaption());
                 helper.setText(message.getMessage().getText(), true);
                 emailSender.send(mail);
