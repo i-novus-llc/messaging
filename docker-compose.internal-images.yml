@@ -5,5 +5,3 @@ services:
     image: ${DOCKER_REGISTRY}/messaging/backend:${TAG}
   messaging-frontend:
     image: ${DOCKER_REGISTRY}/messaging/frontend:${TAG}
-  react:
-    image: ${DOCKER_REGISTRY}/messaging/react:${TAG}
