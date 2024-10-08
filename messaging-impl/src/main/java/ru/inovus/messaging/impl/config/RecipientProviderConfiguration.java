@@ -11,7 +11,7 @@ import ru.inovus.messaging.impl.RecipientProvider;
 import ru.inovus.messaging.impl.provider.*;
 import ru.inovus.messaging.impl.rest.SecurityProviderRestImpl;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 import java.io.IOException;
 
 @Configuration

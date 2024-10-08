@@ -5,8 +5,8 @@ import org.springframework.data.domain.Page;
 import ru.inovus.messaging.api.criteria.RecipientCriteria;
 import ru.inovus.messaging.api.model.Recipient;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 
 @Api(value = "Получатели уведомлений", authorizations = @Authorization(value = "oauth2"))
 @Path("/{tenantCode}/recipients")

@@ -1,5 +1,9 @@
 package ru.inovus.messaging.channel.email;
 
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeUtility;
+import jakarta.mail.util.ByteArrayDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -14,14 +18,9 @@ import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.channel.api.AbstractChannel;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeUtility;
-import javax.mail.util.ByteArrayDataSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
 
@@ -56,8 +55,8 @@ public class EmailChannel extends AbstractChannel {
 
         List<String> recipientsEmailList = message.getRecipients().stream()
                 .map(Recipient::getEmail)
-                .filter(email -> !StringUtils.isEmpty(email))
-                .collect(Collectors.toList());
+                .filter(StringUtils::hasText)
+                .toList();
         if (!recipientsEmailList.isEmpty()) {
             try {
                 MimeMessage mail = emailSender.createMimeMessage();

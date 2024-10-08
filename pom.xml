@@ -10,18 +10,17 @@
     <parent>
         <groupId>net.n2oapp.platform</groupId>
         <artifactId>n2o-boot-platform-parent</artifactId>
-        <version>5.3.3</version>
+        <version>6.1.3</version>
         <relativePath />
     </parent>
 
     <properties>
-        <n2o.version>7.27.16</n2o.version>
-        <access.version>7.0.2</access.version>
-        <audit.version>2.4.33</audit.version>
+        <java.version>17</java.version>
+        <n2o.version>7.28.2</n2o.version>
+        <access.version>8.0.1</access.version>
         <jacoco.skip>true</jacoco.skip>
-        <spring-kafka.version>2.9.2</spring-kafka.version>
-        <lombok.version>1.18.20</lombok.version>
-        <amazonaws.version>1.12.305</amazonaws.version>
+        <lombok.version>1.18.30</lombok.version>
+        <amazonaws.version>1.12.772</amazonaws.version>
     </properties>
 
     <name>Messaging</name>
@@ -49,7 +48,6 @@
     </organization>
 
     <modules>
-        <module>messaging-react</module>
         <module>messaging-admin-frontend</module>
         <module>messaging-admin-web</module>
         <module>messaging-api</module>
@@ -162,7 +160,7 @@
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.7</version>
+                        <version>1.6.13</version>
                         <extensions>true</extensions>
                         <configuration>
                             <serverId>ossrh</serverId>

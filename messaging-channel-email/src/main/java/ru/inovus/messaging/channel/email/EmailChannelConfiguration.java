@@ -25,6 +25,6 @@ public class EmailChannelConfiguration {
                               JavaMailSender emailSender,
                               @Nullable MessageAttachment attachmentService) {
         return new EmailChannel(emailChannelProperties.getQueue(), statusQueueName, mqProvider, emailSender,
-                StringUtils.isEmpty(emailChannelProperties.getFrom())? senderUserName : emailChannelProperties.getFrom(), attachmentService);
+                !StringUtils.hasText(emailChannelProperties.getFrom())? senderUserName : emailChannelProperties.getFrom(), attachmentService);
     }
 }

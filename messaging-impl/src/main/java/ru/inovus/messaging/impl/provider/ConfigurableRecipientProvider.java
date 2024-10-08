@@ -15,9 +15,9 @@ import ru.inovus.messaging.api.model.ProviderRecipient;
 import ru.inovus.messaging.impl.RecipientProvider;
 import ru.inovus.messaging.impl.provider.xml.XmlMapping;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;

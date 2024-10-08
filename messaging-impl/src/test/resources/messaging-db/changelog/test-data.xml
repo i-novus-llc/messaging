@@ -13,11 +13,11 @@
             INSERT INTO messaging.tenant VALUES ('tenant3', 'Test tenant3');
 
             <!-- channels -->
-            INSERT INTO messaging.channel (code, name, queue_name, is_internal) VALUES
-            ('web', 'Web', 'web_queue', true),
+            INSERT INTO messaging.channel (code, name, queue_name, is_internal)
+            VALUES ('web', 'Web', 'web_queue', true),
             ('email', 'Email', 'email_queue', false),
             ('custom', 'Custom', 'custom_queue', false);
-            
+
             <!-- message templates -->
             INSERT INTO messaging.message_template (id, name, code, caption, text, alert_type,
             severity, enabled, channel_code, tenant_code) VALUES

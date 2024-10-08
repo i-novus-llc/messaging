@@ -24,9 +24,9 @@ import ru.inovus.messaging.api.rest.AttachmentRest;
 import ru.inovus.messaging.impl.jooq.tables.records.AttachmentRecord;
 import ru.inovus.messaging.impl.util.DocumentUtils;
 
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
@@ -84,7 +84,7 @@ public class AttachmentService implements AttachmentRest, MessageAttachment {
 
     public AttachmentResponse upload(Attachment attachment) {
         String fileName = documentUtils.getFileName(attachment);
-        if (StringUtils.isEmpty(fileName)) return null;
+        if (!StringUtils.hasText(fileName)) return null;
         documentUtils.checkFileExtension(fileName);
         fileName = documentUtils.getFileNameWithDateTimePrefix(fileName);
 

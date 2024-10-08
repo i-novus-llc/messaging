@@ -231,15 +231,15 @@ databaseChangeLog:
             splitStatements: true
             stripComments: true
   - changeSet:
-        id: MESSAGING-84
-        author: pivutin
-        changes:
-            - sqlFile:
-                  encoding: utf8
-                  path: sql/MESSAGING-84.sql
-                  relativeToChangelogFile: true
-                  splitStatements: true
-                  stripComments: true
+      id: MESSAGING-84
+      author: pivutin
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/MESSAGING-84.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
   - changeSet:
       id: MESSAGING-206
       author: ilebedenko

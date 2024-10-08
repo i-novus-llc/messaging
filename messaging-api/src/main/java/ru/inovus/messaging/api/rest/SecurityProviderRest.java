@@ -10,8 +10,8 @@ import net.n2oapp.security.admin.api.model.Role;
 import org.springframework.data.domain.Page;
 import ru.inovus.messaging.api.criteria.SecurityBaseCriteria;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 
 @Api(value = "Данные о пользователях", authorizations = @Authorization(value = "oauth2"))
 @Path("/security_provider")

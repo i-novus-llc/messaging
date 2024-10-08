@@ -17,7 +17,7 @@ import ru.inovus.messaging.impl.service.MessageTemplateService;
 import ru.inovus.messaging.impl.service.RecipientService;
 import ru.inovus.messaging.impl.util.MessageHelper;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

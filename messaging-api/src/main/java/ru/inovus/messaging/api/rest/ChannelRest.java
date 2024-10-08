@@ -3,8 +3,8 @@ package ru.inovus.messaging.api.rest;
 import io.swagger.annotations.*;
 import ru.inovus.messaging.api.model.Channel;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import java.util.List;
 
 @Api(value = "Каналы", authorizations = @Authorization(value = "oauth2"))

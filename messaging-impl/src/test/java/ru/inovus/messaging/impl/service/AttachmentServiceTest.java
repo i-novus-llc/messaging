@@ -3,8 +3,10 @@ package ru.inovus.messaging.impl.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.S3Object;
 import com.sun.istack.ByteArrayDataSource;
+import jakarta.activation.DataHandler;
+import jakarta.ws.rs.core.Response;
 import net.n2oapp.platform.i18n.UserException;
-import net.n2oapp.platform.test.autoconfigure.pg.EnableEmbeddedPg;
+import net.n2oapp.platform.test.autoconfigure.pg.EnableTestcontainersPg;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.impl.MetadataMap;
 import org.junit.jupiter.api.BeforeAll;
@@ -22,8 +24,6 @@ import ru.inovus.messaging.api.criteria.RecipientCriteria;
 import ru.inovus.messaging.api.model.AttachmentResponse;
 import ru.inovus.messaging.impl.util.DocumentUtils;
 
-import javax.activation.DataHandler;
-import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,7 +41,7 @@ import static org.mockito.Mockito.when;
         properties = "novus.messaging.attachment.enabled: true")
 @TestPropertySource("classpath:application.properties")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@EnableEmbeddedPg
+@EnableTestcontainersPg
 public class AttachmentServiceTest {
 
     private static final String FIRST_FILE_NAME = "test_file_name_1.pdf";

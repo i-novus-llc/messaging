@@ -1,6 +1,9 @@
 package ru.inovus.messaging.channel.email;
 
-import org.apache.commons.mail.util.MimeMessageParser;
+import jakarta.mail.Address;
+import jakarta.mail.Session;
+import jakarta.mail.internet.MimeMessage;
+import org.apache.commons.mail2.jakarta.util.MimeMessageParser;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +23,6 @@ import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.api.queue.QueueMqConsumer;
 import ru.inovus.messaging.mq.support.kafka.KafkaMqProvider;
 
-import javax.mail.Address;
-import javax.mail.Session;
-import javax.mail.internet.MimeMessage;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.CountDownLatch;

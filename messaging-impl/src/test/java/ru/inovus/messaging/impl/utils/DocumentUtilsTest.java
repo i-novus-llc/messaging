@@ -1,8 +1,9 @@
 package ru.inovus.messaging.impl.utils;
 
 import com.sun.istack.ByteArrayDataSource;
+import jakarta.activation.DataHandler;
 import net.n2oapp.platform.i18n.UserException;
-import net.n2oapp.platform.test.autoconfigure.pg.EnableEmbeddedPg;
+import net.n2oapp.platform.test.autoconfigure.pg.EnableTestcontainersPg;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.impl.MetadataMap;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.inovus.messaging.TestApp;
 import ru.inovus.messaging.impl.util.DocumentUtils;
 
-import javax.activation.DataHandler;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDateTime;
 
@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
         properties = "novus.messaging.attachment.enabled: false")
 @TestPropertySource("classpath:application.properties")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@EnableEmbeddedPg
+@EnableTestcontainersPg
 public class DocumentUtilsTest {
     private static final String VALID_FILE_NAME = "test_file_name.pdf";
     private static final String INVALID_FILE_NAME = "test_file_name.xml";
