@@ -12,9 +12,3 @@ services:
       context: messaging-admin-frontend
       args:
         JAR_FILE: target/messaging-admin-frontend.jar
-
-  react:
-    build:
-      context: messaging-react
-      args:
-        NPM_REGISTRY: https://npm.i-novus.ru
