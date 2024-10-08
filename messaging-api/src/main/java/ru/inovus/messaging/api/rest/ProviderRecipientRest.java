@@ -23,8 +23,8 @@ import org.springframework.data.domain.Page;
 import ru.inovus.messaging.api.criteria.ProviderRecipientCriteria;
 import ru.inovus.messaging.api.model.ProviderRecipient;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 
 @Api(value = "Получатели", authorizations = @Authorization(value = "oauth2"))
 @Path("/provider_recipients")

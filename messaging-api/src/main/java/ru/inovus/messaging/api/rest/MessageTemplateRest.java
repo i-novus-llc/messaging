@@ -20,8 +20,8 @@ import org.springframework.data.domain.Page;
 import ru.inovus.messaging.api.criteria.MessageTemplateCriteria;
 import ru.inovus.messaging.api.model.MessageTemplate;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 
 @Api(value = "Шаблоны уведомлений", authorizations = @Authorization(value = "oauth2"))
 @Path("/{tenantCode}/templates")

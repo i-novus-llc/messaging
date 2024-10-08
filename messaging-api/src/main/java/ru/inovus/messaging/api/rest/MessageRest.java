@@ -21,8 +21,8 @@ import ru.inovus.messaging.api.criteria.MessageCriteria;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.MessageOutbox;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import java.util.UUID;
 
 @Api(value = "Уведомления", authorizations = @Authorization(value = "oauth2"))

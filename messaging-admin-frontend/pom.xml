@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -20,17 +21,6 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>ru.i-novus.ms.audit</groupId>
-            <artifactId>audit-client-async-spring-boot-starter</artifactId>
-            <version>${audit.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ru.i-novus.ms.audit</groupId>
-            <artifactId>audit-client-spring-boot-autoconfigure</artifactId>
-            <version>${audit.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>net.n2oapp.framework</groupId>
             <artifactId>n2o-spring-boot-starter</artifactId>
@@ -90,28 +80,24 @@
         </dependency>
 
         <dependency>
-            <groupId>javax.activation</groupId>
-            <artifactId>activation</artifactId>
-            <version>1.1.1</version>
-        </dependency>
-
-        <dependency>
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>net.n2oapp.framework</groupId>
+            <artifactId>n2o-web</artifactId>
+            <version>${n2o.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.n2oapp.framework</groupId>
+            <artifactId>n2o-access</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-
         <finalName>messaging-admin-frontend</finalName>
-
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -120,29 +106,7 @@
                     <executable>true</executable>
                 </configuration>
             </plugin>
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>Copy frontend build</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>target/classes/public</outputDirectory>
-                            <overwrite>true</overwrite>
-                            <resources>
-                                <resource>
-                                    <directory>../messaging-react/build</directory>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
-
     </build>
 
 </project>

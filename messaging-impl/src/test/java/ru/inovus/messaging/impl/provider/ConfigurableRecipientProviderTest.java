@@ -16,7 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import ru.inovus.messaging.api.criteria.ProviderRecipientCriteria;
 import ru.inovus.messaging.api.model.ProviderRecipient;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;

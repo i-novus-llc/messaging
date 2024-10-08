@@ -7,23 +7,19 @@
 - обмен сообщениями между пользователями
 
 # Требования
-- Openjdk 11
+- Openjdk 17
 - PostgreSQL 11
 - Apache Kafka 2.6
-- N2O Security Admin 4
-- N2O Audit 2
 
 # Стек технологий
-- Java 11
+- Java 17
 - JDBC
 - JMS
-- Spring Boot 2.1
-- Spring Cloud Greenwich
+- Spring Boot 3.2
 - Jooq 3
-- Liquibase 3.8.9
-- N2O Platform 4.5
-- N2O UI Framework 7.16
-- React
+- Liquibase 4.24
+- N2O Platform 6.1
+- N2O UI Framework 7.28
 - Websockets
 
 # Структура проекта

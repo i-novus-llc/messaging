@@ -1,7 +1,7 @@
 package ru.inovus.messaging.impl.rest;
 
 import net.n2oapp.platform.i18n.UserException;
-import net.n2oapp.platform.test.autoconfigure.pg.EnableEmbeddedPg;
+import net.n2oapp.platform.test.autoconfigure.pg.EnableTestcontainersPg;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,7 +39,7 @@ import static org.mockito.Mockito.when;
 @SpringBootTest(classes = TestApp.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = "spring.liquibase.change-log: classpath:/messaging-db/test-base-changelog.xml")
-@EnableEmbeddedPg
+@EnableTestcontainersPg
 public class MessageRestImplTest {
 
     @Autowired

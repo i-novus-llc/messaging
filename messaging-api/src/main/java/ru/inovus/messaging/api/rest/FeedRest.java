@@ -21,8 +21,8 @@ import ru.inovus.messaging.api.criteria.FeedCriteria;
 import ru.inovus.messaging.api.model.Feed;
 import ru.inovus.messaging.api.model.FeedCount;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import java.util.UUID;
 
 @Api(value = "Лента уведомлений", authorizations = @Authorization(value = "oauth2"))

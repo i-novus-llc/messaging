@@ -6,6 +6,7 @@ import net.n2oapp.security.auth.context.SpringSecurityUserContext;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -29,8 +30,8 @@ public class SecurityConfig extends OpenIdSecurityCustomizer {
     @Override
     protected void configureHttpSecurity(HttpSecurity http) throws Exception {
         super.configureHttpSecurity(http);
-        http.authorizeRequests().anyRequest().authenticated().and().oauth2Login();
-        //todo 7.x.x security backend server
+        http.authorizeHttpRequests(authorizeHttpRequest -> authorizeHttpRequest.anyRequest().authenticated());
+        http.oauth2Login(Customizer.withDefaults());
     }
 
     @Override

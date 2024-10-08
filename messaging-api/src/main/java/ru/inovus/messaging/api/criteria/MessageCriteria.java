@@ -20,7 +20,7 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.inovus.messaging.api.model.enums.Severity;
 
-import javax.ws.rs.QueryParam;
+import jakarta.ws.rs.QueryParam;
 import java.time.LocalDateTime;
 
 @Getter

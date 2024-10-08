@@ -13,6 +13,7 @@
 
     <properties>
         <jacoco.skip>false</jacoco.skip>
+        <activation.version>2.1.3</activation.version>
     </properties>
 
     <dependencies>
@@ -44,16 +45,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq-codegen</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
         </dependency>
@@ -61,7 +52,7 @@
         <dependency>
             <groupId>com.github.blagerweij</groupId>
             <artifactId>liquibase-sessionlock</artifactId>
-            <version>1.6.0</version>
+            <version>1.6.9</version>
         </dependency>
 
         <dependency>
@@ -95,17 +86,23 @@
             <artifactId>postgresql</artifactId>
         </dependency>
 
+        <dependency>
+        <groupId>jakarta.xml.bind</groupId>
+        <artifactId>jakarta.xml.bind-api</artifactId>
+        <version>3.0.0</version>
+        </dependency>
+
         <!--TEST-->
         <dependency>
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-starter-test</artifactId>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.junit.vintage</groupId>
-                    <artifactId>junit-vintage-engine</artifactId>
-                </exclusion>
-            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>

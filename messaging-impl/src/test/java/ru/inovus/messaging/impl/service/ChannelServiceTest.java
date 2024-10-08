@@ -1,6 +1,6 @@
 package ru.inovus.messaging.impl.service;
 
-import net.n2oapp.platform.test.autoconfigure.pg.EnableEmbeddedPg;
+import net.n2oapp.platform.test.autoconfigure.pg.EnableTestcontainersPg;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import static org.hamcrest.Matchers.is;
 @SpringBootTest(classes = TestApp.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = "spring.liquibase.change-log: classpath:/messaging-db/test-base-changelog.xml")
-@EnableEmbeddedPg
+@EnableTestcontainersPg
 public class ChannelServiceTest {
     @Autowired
     private ChannelService service;

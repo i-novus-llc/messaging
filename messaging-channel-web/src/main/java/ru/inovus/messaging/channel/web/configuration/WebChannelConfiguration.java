@@ -7,6 +7,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.web.FeedCountListener;
@@ -41,6 +42,7 @@ public class WebChannelConfiguration {
     }
 
     @Bean
+    @Primary
     @ConditionalOnProperty(name = "novus.messaging.channel.web.controller", havingValue = "default")
     WebSocketController webSocketController(SimpMessagingTemplate simpMessagingTemplate) {
         return new DefaultSpringWebSocketController(simpMessagingTemplate);

@@ -1,6 +1,6 @@
 package ru.inovus.messaging.impl.service;
 
-import net.n2oapp.platform.test.autoconfigure.pg.EnableEmbeddedPg;
+import net.n2oapp.platform.test.autoconfigure.pg.EnableTestcontainersPg;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ import static org.mockito.Mockito.when;
                 "novus.messaging.queue.feed-count: test-feed-count-queue"
         })
 @EmbeddedKafka
-@EnableEmbeddedPg
+@EnableTestcontainersPg
 @EnableAutoConfiguration(exclude = KafkaAutoConfiguration.class)
 public class RecipientServiceTest {
     @Autowired
