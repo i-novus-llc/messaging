@@ -35,7 +35,7 @@ public class DefaultSpringWebSocketControllerTest extends WebChannelTest {
     private WebChannelProperties properties;
 
     @Override
-    protected void configure(N2oApplicationBuilder builder) {
+    protected void configureEnvironment(N2oApplicationBuilder builder) {
     }
 
     @Override
