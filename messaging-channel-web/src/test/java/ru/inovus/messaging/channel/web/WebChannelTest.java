@@ -110,8 +110,12 @@ public class WebChannelTest extends N2oTestBase {
     }
 
     @Override
-    protected void configure(N2oApplicationBuilder builder) {
+    protected final void configure(N2oApplicationBuilder builder) {
         super.configure(builder);
+        configureEnvironment(builder);
+    }
+
+    protected void configureEnvironment(N2oApplicationBuilder builder) {
         MetadataEnvironment environment = builder.getEnvironment();
         ((N2oWebSocketController) webSocketController).setEnvironment(environment);
         ((N2oWebSocketController) webSocketController).setPipeline(N2oPipelineSupport.readPipeline(environment));
