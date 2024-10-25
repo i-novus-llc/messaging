@@ -11,10 +11,7 @@ import ru.inovus.messaging.api.model.*;
 import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.rest.MessageRest;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
-import ru.inovus.messaging.impl.service.ChannelService;
-import ru.inovus.messaging.impl.service.MessageService;
-import ru.inovus.messaging.impl.service.MessageTemplateService;
-import ru.inovus.messaging.impl.service.RecipientService;
+import ru.inovus.messaging.impl.service.*;
 import ru.inovus.messaging.impl.util.MessageHelper;
 
 import jakarta.annotation.Nullable;
@@ -35,7 +32,8 @@ public class MessageRestImpl implements MessageRest {
     private final ChannelService channelService;
     private final MqProvider mqProvider;
     private final MessageHelper messageHelper;
-    private MessageAttachment attachmentService;
+    private final RecipientGroupService recipientGroupService;
+    private final MessageAttachment attachmentService;
 
     public MessageRestImpl(MessageService messageService,
                            MessageTemplateService messageTemplateService,
@@ -43,6 +41,7 @@ public class MessageRestImpl implements MessageRest {
                            ChannelService channelService,
                            MqProvider mqProvider,
                            MessageHelper messageHelper,
+                           RecipientGroupService recipientGroupService,
                            @Nullable MessageAttachment attachmentService) {
         this.messageService = messageService;
         this.messageTemplateService = messageTemplateService;
@@ -51,6 +50,7 @@ public class MessageRestImpl implements MessageRest {
         this.mqProvider = mqProvider;
         this.messageHelper = messageHelper;
         this.attachmentService = attachmentService;
+        this.recipientGroupService = recipientGroupService;
     }
 
     @Override
@@ -68,25 +68,37 @@ public class MessageRestImpl implements MessageRest {
     @Override
     public void sendMessage(String tenantCode, final MessageOutbox messageOutbox) {
         if (messageOutbox.getMessage() != null) {
-            messageOutbox.getMessage().setTenantCode(tenantCode);
-            setRecipientsAndAttachments(tenantCode, messageOutbox);
-            save(messageOutbox.getMessage());
-            send(messageOutbox.getMessage());
+            Message message = messageOutbox.getMessage();
+            message.setTenantCode(tenantCode);
+
+            setRecipientsAndAttachments(message);
+            save(message);
+            send(message);
+
         } else if (messageOutbox.getTemplateMessageOutbox() != null) {
-            messageOutbox.getTemplateMessageOutbox().setTenantCode(tenantCode);
-            buildAndSendMessage(messageOutbox.getTemplateMessageOutbox());
+            TemplateMessageOutbox templateMessageOutbox = messageOutbox.getTemplateMessageOutbox();
+            templateMessageOutbox.setTenantCode(tenantCode);
+            RecipientGroup recipientGroup = recipientGroupService.getRecipientGroup(tenantCode, templateMessageOutbox.getGroupId());
+
+            if (recipientGroup != null) {
+                templateMessageOutbox.setUserNameList(recipientGroup.getRecipients().stream().map(Recipient::getUsername).collect(Collectors.toList()));
+                for (MessageTemplate template : recipientGroup.getTemplates()) {
+                    templateMessageOutbox.setTemplateCode(template.getCode());
+                    buildAndSendMessage(templateMessageOutbox);
+                }
+            } else
+                buildAndSendMessage(templateMessageOutbox);
         }
     }
 
     /**
      * Выбор источника получателей, вложений и обогащение
      *
-     * @param messageOutbox Уведомление
+     * @param newMessage Уведомление
      */
-    private void setRecipientsAndAttachments(String tenantCode, MessageOutbox messageOutbox) {
-        Message newMessage = messageOutbox.getMessage();
+    private void setRecipientsAndAttachments(Message newMessage) {
         if (nonNull(newMessage.getId())) {
-            Message oldMessage = getMessage(tenantCode, UUID.fromString(newMessage.getId()));
+            Message oldMessage = getMessage(newMessage.getTenantCode(), UUID.fromString(newMessage.getId()));
             if (!CollectionUtils.isEmpty(oldMessage.getRecipients())) {
                 newMessage.setRecipients(oldMessage.getRecipients());
             }

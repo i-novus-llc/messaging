@@ -10,6 +10,7 @@
         <page-access page-id="messaging_msg_template"/>
         <page-access page-id="index"/>
         <page-access page-id="messaging_feed"/>
+        <page-access page-id="recipient_group"/>
         <object-access object-id="messaging_feed" operations="*"/>
         <object-access object-id="messaging_message" operations="*"/>
         <object-access object-id="messaging_user" operations="*"/>
@@ -17,5 +18,6 @@
         <object-access object-id="messaging_region"/>
         <object-access object-id="messaging_organization"/>
         <object-access object-id="messaging_role"/>
+        <object-access object-id="recipient_group" operations="*"/>
     </permit-all>
 </access>

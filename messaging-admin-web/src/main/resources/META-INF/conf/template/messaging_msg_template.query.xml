@@ -18,6 +18,7 @@
         <eq field-id="name" filter-id="name">name={name}</eq>
         <eq field-id="code" filter-id="code">code={code}</eq>
         <eq field-id="enabled" filter-id="enabled" domain="string">enabled={enabled}</eq>
+        <like field-id="codeAndName" filter-id="codeAndName" domain="string">codeAndName={codeAndName}</like>
     </filters>
 
     <fields>
@@ -33,6 +34,7 @@
         <field id="caption" domain="string" mapping="['caption']"/>
         <field id="text" domain="string" mapping="['text']"/>
         <field id="enabled" mapping="['enabled']"/>
+        <field id="codeAndName" domain="string" name="Код и наименование шаблона" mapping="['code'] + ' ' + ['name']"/>
     </fields>
 
 </query>
