@@ -4,6 +4,7 @@ import net.n2oapp.platform.i18n.UserException;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.Record;
 import org.jooq.*;
+import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -82,7 +83,8 @@ public class MessageTemplateService {
                 .ifPresent(enabled -> conditions.add(MESSAGE_TEMPLATE.ENABLED.eq(enabled)));
         Optional.ofNullable(criteria.getCode()).filter(StringUtils::isNotBlank)
                 .ifPresent(code -> conditions.add(MESSAGE_TEMPLATE.CODE.contains(code)));
-
+        Optional.ofNullable(criteria.getCodeAndName()).filter(StringUtils::isNotBlank)
+                .ifPresent(codeAndName -> conditions.add(DSL.concat(MESSAGE_TEMPLATE.CODE, MESSAGE_TEMPLATE.NAME).contains(codeAndName)));
         List<MessageTemplate> list = dsl
                 .select(MESSAGE_TEMPLATE.fields())
                 .from(MESSAGE_TEMPLATE)
