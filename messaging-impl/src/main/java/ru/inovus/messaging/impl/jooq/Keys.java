@@ -9,18 +9,8 @@ import org.jooq.TableField;
 import org.jooq.UniqueKey;
 import org.jooq.impl.Internal;
 
-import ru.inovus.messaging.impl.jooq.tables.Attachment;
-import ru.inovus.messaging.impl.jooq.tables.Channel;
-import ru.inovus.messaging.impl.jooq.tables.Message;
-import ru.inovus.messaging.impl.jooq.tables.MessageRecipient;
-import ru.inovus.messaging.impl.jooq.tables.MessageTemplate;
-import ru.inovus.messaging.impl.jooq.tables.Tenant;
-import ru.inovus.messaging.impl.jooq.tables.records.AttachmentRecord;
-import ru.inovus.messaging.impl.jooq.tables.records.ChannelRecord;
-import ru.inovus.messaging.impl.jooq.tables.records.MessageRecipientRecord;
-import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
-import ru.inovus.messaging.impl.jooq.tables.records.MessageTemplateRecord;
-import ru.inovus.messaging.impl.jooq.tables.records.TenantRecord;
+import ru.inovus.messaging.impl.jooq.tables.*;
+import ru.inovus.messaging.impl.jooq.tables.records.*;
 
 
 /**
@@ -46,6 +36,9 @@ public class Keys {
     public static final UniqueKey<MessageTemplateRecord> MESSAGE_TEMPLATE_PKEY = UniqueKeys0.MESSAGE_TEMPLATE_PKEY;
     public static final UniqueKey<MessageTemplateRecord> MESSAGE_TEMPLATE_CODE_KEY = UniqueKeys0.MESSAGE_TEMPLATE_CODE_KEY;
     public static final UniqueKey<TenantRecord> TENANT_PKEY = UniqueKeys0.TENANT_PKEY;
+    public static final UniqueKey<RecipientGroupRecord> RECIPIENT_GROUP_PKEY = UniqueKeys0.RECIPIENT_GROUP_PKEY;
+    public static final UniqueKey<RecipientGroupTemplateRecord> RECIPIENT_GROUP_TEMPLATE_PKEY = UniqueKeys0.RECIPIENT_GROUP_TEMPLATE_PKEY;
+    public static final UniqueKey<RecipientGroupUserRecord> RECIPIENT_GROUP_USER_PKEY = UniqueKeys0.RECIPIENT_GROUP_USER_PKEY;
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
@@ -57,6 +50,10 @@ public class Keys {
     public static final ForeignKey<MessageRecipientRecord, MessageRecord> MESSAGE_RECIPIENT__MESSAGE_RECIPIENT_MESSAGE_ID_FKEY = ForeignKeys0.MESSAGE_RECIPIENT__MESSAGE_RECIPIENT_MESSAGE_ID_FKEY;
     public static final ForeignKey<MessageTemplateRecord, ChannelRecord> MESSAGE_TEMPLATE__MESSAGE_TEMPLATE_CHANNEL_CODE_CHANNEL_CODE_FK = ForeignKeys0.MESSAGE_TEMPLATE__MESSAGE_TEMPLATE_CHANNEL_CODE_CHANNEL_CODE_FK;
     public static final ForeignKey<MessageTemplateRecord, TenantRecord> MESSAGE_TEMPLATE__MESSAGE_TEMPLATE_TENANT_CODE_FKEY = ForeignKeys0.MESSAGE_TEMPLATE__MESSAGE_TEMPLATE_TENANT_CODE_FKEY;
+    public static final ForeignKey<RecipientGroupRecord, TenantRecord> RECIPIENT_GROUP_TENANT_CODE_FKEY = ForeignKeys0.RECIPIENT_GROUP_TENANT_CODE_FKEY;
+    public static final ForeignKey<RecipientGroupUserRecord, RecipientGroupRecord> RECIPIENT_GROUP_USER_RECIPIENT_GROUP_ID_FKEY = ForeignKeys0.RECIPIENT_GROUP_USER_RECIPIENT_GROUP_ID_FKEY;
+    public static final ForeignKey<RecipientGroupTemplateRecord, RecipientGroupRecord> RECIPIENT_GROUP_TEMPLATE_RECIPIENT_GROUP_ID_FKEY = ForeignKeys0.RECIPIENT_GROUP_TEMPLATE_RECIPIENT_GROUP_ID_FKEY;
+    public static final ForeignKey<RecipientGroupTemplateRecord, MessageTemplateRecord> RECIPIENT_GROUP_TEMPLATE_MESSAGE_TEMPLATE_CODE_FKEY = ForeignKeys0.RECIPIENT_GROUP_TEMPLATE_MESSAGE_TEMPLATE_CODE_FKEY;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
@@ -70,6 +67,9 @@ public class Keys {
         public static final UniqueKey<MessageTemplateRecord> MESSAGE_TEMPLATE_PKEY = Internal.createUniqueKey(MessageTemplate.MESSAGE_TEMPLATE, "message_template_pkey", new TableField[] { MessageTemplate.MESSAGE_TEMPLATE.ID }, true);
         public static final UniqueKey<MessageTemplateRecord> MESSAGE_TEMPLATE_CODE_KEY = Internal.createUniqueKey(MessageTemplate.MESSAGE_TEMPLATE, "message_template_code_key", new TableField[] { MessageTemplate.MESSAGE_TEMPLATE.CODE }, true);
         public static final UniqueKey<TenantRecord> TENANT_PKEY = Internal.createUniqueKey(Tenant.TENANT, "tenant_pkey", new TableField[] { Tenant.TENANT.CODE }, true);
+        public static final UniqueKey<RecipientGroupRecord> RECIPIENT_GROUP_PKEY = Internal.createUniqueKey(Tables.RECIPIENT_GROUP, "recipient_group_pkey", new TableField[] { Tables.RECIPIENT_GROUP.ID }, true);
+        public static final UniqueKey<RecipientGroupUserRecord> RECIPIENT_GROUP_USER_PKEY = Internal.createUniqueKey(Tables.RECIPIENT_GROUP_USER, "recipient_group_user_pkey", new TableField[] { Tables.RECIPIENT_GROUP_USER.ID }, true);
+        public static final UniqueKey<RecipientGroupTemplateRecord> RECIPIENT_GROUP_TEMPLATE_PKEY = Internal.createUniqueKey(Tables.RECIPIENT_GROUP_TEMPLATE, "recipient_group_template_pkey", new TableField[] { Tables.RECIPIENT_GROUP_TEMPLATE.ID }, true);
     }
 
     private static class ForeignKeys0 {
@@ -79,5 +79,10 @@ public class Keys {
         public static final ForeignKey<MessageRecipientRecord, MessageRecord> MESSAGE_RECIPIENT__MESSAGE_RECIPIENT_MESSAGE_ID_FKEY = Internal.createForeignKey(Keys.MESSAGE_PKEY, MessageRecipient.MESSAGE_RECIPIENT, "message_recipient_message_id_fkey", new TableField[] { MessageRecipient.MESSAGE_RECIPIENT.MESSAGE_ID }, true);
         public static final ForeignKey<MessageTemplateRecord, ChannelRecord> MESSAGE_TEMPLATE__MESSAGE_TEMPLATE_CHANNEL_CODE_CHANNEL_CODE_FK = Internal.createForeignKey(Keys.CHANNEL_PKEY, MessageTemplate.MESSAGE_TEMPLATE, "message_template_channel_code_channel_code_fk", new TableField[] { MessageTemplate.MESSAGE_TEMPLATE.CHANNEL_CODE }, true);
         public static final ForeignKey<MessageTemplateRecord, TenantRecord> MESSAGE_TEMPLATE__MESSAGE_TEMPLATE_TENANT_CODE_FKEY = Internal.createForeignKey(Keys.TENANT_PKEY, MessageTemplate.MESSAGE_TEMPLATE, "message_template_tenant_code_fkey", new TableField[] { MessageTemplate.MESSAGE_TEMPLATE.TENANT_CODE }, true);
+        public static final ForeignKey<RecipientGroupRecord, TenantRecord> RECIPIENT_GROUP_TENANT_CODE_FKEY = Internal.createForeignKey(Keys.TENANT_PKEY, Tables.RECIPIENT_GROUP, "recipient_group_tenant_code_fkey", new TableField[] { Tables.RECIPIENT_GROUP.TENANT_CODE }, true);
+        public static final ForeignKey<RecipientGroupUserRecord, RecipientGroupRecord> RECIPIENT_GROUP_USER_RECIPIENT_GROUP_ID_FKEY = Internal.createForeignKey(Keys.RECIPIENT_GROUP_USER_PKEY, Tables.RECIPIENT_GROUP_USER, "recipient_group_user_recipient_group_id_fkey", new TableField[] { Tables.RECIPIENT_GROUP_USER.RECIPIENT_GROUP_ID }, true);
+        public static final ForeignKey<RecipientGroupTemplateRecord, RecipientGroupRecord> RECIPIENT_GROUP_TEMPLATE_RECIPIENT_GROUP_ID_FKEY = Internal.createForeignKey(Keys.RECIPIENT_GROUP_TEMPLATE_PKEY, Tables.RECIPIENT_GROUP_TEMPLATE, "recipient_group_template_recipient_group_id_fkey", new TableField[] { Tables.RECIPIENT_GROUP_TEMPLATE.RECIPIENT_GROUP_ID }, true);
+        public static final ForeignKey<RecipientGroupTemplateRecord, MessageTemplateRecord> RECIPIENT_GROUP_TEMPLATE_MESSAGE_TEMPLATE_CODE_FKEY = Internal.createForeignKey(Keys.MESSAGE_TEMPLATE_CODE_KEY, Tables.RECIPIENT_GROUP_TEMPLATE, "recipient_group_template_message_template_code_fkey", new TableField[] { Tables.RECIPIENT_GROUP_TEMPLATE.MESSAGE_TEMPLATE_CODE }, true);
+        public static final ForeignKey<RecipientGroupTemplateRecord, MessageTemplateRecord> RECIPIENT_GROUP_TEMPLATE_MESSAGE_TEMPLATE_ID_FKEY = Internal.createForeignKey(Keys.MESSAGE_TEMPLATE_PKEY, Tables.RECIPIENT_GROUP_TEMPLATE, "recipient_group_template_message_template_id_fkey", new TableField[] { Tables.RECIPIENT_GROUP_TEMPLATE.MESSAGE_TEMPLATE_ID }, true);
     }
 }

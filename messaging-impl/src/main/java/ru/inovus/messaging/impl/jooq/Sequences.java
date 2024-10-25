@@ -28,4 +28,6 @@ public class Sequences {
      * The sequence <code>messaging.message_template_id_seq</code>
      */
     public static final Sequence<Long> MESSAGE_TEMPLATE_ID_SEQ = Internal.createSequence("message_template_id_seq", Messaging.MESSAGING, org.jooq.impl.SQLDataType.BIGINT.nullable(false), null, null, null, null, false, null);
+
+    public static final Sequence<Long> RECIPIENT_GROUP_ID_SEQ = Internal.createSequence("recipient_group_id_seq", Messaging.MESSAGING, org.jooq.impl.SQLDataType.BIGINT.nullable(false), null, null, null, null, false, null);
 }

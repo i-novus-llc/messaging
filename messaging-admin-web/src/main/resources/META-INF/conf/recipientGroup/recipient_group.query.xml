@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<query xmlns="http://n2oapp.net/framework/config/schema/query-5.0"
+       object-id="recipient_group">
+
+    <list result-mapping="['content']" count-mapping="['totalElements']">
+        <rest filters-separator="&amp;">
+            ${messaging.backend.path}/${novus.messaging.tenant-code}/recipient-groups?{filters}&amp;{sorting}&amp;size={limit}&amp;page={page}
+        </rest>
+    </list>
+
+    <unique>
+        <rest>${messaging.backend.path}/${novus.messaging.tenant-code}/recipient-groups/{id}</rest>
+    </unique>
+
+    <filters>
+        <eq field-id="id" filter-id="id">{id}</eq>
+        <eq field-id="name" filter-id="name">name={name}</eq>
+        <eq field-id="recipientName" filter-id="recipientName*.id">recipientNames={recipientName*.id}</eq>
+        <eq field-id="templateCode" filter-id="templateCode*.id">templateCodes={templateCode*.id}</eq>
+    </filters>
+
+    <fields>
+        <field id="id" domain="integer" name="Идентификатор" select-expression="id"/>
+        <field id="name" domain="string" name="Наименование группы"/>
+        <field id="description" domain="string" name="Описание группы"/>
+        <field id="recipients" domain="object[]" name="Участники" mapping="['recipients']"/>
+        <field id="recipients*.id" domain="integer[]" name="СНИЛС участников" mapping="['recipients*.username']"/>
+        <field id="recipientName" domain="string[]" name="ФИО участников" mapping="['recipients*.name']"/>
+        <field id="templates" domain="object[]" name="Шаблоны уведомления" mapping="['templates']"/>
+        <field id="templateCode" domain="string[]" name="Коды шаблона уведомления" mapping="['templates*.code']"/>
+    </fields>
+
+</query>

@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<table xmlns="http://n2oapp.net/framework/config/schema/widget-5.0" id="message_template_list">
+    <filters>
+        <row>
+            <input-text id="name" label="Наименование группы"/>
+            <input-select id="recipientName" label="ФИО получателя"
+                          query-id="messaging_recipient"
+                          label-field-id="name" search-filter-id="id" type="multi"/>
+            <input-select id="templateCode" label="Код шаблона уведомления"
+                          query-id="messaging_msg_template"
+                          label-field-id="code" type="multi"/>
+        </row>
+    </filters>
+    <columns>
+        <column text-field-id="name" label="Наименование группы"/>
+        <column text-field-id="description" label="Описание группы"/>
+        <column text-field-id="recipientName" label="Участники">
+            <list style="display: block"/>
+        </column>
+        <column text-field-id="templateCode" label="Коды шаблона уведомления">
+            <list style="display: block"/>
+        </column>
+        <column label="Действие">
+            <toolbar>
+                <button id="delete" icon="fa fa-trash" description="Удалить">
+                    <confirm title="Подтверждение" text="Вы уверены, что хотите удалить группу?"/>
+                    <invoke operation-id="delete"/>
+                </button>
+            </toolbar>
+        </column>
+    </columns>
+    <toolbar>
+        <button id="create" label="Создать" color="primary" disable-on-empty-model="false">
+            <show-modal page-id="recipient_group" submit-operation-id="create" route="/create_recipient_group">
+                <datasources>
+                    <datasource id="recipient_group_form_ds" object-id="recipient_group"/>
+                </datasources>
+            </show-modal>
+        </button>
+    </toolbar>
+    <rows>
+        <click>
+            <show-modal page-id="recipient_group" submit-operation-id="update" route="/update_recipient_group">
+                <datasources>
+                    <datasource id="recipient_group_form_ds" query-id="recipient_group">
+                        <filters>
+                            <eq field-id="id" value="{id}"/>
+                        </filters>
+                    </datasource>
+                </datasources>
+            </show-modal>
+        </click>
+    </rows>
+</table>

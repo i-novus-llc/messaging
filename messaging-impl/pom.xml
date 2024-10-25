@@ -13,6 +13,7 @@
 
     <properties>
         <jacoco.skip>false</jacoco.skip>
+        <jooq.version>3.15.12</jooq.version>
     </properties>
 
     <dependencies>

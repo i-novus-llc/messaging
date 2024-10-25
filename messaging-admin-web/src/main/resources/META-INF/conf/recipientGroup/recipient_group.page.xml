@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-4.0"
+             name="Группа получателей уведомлений">
+    <form id="recipient_group_form">
+        <datasource id="recipient_group_form_ds"/>
+        <fields>
+            <set field-label-location="left" field-label-align="left" field-label-width="220px">
+                <row>
+                    <input-text id="name" label="Наименование группы" required="true"/>
+                </row>
+                <row>
+                    <input-text id="description" label="Описание"/>
+                </row>
+                <row>
+                    <input-select id="recipients" label="Участники" query-id="messaging_recipient" type="multi" required="true"/>
+                </row>
+                <row>
+                    <input-select id="templates" label="Шаблоны уведомления" query-id="messaging_msg_template"  label-field-id="codeAndName" type="multi" required="true"/>
+                </row>
+            </set>
+        </fields>
+    </form>
+</simple-page>
