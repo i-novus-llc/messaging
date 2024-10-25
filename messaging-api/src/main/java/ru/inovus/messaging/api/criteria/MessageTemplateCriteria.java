@@ -50,4 +50,8 @@ public class MessageTemplateCriteria extends BaseMessagingCriteria {
     @QueryParam("code")
     @ApiParam("Код шаблона")
     private String code;
+
+    @QueryParam("codeAndName")
+    @ApiParam("Код и наименование шаблона")
+    private String codeAndName;
 }

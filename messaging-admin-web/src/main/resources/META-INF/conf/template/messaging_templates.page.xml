@@ -4,6 +4,7 @@
     <datasources>
         <datasource id="message_ds" query-id="messaging_message"/>
         <datasource id="msg_template_ds" query-id="messaging_msg_template"/>
+        <datasource id="recipient_group_ds" query-id="recipient_group"/>
     </datasources>
     <regions>
         <tabs>
@@ -63,6 +64,9 @@
             </tab>
             <tab name="Шаблоны уведомлений">
                 <table id="templates" ref-id="messaging_msg_template_list" datasource="msg_template_ds"/>
+            </tab>
+            <tab name="Группы получателей">
+                <table id="recipientGroup" ref-id="recipient_group_list" datasource="recipient_group_ds"/>
             </tab>
         </tabs>
     </regions>
