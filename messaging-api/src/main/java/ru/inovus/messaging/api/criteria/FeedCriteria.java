@@ -38,4 +38,8 @@ public class FeedCriteria extends BaseMessagingCriteria {
     @QueryParam("severity")
     @ApiParam("Уровень важности уведомления")
     private Severity severity;
+
+    @QueryParam("isRead")
+    @ApiParam("Признак того, что сообщение прочитано")
+    private Boolean isRead;
 }

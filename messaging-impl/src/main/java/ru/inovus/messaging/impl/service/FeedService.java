@@ -39,6 +39,7 @@ public class FeedService {
         message.setText(record.getText());
         message.setSeverity(record.getSeverity());
         message.setSentAt(record.getSentAt());
+        message.setTemplateCode(record.getTemplateCode());
         if (MessageStatusType.READ.equals(recipientRecord.getStatus()))
             message.setReadAt(recipientRecord.getStatusTime());
         return message;
@@ -66,6 +67,12 @@ public class FeedService {
                 .ifPresent(start -> conditions.add(MESSAGE.SENT_AT.greaterOrEqual(start)));
         Optional.ofNullable(criteria.getSentAtEnd())
                 .ifPresent(end -> conditions.add(MESSAGE.SENT_AT.lessOrEqual(end)));
+
+        if (Boolean.TRUE.equals(criteria.getIsRead())) {
+            conditions.add(MESSAGE_RECIPIENT.STATUS.eq(MessageStatusType.READ));
+        } else if (Boolean.FALSE.equals(criteria.getIsRead())) {
+            conditions.add(MESSAGE_RECIPIENT.STATUS.ne(MessageStatusType.READ));
+        }
 
         SelectConditionStep<Record> query = dsl
                 .select(MESSAGE.fields())
@@ -130,7 +137,6 @@ public class FeedService {
                 .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
                 .set(MESSAGE_RECIPIENT.STATUS, MessageStatusType.READ)
                 .where(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username),
-                        MESSAGE_RECIPIENT.STATUS.eq(MessageStatusType.SENT),
                         exists(dsl.selectOne().from(MESSAGE)
                                 .where(MESSAGE.ID.eq(MESSAGE_RECIPIENT.MESSAGE_ID),
                                         MESSAGE.TENANT_CODE.eq(tenantCode))))
@@ -150,8 +156,7 @@ public class FeedService {
                 .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
                 .set(MESSAGE_RECIPIENT.STATUS, MessageStatusType.READ)
                 .where(MESSAGE_RECIPIENT.MESSAGE_ID.eq(messageId),
-                        MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username),
-                        MESSAGE_RECIPIENT.STATUS.eq(MessageStatusType.SENT))
+                        MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username))
                 .execute();
     }
 
