@@ -46,4 +46,7 @@ public class Feed implements Serializable {
 
     @ApiModelProperty("Дата прочтения уведомления")
     private LocalDateTime readAt;
+
+    @ApiModelProperty("Код шаблона")
+    private String templateCode;
 }
