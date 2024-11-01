@@ -40,6 +40,9 @@ public class TemplateMessageOutbox implements Serializable {
     @ApiModelProperty("Список получателей")
     private List<String> userNameList;
 
+    @ApiModelProperty("Группа получателей")
+    private Integer groupId;
+
     @ApiModelProperty("Заменители плейсхолдеров в тексте шаблона")
     private Map<String, Object> placeholders;
 
