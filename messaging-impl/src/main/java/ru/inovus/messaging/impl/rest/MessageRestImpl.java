@@ -2,6 +2,7 @@ package ru.inovus.messaging.impl.rest;
 
 import lombok.extern.slf4j.Slf4j;
 import net.n2oapp.platform.i18n.UserException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
@@ -15,6 +16,7 @@ import ru.inovus.messaging.impl.service.*;
 import ru.inovus.messaging.impl.util.MessageHelper;
 
 import jakarta.annotation.Nullable;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -26,6 +28,10 @@ import static java.util.Objects.nonNull;
 @Slf4j
 @Controller
 public class MessageRestImpl implements MessageRest {
+
+    @Value("${novus.messaging.notification.enabled:true}")
+    private Boolean notificationEnabled;
+
     private final MessageService messageService;
     private final MessageTemplateService messageTemplateService;
     private final RecipientService recipientService;
@@ -73,8 +79,7 @@ public class MessageRestImpl implements MessageRest {
 
             setRecipientsAndAttachments(message);
             save(message);
-            send(message);
-
+            sendNotification(message);
         } else if (messageOutbox.getTemplateMessageOutbox() != null) {
             TemplateMessageOutbox templateMessageOutbox = messageOutbox.getTemplateMessageOutbox();
             templateMessageOutbox.setTenantCode(tenantCode);
@@ -127,7 +132,7 @@ public class MessageRestImpl implements MessageRest {
         if (!CollectionUtils.isEmpty(templateMessageOutbox.getUserNameList())) {
             Message message = buildMessage(template, templateMessageOutbox.getUserNameList(), templateMessageOutbox);
             save(message);
-            send(message);
+            sendNotification(message);
         }
     }
 
@@ -146,7 +151,9 @@ public class MessageRestImpl implements MessageRest {
      *
      * @param message Уведомление
      */
-    private void send(Message message) {
+    private void sendNotification(Message message) {
+        if (Boolean.FALSE.equals(notificationEnabled)) return;
+
         Channel channel = channelService.getChannel(message.getChannel().getId());
 
         Message newMessage = message.clone();
