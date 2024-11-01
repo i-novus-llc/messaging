@@ -4,12 +4,7 @@
 package ru.inovus.messaging.impl.jooq;
 
 
-import ru.inovus.messaging.impl.jooq.tables.Attachment;
-import ru.inovus.messaging.impl.jooq.tables.Channel;
-import ru.inovus.messaging.impl.jooq.tables.Message;
-import ru.inovus.messaging.impl.jooq.tables.MessageRecipient;
-import ru.inovus.messaging.impl.jooq.tables.MessageTemplate;
-import ru.inovus.messaging.impl.jooq.tables.Tenant;
+import ru.inovus.messaging.impl.jooq.tables.*;
 
 
 /**
@@ -47,4 +42,19 @@ public class Tables {
      * Тенанты
      */
     public static final Tenant TENANT = Tenant.TENANT;
+
+    /**
+     * Группы получателей
+     */
+    public static final RecipientGroup RECIPIENT_GROUP = RecipientGroup.RECIPIENT_GROUP;
+
+    /**
+     * Получатели в группе пользователей
+     */
+    public static final RecipientGroupUser RECIPIENT_GROUP_USER = RecipientGroupUser.RECIPIENT_GROUP_USER;
+
+    /**
+     * Шаблоны в группе пользователей
+     */
+    public static final RecipientGroupTemplate RECIPIENT_GROUP_TEMPLATE = RecipientGroupTemplate.RECIPIENT_GROUP_TEMPLATE;
 }

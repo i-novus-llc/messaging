@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<object xmlns="http://n2oapp.net/framework/config/schema/object-4.0">
+    <operations>
+        <operation id="create">
+            <invocation>
+                <rest method="POST">${messaging.backend.path}/${novus.messaging.tenant-code}/recipient-groups</rest>
+            </invocation>
+            <in>
+                <field id="id" mapping="['id']"/>
+                <field id="name" mapping="['name']" required="true"/>
+                <field id="description" mapping="['description']"/>
+                <field id="recipients*.username" mapping="['recipients*.username']"/>
+                <field id="recipients*.name" mapping="['recipients*.name']"/>
+                <field id="templates*.id" mapping="['templates*.id']"/>
+                <field id="templates*.code" mapping="['templates*.code']"/>
+            </in>
+        </operation>
+
+        <operation id="update">
+            <invocation>
+                <rest method="PUT">${messaging.backend.path}/${novus.messaging.tenant-code}/recipient-groups/{id}</rest>
+            </invocation>
+            <in>
+                <field id="id" mapping="['id']"/>
+                <field id="name" mapping="['name']" required="true"/>
+                <field id="description" mapping="['description']"/>
+                <field id="recipients*.username" mapping="['recipients*.username']"/>
+                <field id="recipients*.name" mapping="['recipients*.name']"/>
+                <field id="templates*.id" mapping="['templates*.id']"/>
+                <field id="templates*.code" mapping="['templates*.code']"/>
+            </in>
+        </operation>
+
+        <operation id="delete" confirm="true" success-text="Данные удалены">
+            <invocation>
+                <rest method="DELETE">${messaging.backend.path}/${novus.messaging.tenant-code}/recipient-groups/{id}</rest>
+            </invocation>
+            <in>
+                <field id="id" mapping="['id']"/>
+            </in>
+        </operation>
+
+    </operations>
+</object>
