@@ -16,6 +16,7 @@
         <more field-id="sentAt" filter-id="sentAt.begin"  domain="localdatetime">sentAtBegin={sentAt.begin}</more>
         <less field-id="sentAt" filter-id="sentAt.end" normalize="#this.plusDays(1).minusNanos(1)"  domain="localdatetime">sentAtEnd={sentAt.end}</less>
         <eq field-id="username" filter-id="username" default-value="#{username}">user={username}</eq>
+        <eq field-id="isRead" filter-id="isRead">isRead={isRead}</eq>
     </filters>
     
     <fields>
@@ -29,5 +30,6 @@
         <field id="readAt" domain="date"/>
         <field id="isRead" domain="boolean" mapping="#this['readAt'] == null ? false : true"/>
         <field id="username" domain="string" select="false"/>
+        <field id="templateCode" domain="string"/>
     </fields>
 </query>
