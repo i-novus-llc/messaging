@@ -13,6 +13,7 @@
     </filters>
     <columns>
         <column text-field-id="name" label="Наименование группы"/>
+        <column text-field-id="code" label="Код группы"/>
         <column text-field-id="description" label="Описание группы"/>
         <column text-field-id="recipientName" label="Участники">
             <list style="display: block"/>
