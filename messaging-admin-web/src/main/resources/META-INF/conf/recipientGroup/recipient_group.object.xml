@@ -8,6 +8,7 @@
             <in>
                 <field id="id" mapping="['id']"/>
                 <field id="name" mapping="['name']" required="true"/>
+                <field id="code" mapping="['code']" required="true"/>
                 <field id="description" mapping="['description']"/>
                 <field id="recipients*.username" mapping="['recipients*.username']"/>
                 <field id="recipients*.name" mapping="['recipients*.name']"/>
@@ -23,6 +24,7 @@
             <in>
                 <field id="id" mapping="['id']"/>
                 <field id="name" mapping="['name']" required="true"/>
+                <field id="code" mapping="['code']" required="true"/>
                 <field id="description" mapping="['description']"/>
                 <field id="recipients*.username" mapping="['recipients*.username']"/>
                 <field id="recipients*.name" mapping="['recipients*.name']"/>

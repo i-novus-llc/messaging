@@ -15,6 +15,7 @@
     <filters>
         <eq field-id="id" filter-id="id">{id}</eq>
         <eq field-id="name" filter-id="name">name={name}</eq>
+        <eq field-id="code" filter-id="code">code={code}</eq>
         <eq field-id="recipientName" filter-id="recipientName*.id">recipientNames={recipientName*.id}</eq>
         <eq field-id="templateCode" filter-id="templateCode*.id">templateCodes={templateCode*.id}</eq>
     </filters>
@@ -22,6 +23,7 @@
     <fields>
         <field id="id" domain="integer" name="Идентификатор" select-expression="id"/>
         <field id="name" domain="string" name="Наименование группы"/>
+        <field id="code" domain="string" name="Код группы"/>
         <field id="description" domain="string" name="Описание группы"/>
         <field id="recipients" domain="object[]" name="Участники" mapping="['recipients']"/>
         <field id="recipients*.id" domain="integer[]" name="СНИЛС участников" mapping="['recipients*.username']"/>

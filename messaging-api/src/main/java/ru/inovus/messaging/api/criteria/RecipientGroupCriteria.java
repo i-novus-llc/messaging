@@ -15,11 +15,15 @@ public class RecipientGroupCriteria extends BaseMessagingCriteria {
     @ApiParam("Название группы получателей")
     private String name;
 
+    @QueryParam("code")
+    @ApiParam("Код группы получателей")
+    private String code;
+
     @QueryParam("recipientNames")
     @ApiParam("Имена пользователей группы получателей")
     private List<String> recipientNames;
 
     @QueryParam("templateCodes")
     @ApiParam("Коды шаблонов группы получателей")
-    private List<Integer> templateCodes;
+    private List<String> templateCodes;
 }

@@ -9,6 +9,9 @@
                     <input-text id="name" label="Наименование группы" required="true"/>
                 </row>
                 <row>
+                    <input-text id="code" label="Код группы" required="true"/>
+                </row>
+                <row>
                     <input-text id="description" label="Описание"/>
                 </row>
                 <row>

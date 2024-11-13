@@ -1,5 +1,7 @@
 package ru.inovus.messaging.impl.service;
 
+import net.n2oapp.platform.i18n.Message;
+import net.n2oapp.platform.i18n.UserException;
 import org.jooq.*;
 import org.jooq.Record;
 import org.jooq.impl.DSL;
@@ -41,6 +43,7 @@ public class RecipientGroupService {
         RecipientGroup result = new RecipientGroup();
         result.setId(record.getId());
         result.setName(record.getName());
+        result.setCode(record.getCode());
         result.setDescription(record.getDescription());
         result.setTenantCode(record.getTenantCode());
         result.setRecipients((List<Recipient>) rec.get("users"));
@@ -67,9 +70,11 @@ public class RecipientGroupService {
         conditions.add(RECIPIENT_GROUP.TENANT_CODE.eq(tenantCode));
         Optional.ofNullable(criteria.getName()).ifPresent(name ->
                 conditions.add(RECIPIENT_GROUP.NAME.eq(name)));
+        Optional.ofNullable(criteria.getCode()).ifPresent(code ->
+                conditions.add(RECIPIENT_GROUP.CODE.eq(code)));
 
         var query = dsl
-                .selectDistinct(RECIPIENT_GROUP.ID, RECIPIENT_GROUP.NAME, RECIPIENT_GROUP.DESCRIPTION, RECIPIENT_GROUP.TENANT_CODE,
+                .selectDistinct(RECIPIENT_GROUP.ID, RECIPIENT_GROUP.NAME, RECIPIENT_GROUP.CODE, RECIPIENT_GROUP.DESCRIPTION, RECIPIENT_GROUP.TENANT_CODE,
                         DSL.multiset(
                                 DSL.select(RECIPIENT_GROUP_USER.RECIPIENT_NAME, RECIPIENT_GROUP_USER.RECIPIENT_USERNAME)
                                         .from(RECIPIENT_GROUP_USER)
@@ -87,16 +92,16 @@ public class RecipientGroupService {
                 .from(RECIPIENT_GROUP);
 
         if (criteria.getTemplateCodes() != null && !criteria.getTemplateCodes().isEmpty()) {
-            List<Integer> targetTemplateCodes = criteria.getTemplateCodes();
+            List<String> targetTemplateCodes = criteria.getTemplateCodes();
             query.join(RECIPIENT_GROUP_TEMPLATE)
                     .on(RECIPIENT_GROUP_TEMPLATE.RECIPIENT_GROUP_ID.eq(RECIPIENT_GROUP.ID))
-                    .where(RECIPIENT_GROUP_TEMPLATE.MESSAGE_TEMPLATE_ID.in(targetTemplateCodes));
+                    .where(RECIPIENT_GROUP_TEMPLATE.MESSAGE_TEMPLATE_CODE.in(targetTemplateCodes));
             query.groupBy(RECIPIENT_GROUP.ID)
                     .having(DSL.countDistinct(RECIPIENT_GROUP_TEMPLATE.MESSAGE_TEMPLATE_ID).ge(targetTemplateCodes.size()));
 
             countQuery.join(RECIPIENT_GROUP_TEMPLATE)
                     .on(RECIPIENT_GROUP_TEMPLATE.RECIPIENT_GROUP_ID.eq(RECIPIENT_GROUP.ID))
-                    .where(RECIPIENT_GROUP_TEMPLATE.MESSAGE_TEMPLATE_ID.in(targetTemplateCodes));
+                    .where(RECIPIENT_GROUP_TEMPLATE.MESSAGE_TEMPLATE_CODE.in(targetTemplateCodes));
             countQuery.groupBy(RECIPIENT_GROUP.ID)
                     .having(DSL.countDistinct(RECIPIENT_GROUP_TEMPLATE.MESSAGE_TEMPLATE_ID).ge(targetTemplateCodes.size()));
         }
@@ -122,15 +127,15 @@ public class RecipientGroupService {
                 .offset((int) criteria.getOffset())
                 .fetch(MAPPER);
 
-        Integer count =dsl.selectCount().from(countQuery.where(conditions))
+        Integer count = dsl.selectCount().from(countQuery.where(conditions))
                 .fetchOne().component1();
         return new PageImpl<>(list, criteria, count);
     }
 
-    public RecipientGroup getRecipientGroup(String tenantCode, Integer id) {
-        if (id == null) return null;
-        return dsl
-                .select(RECIPIENT_GROUP.ID, RECIPIENT_GROUP.NAME, RECIPIENT_GROUP.DESCRIPTION, RECIPIENT_GROUP.TENANT_CODE,
+    public RecipientGroup getRecipientGroup(String tenantCode, Integer id, String code) {
+        if (id == null && code == null) return null;
+        var query = dsl
+                .select(RECIPIENT_GROUP.ID, RECIPIENT_GROUP.NAME, RECIPIENT_GROUP.CODE, RECIPIENT_GROUP.DESCRIPTION, RECIPIENT_GROUP.TENANT_CODE,
                         DSL.multiset(
                                 DSL.select(RECIPIENT_GROUP_USER.RECIPIENT_NAME, RECIPIENT_GROUP_USER.RECIPIENT_USERNAME)
                                         .from(RECIPIENT_GROUP_USER)
@@ -142,17 +147,21 @@ public class RecipientGroupService {
                                         .where(RECIPIENT_GROUP_TEMPLATE.RECIPIENT_GROUP_ID.eq(RECIPIENT_GROUP.ID))
                         ).convertFrom(r -> r.map(TEMPLATE_MAPPER)).as("templates")
                 )
-                .from(RECIPIENT_GROUP)
-                .where(RECIPIENT_GROUP.ID.eq(id), RECIPIENT_GROUP.TENANT_CODE.eq(tenantCode))
-                .fetchOne(MAPPER);
+                .from(RECIPIENT_GROUP);
+
+        if (id != null) query.where(RECIPIENT_GROUP.ID.eq(id), RECIPIENT_GROUP.TENANT_CODE.eq(tenantCode));
+        else query.where(RECIPIENT_GROUP.CODE.eq(code), RECIPIENT_GROUP.TENANT_CODE.eq(tenantCode));
+
+        return query.fetchOne(MAPPER);
     }
 
     @Transactional
     public Integer createRecipientGroup(String tenantCode, RecipientGroup value) {
+        validateRecipientGroup(null, value);
         Integer id = dsl.nextval(Sequences.RECIPIENT_GROUP_ID_SEQ).intValue();
         dsl.insertInto(RECIPIENT_GROUP)
-                .columns(RECIPIENT_GROUP.ID, RECIPIENT_GROUP.NAME, RECIPIENT_GROUP.DESCRIPTION, RECIPIENT_GROUP.TENANT_CODE)
-                .values(id, value.getName(), value.getDescription(), tenantCode)
+                .columns(RECIPIENT_GROUP.ID, RECIPIENT_GROUP.NAME, RECIPIENT_GROUP.CODE, RECIPIENT_GROUP.DESCRIPTION, RECIPIENT_GROUP.TENANT_CODE)
+                .values(id, value.getName(), value.getCode(), value.getDescription(), tenantCode)
                 .execute();
 
         insertRecipients(id, value.getRecipients());
@@ -162,8 +171,10 @@ public class RecipientGroupService {
 
     @Transactional
     public void updateRecipientGroup(String tenantCode, Integer id, RecipientGroup value) {
+        validateRecipientGroup(id, value);
         dsl.update(RECIPIENT_GROUP)
                 .set(RECIPIENT_GROUP.NAME, value.getName())
+                .set(RECIPIENT_GROUP.CODE, value.getCode())
                 .set(RECIPIENT_GROUP.DESCRIPTION, value.getDescription())
                 .set(RECIPIENT_GROUP.TENANT_CODE, tenantCode)
                 .where(RECIPIENT_GROUP.ID.eq(id), RECIPIENT_GROUP.TENANT_CODE.eq(tenantCode))
@@ -223,4 +234,13 @@ public class RecipientGroupService {
         return result;
     }
 
+    private void validateRecipientGroup(Integer id, RecipientGroup value) {
+        List<Condition> conditions = new ArrayList<>();
+        conditions.add(RECIPIENT_GROUP.CODE.eq(value.getCode()));
+        if (id != null) conditions.add(RECIPIENT_GROUP.ID.notEqual(id));
+        Integer count = dsl.selectCount().from(RECIPIENT_GROUP.where(conditions))
+                .fetchOne().component1();
+        if (count > 0)
+            throw new UserException(new Message("messaging.exception.recipientGroup.codeExist", value.getCode()));
+    }
 }
