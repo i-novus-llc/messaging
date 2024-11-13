@@ -336,3 +336,11 @@ databaseChangeLog:
             encoding: utf8
             path: sql/EGISZKD-5892.sql
             relativeToChangelogFile: true
+  - changeSet:
+      id: EGISZKD-6146
+      author: estartcev
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/EGISZKD-6146.sql
+            relativeToChangelogFile: true

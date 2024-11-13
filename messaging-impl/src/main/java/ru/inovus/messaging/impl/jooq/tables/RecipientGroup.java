@@ -16,6 +16,7 @@ public class RecipientGroup extends TableImpl<RecipientGroupRecord> {
 
     public final TableField<RecipientGroupRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.nullable(false), this, "Уникальный идентификатор");
     public final TableField<RecipientGroupRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR.nullable(false), this, "Наименование группы");
+    public final TableField<RecipientGroupRecord, String> CODE = createField(DSL.name("code"), SQLDataType.VARCHAR.nullable(false), this, "Код группы");
     public final TableField<RecipientGroupRecord, String> DESCRIPTION = createField(DSL.name("description"), SQLDataType.VARCHAR, this, "Описание группы");
     public final TableField<RecipientGroupRecord, String> TENANT_CODE = createField(DSL.name("tenant_code"), SQLDataType.VARCHAR, this, "Тенант, к которому относится настройка");
 
