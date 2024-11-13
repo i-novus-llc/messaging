@@ -83,7 +83,7 @@ public class MessageRestImpl implements MessageRest {
         } else if (messageOutbox.getTemplateMessageOutbox() != null) {
             TemplateMessageOutbox templateMessageOutbox = messageOutbox.getTemplateMessageOutbox();
             templateMessageOutbox.setTenantCode(tenantCode);
-            RecipientGroup recipientGroup = recipientGroupService.getRecipientGroup(tenantCode, templateMessageOutbox.getGroupId());
+            RecipientGroup recipientGroup = recipientGroupService.getRecipientGroup(tenantCode, templateMessageOutbox.getGroupId(), templateMessageOutbox.getGroupCode());
 
             if (recipientGroup != null) {
                 templateMessageOutbox.setUserNameList(recipientGroup.getRecipients().stream().map(Recipient::getUsername).collect(Collectors.toList()));

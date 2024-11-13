@@ -22,6 +22,9 @@ public class RecipientGroup implements Serializable {
     @ApiModelProperty("Название группы получателей")
     private String name;
 
+    @ApiModelProperty("Код группы получателей")
+    private String code;
+
     @ApiModelProperty("Описание группы получателей")
     private String description;
 

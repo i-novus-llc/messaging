@@ -23,7 +23,7 @@ public class RecipientGroupRestImpl implements RecipientGroupRest {
 
     @Override
     public RecipientGroup getRecipientGroup(String tenantCode, Integer id) {
-        return recipientGroupService.getRecipientGroup(tenantCode, id);
+        return recipientGroupService.getRecipientGroup(tenantCode, id, null);
     }
 
     @Override
