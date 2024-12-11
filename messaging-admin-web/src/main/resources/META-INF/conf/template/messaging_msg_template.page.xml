@@ -9,7 +9,21 @@
                     <input-text id="name" label="Наименование шаблона" required="true"/>
                 </row>
                 <row>
-                    <input-text id="code" label="Код шаблона" required="true"/>
+                    <input-text id="code" label="Код шаблона" required="true">
+                        <validations>
+                            <condition id="validateCodeFormat"
+                                       message="Неверный формат кода шаблона. Допустим латинский алфавит, нижнее подчеркивание, дефис, цифры"
+                                       side="client"
+                                       field-id="code" on="code">
+                                <![CDATA[
+                                               if (typeof code !== 'undefined' && code !== null && code.length !== 0) {
+                                                   return /^[a-zA-F0-9][a-zA-F0-9-_]*$/.test(code)
+                                               }
+                                               return true;
+                                        ]]>
+                            </condition>
+                        </validations>
+                    </input-text>
                 </row>
                 <row>
                     <checkbox id="enabled" label="Включить" default-value="true" unchecked="false"/>
