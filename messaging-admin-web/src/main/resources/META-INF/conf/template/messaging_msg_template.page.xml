@@ -29,6 +29,7 @@
                         <dependencies>
                             <visibility on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</visibility>
                             <requiring on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</requiring>
+                            <reset on="infoType" apply-on-init="false"/>
                         </dependencies>
                     </input-select>
                 </row>
@@ -42,6 +43,7 @@
                         <dependencies>
                             <visibility on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</visibility>
                             <requiring on="infoType">'${novus.messaging.web-channel-id}' === infoType.id</requiring>
+                            <reset on="infoType" apply-on-init="false"/>
                         </dependencies>
                     </input-select>
                 </row>
