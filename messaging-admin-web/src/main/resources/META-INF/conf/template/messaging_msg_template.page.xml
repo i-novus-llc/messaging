@@ -17,7 +17,7 @@
                                        field-id="code" on="code">
                                 <![CDATA[
                                                if (typeof code !== 'undefined' && code !== null && code.length !== 0) {
-                                                   return /^[a-zA-F0-9][a-zA-F0-9-_]*$/.test(code)
+                                                   return /^[a-zA-Z0-9][a-zA-Z0-9-_]*$/.test(code)
                                                }
                                                return true;
                                         ]]>
