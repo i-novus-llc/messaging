@@ -30,7 +30,6 @@ UI:
 - `messaging-admin-frontend` - Запускаемый модуль UI для администрирования уведомлений (включает messaging-admin-web)
 - `messaging-admin-web` - UI для администрирования уведомлений (включает messaging-web)
 - `messaging-web` - UI для встраивания пользовательских настроек и ленты уведомлений
-- `messaging-react` - React модуль для отрисовки UI
 
 Backend:
 - `messaging-backend` - Запускаемый модуль бэкенда
