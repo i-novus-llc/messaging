@@ -6,7 +6,7 @@
     <parent>
         <groupId>ru.i-novus.messaging</groupId>
         <artifactId>messaging-pom</artifactId>
-        <version>5.0.3-SNAPSHOT</version>
+        <version>5.0.4-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
 
