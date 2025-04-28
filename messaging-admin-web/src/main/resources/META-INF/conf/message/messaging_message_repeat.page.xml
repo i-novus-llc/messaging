@@ -44,7 +44,7 @@
                         </select>
                     </row>
                     <row>
-                        <input-text id="caption" label="Заголовок уведомления" length="150"
+                        <text-area id="caption" label="Заголовок уведомления" max-rows="5"
                                     enabled="false"/>
                     </row>
                     <row>
