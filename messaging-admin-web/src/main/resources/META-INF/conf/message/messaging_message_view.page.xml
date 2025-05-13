@@ -42,7 +42,7 @@
                             </output-text>
                         </row>
                         <row>
-                            <output-text id="caption" label="Заголовок уведомления"/>
+                            <text-area id="caption" label="Заголовок уведомления" max-rows="5" enabled="false"/>
                         </row>
                         <row>
                             <text-area id="text" label="Текст уведомления" max-rows="5" enabled="false"/>
