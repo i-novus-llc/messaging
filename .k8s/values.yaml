@@ -1,0 +1,76 @@
+## Global values for parent chart and subcharts.
+global:
+  ## Current build tag for images of this project.
+  imageTag: "${docker.image.tag}"
+  ## Global values for all spring services.
+  spring:
+    dbUrl: "jdbc:postgresql://messaging-db:5432/"
+    dbUsername: "postgres"
+    dbPassword: "postgres"
+    ## Global environment variables injected in every spring service.
+    env:
+      SPRING_CLOUD_CONSUL_CONFIG_PREFIX: "messaging"
+      SPRING_CLOUD_CONSUL_CONFIG_FORMAT: YAML
+      JAVA_OPTS: "-XX:MaxRAMPercentage=75"
+
+
+# list of spring boot services using the database with specific values for each
+messaging-service:
+  messaging-frontend:
+    replicaCount: 1
+    enabled: true
+    imageName: messaging/frontend
+    actuatorPath: "actuator"
+    resources:
+      limits:
+        memory: 512Mi
+        cpu: 700m
+      request:
+        memory: 300Mi
+        cpu: 10m
+    env:
+      SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_ADMIN_WEB_CLIENT_ID: localhost
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_ADMIN_WEB_CLIENT_SECRET: 494f2352-b552-4888-82fa-e2087beafd0d
+      ACCESS_SERVICE_URL: http://yandex.develop:8278/api
+      ACCESS_SERVICE_API_URL: ${ACCESS_SERVICE_URL}
+      ACCESS_KEYCLOAK_SERVER_URL: https://keycloak.i-novus.ru/auth
+      MESSAGING_BACKEND_PATH: http://messaging-backend:8080/api
+      N2O_CONFIG_WS_ENDPOINT: http://yandex.develop:8112/ws
+      SPRING_DATA_REDIS_HOST: redis
+      JAVA_OPTS: -Xmx200m
+
+  messaging-backend:
+    startupProbe:
+      initialDelaySeconds: 120
+    replicaCount: 1
+    enabled: true
+    imageName: messaging/backend
+    actuatorPath: "actuator"
+    overrideDbName: "messaging"
+    resources:
+      limits:
+        memory: 512Mi
+        cpu: 700m
+      request:
+        memory: 300Mi
+        cpu: 10m
+    env:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://messaging-db/postgres
+      SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_USER_NAME_ATTRIBUTE: preferred_username
+      SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
+      NOVUS_MESSAGING_RECIPIENT_PROVIDER_URL: http://yandex.develop:8278/api
+      NOVUS_MESSAGING_RECIPIENT_PROVIDER_TYPE: security
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: http://kafka:9092
+      SPRING_MAIL_USERNAME: someuser
+      SPRING_MAIL_HOST: maildev.i-novus.ru
+      JAVA_OPTS: -Xmx200m
+      SERVER_PORT: 8080
+      SPRING_DATA_REDIS_HOST: redis
+
+
+infrastructure:
+  genericServices:
+    messaging-db:
+      enabled: true
+
