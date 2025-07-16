@@ -1,0 +1,15 @@
+{{- if index .Values "genericServices" "messaging-db" "volumes" }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: messaging-db-data
+  annotations:
+    "helm.sh/resource-policy": keep
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: {{ coalesce (index .Values "genericServices" "messaging-db" "storageClassName") "retain" }}
+{{- end }}

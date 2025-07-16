@@ -1,0 +1,66 @@
+# list of all generic services with specific values for each
+genericServices:
+  messaging-db:
+    port: 5432
+    imageName: /messaging/db
+    imageTag: ${docker.image.tag}
+    imagePullPolicy: IfNotPresent
+    storageClassName: 'nfs-retain'
+    resources:
+      limits:
+        memory: 512Mi
+        cpu: 300m
+    replicaCount: 1
+    volumes:
+      - name: messaging-db-data
+        persistentVolumeClaim:
+          claimName: messaging-db-data
+    volumeMounts:
+      - mountPath: /pg/14
+        name: messaging-db-data
+    env:
+      POSTGRES_PASSWORD: postgres
+
+  zookeeper:
+    port: 2181
+    imageName: '/library/zookeeper'
+    registry: harbor.i-novus.ru/docker-hub
+    imageTag: 3.7.0
+    imagePullPolicy: IfNotPresent
+    resources:
+      limits:
+        memory: 512Mi
+        cpu: 200m
+    env:
+      ZOOKEEPER_CLIENT_PORT: "2181"
+      ZOOKEEPER_TICK_TIME: "2000"
+
+  kafka:
+    registry: harbor.i-novus.ru/container-hub
+    port: 9092
+    imageName: '/bitnami/kafka'
+    imageTag: 2.8.1
+    imagePullPolicy: IfNotPresent
+    resources:
+      limits:
+        memory: 512Mi
+        cpu: 200m
+    depends_on:
+      - zookeeper
+    env:
+      KAFKA_BROKER_ID: 1
+      KAFKA_LISTENERS: PLAINTEXT://:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      ALLOW_PLAINTEXT_LISTENER: "yes"
+
+  redis:
+    registry: harbor.i-novus.ru/docker-hub
+    port: 6379
+    imageName: '/redis'
+    imageTag: 7.0.11-alpine
+    imagePullPolicy: IfNotPresent
+    resources:
+      limits:
+        memory: 512Mi
+        cpu: 300m

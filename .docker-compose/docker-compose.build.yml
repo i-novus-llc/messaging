@@ -1,0 +1,26 @@
+services:
+  messaging-db:
+    image: ${DOCKER_REGISTRY}/messaging/db:${docker.image.tag}
+    build:
+      context: ${project.basedir}/db-init
+      args:
+        DOCKER_REGISTRY: ${DOCKER_REGISTRY}
+    volumes:
+      - messaging-db-data:/pg/14/data
+
+  messaging-backend:
+    image: ${DOCKER_REGISTRY}/messaging/backend:${docker.image.tag}
+    build:
+      context: ${project.basedir}/messaging-backend
+      args:
+        JAR_FILE: target/messaging-backend.jar
+
+  messaging-frontend:
+    image: ${DOCKER_REGISTRY}/messaging/frontend:${docker.image.tag}
+    build:
+      context: ${project.basedir}/messaging-admin-frontend
+      args:
+        JAR_FILE: target/messaging-admin-frontend.jar
+
+volumes:
+  messaging-db-data:

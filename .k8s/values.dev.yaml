@@ -1,0 +1,19 @@
+## Global values for parent chart and subcharts.
+global:
+  spring:
+    ## Use default consul address `consul-agent.local` or use pod host IP.
+    useDefaultConsul: false
+
+messaging-service:
+  messaging-frontend:
+    resources:
+    enabled: true
+  messaging-backend:
+    resources:
+    enabled: true
+
+
+infrastructure:
+  genericServices:
+    messaging-db:
+      enabled: true
