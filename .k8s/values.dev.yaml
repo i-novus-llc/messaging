@@ -6,10 +6,8 @@ global:
 
 messaging-service:
   messaging-frontend:
-    resources:
     enabled: true
   messaging-backend:
-    resources:
     enabled: true
 
 
