@@ -7,19 +7,19 @@
 - обмен сообщениями между пользователями
 
 # Требования
-- Openjdk 17
-- PostgreSQL 11
+- Openjdk 21
+- PostgreSQL 14
 - Apache Kafka 2.6
 
 # Стек технологий
-- Java 17
+- Java 21
 - JDBC
 - JMS
-- Spring Boot 3.2
+- Spring Boot 3.5.3
 - Jooq 3
 - Liquibase 4.24
-- N2O Platform 6.1
-- N2O UI Framework 7.28
+- N2O Platform 7.0.1
+- N2O UI Framework 7.29.1
 - Websockets
 
 # Структура проекта

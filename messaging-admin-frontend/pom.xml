@@ -55,11 +55,13 @@
         <dependency>
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-starter-actuator</artifactId>
+            <type>pom</type>
         </dependency>
 
         <dependency>
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-starter-web</artifactId>
+            <type>pom</type>
         </dependency>
 
         <dependency>
@@ -81,6 +83,7 @@
         <dependency>
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-starter-test</artifactId>
+            <type>pom</type>
             <scope>test</scope>
         </dependency>
 
