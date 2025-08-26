@@ -28,9 +28,9 @@
     <url>https://messaging.i-novus.ru</url>
 
     <scm>
-        <connection>scm:git:https://git.i-novus.ru/platform/messaging.git</connection>
-        <url>https://git.i-novus.ru/platform/messaging</url>
-        <developerConnection>scm:git:https://git.i-novus.ru/platform/messaging.git</developerConnection>
+        <connection>scm:git:https://git.i-novus.ru/components/messaging.git</connection>
+        <url>https://git.i-novus.ru/components/messaging</url>
+        <developerConnection>scm:git:https://git.i-novus.ru/components/messaging.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
