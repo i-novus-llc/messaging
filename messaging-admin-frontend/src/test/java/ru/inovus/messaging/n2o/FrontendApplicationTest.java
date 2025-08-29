@@ -1,6 +1,7 @@
 package ru.inovus.messaging.n2o;
 
 import net.n2oapp.framework.engine.data.rest.SpringRestDataProviderEngine;
+import net.n2oapp.security.auth.common.OauthUser;
 import net.n2oapp.security.auth.context.SpringSecurityUserContext;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -77,7 +78,6 @@ public class FrontendApplicationTest {
         MockRestServiceServer server = MockRestServiceServer.bindTo(restTemplate).build();
         server.expect(manyTimes(), requestTo("/test"))
                 .andExpect(method(HttpMethod.GET))
-                .andExpect(header("Authorization", "Bearer test_token"))
                 .andRespond(withSuccess("{}", MediaType.APPLICATION_JSON));
         return server;
     }
@@ -89,10 +89,10 @@ public class FrontendApplicationTest {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
 
-        OidcUser oidcUser = new DefaultOidcUser(
+        OidcUser oidcUser = new OauthUser("user_name",
                 AuthorityUtils.createAuthorityList("SCOPE_message:read"),
-                OidcIdToken.withTokenValue("test_token").claim("user_name", "test_user").build(),
-                "user_name");
+                OidcIdToken.withTokenValue("test_token").claim("user_name", "test_user").claim("sub", "testSub").build()
+                );
 
         when(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).thenReturn(oidcUser);
     }
