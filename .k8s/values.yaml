@@ -32,11 +32,11 @@ messaging-service:
       SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
       SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_ADMIN_WEB_CLIENT_ID: localhost
       SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_ADMIN_WEB_CLIENT_SECRET: yp3iyODR7XJq2bxzfWzyofShzvnravZT
-      ACCESS_SERVICE_URL: http://yandex.develop:8278/api
+      ACCESS_SERVICE_URL: https://security-dev.i-novus.ru/service/api
       ACCESS_SERVICE_API_URL: ${ACCESS_SERVICE_URL}
       ACCESS_KEYCLOAK_SERVER_URL: https://keycloak-dev.i-novus.ru/auth
       MESSAGING_BACKEND_PATH: http://messaging-backend:8080/api
-      N2O_CONFIG_WS_ENDPOINT: http://yandex.develop:8112/ws
+      N2O_CONFIG_WS_ENDPOINT: https://security-dev.i-novus.ru/service/ws
       SPRING_DATA_REDIS_HOST: redis
       JAVA_OPTS: -Xmx200m
 
@@ -59,7 +59,7 @@ messaging-service:
       SPRING_DATASOURCE_URL: jdbc:postgresql://messaging-db/postgres
       SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_USER_NAME_ATTRIBUTE: preferred_username
       SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
-      NOVUS_MESSAGING_RECIPIENT_PROVIDER_URL: http://yandex.develop:8278/api
+      NOVUS_MESSAGING_RECIPIENT_PROVIDER_URL: https://security-dev.i-novus.ru/service/api
       NOVUS_MESSAGING_RECIPIENT_PROVIDER_TYPE: security
       SPRING_KAFKA_BOOTSTRAP_SERVERS: http://kafka:9092
       SPRING_MAIL_USERNAME: someuser
