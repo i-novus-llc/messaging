@@ -33,17 +33,9 @@
 
         <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-auth</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-auth-common</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-admin-rest-client</artifactId>
+            <artifactId>security-client-starter</artifactId>
+            <version>${access.version}</version>
+            <type>pom</type>
         </dependency>
 
         <dependency>
