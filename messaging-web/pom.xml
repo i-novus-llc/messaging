@@ -8,6 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>messaging-web</artifactId>
+    <name>messaging-web</name>
 
     <properties>
         <jacoco.skip>false</jacoco.skip>

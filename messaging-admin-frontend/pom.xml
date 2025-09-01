@@ -11,6 +11,7 @@
     </parent>
 
     <artifactId>messaging-admin-frontend</artifactId>
+    <name>messaging-admin-frontend</name>
 
     <properties>
         <jaxws.version>2.3.2</jaxws.version>
