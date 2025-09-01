@@ -53,17 +53,5 @@ public class SecurityConfig extends OpenIdSecurityCustomizer {
         };
     }
 
-    @Bean
-    public RestTemplateBuilder restTemplateBuilder() {
-        //add token to header restTemplate in n2o restDataProviderEngine
-        return new RestTemplateBuilder().additionalInterceptors((request, body, execution) -> {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (nonNull(authentication) && authentication.getPrincipal() instanceof DefaultOidcUser) {
-                DefaultOidcUser principal = (DefaultOidcUser) authentication.getPrincipal();
-                request.getHeaders().setBearerAuth(principal.getIdToken().getTokenValue());
-            }
-            return execution.execute(request, body);
-        });
-    }
 }
 

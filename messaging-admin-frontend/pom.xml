@@ -6,7 +6,7 @@
     <parent>
         <groupId>ru.i-novus.messaging</groupId>
         <artifactId>messaging-pom</artifactId>
-        <version>5.1.0-SNAPSHOT</version>
+        <version>6.0.0-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
 
@@ -34,17 +34,9 @@
 
         <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-auth</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-auth-common</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-admin-rest-client</artifactId>
+            <artifactId>security-client-starter</artifactId>
+            <version>${access.version}</version>
+            <type>pom</type>
         </dependency>
 
         <dependency>
@@ -56,11 +48,13 @@
         <dependency>
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-starter-actuator</artifactId>
+            <type>pom</type>
         </dependency>
 
         <dependency>
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-starter-web</artifactId>
+            <type>pom</type>
         </dependency>
 
         <dependency>
@@ -82,6 +76,7 @@
         <dependency>
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-starter-test</artifactId>
+            <type>pom</type>
             <scope>test</scope>
         </dependency>
 
@@ -104,6 +99,13 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <executable>true</executable>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
                 </configuration>
             </plugin>
         </plugins>
