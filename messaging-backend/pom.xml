@@ -7,7 +7,7 @@
     <parent>
         <groupId>ru.i-novus.messaging</groupId>
         <artifactId>messaging-pom</artifactId>
-        <version>5.1.0-SNAPSHOT</version>
+        <version>6.0.0-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
 
@@ -55,6 +55,7 @@
         <dependency>
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-starter-feign-client</artifactId>
+            <type>pom</type>
         </dependency>
 
         <dependency>
@@ -63,13 +64,20 @@
         </dependency>
 
         <dependency>
+            <groupId>net.n2oapp.framework.security</groupId>
+            <artifactId>security-auth-common</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-starter-jaxrs-server</artifactId>
+            <type>pom</type>
         </dependency>
 
         <dependency>
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-starter-ms</artifactId>
+            <type>pom</type>
         </dependency>
 
         <dependency>
@@ -93,6 +101,13 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
             </plugin>
         </plugins>
     </build>

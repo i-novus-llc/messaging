@@ -2,7 +2,7 @@ package ru.inovus.messaging.n2o;
 
 import net.n2oapp.criteria.dataset.DataSet;
 import net.n2oapp.framework.api.metadata.Compiled;
-import net.n2oapp.framework.api.metadata.ReduxModel;
+import net.n2oapp.framework.api.metadata.ReduxModelEnum;
 import net.n2oapp.framework.api.metadata.compile.BindProcessor;
 import net.n2oapp.framework.api.metadata.meta.ModelLink;
 import net.n2oapp.framework.api.metadata.meta.control.DefaultValues;
@@ -43,7 +43,7 @@ public class MessagingFeedPageBinder implements BaseMetadataBinder<Page> {
         df.setValues(data);
         ModelLink ml = new ModelLink(df);
 
-        page.getModels().put(String.format("%s['%s']", ReduxModel.filter.name().toLowerCase(),
+        page.getModels().put(String.format("%s['%s']", ReduxModelEnum.FILTER.name().toLowerCase(),
                 ((SimplePage) page).getWidget().getId()), ml);
         return page;
     }
