@@ -13,6 +13,7 @@
 - `novus.messaging.attachment.s3.secret-key` - секретный ключ к сервису хранения
 - `novus.messaging.attachment.s3.bucket-name` - имя корзины в сервисе хранения
 - `novus.messaging.notification.enabled` - включает отправку уведомлений в каналы отправки (по умолчанию `true`)
+- `novus.messaging.permit.all.matchers` - список эндпоинтов которые будут доступны без авторизации на бэкенде(настройка актуальна только для [messaging-backend](../messaging-backend))
 
 ## Настройки провайдеров
 
