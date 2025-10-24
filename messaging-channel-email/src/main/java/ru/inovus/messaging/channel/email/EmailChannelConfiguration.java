@@ -16,7 +16,7 @@ public class EmailChannelConfiguration {
 
     @Value("${novus.messaging.queue.status}")
     private String statusQueueName;
-    @Value("${spring.mail.username}")
+    @Value("${spring.mail.properties.mail.smtp.from:${spring.mail.username}}")
     private String senderUserName;
 
     @Bean
