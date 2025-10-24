@@ -27,7 +27,7 @@ public class EmailSender {
     @Autowired
     private MessageService messageService;
 
-    @Value("${spring.mail.username}")
+    @Value("${spring.mail.properties.mail.smtp.from:${spring.mail.username}}")
     private String sender;
     private static final Logger logger = LoggerFactory.getLogger(EmailSender.class);
 
