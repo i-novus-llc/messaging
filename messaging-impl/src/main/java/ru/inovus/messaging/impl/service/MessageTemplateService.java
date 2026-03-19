@@ -17,10 +17,7 @@ import ru.inovus.messaging.api.model.MessageTemplate;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageTemplateRecord;
 import ru.inovus.messaging.impl.util.MessageHelper;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
@@ -85,11 +82,14 @@ public class MessageTemplateService {
                 .ifPresent(code -> conditions.add(MESSAGE_TEMPLATE.CODE.contains(code)));
         Optional.ofNullable(criteria.getCodeAndName()).filter(StringUtils::isNotBlank)
                 .ifPresent(codeAndName -> conditions.add(DSL.concat(MESSAGE_TEMPLATE.CODE, MESSAGE_TEMPLATE.NAME).contains(codeAndName)));
+
+        Collection<SortField<?>> sortFieldList = getSortFields(criteria.getSort());
+        sortFieldList.add(MESSAGE_TEMPLATE.ID.asc());
         List<MessageTemplate> list = dsl
                 .select(MESSAGE_TEMPLATE.fields())
                 .from(MESSAGE_TEMPLATE)
                 .where(conditions)
-                .orderBy(getSortFields(criteria.getSort()))
+                .orderBy(sortFieldList)
                 .limit(criteria.getPageSize())
                 .offset((int) criteria.getOffset())
                 .fetch()
