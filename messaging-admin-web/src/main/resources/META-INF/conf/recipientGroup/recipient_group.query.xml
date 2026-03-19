@@ -17,7 +17,7 @@
         <eq field-id="name" filter-id="name">name={name}</eq>
         <eq field-id="code" filter-id="code">code={code}</eq>
         <eq field-id="recipientName" filter-id="recipientName*.id">recipientNames={recipientName*.id}</eq>
-        <eq field-id="templateCode" filter-id="templateCode*.id">templateCodes={templateCode*.id}</eq>
+        <eq field-id="templateCode" filter-id="templateCode*.code">templateCodes={templateCode*.code}</eq>
     </filters>
 
     <fields>
