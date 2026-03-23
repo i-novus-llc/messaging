@@ -16,10 +16,10 @@
         <column text-field-id="code" label="Код группы"/>
         <column text-field-id="description" label="Описание группы"/>
         <column text-field-id="recipientName" label="Участники">
-            <list style="display: block"/>
+            <list/>
         </column>
         <column text-field-id="templateCode" label="Коды шаблона уведомления">
-            <list style="display: block"/>
+            <list/>
         </column>
         <column label="Действие">
             <toolbar>
