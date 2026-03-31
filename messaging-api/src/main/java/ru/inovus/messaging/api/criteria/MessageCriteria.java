@@ -22,6 +22,7 @@ import ru.inovus.messaging.api.model.enums.Severity;
 
 import jakarta.ws.rs.QueryParam;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -42,4 +43,8 @@ public class MessageCriteria extends BaseMessagingCriteria {
     @QueryParam("infoType")
     @ApiParam("Канал отправки уведомления")
     private String channelCode;
+
+    @QueryParam("templateCodes")
+    @ApiParam("Коды шаблонов")
+    private List<String> templateCodes;
 }
