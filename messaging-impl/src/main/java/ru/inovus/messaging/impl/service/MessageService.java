@@ -2,6 +2,7 @@ package ru.inovus.messaging.impl.service;
 
 import org.jooq.Record;
 import org.jooq.*;
+import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -142,6 +143,10 @@ public class MessageService {
                 .ifPresent(start -> conditions.add(MESSAGE.SENT_AT.greaterOrEqual(start)));
         Optional.ofNullable(criteria.getSentAtEnd())
                 .ifPresent(end -> conditions.add(MESSAGE.SENT_AT.lessOrEqual(end)));
+
+        if (criteria.getTemplateCodes() != null && !criteria.getTemplateCodes().isEmpty()) {
+            conditions.add(MESSAGE.TEMPLATE_CODE.in(criteria.getTemplateCodes()));
+        }
 
         SelectConditionStep<Record> query = dsl
                 .select(MESSAGE.fields())
