@@ -344,3 +344,11 @@ databaseChangeLog:
             encoding: utf8
             path: sql/EGISZKD-6146.sql
             relativeToChangelogFile: true
+  - changeSet:
+      id: EGISZNRPLATFORM-2127
+      author: aarifullin
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/EGISZNRPLATFORM-2127.sql
+            relativeToChangelogFile: true

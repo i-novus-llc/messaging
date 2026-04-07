@@ -4,27 +4,26 @@
 package ru.inovus.messaging.impl.jooq.tables.records;
 
 
-import org.jooq.Field;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 import org.jooq.Record1;
-import org.jooq.Record13;
-import org.jooq.Row13;
 import org.jooq.impl.UpdatableRecordImpl;
+
 import ru.inovus.messaging.api.model.enums.AlertType;
+import ru.inovus.messaging.api.model.enums.MessageType;
 import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.model.enums.Severity;
 import ru.inovus.messaging.impl.jooq.tables.Message;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 
 /**
  * Уведомления
  */
-@SuppressWarnings({ "all", "unchecked", "rawtypes" })
-public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements Record13<UUID, String, String, Severity, AlertType, LocalDateTime, String, RecipientType, String, String, Integer, String, String> {
+@SuppressWarnings({ "all", "unchecked", "rawtypes", "this-escape" })
+public class MessageRecord extends UpdatableRecordImpl<MessageRecord> {
 
-    private static final long serialVersionUID = -491039795;
+    private static final long serialVersionUID = 1L;
 
     /**
      * Setter for <code>messaging.message.id</code>. Уникальный идентификатор
@@ -83,129 +82,161 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
     }
 
     /**
-     * Setter for <code>messaging.message.alert_type</code>. Способ отображения уведомления
+     * Setter for <code>messaging.message.alert_type</code>. Способ отображения
+     * уведомления
      */
     public void setAlertType(AlertType value) {
         set(4, value);
     }
 
     /**
-     * Getter for <code>messaging.message.alert_type</code>. Способ отображения уведомления
+     * Getter for <code>messaging.message.alert_type</code>. Способ отображения
+     * уведомления
      */
     public AlertType getAlertType() {
         return (AlertType) get(4);
     }
 
     /**
-     * Setter for <code>messaging.message.sent_at</code>. Дата и время отправки уведомления
+     * Setter for <code>messaging.message.sent_at</code>. Дата и время отправки
+     * уведомления
      */
     public void setSentAt(LocalDateTime value) {
         set(5, value);
     }
 
     /**
-     * Getter for <code>messaging.message.sent_at</code>. Дата и время отправки уведомления
+     * Getter for <code>messaging.message.sent_at</code>. Дата и время отправки
+     * уведомления
      */
     public LocalDateTime getSentAt() {
         return (LocalDateTime) get(5);
     }
 
     /**
-     * Setter for <code>messaging.message.tenant_code</code>. Тенант, к которому относится уведомление
+     * Setter for <code>messaging.message.tenant_code</code>. Тенант, к которому
+     * относится уведомление
      */
     public void setTenantCode(String value) {
         set(6, value);
     }
 
     /**
-     * Getter for <code>messaging.message.tenant_code</code>. Тенант, к которому относится уведомление
+     * Getter for <code>messaging.message.tenant_code</code>. Тенант, к которому
+     * относится уведомление
      */
     public String getTenantCode() {
         return (String) get(6);
     }
 
     /**
-     * Setter for <code>messaging.message.recipient_type</code>. Тип получателя уведомления
+     * Setter for <code>messaging.message.recipient_type</code>. Тип получателя
+     * уведомления
      */
     public void setRecipientType(RecipientType value) {
         set(7, value);
     }
 
     /**
-     * Getter for <code>messaging.message.recipient_type</code>. Тип получателя уведомления
+     * Getter for <code>messaging.message.recipient_type</code>. Тип получателя
+     * уведомления
      */
     public RecipientType getRecipientType() {
         return (RecipientType) get(7);
     }
 
     /**
-     * Setter for <code>messaging.message.template_code</code>. Код шаблона, который был использован для формирования уведомления
+     * Setter for <code>messaging.message.template_code</code>. Код шаблона,
+     * который был использован для формирования уведомления
      */
     public void setTemplateCode(String value) {
         set(8, value);
     }
 
     /**
-     * Getter for <code>messaging.message.template_code</code>. Код шаблона, который был использован для формирования уведомления
+     * Getter for <code>messaging.message.template_code</code>. Код шаблона,
+     * который был использован для формирования уведомления
      */
     public String getTemplateCode() {
         return (String) get(8);
     }
 
     /**
-     * Setter for <code>messaging.message.channel_code</code>. Код канала отправки уведомления
+     * Setter for <code>messaging.message.channel_code</code>. Код канала
+     * отправки уведомления
      */
     public void setChannelCode(String value) {
         set(9, value);
     }
 
     /**
-     * Getter for <code>messaging.message.channel_code</code>. Код канала отправки уведомления
+     * Getter for <code>messaging.message.channel_code</code>. Код канала
+     * отправки уведомления
      */
     public String getChannelCode() {
         return (String) get(9);
     }
 
     /**
-     * Setter for <code>messaging.message.organization</code>. Организации, сотрудникам которых отправлено уведомление
+     * Setter for <code>messaging.message.organization</code>. Организации,
+     * сотрудникам которых отправлено уведомление
      */
     public void setOrganization(Integer value) {
         set(10, value);
     }
 
     /**
-     * Getter for <code>messaging.message.organization</code>. Организации, сотрудникам которых отправлено уведомление
+     * Getter for <code>messaging.message.organization</code>. Организации,
+     * сотрудникам которых отправлено уведомление
      */
     public Integer getOrganization() {
         return (Integer) get(10);
     }
 
     /**
-     * Setter for <code>messaging.message.role</code>. Роли, которым отправлено уведомление
+     * Setter for <code>messaging.message.role</code>. Роли, которым отправлено
+     * уведомление
      */
     public void setRole(String value) {
         set(11, value);
     }
 
     /**
-     * Getter for <code>messaging.message.role</code>. Роли, которым отправлено уведомление
+     * Getter for <code>messaging.message.role</code>. Роли, которым отправлено
+     * уведомление
      */
     public String getRole() {
         return (String) get(11);
     }
 
     /**
-     * Setter for <code>messaging.message.region</code>. Регион, сотрудникам которого отправлено уведомление
+     * Setter for <code>messaging.message.region</code>. Регион, сотрудникам
+     * которого отправлено уведомление
      */
     public void setRegion(String value) {
         set(12, value);
     }
 
     /**
-     * Getter for <code>messaging.message.region</code>. Регион, сотрудникам которого отправлено уведомление
+     * Getter for <code>messaging.message.region</code>. Регион, сотрудникам
+     * которого отправлено уведомление
      */
     public String getRegion() {
         return (String) get(12);
+    }
+
+    /**
+     * Setter for <code>messaging.message.message_type</code>. Тип уведомления
+     */
+    public void setMessageType(MessageType value) {
+        set(13, value);
+    }
+
+    /**
+     * Getter for <code>messaging.message.message_type</code>. Тип уведомления
+     */
+    public MessageType getMessageType() {
+        return (MessageType) get(13);
     }
 
     // -------------------------------------------------------------------------
@@ -215,311 +246,6 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
     @Override
     public Record1<UUID> key() {
         return (Record1) super.key();
-    }
-
-    // -------------------------------------------------------------------------
-    // Record13 type implementation
-    // -------------------------------------------------------------------------
-
-    @Override
-    public Row13<UUID, String, String, Severity, AlertType, LocalDateTime, String, RecipientType, String, String, Integer, String, String> fieldsRow() {
-        return (Row13) super.fieldsRow();
-    }
-
-    @Override
-    public Row13<UUID, String, String, Severity, AlertType, LocalDateTime, String, RecipientType, String, String, Integer, String, String> valuesRow() {
-        return (Row13) super.valuesRow();
-    }
-
-    @Override
-    public Field<UUID> field1() {
-        return Message.MESSAGE.ID;
-    }
-
-    @Override
-    public Field<String> field2() {
-        return Message.MESSAGE.CAPTION;
-    }
-
-    @Override
-    public Field<String> field3() {
-        return Message.MESSAGE.TEXT;
-    }
-
-    @Override
-    public Field<Severity> field4() {
-        return Message.MESSAGE.SEVERITY;
-    }
-
-    @Override
-    public Field<AlertType> field5() {
-        return Message.MESSAGE.ALERT_TYPE;
-    }
-
-    @Override
-    public Field<LocalDateTime> field6() {
-        return Message.MESSAGE.SENT_AT;
-    }
-
-    @Override
-    public Field<String> field7() {
-        return Message.MESSAGE.TENANT_CODE;
-    }
-
-    @Override
-    public Field<RecipientType> field8() {
-        return Message.MESSAGE.RECIPIENT_TYPE;
-    }
-
-    @Override
-    public Field<String> field9() {
-        return Message.MESSAGE.TEMPLATE_CODE;
-    }
-
-    @Override
-    public Field<String> field10() {
-        return Message.MESSAGE.CHANNEL_CODE;
-    }
-
-    @Override
-    public Field<Integer> field11() {
-        return Message.MESSAGE.ORGANIZATION;
-    }
-
-    @Override
-    public Field<String> field12() {
-        return Message.MESSAGE.ROLE;
-    }
-
-    @Override
-    public Field<String> field13() {
-        return Message.MESSAGE.REGION;
-    }
-
-    @Override
-    public UUID component1() {
-        return getId();
-    }
-
-    @Override
-    public String component2() {
-        return getCaption();
-    }
-
-    @Override
-    public String component3() {
-        return getText();
-    }
-
-    @Override
-    public Severity component4() {
-        return getSeverity();
-    }
-
-    @Override
-    public AlertType component5() {
-        return getAlertType();
-    }
-
-    @Override
-    public LocalDateTime component6() {
-        return getSentAt();
-    }
-
-    @Override
-    public String component7() {
-        return getTenantCode();
-    }
-
-    @Override
-    public RecipientType component8() {
-        return getRecipientType();
-    }
-
-    @Override
-    public String component9() {
-        return getTemplateCode();
-    }
-
-    @Override
-    public String component10() {
-        return getChannelCode();
-    }
-
-    @Override
-    public Integer component11() {
-        return getOrganization();
-    }
-
-    @Override
-    public String component12() {
-        return getRole();
-    }
-
-    @Override
-    public String component13() {
-        return getRegion();
-    }
-
-    @Override
-    public UUID value1() {
-        return getId();
-    }
-
-    @Override
-    public String value2() {
-        return getCaption();
-    }
-
-    @Override
-    public String value3() {
-        return getText();
-    }
-
-    @Override
-    public Severity value4() {
-        return getSeverity();
-    }
-
-    @Override
-    public AlertType value5() {
-        return getAlertType();
-    }
-
-    @Override
-    public LocalDateTime value6() {
-        return getSentAt();
-    }
-
-    @Override
-    public String value7() {
-        return getTenantCode();
-    }
-
-    @Override
-    public RecipientType value8() {
-        return getRecipientType();
-    }
-
-    @Override
-    public String value9() {
-        return getTemplateCode();
-    }
-
-    @Override
-    public String value10() {
-        return getChannelCode();
-    }
-
-    @Override
-    public Integer value11() {
-        return getOrganization();
-    }
-
-    @Override
-    public String value12() {
-        return getRole();
-    }
-
-    @Override
-    public String value13() {
-        return getRegion();
-    }
-
-    @Override
-    public MessageRecord value1(UUID value) {
-        setId(value);
-        return this;
-    }
-
-    @Override
-    public MessageRecord value2(String value) {
-        setCaption(value);
-        return this;
-    }
-
-    @Override
-    public MessageRecord value3(String value) {
-        setText(value);
-        return this;
-    }
-
-    @Override
-    public MessageRecord value4(Severity value) {
-        setSeverity(value);
-        return this;
-    }
-
-    @Override
-    public MessageRecord value5(AlertType value) {
-        setAlertType(value);
-        return this;
-    }
-
-    @Override
-    public MessageRecord value6(LocalDateTime value) {
-        setSentAt(value);
-        return this;
-    }
-
-    @Override
-    public MessageRecord value7(String value) {
-        setTenantCode(value);
-        return this;
-    }
-
-    @Override
-    public MessageRecord value8(RecipientType value) {
-        setRecipientType(value);
-        return this;
-    }
-
-    @Override
-    public MessageRecord value9(String value) {
-        setTemplateCode(value);
-        return this;
-    }
-
-    @Override
-    public MessageRecord value10(String value) {
-        setChannelCode(value);
-        return this;
-    }
-
-    @Override
-    public MessageRecord value11(Integer value) {
-        setOrganization(value);
-        return this;
-    }
-
-    @Override
-    public MessageRecord value12(String value) {
-        setRole(value);
-        return this;
-    }
-
-    @Override
-    public MessageRecord value13(String value) {
-        setRegion(value);
-        return this;
-    }
-
-    @Override
-    public MessageRecord values(UUID value1, String value2, String value3, Severity value4, AlertType value5, LocalDateTime value6, String value7, RecipientType value8, String value9, String value10, Integer value11, String value12, String value13) {
-        value1(value1);
-        value2(value2);
-        value3(value3);
-        value4(value4);
-        value5(value5);
-        value6(value6);
-        value7(value7);
-        value8(value8);
-        value9(value9);
-        value10(value10);
-        value11(value11);
-        value12(value12);
-        value13(value13);
-        return this;
     }
 
     // -------------------------------------------------------------------------
@@ -536,21 +262,23 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> implements
     /**
      * Create a detached, initialised MessageRecord
      */
-    public MessageRecord(UUID id, String caption, String text, Severity severity, AlertType alertType, LocalDateTime sentAt, String tenantCode, RecipientType recipientType, String templateCode, String channelCode, Integer organization, String role, String region) {
+    public MessageRecord(UUID id, String caption, String text, Severity severity, AlertType alertType, LocalDateTime sentAt, String tenantCode, RecipientType recipientType, String templateCode, String channelCode, Integer organization, String role, String region, MessageType messageType) {
         super(Message.MESSAGE);
 
-        set(0, id);
-        set(1, caption);
-        set(2, text);
-        set(3, severity);
-        set(4, alertType);
-        set(5, sentAt);
-        set(6, tenantCode);
-        set(7, recipientType);
-        set(8, templateCode);
-        set(9, channelCode);
-        set(10, organization);
-        set(11, role);
-        set(12, region);
+        setId(id);
+        setCaption(caption);
+        setText(text);
+        setSeverity(severity);
+        setAlertType(alertType);
+        setSentAt(sentAt);
+        setTenantCode(tenantCode);
+        setRecipientType(recipientType);
+        setTemplateCode(templateCode);
+        setChannelCode(channelCode);
+        setOrganization(organization);
+        setRole(role);
+        setRegion(region);
+        setMessageType(messageType);
+        resetChangedOnNotNull();
     }
 }

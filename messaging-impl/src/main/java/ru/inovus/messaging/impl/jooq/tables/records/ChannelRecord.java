@@ -4,10 +4,7 @@
 package ru.inovus.messaging.impl.jooq.tables.records;
 
 
-import org.jooq.Field;
 import org.jooq.Record1;
-import org.jooq.Record4;
-import org.jooq.Row4;
 import org.jooq.impl.UpdatableRecordImpl;
 
 import ru.inovus.messaging.impl.jooq.tables.Channel;
@@ -16,10 +13,10 @@ import ru.inovus.messaging.impl.jooq.tables.Channel;
 /**
  * Каналы отправки уведомлений
  */
-@SuppressWarnings({ "all", "unchecked", "rawtypes" })
-public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements Record4<String, String, Boolean, String> {
+@SuppressWarnings({ "all", "unchecked", "rawtypes", "this-escape" })
+public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> {
 
-    private static final long serialVersionUID = 1095337288;
+    private static final long serialVersionUID = 1L;
 
     /**
      * Setter for <code>messaging.channel.name</code>. Наименование канала
@@ -36,28 +33,32 @@ public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements
     }
 
     /**
-     * Setter for <code>messaging.channel.queue_name</code>. Наименование очереди канала
+     * Setter for <code>messaging.channel.queue_name</code>. Наименование
+     * очереди канала
      */
     public void setQueueName(String value) {
         set(1, value);
     }
 
     /**
-     * Getter for <code>messaging.channel.queue_name</code>. Наименование очереди канала
+     * Getter for <code>messaging.channel.queue_name</code>. Наименование
+     * очереди канала
      */
     public String getQueueName() {
         return (String) get(1);
     }
 
     /**
-     * Setter for <code>messaging.channel.is_internal</code>. Признак внутрисистемного канала отправки
+     * Setter for <code>messaging.channel.is_internal</code>. Признак
+     * внутрисистемного канала отправки
      */
     public void setIsInternal(Boolean value) {
         set(2, value);
     }
 
     /**
-     * Getter for <code>messaging.channel.is_internal</code>. Признак внутрисистемного канала отправки
+     * Getter for <code>messaging.channel.is_internal</code>. Признак
+     * внутрисистемного канала отправки
      */
     public Boolean getIsInternal() {
         return (Boolean) get(2);
@@ -87,113 +88,6 @@ public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements
     }
 
     // -------------------------------------------------------------------------
-    // Record4 type implementation
-    // -------------------------------------------------------------------------
-
-    @Override
-    public Row4<String, String, Boolean, String> fieldsRow() {
-        return (Row4) super.fieldsRow();
-    }
-
-    @Override
-    public Row4<String, String, Boolean, String> valuesRow() {
-        return (Row4) super.valuesRow();
-    }
-
-    @Override
-    public Field<String> field1() {
-        return Channel.CHANNEL.NAME;
-    }
-
-    @Override
-    public Field<String> field2() {
-        return Channel.CHANNEL.QUEUE_NAME;
-    }
-
-    @Override
-    public Field<Boolean> field3() {
-        return Channel.CHANNEL.IS_INTERNAL;
-    }
-
-    @Override
-    public Field<String> field4() {
-        return Channel.CHANNEL.CODE;
-    }
-
-    @Override
-    public String component1() {
-        return getName();
-    }
-
-    @Override
-    public String component2() {
-        return getQueueName();
-    }
-
-    @Override
-    public Boolean component3() {
-        return getIsInternal();
-    }
-
-    @Override
-    public String component4() {
-        return getCode();
-    }
-
-    @Override
-    public String value1() {
-        return getName();
-    }
-
-    @Override
-    public String value2() {
-        return getQueueName();
-    }
-
-    @Override
-    public Boolean value3() {
-        return getIsInternal();
-    }
-
-    @Override
-    public String value4() {
-        return getCode();
-    }
-
-    @Override
-    public ChannelRecord value1(String value) {
-        setName(value);
-        return this;
-    }
-
-    @Override
-    public ChannelRecord value2(String value) {
-        setQueueName(value);
-        return this;
-    }
-
-    @Override
-    public ChannelRecord value3(Boolean value) {
-        setIsInternal(value);
-        return this;
-    }
-
-    @Override
-    public ChannelRecord value4(String value) {
-        setCode(value);
-        return this;
-    }
-
-    @Override
-    public ChannelRecord values(String value1, String value2, Boolean value3, String value4) {
-        value1(value1);
-        value2(value2);
-        value3(value3);
-        value4(value4);
-        return this;
-    }
-
-    // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
 
@@ -210,9 +104,10 @@ public class ChannelRecord extends UpdatableRecordImpl<ChannelRecord> implements
     public ChannelRecord(String name, String queueName, Boolean isInternal, String code) {
         super(Channel.CHANNEL);
 
-        set(0, name);
-        set(1, queueName);
-        set(2, isInternal);
-        set(3, code);
+        setName(name);
+        setQueueName(queueName);
+        setIsInternal(isInternal);
+        setCode(code);
+        resetChangedOnNotNull();
     }
 }
