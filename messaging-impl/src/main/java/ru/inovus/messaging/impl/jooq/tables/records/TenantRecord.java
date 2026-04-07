@@ -4,10 +4,7 @@
 package ru.inovus.messaging.impl.jooq.tables.records;
 
 
-import org.jooq.Field;
 import org.jooq.Record1;
-import org.jooq.Record2;
-import org.jooq.Row2;
 import org.jooq.impl.UpdatableRecordImpl;
 
 import ru.inovus.messaging.impl.jooq.tables.Tenant;
@@ -16,10 +13,10 @@ import ru.inovus.messaging.impl.jooq.tables.Tenant;
 /**
  * Тенанты
  */
-@SuppressWarnings({ "all", "unchecked", "rawtypes" })
-public class TenantRecord extends UpdatableRecordImpl<TenantRecord> implements Record2<String, String> {
+@SuppressWarnings({ "all", "unchecked", "rawtypes", "this-escape" })
+public class TenantRecord extends UpdatableRecordImpl<TenantRecord> {
 
-    private static final long serialVersionUID = 1778893056;
+    private static final long serialVersionUID = 1L;
 
     /**
      * Setter for <code>messaging.tenant.code</code>. Уникальный код тенанта
@@ -59,69 +56,6 @@ public class TenantRecord extends UpdatableRecordImpl<TenantRecord> implements R
     }
 
     // -------------------------------------------------------------------------
-    // Record2 type implementation
-    // -------------------------------------------------------------------------
-
-    @Override
-    public Row2<String, String> fieldsRow() {
-        return (Row2) super.fieldsRow();
-    }
-
-    @Override
-    public Row2<String, String> valuesRow() {
-        return (Row2) super.valuesRow();
-    }
-
-    @Override
-    public Field<String> field1() {
-        return Tenant.TENANT.CODE;
-    }
-
-    @Override
-    public Field<String> field2() {
-        return Tenant.TENANT.NAME;
-    }
-
-    @Override
-    public String component1() {
-        return getCode();
-    }
-
-    @Override
-    public String component2() {
-        return getName();
-    }
-
-    @Override
-    public String value1() {
-        return getCode();
-    }
-
-    @Override
-    public String value2() {
-        return getName();
-    }
-
-    @Override
-    public TenantRecord value1(String value) {
-        setCode(value);
-        return this;
-    }
-
-    @Override
-    public TenantRecord value2(String value) {
-        setName(value);
-        return this;
-    }
-
-    @Override
-    public TenantRecord values(String value1, String value2) {
-        value1(value1);
-        value2(value2);
-        return this;
-    }
-
-    // -------------------------------------------------------------------------
     // Constructors
     // -------------------------------------------------------------------------
 
@@ -138,7 +72,8 @@ public class TenantRecord extends UpdatableRecordImpl<TenantRecord> implements R
     public TenantRecord(String code, String name) {
         super(Tenant.TENANT);
 
-        set(0, code);
-        set(1, name);
+        setCode(code);
+        setName(name);
+        resetChangedOnNotNull();
     }
 }

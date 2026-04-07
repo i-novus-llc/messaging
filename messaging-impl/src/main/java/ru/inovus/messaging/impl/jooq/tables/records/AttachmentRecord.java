@@ -4,48 +4,50 @@
 package ru.inovus.messaging.impl.jooq.tables.records;
 
 
-import org.jooq.Field;
-import org.jooq.Record1;
-import org.jooq.Record4;
-import org.jooq.Row4;
-import org.jooq.impl.UpdatableRecordImpl;
-import ru.inovus.messaging.impl.jooq.tables.Attachment;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
+
+import org.jooq.Record1;
+import org.jooq.impl.UpdatableRecordImpl;
+
+import ru.inovus.messaging.impl.jooq.tables.Attachment;
 
 
 /**
  * Вложения
  */
-@SuppressWarnings({ "all", "unchecked", "rawtypes" })
-public class AttachmentRecord extends UpdatableRecordImpl<AttachmentRecord> implements Record4<UUID, UUID, String, LocalDateTime> {
+@SuppressWarnings({ "all", "unchecked", "rawtypes", "this-escape" })
+public class AttachmentRecord extends UpdatableRecordImpl<AttachmentRecord> {
 
-    private static final long serialVersionUID = 1971702978;
+    private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>messaging.attachment.id</code>. Уникальный идентификатор записи
+     * Setter for <code>messaging.attachment.id</code>. Уникальный идентификатор
+     * записи
      */
     public void setId(UUID value) {
         set(0, value);
     }
 
     /**
-     * Getter for <code>messaging.attachment.id</code>. Уникальный идентификатор записи
+     * Getter for <code>messaging.attachment.id</code>. Уникальный идентификатор
+     * записи
      */
     public UUID getId() {
         return (UUID) get(0);
     }
 
     /**
-     * Setter for <code>messaging.attachment.message_id</code>. Уникальный идентификатор уведомления
+     * Setter for <code>messaging.attachment.message_id</code>. Уникальный
+     * идентификатор уведомления
      */
     public void setMessageId(UUID value) {
         set(1, value);
     }
 
     /**
-     * Getter for <code>messaging.attachment.message_id</code>. Уникальный идентификатор уведомления
+     * Getter for <code>messaging.attachment.message_id</code>. Уникальный
+     * идентификатор уведомления
      */
     public UUID getMessageId() {
         return (UUID) get(1);
@@ -66,14 +68,16 @@ public class AttachmentRecord extends UpdatableRecordImpl<AttachmentRecord> impl
     }
 
     /**
-     * Setter for <code>messaging.attachment.created_at</code>. Время создания файла
+     * Setter for <code>messaging.attachment.created_at</code>. Время создания
+     * файла
      */
     public void setCreatedAt(LocalDateTime value) {
         set(3, value);
     }
 
     /**
-     * Getter for <code>messaging.attachment.created_at</code>. Время создания файла
+     * Getter for <code>messaging.attachment.created_at</code>. Время создания
+     * файла
      */
     public LocalDateTime getCreatedAt() {
         return (LocalDateTime) get(3);
@@ -86,113 +90,6 @@ public class AttachmentRecord extends UpdatableRecordImpl<AttachmentRecord> impl
     @Override
     public Record1<UUID> key() {
         return (Record1) super.key();
-    }
-
-    // -------------------------------------------------------------------------
-    // Record4 type implementation
-    // -------------------------------------------------------------------------
-
-    @Override
-    public Row4<UUID, UUID, String, LocalDateTime> fieldsRow() {
-        return (Row4) super.fieldsRow();
-    }
-
-    @Override
-    public Row4<UUID, UUID, String, LocalDateTime> valuesRow() {
-        return (Row4) super.valuesRow();
-    }
-
-    @Override
-    public Field<UUID> field1() {
-        return Attachment.ATTACHMENT.ID;
-    }
-
-    @Override
-    public Field<UUID> field2() {
-        return Attachment.ATTACHMENT.MESSAGE_ID;
-    }
-
-    @Override
-    public Field<String> field3() {
-        return Attachment.ATTACHMENT.FILE;
-    }
-
-    @Override
-    public Field<LocalDateTime> field4() {
-        return Attachment.ATTACHMENT.CREATED_AT;
-    }
-
-    @Override
-    public UUID component1() {
-        return getId();
-    }
-
-    @Override
-    public UUID component2() {
-        return getMessageId();
-    }
-
-    @Override
-    public String component3() {
-        return getFile();
-    }
-
-    @Override
-    public LocalDateTime component4() {
-        return getCreatedAt();
-    }
-
-    @Override
-    public UUID value1() {
-        return getId();
-    }
-
-    @Override
-    public UUID value2() {
-        return getMessageId();
-    }
-
-    @Override
-    public String value3() {
-        return getFile();
-    }
-
-    @Override
-    public LocalDateTime value4() {
-        return getCreatedAt();
-    }
-
-    @Override
-    public AttachmentRecord value1(UUID value) {
-        setId(value);
-        return this;
-    }
-
-    @Override
-    public AttachmentRecord value2(UUID value) {
-        setMessageId(value);
-        return this;
-    }
-
-    @Override
-    public AttachmentRecord value3(String value) {
-        setFile(value);
-        return this;
-    }
-
-    @Override
-    public AttachmentRecord value4(LocalDateTime value) {
-        setCreatedAt(value);
-        return this;
-    }
-
-    @Override
-    public AttachmentRecord values(UUID value1, UUID value2, String value3, LocalDateTime value4) {
-        value1(value1);
-        value2(value2);
-        value3(value3);
-        value4(value4);
-        return this;
     }
 
     // -------------------------------------------------------------------------
@@ -212,9 +109,10 @@ public class AttachmentRecord extends UpdatableRecordImpl<AttachmentRecord> impl
     public AttachmentRecord(UUID id, UUID messageId, String file, LocalDateTime createdAt) {
         super(Attachment.ATTACHMENT);
 
-        set(0, id);
-        set(1, messageId);
-        set(2, file);
-        set(3, createdAt);
+        setId(id);
+        setMessageId(messageId);
+        setFile(file);
+        setCreatedAt(createdAt);
+        resetChangedOnNotNull();
     }
 }

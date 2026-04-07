@@ -18,6 +18,8 @@ package ru.inovus.messaging.api.criteria;
 import io.swagger.annotations.ApiParam;
 import lombok.Getter;
 import lombok.Setter;
+import ru.inovus.messaging.api.model.enums.MessageType;
+import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.model.enums.Severity;
 
 import jakarta.ws.rs.QueryParam;
@@ -42,4 +44,12 @@ public class FeedCriteria extends BaseMessagingCriteria {
     @QueryParam("isRead")
     @ApiParam("Признак того, что сообщение прочитано")
     private Boolean isRead;
+
+    @QueryParam("messageType")
+    @ApiParam("Тип уведомления")
+    private MessageType messageType;
+
+    @QueryParam("recipientType")
+    @ApiParam("Тип получателя уведомления")
+    private RecipientType recipientType;
 }
