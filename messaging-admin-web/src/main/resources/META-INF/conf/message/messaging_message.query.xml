@@ -21,6 +21,7 @@
         <more field-id="sentAt" filter-id="sentAt.begin" domain="localdatetime">sentAtBegin={sentAt.begin}</more>
         <less field-id="sentAt" filter-id="sentAt.end" normalize="#this.plusDays(1).minusNanos(1)"
               domain="localdatetime">sentAtEnd={sentAt.end}</less>
+        <eq field-id="templateCodes" filter-id="templateCodes*.code">templateCodes={templateCodes*.code}</eq>
     </filters>
     
     <fields>
@@ -43,5 +44,6 @@
         <field id="organization"/>
         <field id="attachments"/>
         <field id="templateCode"/>
+        <field id="templateCodes" domain="string[]" name="Коды шаблона уведомления"/>
     </fields>
 </query>
