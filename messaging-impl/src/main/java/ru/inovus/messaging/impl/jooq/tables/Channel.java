@@ -4,25 +4,43 @@
 package ru.inovus.messaging.impl.jooq.tables;
 
 
+import java.util.Collection;
+
+import org.jooq.Condition;
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.InverseForeignKey;
+import org.jooq.Name;
+import org.jooq.Path;
+import org.jooq.PlainSQL;
+import org.jooq.QueryPart;
 import org.jooq.Record;
-import org.jooq.*;
+import org.jooq.SQL;
+import org.jooq.Schema;
+import org.jooq.Select;
+import org.jooq.Stringly;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
 import ru.inovus.messaging.impl.jooq.Keys;
 import ru.inovus.messaging.impl.jooq.Messaging;
+import ru.inovus.messaging.impl.jooq.tables.Message.MessagePath;
+import ru.inovus.messaging.impl.jooq.tables.MessageTemplate.MessageTemplatePath;
 import ru.inovus.messaging.impl.jooq.tables.records.ChannelRecord;
-
-import java.util.Arrays;
-import java.util.List;
 
 
 /**
  * Каналы отправки уведомлений
  */
-@SuppressWarnings({ "all", "unchecked", "rawtypes" })
+@SuppressWarnings({ "all", "unchecked", "rawtypes", "this-escape" })
 public class Channel extends TableImpl<ChannelRecord> {
 
-    private static final long serialVersionUID = -144895748;
+    private static final long serialVersionUID = 1L;
 
     /**
      * The reference instance of <code>messaging.channel</code>
@@ -40,28 +58,31 @@ public class Channel extends TableImpl<ChannelRecord> {
     /**
      * The column <code>messaging.channel.name</code>. Наименование канала
      */
-    public final TableField<ChannelRecord, String> NAME = createField(DSL.name("name"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Наименование канала");
+    public final TableField<ChannelRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR.nullable(false), this, "Наименование канала");
 
     /**
-     * The column <code>messaging.channel.queue_name</code>. Наименование очереди канала
+     * The column <code>messaging.channel.queue_name</code>. Наименование
+     * очереди канала
      */
-    public final TableField<ChannelRecord, String> QUEUE_NAME = createField(DSL.name("queue_name"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Наименование очереди канала");
+    public final TableField<ChannelRecord, String> QUEUE_NAME = createField(DSL.name("queue_name"), SQLDataType.VARCHAR.nullable(false), this, "Наименование очереди канала");
 
     /**
-     * The column <code>messaging.channel.is_internal</code>. Признак внутрисистемного канала отправки
+     * The column <code>messaging.channel.is_internal</code>. Признак
+     * внутрисистемного канала отправки
      */
-    public final TableField<ChannelRecord, Boolean> IS_INTERNAL = createField(DSL.name("is_internal"), org.jooq.impl.SQLDataType.BOOLEAN, this, "Признак внутрисистемного канала отправки");
+    public final TableField<ChannelRecord, Boolean> IS_INTERNAL = createField(DSL.name("is_internal"), SQLDataType.BOOLEAN, this, "Признак внутрисистемного канала отправки");
 
     /**
      * The column <code>messaging.channel.code</code>. Код канала
      */
-    public final TableField<ChannelRecord, String> CODE = createField(DSL.name("code"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Код канала");
+    public final TableField<ChannelRecord, String> CODE = createField(DSL.name("code"), SQLDataType.VARCHAR.nullable(false), this, "Код канала");
 
-    /**
-     * Create a <code>messaging.channel</code> table reference
-     */
-    public Channel() {
-        this(DSL.name("channel"), null);
+    private Channel(Name alias, Table<ChannelRecord> aliased) {
+        this(alias, aliased, (Field<?>[]) null, null);
+    }
+
+    private Channel(Name alias, Table<ChannelRecord> aliased, Field<?>[] parameters, Condition where) {
+        super(alias, null, aliased, parameters, DSL.comment("Каналы отправки уведомлений"), TableOptions.table(), where);
     }
 
     /**
@@ -78,21 +99,49 @@ public class Channel extends TableImpl<ChannelRecord> {
         this(alias, CHANNEL);
     }
 
-    private Channel(Name alias, Table<ChannelRecord> aliased) {
-        this(alias, aliased, null);
+    /**
+     * Create a <code>messaging.channel</code> table reference
+     */
+    public Channel() {
+        this(DSL.name("channel"), null);
     }
 
-    private Channel(Name alias, Table<ChannelRecord> aliased, Field<?>[] parameters) {
-        super(alias, null, aliased, parameters, DSL.comment("Каналы отправки уведомлений"), TableOptions.table());
+    public <O extends Record> Channel(Table<O> path, ForeignKey<O, ChannelRecord> childPath, InverseForeignKey<O, ChannelRecord> parentPath) {
+        super(path, childPath, parentPath, CHANNEL);
     }
 
-    public <O extends Record> Channel(Table<O> child, ForeignKey<O, ChannelRecord> key) {
-        super(child, key, CHANNEL);
+    /**
+     * A subtype implementing {@link Path} for simplified path-based joins.
+     */
+    public static class ChannelPath extends Channel implements Path<ChannelRecord> {
+
+        private static final long serialVersionUID = 1L;
+        public <O extends Record> ChannelPath(Table<O> path, ForeignKey<O, ChannelRecord> childPath, InverseForeignKey<O, ChannelRecord> parentPath) {
+            super(path, childPath, parentPath);
+        }
+        private ChannelPath(Name alias, Table<ChannelRecord> aliased) {
+            super(alias, aliased);
+        }
+
+        @Override
+        public ChannelPath as(String alias) {
+            return new ChannelPath(DSL.name(alias), this);
+        }
+
+        @Override
+        public ChannelPath as(Name alias) {
+            return new ChannelPath(alias, this);
+        }
+
+        @Override
+        public ChannelPath as(Table<?> alias) {
+            return new ChannelPath(alias.getQualifiedName(), this);
+        }
     }
 
     @Override
     public Schema getSchema() {
-        return Messaging.MESSAGING;
+        return aliased() ? null : Messaging.MESSAGING;
     }
 
     @Override
@@ -100,9 +149,30 @@ public class Channel extends TableImpl<ChannelRecord> {
         return Keys.CHANNEL_PKEY;
     }
 
-    @Override
-    public List<UniqueKey<ChannelRecord>> getKeys() {
-        return Arrays.<UniqueKey<ChannelRecord>>asList(Keys.CHANNEL_PKEY);
+    private transient MessagePath _message;
+
+    /**
+     * Get the implicit to-many join path to the <code>messaging.message</code>
+     * table
+     */
+    public MessagePath message() {
+        if (_message == null)
+            _message = new MessagePath(this, null, Keys.MESSAGE__MESSAGE_CHANNEL_CODE_CHANNEL_CODE_FK.getInverseKey());
+
+        return _message;
+    }
+
+    private transient MessageTemplatePath _messageTemplate;
+
+    /**
+     * Get the implicit to-many join path to the
+     * <code>messaging.message_template</code> table
+     */
+    public MessageTemplatePath messageTemplate() {
+        if (_messageTemplate == null)
+            _messageTemplate = new MessageTemplatePath(this, null, Keys.MESSAGE_TEMPLATE__MESSAGE_TEMPLATE_CHANNEL_CODE_CHANNEL_CODE_FK.getInverseKey());
+
+        return _messageTemplate;
     }
 
     @Override
@@ -113,6 +183,11 @@ public class Channel extends TableImpl<ChannelRecord> {
     @Override
     public Channel as(Name alias) {
         return new Channel(alias, this);
+    }
+
+    @Override
+    public Channel as(Table<?> alias) {
+        return new Channel(alias.getQualifiedName(), this);
     }
 
     /**
@@ -131,12 +206,95 @@ public class Channel extends TableImpl<ChannelRecord> {
         return new Channel(name, null);
     }
 
-    // -------------------------------------------------------------------------
-    // Row4 type methods
-    // -------------------------------------------------------------------------
-
+    /**
+     * Rename this table
+     */
     @Override
-    public Row4<String, String, Boolean, String> fieldsRow() {
-        return (Row4) super.fieldsRow();
+    public Channel rename(Table<?> name) {
+        return new Channel(name.getQualifiedName(), null);
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public Channel where(Condition condition) {
+        return new Channel(getQualifiedName(), aliased() ? this : null, null, condition);
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public Channel where(Collection<? extends Condition> conditions) {
+        return where(DSL.and(conditions));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public Channel where(Condition... conditions) {
+        return where(DSL.and(conditions));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public Channel where(Field<Boolean> condition) {
+        return where(DSL.condition(condition));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public Channel where(SQL condition) {
+        return where(DSL.condition(condition));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public Channel where(@Stringly.SQL String condition) {
+        return where(DSL.condition(condition));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public Channel where(@Stringly.SQL String condition, Object... binds) {
+        return where(DSL.condition(condition, binds));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public Channel where(@Stringly.SQL String condition, QueryPart... parts) {
+        return where(DSL.condition(condition, parts));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public Channel whereExists(Select<?> select) {
+        return where(DSL.exists(select));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public Channel whereNotExists(Select<?> select) {
+        return where(DSL.notExists(select));
     }
 }

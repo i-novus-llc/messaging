@@ -67,6 +67,10 @@ public class FeedService {
                 .ifPresent(start -> conditions.add(MESSAGE.SENT_AT.greaterOrEqual(start)));
         Optional.ofNullable(criteria.getSentAtEnd())
                 .ifPresent(end -> conditions.add(MESSAGE.SENT_AT.lessOrEqual(end)));
+        Optional.ofNullable(criteria.getMessageType())
+                .ifPresent(messageType -> conditions.add(MESSAGE.MESSAGE_TYPE.eq(messageType)));
+        Optional.ofNullable(criteria.getRecipientType())
+                .ifPresent(recipientType -> conditions.add(MESSAGE.RECIPIENT_TYPE.eq(recipientType)));
 
         if (Boolean.TRUE.equals(criteria.getIsRead())) {
             conditions.add(MESSAGE_RECIPIENT.STATUS.eq(MessageStatusType.READ));
@@ -128,18 +132,25 @@ public class FeedService {
      *
      * @param tenantCode Код тенанта
      * @param username   Имя пользователя
+     * @param criteria   Критерии фильтрации уведомлений
      */
     @Transactional
-    public void markReadAll(String tenantCode, String username) {
+    public void markReadAll(String tenantCode, String username, FeedCriteria criteria) {
+        List<Condition> messageConditions = new ArrayList<>();
+        messageConditions.add(MESSAGE.ID.eq(MESSAGE_RECIPIENT.MESSAGE_ID));
+        messageConditions.add(MESSAGE.TENANT_CODE.eq(tenantCode));
+        Optional.ofNullable(criteria.getMessageType())
+                .ifPresent(messageType -> messageConditions.add(MESSAGE.MESSAGE_TYPE.eq(messageType)));
+        Optional.ofNullable(criteria.getRecipientType())
+                .ifPresent(recipientType -> messageConditions.add(MESSAGE.RECIPIENT_TYPE.eq(recipientType)));
+
         LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
         dsl
                 .update(MESSAGE_RECIPIENT)
                 .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
                 .set(MESSAGE_RECIPIENT.STATUS, MessageStatusType.READ)
                 .where(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username),
-                        exists(dsl.selectOne().from(MESSAGE)
-                                .where(MESSAGE.ID.eq(MESSAGE_RECIPIENT.MESSAGE_ID),
-                                        MESSAGE.TENANT_CODE.eq(tenantCode))))
+                        exists(dsl.selectOne().from(MESSAGE).where(messageConditions)))
                 .execute();
     }
 

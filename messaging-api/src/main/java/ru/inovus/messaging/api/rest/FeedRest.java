@@ -66,7 +66,8 @@ public interface FeedRest {
     @ApiOperation("Пометить все уведомления прочитанными")
     @ApiResponse(code = 200, message = "Все уведомления помечены прочитанными")
     void markReadAll(@PathParam("tenantCode") @ApiParam(value = "Код тенанта") String tenantCode,
-                     @PathParam("username") @ApiParam(value = "Имя пользователя") String username);
+                     @PathParam("username") @ApiParam(value = "Имя пользователя") String username,
+                     @BeanParam @ApiParam(value = "Критерии фильтрации уведомлений") FeedCriteria criteria);
 
     @POST
     @Path("/{username}/message/{id}/read")

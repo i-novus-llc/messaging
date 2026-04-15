@@ -50,8 +50,8 @@ public class FeedRestImpl implements FeedRest {
     }
 
     @Override
-    public void markReadAll(String tenantCode, String username) {
-        feedService.markReadAll(tenantCode, username);
+    public void markReadAll(String tenantCode, String username, FeedCriteria criteria) {
+        feedService.markReadAll(tenantCode, username, criteria);
         mqProvider.publish(new FeedCount(tenantCode, username, 0), feedCountQueue);
     }
 

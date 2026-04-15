@@ -190,6 +190,12 @@
                                             <expression>.*\.message_recipient\.status</expression>
                                             <types>.*</types>
                                         </forcedType>
+                                        <forcedType>
+                                            <userType>ru.inovus.messaging.api.model.enums.MessageType</userType>
+                                            <converter>ru.inovus.messaging.impl.util.MessageTypeConverter</converter>
+                                            <expression>.*\.message_type</expression>
+                                            <types>.*</types>
+                                        </forcedType>
                                     </forcedTypes>
                                 </database>
                                 <target>

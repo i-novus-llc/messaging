@@ -4,29 +4,48 @@
 package ru.inovus.messaging.impl.jooq.tables;
 
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
+
+import org.jooq.Condition;
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.InverseForeignKey;
+import org.jooq.Name;
+import org.jooq.Path;
+import org.jooq.PlainSQL;
+import org.jooq.QueryPart;
 import org.jooq.Record;
-import org.jooq.*;
+import org.jooq.SQL;
+import org.jooq.Schema;
+import org.jooq.Select;
+import org.jooq.Stringly;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
 import ru.inovus.messaging.impl.jooq.Keys;
 import ru.inovus.messaging.impl.jooq.Messaging;
+import ru.inovus.messaging.impl.jooq.tables.Message.MessagePath;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecipientRecord;
 import ru.inovus.messaging.impl.util.MessageStatusTypeConverter;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
 
 
 /**
  * Получатель уведомления
  */
-@SuppressWarnings({ "all", "unchecked", "rawtypes" })
+@SuppressWarnings({ "all", "unchecked", "rawtypes", "this-escape" })
 public class MessageRecipient extends TableImpl<MessageRecipientRecord> {
 
-    private static final long serialVersionUID = 410240673;
+    private static final long serialVersionUID = 1L;
 
     /**
      * The reference instance of <code>messaging.message_recipient</code>
@@ -42,44 +61,76 @@ public class MessageRecipient extends TableImpl<MessageRecipientRecord> {
     }
 
     /**
-     * The column <code>messaging.message_recipient.id</code>. Уникальный идентификатор
+     * The column <code>messaging.message_recipient.id</code>. Уникальный
+     * идентификатор
      */
-    public final TableField<MessageRecipientRecord, Long> ID = createField(DSL.name("id"), org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "Уникальный идентификатор");
+    public final TableField<MessageRecipientRecord, Long> ID = createField(DSL.name("id"), SQLDataType.BIGINT.nullable(false), this, "Уникальный идентификатор");
 
     /**
-     * The column <code>messaging.message_recipient.message_id</code>. Идентификатор уведомления
+     * The column <code>messaging.message_recipient.message_id</code>.
+     * Идентификатор уведомления
      */
-    public final TableField<MessageRecipientRecord, UUID> MESSAGE_ID = createField(DSL.name("message_id"), org.jooq.impl.SQLDataType.UUID, this, "Идентификатор уведомления");
+    public final TableField<MessageRecipientRecord, UUID> MESSAGE_ID = createField(DSL.name("message_id"), SQLDataType.UUID, this, "Идентификатор уведомления");
 
     /**
-     * The column <code>messaging.message_recipient.status_time</code>. Время установки статуса
+     * The column <code>messaging.message_recipient.status_time</code>. Время
+     * установки статуса
      */
-    public final TableField<MessageRecipientRecord, LocalDateTime> STATUS_TIME = createField(DSL.name("status_time"), org.jooq.impl.SQLDataType.LOCALDATETIME, this, "Время установки статуса");
+    public final TableField<MessageRecipientRecord, LocalDateTime> STATUS_TIME = createField(DSL.name("status_time"), SQLDataType.LOCALDATETIME(6), this, "Время установки статуса");
 
     /**
-     * The column <code>messaging.message_recipient.recipient_name</code>. Имя контакта получателя
+     * The column <code>messaging.message_recipient.recipient_name</code>. Имя
+     * контакта получателя
      */
-    public final TableField<MessageRecipientRecord, String> RECIPIENT_NAME = createField(DSL.name("recipient_name"), org.jooq.impl.SQLDataType.VARCHAR, this, "Имя контакта получателя");
+    public final TableField<MessageRecipientRecord, String> RECIPIENT_NAME = createField(DSL.name("recipient_name"), SQLDataType.VARCHAR, this, "Имя контакта получателя");
 
     /**
-     * The column <code>messaging.message_recipient.recipient_username</code>. Уникальное имя пользователя из провайдера
+     * The column <code>messaging.message_recipient.recipient_username</code>.
+     * Уникальное имя пользователя из провайдера
      */
-    public final TableField<MessageRecipientRecord, String> RECIPIENT_USERNAME = createField(DSL.name("recipient_username"), org.jooq.impl.SQLDataType.VARCHAR, this, "Уникальное имя пользователя из провайдера");
+    public final TableField<MessageRecipientRecord, String> RECIPIENT_USERNAME = createField(DSL.name("recipient_username"), SQLDataType.VARCHAR, this, "Уникальное имя пользователя из провайдера");
 
     /**
-     * The column <code>messaging.message_recipient.status</code>. Текущий статус отправки уведомления получателю
+     * The column <code>messaging.message_recipient.status</code>. Текущий
+     * статус отправки уведомления получателю
      */
-    public final TableField<MessageRecipientRecord, MessageStatusType> STATUS = createField(DSL.name("status"), org.jooq.impl.SQLDataType.VARCHAR, this, "Текущий статус отправки уведомления получателю", new MessageStatusTypeConverter());
+    public final TableField<MessageRecipientRecord, MessageStatusType> STATUS = createField(DSL.name("status"), SQLDataType.VARCHAR, this, "Текущий статус отправки уведомления получателю", new MessageStatusTypeConverter());
 
     /**
-     * The column <code>messaging.message_recipient.departured_at</code>. Дата и время фактической отправки уведомления
+     * The column <code>messaging.message_recipient.departured_at</code>. Дата и
+     * время фактической отправки уведомления
      */
-    public final TableField<MessageRecipientRecord, LocalDateTime> DEPARTURED_AT = createField(DSL.name("departured_at"), org.jooq.impl.SQLDataType.LOCALDATETIME, this, "Дата и время фактической отправки уведомления");
+    public final TableField<MessageRecipientRecord, LocalDateTime> DEPARTURED_AT = createField(DSL.name("departured_at"), SQLDataType.LOCALDATETIME(6), this, "Дата и время фактической отправки уведомления");
 
     /**
-     * The column <code>messaging.message_recipient.send_message_error</code>. Сообщение ошибки отправки уведомления
+     * The column <code>messaging.message_recipient.send_message_error</code>.
+     * Сообщение ошибки отправки уведомления
      */
-    public final TableField<MessageRecipientRecord, String> SEND_MESSAGE_ERROR = createField(DSL.name("send_message_error"), org.jooq.impl.SQLDataType.VARCHAR, this, "Сообщение ошибки отправки уведомления");
+    public final TableField<MessageRecipientRecord, String> SEND_MESSAGE_ERROR = createField(DSL.name("send_message_error"), SQLDataType.VARCHAR, this, "Сообщение ошибки отправки уведомления");
+
+    private MessageRecipient(Name alias, Table<MessageRecipientRecord> aliased) {
+        this(alias, aliased, (Field<?>[]) null, null);
+    }
+
+    private MessageRecipient(Name alias, Table<MessageRecipientRecord> aliased, Field<?>[] parameters, Condition where) {
+        super(alias, null, aliased, parameters, DSL.comment("Получатель уведомления"), TableOptions.table(), where);
+    }
+
+    /**
+     * Create an aliased <code>messaging.message_recipient</code> table
+     * reference
+     */
+    public MessageRecipient(String alias) {
+        this(DSL.name(alias), MESSAGE_RECIPIENT);
+    }
+
+    /**
+     * Create an aliased <code>messaging.message_recipient</code> table
+     * reference
+     */
+    public MessageRecipient(Name alias) {
+        this(alias, MESSAGE_RECIPIENT);
+    }
 
     /**
      * Create a <code>messaging.message_recipient</code> table reference
@@ -88,35 +139,42 @@ public class MessageRecipient extends TableImpl<MessageRecipientRecord> {
         this(DSL.name("message_recipient"), null);
     }
 
-    /**
-     * Create an aliased <code>messaging.message_recipient</code> table reference
-     */
-    public MessageRecipient(String alias) {
-        this(DSL.name(alias), MESSAGE_RECIPIENT);
+    public <O extends Record> MessageRecipient(Table<O> path, ForeignKey<O, MessageRecipientRecord> childPath, InverseForeignKey<O, MessageRecipientRecord> parentPath) {
+        super(path, childPath, parentPath, MESSAGE_RECIPIENT);
     }
 
     /**
-     * Create an aliased <code>messaging.message_recipient</code> table reference
+     * A subtype implementing {@link Path} for simplified path-based joins.
      */
-    public MessageRecipient(Name alias) {
-        this(alias, MESSAGE_RECIPIENT);
-    }
+    public static class MessageRecipientPath extends MessageRecipient implements Path<MessageRecipientRecord> {
 
-    private MessageRecipient(Name alias, Table<MessageRecipientRecord> aliased) {
-        this(alias, aliased, null);
-    }
+        private static final long serialVersionUID = 1L;
+        public <O extends Record> MessageRecipientPath(Table<O> path, ForeignKey<O, MessageRecipientRecord> childPath, InverseForeignKey<O, MessageRecipientRecord> parentPath) {
+            super(path, childPath, parentPath);
+        }
+        private MessageRecipientPath(Name alias, Table<MessageRecipientRecord> aliased) {
+            super(alias, aliased);
+        }
 
-    private MessageRecipient(Name alias, Table<MessageRecipientRecord> aliased, Field<?>[] parameters) {
-        super(alias, null, aliased, parameters, DSL.comment("Получатель уведомления"), TableOptions.table());
-    }
+        @Override
+        public MessageRecipientPath as(String alias) {
+            return new MessageRecipientPath(DSL.name(alias), this);
+        }
 
-    public <O extends Record> MessageRecipient(Table<O> child, ForeignKey<O, MessageRecipientRecord> key) {
-        super(child, key, MESSAGE_RECIPIENT);
+        @Override
+        public MessageRecipientPath as(Name alias) {
+            return new MessageRecipientPath(alias, this);
+        }
+
+        @Override
+        public MessageRecipientPath as(Table<?> alias) {
+            return new MessageRecipientPath(alias.getQualifiedName(), this);
+        }
     }
 
     @Override
     public Schema getSchema() {
-        return Messaging.MESSAGING;
+        return aliased() ? null : Messaging.MESSAGING;
     }
 
     @Override
@@ -125,17 +183,20 @@ public class MessageRecipient extends TableImpl<MessageRecipientRecord> {
     }
 
     @Override
-    public List<UniqueKey<MessageRecipientRecord>> getKeys() {
-        return Arrays.<UniqueKey<MessageRecipientRecord>>asList(Keys.MESSAGE_RECIPIENT_PKEY);
-    }
-
-    @Override
     public List<ForeignKey<MessageRecipientRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<MessageRecipientRecord, ?>>asList(Keys.MESSAGE_RECIPIENT__MESSAGE_RECIPIENT_MESSAGE_ID_FKEY);
+        return Arrays.asList(Keys.MESSAGE_RECIPIENT__MESSAGE_RECIPIENT_MESSAGE_ID_FKEY);
     }
 
-    public Message message() {
-        return new Message(this, Keys.MESSAGE_RECIPIENT__MESSAGE_RECIPIENT_MESSAGE_ID_FKEY);
+    private transient MessagePath _message;
+
+    /**
+     * Get the implicit join path to the <code>messaging.message</code> table.
+     */
+    public MessagePath message() {
+        if (_message == null)
+            _message = new MessagePath(this, Keys.MESSAGE_RECIPIENT__MESSAGE_RECIPIENT_MESSAGE_ID_FKEY, null);
+
+        return _message;
     }
 
     @Override
@@ -146,6 +207,11 @@ public class MessageRecipient extends TableImpl<MessageRecipientRecord> {
     @Override
     public MessageRecipient as(Name alias) {
         return new MessageRecipient(alias, this);
+    }
+
+    @Override
+    public MessageRecipient as(Table<?> alias) {
+        return new MessageRecipient(alias.getQualifiedName(), this);
     }
 
     /**
@@ -164,12 +230,95 @@ public class MessageRecipient extends TableImpl<MessageRecipientRecord> {
         return new MessageRecipient(name, null);
     }
 
-    // -------------------------------------------------------------------------
-    // Row8 type methods
-    // -------------------------------------------------------------------------
-
+    /**
+     * Rename this table
+     */
     @Override
-    public Row8<Long, UUID, LocalDateTime, String, String, MessageStatusType, LocalDateTime, String> fieldsRow() {
-        return (Row8) super.fieldsRow();
+    public MessageRecipient rename(Table<?> name) {
+        return new MessageRecipient(name.getQualifiedName(), null);
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public MessageRecipient where(Condition condition) {
+        return new MessageRecipient(getQualifiedName(), aliased() ? this : null, null, condition);
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public MessageRecipient where(Collection<? extends Condition> conditions) {
+        return where(DSL.and(conditions));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public MessageRecipient where(Condition... conditions) {
+        return where(DSL.and(conditions));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public MessageRecipient where(Field<Boolean> condition) {
+        return where(DSL.condition(condition));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public MessageRecipient where(SQL condition) {
+        return where(DSL.condition(condition));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public MessageRecipient where(@Stringly.SQL String condition) {
+        return where(DSL.condition(condition));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public MessageRecipient where(@Stringly.SQL String condition, Object... binds) {
+        return where(DSL.condition(condition, binds));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public MessageRecipient where(@Stringly.SQL String condition, QueryPart... parts) {
+        return where(DSL.condition(condition, parts));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public MessageRecipient whereExists(Select<?> select) {
+        return where(DSL.exists(select));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public MessageRecipient whereNotExists(Select<?> select) {
+        return where(DSL.notExists(select));
     }
 }

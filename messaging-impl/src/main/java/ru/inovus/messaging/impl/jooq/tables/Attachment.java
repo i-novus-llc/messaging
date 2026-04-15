@@ -4,27 +4,46 @@
 package ru.inovus.messaging.impl.jooq.tables;
 
 
-import org.jooq.Record;
-import org.jooq.*;
-import org.jooq.impl.DSL;
-import org.jooq.impl.TableImpl;
-import ru.inovus.messaging.impl.jooq.Keys;
-import ru.inovus.messaging.impl.jooq.Messaging;
-import ru.inovus.messaging.impl.jooq.tables.records.AttachmentRecord;
-
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+
+import org.jooq.Condition;
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.InverseForeignKey;
+import org.jooq.Name;
+import org.jooq.Path;
+import org.jooq.PlainSQL;
+import org.jooq.QueryPart;
+import org.jooq.Record;
+import org.jooq.SQL;
+import org.jooq.Schema;
+import org.jooq.Select;
+import org.jooq.Stringly;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
+
+import ru.inovus.messaging.impl.jooq.Keys;
+import ru.inovus.messaging.impl.jooq.Messaging;
+import ru.inovus.messaging.impl.jooq.tables.Message.MessagePath;
+import ru.inovus.messaging.impl.jooq.tables.records.AttachmentRecord;
 
 
 /**
  * Вложения
  */
-@SuppressWarnings({ "all", "unchecked", "rawtypes" })
+@SuppressWarnings({ "all", "unchecked", "rawtypes", "this-escape" })
 public class Attachment extends TableImpl<AttachmentRecord> {
 
-    private static final long serialVersionUID = -1690493298;
+    private static final long serialVersionUID = 1L;
 
     /**
      * The reference instance of <code>messaging.attachment</code>
@@ -40,30 +59,34 @@ public class Attachment extends TableImpl<AttachmentRecord> {
     }
 
     /**
-     * The column <code>messaging.attachment.id</code>. Уникальный идентификатор записи
+     * The column <code>messaging.attachment.id</code>. Уникальный идентификатор
+     * записи
      */
-    public final TableField<AttachmentRecord, UUID> ID = createField(DSL.name("id"), org.jooq.impl.SQLDataType.UUID.nullable(false), this, "Уникальный идентификатор записи");
+    public final TableField<AttachmentRecord, UUID> ID = createField(DSL.name("id"), SQLDataType.UUID.nullable(false), this, "Уникальный идентификатор записи");
 
     /**
-     * The column <code>messaging.attachment.message_id</code>. Уникальный идентификатор уведомления
+     * The column <code>messaging.attachment.message_id</code>. Уникальный
+     * идентификатор уведомления
      */
-    public final TableField<AttachmentRecord, UUID> MESSAGE_ID = createField(DSL.name("message_id"), org.jooq.impl.SQLDataType.UUID.nullable(false), this, "Уникальный идентификатор уведомления");
+    public final TableField<AttachmentRecord, UUID> MESSAGE_ID = createField(DSL.name("message_id"), SQLDataType.UUID.nullable(false), this, "Уникальный идентификатор уведомления");
 
     /**
      * The column <code>messaging.attachment.file</code>. Имя файла в хранилище
      */
-    public final TableField<AttachmentRecord, String> FILE = createField(DSL.name("file"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Имя файла в хранилище");
+    public final TableField<AttachmentRecord, String> FILE = createField(DSL.name("file"), SQLDataType.VARCHAR.nullable(false), this, "Имя файла в хранилище");
 
     /**
-     * The column <code>messaging.attachment.created_at</code>. Время создания файла
+     * The column <code>messaging.attachment.created_at</code>. Время создания
+     * файла
      */
-    public final TableField<AttachmentRecord, LocalDateTime> CREATED_AT = createField(DSL.name("created_at"), org.jooq.impl.SQLDataType.LOCALDATETIME, this, "Время создания файла");
+    public final TableField<AttachmentRecord, LocalDateTime> CREATED_AT = createField(DSL.name("created_at"), SQLDataType.LOCALDATETIME(6), this, "Время создания файла");
 
-    /**
-     * Create a <code>messaging.attachment</code> table reference
-     */
-    public Attachment() {
-        this(DSL.name("attachment"), null);
+    private Attachment(Name alias, Table<AttachmentRecord> aliased) {
+        this(alias, aliased, (Field<?>[]) null, null);
+    }
+
+    private Attachment(Name alias, Table<AttachmentRecord> aliased, Field<?>[] parameters, Condition where) {
+        super(alias, null, aliased, parameters, DSL.comment("Вложения"), TableOptions.table(), where);
     }
 
     /**
@@ -80,21 +103,49 @@ public class Attachment extends TableImpl<AttachmentRecord> {
         this(alias, ATTACHMENT);
     }
 
-    private Attachment(Name alias, Table<AttachmentRecord> aliased) {
-        this(alias, aliased, null);
+    /**
+     * Create a <code>messaging.attachment</code> table reference
+     */
+    public Attachment() {
+        this(DSL.name("attachment"), null);
     }
 
-    private Attachment(Name alias, Table<AttachmentRecord> aliased, Field<?>[] parameters) {
-        super(alias, null, aliased, parameters, DSL.comment("Вложения"), TableOptions.table());
+    public <O extends Record> Attachment(Table<O> path, ForeignKey<O, AttachmentRecord> childPath, InverseForeignKey<O, AttachmentRecord> parentPath) {
+        super(path, childPath, parentPath, ATTACHMENT);
     }
 
-    public <O extends Record> Attachment(Table<O> child, ForeignKey<O, AttachmentRecord> key) {
-        super(child, key, ATTACHMENT);
+    /**
+     * A subtype implementing {@link Path} for simplified path-based joins.
+     */
+    public static class AttachmentPath extends Attachment implements Path<AttachmentRecord> {
+
+        private static final long serialVersionUID = 1L;
+        public <O extends Record> AttachmentPath(Table<O> path, ForeignKey<O, AttachmentRecord> childPath, InverseForeignKey<O, AttachmentRecord> parentPath) {
+            super(path, childPath, parentPath);
+        }
+        private AttachmentPath(Name alias, Table<AttachmentRecord> aliased) {
+            super(alias, aliased);
+        }
+
+        @Override
+        public AttachmentPath as(String alias) {
+            return new AttachmentPath(DSL.name(alias), this);
+        }
+
+        @Override
+        public AttachmentPath as(Name alias) {
+            return new AttachmentPath(alias, this);
+        }
+
+        @Override
+        public AttachmentPath as(Table<?> alias) {
+            return new AttachmentPath(alias.getQualifiedName(), this);
+        }
     }
 
     @Override
     public Schema getSchema() {
-        return Messaging.MESSAGING;
+        return aliased() ? null : Messaging.MESSAGING;
     }
 
     @Override
@@ -103,17 +154,20 @@ public class Attachment extends TableImpl<AttachmentRecord> {
     }
 
     @Override
-    public List<UniqueKey<AttachmentRecord>> getKeys() {
-        return Arrays.<UniqueKey<AttachmentRecord>>asList(Keys.ATTACHMENT_PKEY);
-    }
-
-    @Override
     public List<ForeignKey<AttachmentRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<AttachmentRecord, ?>>asList(Keys.ATTACHMENT__ATTACHMENT_MESSAGE_ID_FK);
+        return Arrays.asList(Keys.ATTACHMENT__ATTACHMENT_MESSAGE_ID_FK);
     }
 
-    public Message message() {
-        return new Message(this, Keys.ATTACHMENT__ATTACHMENT_MESSAGE_ID_FK);
+    private transient MessagePath _message;
+
+    /**
+     * Get the implicit join path to the <code>messaging.message</code> table.
+     */
+    public MessagePath message() {
+        if (_message == null)
+            _message = new MessagePath(this, Keys.ATTACHMENT__ATTACHMENT_MESSAGE_ID_FK, null);
+
+        return _message;
     }
 
     @Override
@@ -124,6 +178,11 @@ public class Attachment extends TableImpl<AttachmentRecord> {
     @Override
     public Attachment as(Name alias) {
         return new Attachment(alias, this);
+    }
+
+    @Override
+    public Attachment as(Table<?> alias) {
+        return new Attachment(alias.getQualifiedName(), this);
     }
 
     /**
@@ -142,12 +201,95 @@ public class Attachment extends TableImpl<AttachmentRecord> {
         return new Attachment(name, null);
     }
 
-    // -------------------------------------------------------------------------
-    // Row4 type methods
-    // -------------------------------------------------------------------------
-
+    /**
+     * Rename this table
+     */
     @Override
-    public Row4<UUID, UUID, String, LocalDateTime> fieldsRow() {
-        return (Row4) super.fieldsRow();
+    public Attachment rename(Table<?> name) {
+        return new Attachment(name.getQualifiedName(), null);
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public Attachment where(Condition condition) {
+        return new Attachment(getQualifiedName(), aliased() ? this : null, null, condition);
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public Attachment where(Collection<? extends Condition> conditions) {
+        return where(DSL.and(conditions));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public Attachment where(Condition... conditions) {
+        return where(DSL.and(conditions));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public Attachment where(Field<Boolean> condition) {
+        return where(DSL.condition(condition));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public Attachment where(SQL condition) {
+        return where(DSL.condition(condition));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public Attachment where(@Stringly.SQL String condition) {
+        return where(DSL.condition(condition));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public Attachment where(@Stringly.SQL String condition, Object... binds) {
+        return where(DSL.condition(condition, binds));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public Attachment where(@Stringly.SQL String condition, QueryPart... parts) {
+        return where(DSL.condition(condition, parts));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public Attachment whereExists(Select<?> select) {
+        return where(DSL.exists(select));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public Attachment whereNotExists(Select<?> select) {
+        return where(DSL.notExists(select));
     }
 }

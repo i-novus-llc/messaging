@@ -4,25 +4,44 @@
 package ru.inovus.messaging.impl.jooq.tables;
 
 
+import java.util.Collection;
+
+import org.jooq.Condition;
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.InverseForeignKey;
+import org.jooq.Name;
+import org.jooq.Path;
+import org.jooq.PlainSQL;
+import org.jooq.QueryPart;
 import org.jooq.Record;
-import org.jooq.*;
+import org.jooq.SQL;
+import org.jooq.Schema;
+import org.jooq.Select;
+import org.jooq.Stringly;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
 import ru.inovus.messaging.impl.jooq.Keys;
 import ru.inovus.messaging.impl.jooq.Messaging;
+import ru.inovus.messaging.impl.jooq.tables.Message.MessagePath;
+import ru.inovus.messaging.impl.jooq.tables.MessageTemplate.MessageTemplatePath;
+import ru.inovus.messaging.impl.jooq.tables.RecipientGroup.RecipientGroupPath;
 import ru.inovus.messaging.impl.jooq.tables.records.TenantRecord;
-
-import java.util.Arrays;
-import java.util.List;
 
 
 /**
  * Тенанты
  */
-@SuppressWarnings({ "all", "unchecked", "rawtypes" })
+@SuppressWarnings({ "all", "unchecked", "rawtypes", "this-escape" })
 public class Tenant extends TableImpl<TenantRecord> {
 
-    private static final long serialVersionUID = -248045846;
+    private static final long serialVersionUID = 1L;
 
     /**
      * The reference instance of <code>messaging.tenant</code>
@@ -40,18 +59,19 @@ public class Tenant extends TableImpl<TenantRecord> {
     /**
      * The column <code>messaging.tenant.code</code>. Уникальный код тенанта
      */
-    public final TableField<TenantRecord, String> CODE = createField(DSL.name("code"), org.jooq.impl.SQLDataType.VARCHAR.nullable(false), this, "Уникальный код тенанта");
+    public final TableField<TenantRecord, String> CODE = createField(DSL.name("code"), SQLDataType.VARCHAR.nullable(false), this, "Уникальный код тенанта");
 
     /**
      * The column <code>messaging.tenant.name</code>. Наименование тенанта
      */
-    public final TableField<TenantRecord, String> NAME = createField(DSL.name("name"), org.jooq.impl.SQLDataType.VARCHAR, this, "Наименование тенанта");
+    public final TableField<TenantRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR, this, "Наименование тенанта");
 
-    /**
-     * Create a <code>messaging.tenant</code> table reference
-     */
-    public Tenant() {
-        this(DSL.name("tenant"), null);
+    private Tenant(Name alias, Table<TenantRecord> aliased) {
+        this(alias, aliased, (Field<?>[]) null, null);
+    }
+
+    private Tenant(Name alias, Table<TenantRecord> aliased, Field<?>[] parameters, Condition where) {
+        super(alias, null, aliased, parameters, DSL.comment("Тенанты"), TableOptions.table(), where);
     }
 
     /**
@@ -68,21 +88,49 @@ public class Tenant extends TableImpl<TenantRecord> {
         this(alias, TENANT);
     }
 
-    private Tenant(Name alias, Table<TenantRecord> aliased) {
-        this(alias, aliased, null);
+    /**
+     * Create a <code>messaging.tenant</code> table reference
+     */
+    public Tenant() {
+        this(DSL.name("tenant"), null);
     }
 
-    private Tenant(Name alias, Table<TenantRecord> aliased, Field<?>[] parameters) {
-        super(alias, null, aliased, parameters, DSL.comment("Тенанты"), TableOptions.table());
+    public <O extends Record> Tenant(Table<O> path, ForeignKey<O, TenantRecord> childPath, InverseForeignKey<O, TenantRecord> parentPath) {
+        super(path, childPath, parentPath, TENANT);
     }
 
-    public <O extends Record> Tenant(Table<O> child, ForeignKey<O, TenantRecord> key) {
-        super(child, key, TENANT);
+    /**
+     * A subtype implementing {@link Path} for simplified path-based joins.
+     */
+    public static class TenantPath extends Tenant implements Path<TenantRecord> {
+
+        private static final long serialVersionUID = 1L;
+        public <O extends Record> TenantPath(Table<O> path, ForeignKey<O, TenantRecord> childPath, InverseForeignKey<O, TenantRecord> parentPath) {
+            super(path, childPath, parentPath);
+        }
+        private TenantPath(Name alias, Table<TenantRecord> aliased) {
+            super(alias, aliased);
+        }
+
+        @Override
+        public TenantPath as(String alias) {
+            return new TenantPath(DSL.name(alias), this);
+        }
+
+        @Override
+        public TenantPath as(Name alias) {
+            return new TenantPath(alias, this);
+        }
+
+        @Override
+        public TenantPath as(Table<?> alias) {
+            return new TenantPath(alias.getQualifiedName(), this);
+        }
     }
 
     @Override
     public Schema getSchema() {
-        return Messaging.MESSAGING;
+        return aliased() ? null : Messaging.MESSAGING;
     }
 
     @Override
@@ -90,9 +138,43 @@ public class Tenant extends TableImpl<TenantRecord> {
         return Keys.TENANT_PKEY;
     }
 
-    @Override
-    public List<UniqueKey<TenantRecord>> getKeys() {
-        return Arrays.<UniqueKey<TenantRecord>>asList(Keys.TENANT_PKEY);
+    private transient MessageTemplatePath _messageTemplate;
+
+    /**
+     * Get the implicit to-many join path to the
+     * <code>messaging.message_template</code> table
+     */
+    public MessageTemplatePath messageTemplate() {
+        if (_messageTemplate == null)
+            _messageTemplate = new MessageTemplatePath(this, null, Keys.MESSAGE_TEMPLATE__MESSAGE_TEMPLATE_TENANT_CODE_FKEY.getInverseKey());
+
+        return _messageTemplate;
+    }
+
+    private transient MessagePath _message;
+
+    /**
+     * Get the implicit to-many join path to the <code>messaging.message</code>
+     * table
+     */
+    public MessagePath message() {
+        if (_message == null)
+            _message = new MessagePath(this, null, Keys.MESSAGE__MESSAGE_TENANT_CODE_FKEY.getInverseKey());
+
+        return _message;
+    }
+
+    private transient RecipientGroupPath _recipientGroup;
+
+    /**
+     * Get the implicit to-many join path to the
+     * <code>messaging.recipient_group</code> table
+     */
+    public RecipientGroupPath recipientGroup() {
+        if (_recipientGroup == null)
+            _recipientGroup = new RecipientGroupPath(this, null, Keys.RECIPIENT_GROUP__RECIPIENT_GROUP_TENANT_CODE_FKEY.getInverseKey());
+
+        return _recipientGroup;
     }
 
     @Override
@@ -103,6 +185,11 @@ public class Tenant extends TableImpl<TenantRecord> {
     @Override
     public Tenant as(Name alias) {
         return new Tenant(alias, this);
+    }
+
+    @Override
+    public Tenant as(Table<?> alias) {
+        return new Tenant(alias.getQualifiedName(), this);
     }
 
     /**
@@ -121,12 +208,95 @@ public class Tenant extends TableImpl<TenantRecord> {
         return new Tenant(name, null);
     }
 
-    // -------------------------------------------------------------------------
-    // Row2 type methods
-    // -------------------------------------------------------------------------
-
+    /**
+     * Rename this table
+     */
     @Override
-    public Row2<String, String> fieldsRow() {
-        return (Row2) super.fieldsRow();
+    public Tenant rename(Table<?> name) {
+        return new Tenant(name.getQualifiedName(), null);
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public Tenant where(Condition condition) {
+        return new Tenant(getQualifiedName(), aliased() ? this : null, null, condition);
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public Tenant where(Collection<? extends Condition> conditions) {
+        return where(DSL.and(conditions));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public Tenant where(Condition... conditions) {
+        return where(DSL.and(conditions));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public Tenant where(Field<Boolean> condition) {
+        return where(DSL.condition(condition));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public Tenant where(SQL condition) {
+        return where(DSL.condition(condition));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public Tenant where(@Stringly.SQL String condition) {
+        return where(DSL.condition(condition));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public Tenant where(@Stringly.SQL String condition, Object... binds) {
+        return where(DSL.condition(condition, binds));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    @PlainSQL
+    public Tenant where(@Stringly.SQL String condition, QueryPart... parts) {
+        return where(DSL.condition(condition, parts));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public Tenant whereExists(Select<?> select) {
+        return where(DSL.exists(select));
+    }
+
+    /**
+     * Create an inline derived table from this table
+     */
+    @Override
+    public Tenant whereNotExists(Select<?> select) {
+        return where(DSL.notExists(select));
     }
 }
