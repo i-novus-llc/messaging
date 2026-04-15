@@ -6,33 +6,28 @@ package ru.inovus.messaging.impl.jooq;
 
 import org.jooq.Index;
 import org.jooq.OrderField;
+import org.jooq.impl.DSL;
 import org.jooq.impl.Internal;
 
 import ru.inovus.messaging.impl.jooq.tables.Message;
 import ru.inovus.messaging.impl.jooq.tables.MessageTemplate;
+import ru.inovus.messaging.impl.jooq.tables.RecipientGroupTemplate;
+import ru.inovus.messaging.impl.jooq.tables.RecipientGroupUser;
 
 
 /**
- * A class modelling indexes of tables of the <code>messaging</code> schema.
+ * A class modelling indexes of tables in messaging.
  */
-@SuppressWarnings({ "all", "unchecked", "rawtypes" })
+@SuppressWarnings({ "all", "unchecked", "rawtypes", "this-escape" })
 public class Indexes {
 
     // -------------------------------------------------------------------------
     // INDEX definitions
     // -------------------------------------------------------------------------
 
-    public static final Index MESSAGE_TENANT_CODE_IDX = Indexes0.MESSAGE_TENANT_CODE_IDX;
-    public static final Index CODE_UX = Indexes0.CODE_UX;
-    public static final Index MESSAGE_TEMPLATE_TENANT_CODE_IDX = Indexes0.MESSAGE_TEMPLATE_TENANT_CODE_IDX;
-
-    // -------------------------------------------------------------------------
-    // [#1459] distribute members to avoid static initialisers > 64kb
-    // -------------------------------------------------------------------------
-
-    private static class Indexes0 {
-        public static Index MESSAGE_TENANT_CODE_IDX = Internal.createIndex("message_tenant_code_idx", Message.MESSAGE, new OrderField[] { Message.MESSAGE.TENANT_CODE }, false);
-        public static Index CODE_UX = Internal.createIndex("code_ux", MessageTemplate.MESSAGE_TEMPLATE, new OrderField[] { MessageTemplate.MESSAGE_TEMPLATE.CODE }, true);
-        public static Index MESSAGE_TEMPLATE_TENANT_CODE_IDX = Internal.createIndex("message_template_tenant_code_idx", MessageTemplate.MESSAGE_TEMPLATE, new OrderField[] { MessageTemplate.MESSAGE_TEMPLATE.TENANT_CODE }, false);
-    }
+    public static final Index CODE_UX = Internal.createIndex(DSL.name("code_ux"), MessageTemplate.MESSAGE_TEMPLATE, new OrderField[] { MessageTemplate.MESSAGE_TEMPLATE.CODE }, true);
+    public static final Index MESSAGE_TEMPLATE_TENANT_CODE_IDX = Internal.createIndex(DSL.name("message_template_tenant_code_idx"), MessageTemplate.MESSAGE_TEMPLATE, new OrderField[] { MessageTemplate.MESSAGE_TEMPLATE.TENANT_CODE }, false);
+    public static final Index MESSAGE_TENANT_CODE_IDX = Internal.createIndex(DSL.name("message_tenant_code_idx"), Message.MESSAGE, new OrderField[] { Message.MESSAGE.TENANT_CODE }, false);
+    public static final Index RECIPIENT_GROUP_TEMPLATE_RECIPIENT_GROUP_ID_IDX = Internal.createIndex(DSL.name("recipient_group_template_recipient_group_id_idx"), RecipientGroupTemplate.RECIPIENT_GROUP_TEMPLATE, new OrderField[] { RecipientGroupTemplate.RECIPIENT_GROUP_TEMPLATE.RECIPIENT_GROUP_ID }, false);
+    public static final Index RECIPIENT_GROUP_USER_RECIPIENT_GROUP_ID_IDX = Internal.createIndex(DSL.name("recipient_group_user_recipient_group_id_idx"), RecipientGroupUser.RECIPIENT_GROUP_USER, new OrderField[] { RecipientGroupUser.RECIPIENT_GROUP_USER.RECIPIENT_GROUP_ID }, false);
 }
