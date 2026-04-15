@@ -22,6 +22,9 @@
                             </input-select>
                             <input-select id="infoType" label="Информирование" query-id="messaging_channels"/>
                             <date-interval id="sentAt" label="Дата отправки"/>
+                            <input-select id="templateCodes" label="Код шаблона уведомления"
+                                          query-id="messaging_msg_template"
+                                          label-field-id="code" type="multi"/>
                         </row>
                     </filters>
                     <columns>
