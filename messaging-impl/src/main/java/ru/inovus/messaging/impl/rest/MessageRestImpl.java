@@ -9,6 +9,7 @@ import org.springframework.util.CollectionUtils;
 import ru.inovus.messaging.api.MessageAttachment;
 import ru.inovus.messaging.api.criteria.MessageCriteria;
 import ru.inovus.messaging.api.model.*;
+import ru.inovus.messaging.api.model.enums.MessageType;
 import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.rest.MessageRest;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
@@ -178,6 +179,7 @@ public class MessageRestImpl implements MessageRest {
         message.setAlertType(messageTemplate.getAlertType());
         message.setSentAt(params.getSentAt());
         message.setChannel(messageTemplate.getChannel());
+        message.setMessageType(MessageType.SYSTEM);
         message.setRecipientType(RecipientType.RECIPIENT);
         message.setTenantCode(params.getTenantCode());
         message.setRecipients(recipientService.getRecipientsByUsername(userNameList));
