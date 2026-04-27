@@ -25,6 +25,7 @@ spec:
       labels:
         app: {{ $service }}
     spec:
+      enableServiceLinks: false
       {{- if .initContainers }}
       initContainers:  {{- toYaml .initContainers | nindent 8 }}
       {{- end }}

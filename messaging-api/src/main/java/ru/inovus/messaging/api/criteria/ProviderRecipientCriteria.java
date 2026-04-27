@@ -47,6 +47,6 @@ public class ProviderRecipientCriteria extends BaseMessagingCriteria {
     private Integer regionId;
 
     @QueryParam("organizationId")
-    @ApiParam("Идентификатор организации")
-    private Integer organizationId;
+    @ApiParam("Идентификаторы организаций")
+    private List<Integer> organizationIds;
 }

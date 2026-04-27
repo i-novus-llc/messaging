@@ -181,7 +181,7 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> {
      * Setter for <code>messaging.message.organization</code>. Организации,
      * сотрудникам которых отправлено уведомление
      */
-    public void setOrganization(Integer value) {
+    public void setOrganization(String value) {
         set(10, value);
     }
 
@@ -189,8 +189,8 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> {
      * Getter for <code>messaging.message.organization</code>. Организации,
      * сотрудникам которых отправлено уведомление
      */
-    public Integer getOrganization() {
-        return (Integer) get(10);
+    public String getOrganization() {
+        return (String) get(10);
     }
 
     /**
@@ -262,7 +262,7 @@ public class MessageRecord extends UpdatableRecordImpl<MessageRecord> {
     /**
      * Create a detached, initialised MessageRecord
      */
-    public MessageRecord(UUID id, String caption, String text, Severity severity, AlertType alertType, LocalDateTime sentAt, String tenantCode, RecipientType recipientType, String templateCode, String channelCode, Integer organization, String role, String region, MessageType messageType) {
+    public MessageRecord(UUID id, String caption, String text, Severity severity, AlertType alertType, LocalDateTime sentAt, String tenantCode, RecipientType recipientType, String templateCode, String channelCode, String organization, String role, String region, MessageType messageType) {
         super(Message.MESSAGE);
 
         setId(id);
