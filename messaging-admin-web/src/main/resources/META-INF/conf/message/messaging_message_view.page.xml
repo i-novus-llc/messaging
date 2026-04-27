@@ -54,7 +54,7 @@
                         <row>
                             <output-text id="role" label="Роль" visible="{role!=null}"/>
                             <output-text id="region.name" label="Регион" visible="{region!=null}"/>
-                            <output-text id="organization.name" label="Организация" visible="{organization!=null}"/>
+                            <output-text id="organizationName" label="Организация" visible="{organizationName!=null}"/>
                         </row>
                     </set>
                     <hidden id="attachmentEnabled" default-value="${novus.messaging.attachment.enabled}"/>

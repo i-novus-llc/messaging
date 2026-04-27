@@ -44,12 +44,17 @@ public class SecurityAdminRecipientProvider implements RecipientProvider {
     public Page<ProviderRecipient> getRecipients(ProviderRecipientCriteria criteria) {
         RestUserCriteria restUserCriteria = new RestUserCriteria();
         restUserCriteria.setUsername(criteria.getUsername());
-        restUserCriteria.setPage(criteria.getPageNumber());
-        restUserCriteria.setSize(criteria.getPageSize());
         restUserCriteria.setFio(criteria.getName());
         restUserCriteria.setRoleCodes(criteria.getRoleCodes());
         restUserCriteria.setRegionId(criteria.getRegionId());
-        restUserCriteria.setOrganizationId(criteria.getOrganizationId());
+
+        List<Integer> orgIds = criteria.getOrganizationIds();
+        if (orgIds != null && !orgIds.isEmpty()) {
+            restUserCriteria.setOrganizationIds(orgIds);
+        }
+
+        restUserCriteria.setPage(criteria.getPageNumber());
+        restUserCriteria.setSize(criteria.getPageSize());
         Page<net.n2oapp.security.admin.api.model.User> userPage = userRestService.findAll(restUserCriteria);
         return userPage.getContent().isEmpty() ? Page.empty() :
                 new PageImpl<>(userPage.getContent().stream().map(this::mapSecurityUser).collect(Collectors.toList()), userPage.getPageable(), userPage.getTotalElements());
@@ -96,9 +101,14 @@ public class SecurityAdminRecipientProvider implements RecipientProvider {
                 .map(region -> new BaseResponse(region.getId(), region.getName())).findFirst().orElse(null);
     }
 
-    public BaseResponse getMedOrganization(Integer id) {
-        Organization organization = organizationRestService.get(id);
-        return new BaseResponse(organization.getId(), organization.getFullName());
+    public List<BaseResponse> getMedOrganizations(String joinedOrgIds) {
+        String[] ids = joinedOrgIds.split(", ");
+        if (ids.length == 0) return null;
+
+        return Arrays.stream(ids)
+                .map(id -> organizationRestService.get(Integer.valueOf(id)))
+                .map(org -> new BaseResponse(org.getId(), org.getShortName()))
+                .toList();
     }
 
     private ProviderRecipient mapSecurityUser(net.n2oapp.security.admin.api.model.User securityUser) {
