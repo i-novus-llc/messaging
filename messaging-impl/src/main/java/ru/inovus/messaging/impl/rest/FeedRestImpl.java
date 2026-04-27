@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import ru.inovus.messaging.api.criteria.FeedCriteria;
 import ru.inovus.messaging.api.model.Feed;
 import ru.inovus.messaging.api.model.FeedCount;
+import ru.inovus.messaging.api.model.FeedStatistics;
 import ru.inovus.messaging.api.rest.FeedRest;
 import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.impl.service.FeedService;
@@ -34,6 +35,11 @@ public class FeedRestImpl implements FeedRest {
     @Override
     public FeedCount getFeedCount(String tenantCode, String username) {
         return feedService.getFeedCount(tenantCode, username);
+    }
+
+    @Override
+    public FeedStatistics getFeedStatistics(String tenantCode, String username) {
+        return feedService.getFeedStatistics(tenantCode, username);
     }
 
     @Override

@@ -11,6 +11,7 @@ import ru.inovus.messaging.TestApp;
 import ru.inovus.messaging.api.criteria.FeedCriteria;
 import ru.inovus.messaging.api.model.Feed;
 import ru.inovus.messaging.api.model.FeedCount;
+import ru.inovus.messaging.api.model.FeedStatistics;
 import ru.inovus.messaging.api.model.enums.MessageType;
 import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.model.enums.Severity;
@@ -28,18 +29,18 @@ import static org.hamcrest.Matchers.is;
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = "spring.liquibase.change-log: classpath:/messaging-db/test-base-changelog.xml")
 @EnableTestcontainersPg
-public class FeedServiceTest {
+class FeedServiceTest {
 
     @Autowired
     private FeedService service;
 
-    private final String TENANT_CODE = "tenant3";
-    private final String USERNAME = "user";
-    private final String USERNAME2 = "user2";
+    private static final String TENANT_CODE = "tenant3";
+    private static final String USERNAME = "user";
+    private static final String USERNAME2 = "user2";
 
 
     @Test
-    public void testGetMessageFeed() {
+    void testGetMessageFeed() {
         FeedCriteria criteria = new FeedCriteria();
 
         Page<Feed> feed = service.getMessageFeed(TENANT_CODE, USERNAME, criteria);
@@ -74,7 +75,7 @@ public class FeedServiceTest {
     }
 
     @Test
-    public void test() {
+    void test() {
         FeedCount feedCount = service.getFeedCount(TENANT_CODE, USERNAME);
         assertThat(feedCount.getCount(), is(3));
 
@@ -95,7 +96,7 @@ public class FeedServiceTest {
     }
 
     @Test
-    public void testGetMessageFeedByMessageType() {
+    void testGetMessageFeedByMessageType() {
         // filter by SYSTEM → Message3 (2021-08-15) and Message5 (2021-12-15)
         FeedCriteria criteria = new FeedCriteria();
         criteria.setMessageType(MessageType.SYSTEM);
@@ -114,7 +115,7 @@ public class FeedServiceTest {
     }
 
     @Test
-    public void testGetMessageFeedByRecipientType() {
+    void testGetMessageFeedByRecipientType() {
         // user2: Message6 (RECIPIENT), Message7 (RECIPIENT), Message8 (USER_GROUP_BY_ROLE)
 
         // filter by RECIPIENT → Message6, Message7
@@ -136,8 +137,21 @@ public class FeedServiceTest {
     }
 
     @Test
+    void testGetFeedStatistics() {
+        FeedStatistics stats = service.getFeedStatistics(TENANT_CODE, USERNAME2);
+
+        assertThat(stats.getTotal(), is(3));
+        assertThat(stats.getRead(), is(0));
+        assertThat(stats.getUnread(), is(3));
+        assertThat(stats.getSystem(), is(2));
+        assertThat(stats.getUser(), is(1));
+        assertThat(stats.getRecipient(), is(2));
+        assertThat(stats.getUserGroupByRole(), is(1));
+    }
+
+    @Test
     @Transactional
-    public void testMarkReadAllWithMessageTypeFilter() {
+    void testMarkReadAllWithMessageTypeFilter() {
         // user2 has 3 unread: Message6 (SYSTEM), Message7 (USER), Message8 (SYSTEM)
         assertThat(service.getFeedCount(TENANT_CODE, USERNAME2).getCount(), is(3));
 
@@ -152,7 +166,7 @@ public class FeedServiceTest {
 
     @Test
     @Transactional
-    public void testMarkReadAllWithRecipientTypeFilter() {
+    void testMarkReadAllWithRecipientTypeFilter() {
         // user2 has 3 unread: Message6 (RECIPIENT), Message7 (RECIPIENT), Message8 (USER_GROUP_BY_ROLE)
         assertThat(service.getFeedCount(TENANT_CODE, USERNAME2).getCount(), is(3));
 
