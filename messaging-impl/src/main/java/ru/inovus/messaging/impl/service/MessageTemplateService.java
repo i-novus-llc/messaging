@@ -78,8 +78,8 @@ public class MessageTemplateService {
                 .ifPresent(name -> conditions.add(MESSAGE_TEMPLATE.NAME.containsIgnoreCase(name)));
         Optional.ofNullable(criteria.getEnabled())
                 .ifPresent(enabled -> conditions.add(MESSAGE_TEMPLATE.ENABLED.eq(enabled)));
-        Optional.ofNullable(criteria.getCode()).filter(StringUtils::isNotBlank)
-                .ifPresent(code -> conditions.add(MESSAGE_TEMPLATE.CODE.contains(code)));
+        Optional.ofNullable(criteria.getCodes()).filter(list -> !list.isEmpty())
+                .ifPresent(codes -> conditions.add(MESSAGE_TEMPLATE.CODE.in(codes)));
         Optional.ofNullable(criteria.getCodeAndName()).filter(StringUtils::isNotBlank)
                 .ifPresent(codeAndName -> conditions.add(DSL.concat(MESSAGE_TEMPLATE.CODE, MESSAGE_TEMPLATE.NAME).contains(codeAndName)));
 

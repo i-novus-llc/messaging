@@ -14,6 +14,8 @@ import ru.inovus.messaging.api.model.MessageTemplate;
 import ru.inovus.messaging.api.model.enums.AlertType;
 import ru.inovus.messaging.api.model.enums.Severity;
 
+import java.util.List;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -23,7 +25,7 @@ import static org.hamcrest.Matchers.nullValue;
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = "spring.liquibase.change-log: classpath:/messaging-db/test-base-changelog.xml")
 @EnableTestcontainersPg
-public class MessageTemplateServiceTest {
+class MessageTemplateServiceTest {
 
     @Autowired
     private MessageTemplateService service;
@@ -32,7 +34,7 @@ public class MessageTemplateServiceTest {
 
 
     @Test
-    public void testGetTemplates() {
+    void testGetTemplates() {
         MessageTemplateCriteria criteria = new MessageTemplateCriteria();
 
         Page<MessageTemplate> templates = service.getTemplates(TENANT_CODE, criteria);
@@ -42,11 +44,12 @@ public class MessageTemplateServiceTest {
         assertThat(templates.getContent().get(1).getId(), is(2));
         assertThat(templates.getContent().get(2).getId(), is(1));
 
-        // filter by code
-        criteria.setCode("mt2");
+        // filter by codes
+        criteria.setCodes(List.of("mt2", "mt3"));
         templates = service.getTemplates(TENANT_CODE, criteria);
-        assertThat(templates.getTotalElements(), is(1L));
-        assertThat(templates.getContent().get(0).getId(), is(2));
+        assertThat(templates.getTotalElements(), is(2L));
+        assertThat(templates.getContent().get(0).getId(), is(3));
+        assertThat(templates.getContent().get(1).getId(), is(2));
 
         // filter by name
         criteria = new MessageTemplateCriteria();
@@ -89,7 +92,7 @@ public class MessageTemplateServiceTest {
     }
 
     @Test
-    public void testGetByCode() {
+    void testGetByCode() {
         // return null if not exist
         MessageTemplate template = service.getTemplate(TENANT_CODE, "undefined");
         assertThat(template, nullValue());
@@ -100,7 +103,7 @@ public class MessageTemplateServiceTest {
     }
 
     @Test
-    public void test() {
+    void test() {
         Integer id = testCreateTemplate();
         testUpdateTemplate(id);
         testDeleteTemplate(id);

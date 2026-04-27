@@ -16,6 +16,7 @@ import ru.inovus.messaging.TestApp;
 import ru.inovus.messaging.api.criteria.MessageCriteria;
 import ru.inovus.messaging.api.model.*;
 import ru.inovus.messaging.api.model.enums.AlertType;
+import ru.inovus.messaging.api.model.enums.MessageType;
 import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.model.enums.Severity;
 import ru.inovus.messaging.api.rest.SecurityProviderRest;
@@ -40,7 +41,7 @@ import static org.mockito.Mockito.when;
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = "spring.liquibase.change-log: classpath:/messaging-db/test-base-changelog.xml")
 @EnableTestcontainersPg
-public class MessageRestImplTest {
+class MessageRestImplTest {
 
     @Autowired
     private MessageRestImpl messageRest;
@@ -63,17 +64,17 @@ public class MessageRestImplTest {
     @Captor
     ArgumentCaptor<Message> messageArgumentCaptor;
 
-    private String TENANT_CODE = "tenant";
+    private static final String TENANT_CODE = "tenant";
 
 
     @BeforeEach
-    public void before() {
+    void before() {
         when(recipientService.getRecipientsByUsername(any())).thenReturn(List.of(getRecipient()));
         when(recipientService.getAll()).thenReturn(getRecipients());
     }
 
     @Test
-    public void testTemplatedMessage() {
+    void testTemplatedMessage() {
         messageRest.sendMessage(TENANT_CODE, getTemplatedMessage());
 
         Mockito.verify(mqProvider).publish(messageArgumentCaptor.capture(), any());
@@ -100,11 +101,12 @@ public class MessageRestImplTest {
         assertThat(dbStoredMessage.getChannel().getId(), is("email"));
         assertThat(dbStoredMessage.getTemplateCode(), is("mt3"));
         assertThat(dbStoredMessage.getRecipientType(), is(RecipientType.RECIPIENT));
+        assertThat(dbStoredMessage.getMessageType(), is(MessageType.SYSTEM));
         assertThat(dbStoredMessage.getSentAt(), is(LocalDateTime.parse("2007-12-03T10:15:30")));
     }
 
     @Test
-    public void testEmptyRecipientsMessage() {
+    void testEmptyRecipientsMessage() {
         Exception exception = assertThrows(UserException.class, () -> {
             messageRest.sendMessage(TENANT_CODE, getEmptyRecipientsMessage());
         });
@@ -112,7 +114,7 @@ public class MessageRestImplTest {
     }
 
     @Test
-    public void testEmptyTemplateCodeAndWrongTenant() {
+    void testEmptyTemplateCodeAndWrongTenant() {
         // template with empty templateCode shouldn't create message
         long count = messageRest.getMessages(TENANT_CODE, new MessageCriteria()).getTotalElements();
 
