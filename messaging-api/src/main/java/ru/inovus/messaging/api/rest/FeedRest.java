@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import ru.inovus.messaging.api.criteria.FeedCriteria;
 import ru.inovus.messaging.api.model.Feed;
 import ru.inovus.messaging.api.model.FeedCount;
+import ru.inovus.messaging.api.model.FeedStatistics;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -44,6 +45,13 @@ public interface FeedRest {
     @ApiResponse(code = 200, message = "Количество непрочитанных уведомлений")
     FeedCount getFeedCount(@PathParam("tenantCode") @ApiParam(value = "Код тенанта") String tenantCode,
                            @PathParam("username") @ApiParam(value = "Имя пользователя") String username);
+
+    @GET
+    @Path("/{username}/statistics")
+    @ApiOperation("Получение счётчиков уведомлений пользователя")
+    @ApiResponse(code = 200, message = "Счётчики уведомлений")
+    FeedStatistics getFeedStatistics(@PathParam("tenantCode") @ApiParam(value = "Код тенанта") String tenantCode,
+                                     @PathParam("username") @ApiParam(value = "Имя пользователя") String username);
 
     @GET
     @Path("/{username}/message/{id}")
