@@ -12,6 +12,6 @@
 
     <fields>
         <field id="id"/>
-        <field id="name" domain="string" mapping="['fullName']"/>
+        <field id="name" domain="string" mapping="['shortName']"/>
     </fields>
 </query>

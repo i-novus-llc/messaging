@@ -128,7 +128,7 @@
                                 <reset on="recipientType" apply-on-init="false">return true;</reset>
                             </dependencies>
                         </input-select>
-                        <input-select id="organization" type="single" label="Укажите организацию"
+                        <input-select id="organization" type="checkboxes" label="Укажите организацию"
                                       query-id="messaging_organization" label-field-id="name"
                                       search-field-id="name">
                             <dependencies>
@@ -170,7 +170,7 @@
                 <filters>
                     <in field-id="roleCodes" values="{roles*.code}" datasource="create"/>
                     <eq field-id="regionId" value="{region.id}" datasource="create"/>
-                    <eq field-id="organizationId" value="{organization.id}" datasource="create"/>
+                    <in field-id="organizationId" values="{organization*.id}" datasource="create"/>
                     <like field-id="name" value="{fio}" datasource="create"/>
                 </filters>
                 <dependencies>

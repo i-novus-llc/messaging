@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.inovus.messaging.TestApp;
 import ru.inovus.messaging.api.criteria.MessageCriteria;
+import ru.inovus.messaging.api.model.BaseResponse;
 import ru.inovus.messaging.api.model.Channel;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.Recipient;
@@ -17,10 +18,12 @@ import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.model.enums.Severity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApp.class,
@@ -117,5 +120,25 @@ public class MessageServiceTest {
         assertThat(message.getRecipients().size(), is(1));
         assertThat(message.getRecipients().get(0).getName(), is(recipient.getName()));
         assertThat(message.getRecipients().get(0).getUsername(), is(recipient.getUsername()));
+    }
+
+    @Test
+    public void testCreateMessageWithMultipleOrganizations() {
+        Message newMessage = new Message();
+        newMessage.setTenantCode("tenant2");
+        newMessage.setText("text");
+        newMessage.setCaption("caption");
+        newMessage.setSeverity(Severity.INFO);
+        newMessage.setAlertType(AlertType.POPUP);
+        newMessage.setRecipientType(RecipientType.USER_GROUP_BY_ORGANIZATION);
+        newMessage.setChannel(new Channel("web", "Web", "web-queue"));
+        newMessage.setOrganization(List.of(
+                new BaseResponse(1, "Org1"),
+                new BaseResponse(2, "Org2")
+        ));
+
+        String newMessageId = service.createMessage(newMessage).getId();
+
+        assertThat(newMessageId, notNullValue());
     }
 }

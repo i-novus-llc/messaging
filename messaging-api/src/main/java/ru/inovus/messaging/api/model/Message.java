@@ -73,8 +73,8 @@ public class Message implements Serializable {
     @ApiModelProperty("Регион")
     private BaseResponse region;
 
-    @ApiModelProperty("Организация")
-    private BaseResponse organization;
+    @ApiModelProperty("Организации")
+    private List<BaseResponse> organization;
 
     @ApiModelProperty("Список получателей")
     private List<Recipient> recipients;

@@ -73,9 +73,12 @@ public class MessageService {
         message.setRegion(nonNull(provider) && StringUtils.hasText(record.getRegion())
                 ? provider.getRegion(record.getRegion())
                 : null);
-        message.setOrganization(nonNull(provider) && nonNull(record.getOrganization())
-                ? provider.getMedOrganization(record.getOrganization())
-                : null);
+        List<BaseResponse> organizations = nonNull(provider) && StringUtils.hasText(record.getOrganization())
+                ? provider.getMedOrganizations(record.getOrganization())
+                : null;
+        if (!CollectionUtils.isEmpty(organizations)) {
+            message.setOrganization(organizations);
+        }
         return message;
     };
 
@@ -103,7 +106,7 @@ public class MessageService {
                         message.getRecipientType(), message.getTemplateCode(),
                         message.getChannel() != null ? message.getChannel().getId() : null,
                         joinRoles(message.getRoles()),
-                        nonNull(message.getOrganization()) ? message.getOrganization().getId() : null,
+                        joinOrganizations(message.getOrganization()),
                         nonNull(message.getRegion()) ? message.getRegion().getName() : null)
                 .returning()
                 .fetch().get(0).getId();
@@ -197,6 +200,12 @@ public class MessageService {
     private String joinRoles(List<BaseResponse> roles) {
         return !CollectionUtils.isEmpty(roles)
                 ? roles.stream().map(role -> role.getId().toString()).collect(Collectors.joining(", "))
+                : null;
+    }
+
+    private String joinOrganizations(List<BaseResponse> organizations) {
+        return !CollectionUtils.isEmpty(organizations)
+                ? organizations.stream().map(org -> org.getId().toString()).collect(Collectors.joining(", "))
                 : null;
     }
 }
