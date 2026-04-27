@@ -16,7 +16,7 @@
         <eq field-id="alertType.id" filter-id="alertType.id">alertType={alertType.id}</eq>
         <eq field-id="infoType" filter-id="infoType.id">infoType={infoType.id}</eq>
         <eq field-id="name" filter-id="name">name={name}</eq>
-        <eq field-id="code" filter-id="code">code={code}</eq>
+        <in field-id="code" filter-id="code" domain="string[]">code={code}</in>
         <eq field-id="enabled" filter-id="enabled" domain="string">enabled={enabled}</eq>
         <like field-id="codeAndName" filter-id="codeAndName" domain="string">codeAndName={codeAndName}</like>
     </filters>

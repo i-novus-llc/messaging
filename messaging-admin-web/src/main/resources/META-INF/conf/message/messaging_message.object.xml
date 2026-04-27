@@ -12,6 +12,7 @@
                 <field id="text" mapping="['message.text']" domain="string"/>
                 <field id="severity.id" mapping="['message.severity']" domain="string"/>
                 <field id="alertType.id" mapping="['message.alertType']" domain="string"/>
+                <field id="messageType.id" mapping="['message.messageType']" domain="string"/>
                 <field id="infoType" mapping="['message.channel']" domain="object"/>
                 <field id="recipientType.id" mapping="['message.recipientType']" domain="string"/>
                 <field id="roles" mapping="['message.roles']"/>

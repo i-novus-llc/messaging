@@ -22,6 +22,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import ru.inovus.messaging.api.model.enums.AlertType;
+import ru.inovus.messaging.api.model.enums.MessageType;
 import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.model.enums.Severity;
 
@@ -60,6 +61,9 @@ public class Message implements Serializable {
 
     @ApiModelProperty("Канал отправки")
     private Channel channel;
+
+    @ApiModelProperty("Тип уведомления")
+    private MessageType messageType;
 
     @ApiModelProperty("Тип получателей уведомления")
     private RecipientType recipientType;

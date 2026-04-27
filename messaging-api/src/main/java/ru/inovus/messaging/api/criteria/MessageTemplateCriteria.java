@@ -23,6 +23,9 @@ import ru.inovus.messaging.api.model.enums.Severity;
 
 import jakarta.ws.rs.QueryParam;
 
+import java.util.List;
+
+
 @Getter
 @Setter
 public class MessageTemplateCriteria extends BaseMessagingCriteria {
@@ -48,8 +51,8 @@ public class MessageTemplateCriteria extends BaseMessagingCriteria {
     private Boolean enabled;
 
     @QueryParam("code")
-    @ApiParam("Код шаблона")
-    private String code;
+    @ApiParam("Коды шаблонов")
+    private List<String> codes;
 
     @QueryParam("codeAndName")
     @ApiParam("Код и наименование шаблона")

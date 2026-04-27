@@ -13,6 +13,7 @@ import ru.inovus.messaging.api.model.Channel;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.Recipient;
 import ru.inovus.messaging.api.model.enums.AlertType;
+import ru.inovus.messaging.api.model.enums.MessageType;
 import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.model.enums.Severity;
 
@@ -27,7 +28,7 @@ import static org.hamcrest.Matchers.is;
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = "spring.liquibase.change-log: classpath:/messaging-db/test-base-changelog.xml")
 @EnableTestcontainersPg
-public class MessageServiceTest {
+class MessageServiceTest {
 
     @Autowired
     private MessageService service;
@@ -35,7 +36,7 @@ public class MessageServiceTest {
     private static final String TENANT_CODE = "tenant";
 
     @Test
-    public void testGetMessages() {
+    void testGetMessages() {
         MessageCriteria criteria = new MessageCriteria();
 
         Page<Message> messages = service.getMessages(TENANT_CODE, criteria);
@@ -78,7 +79,7 @@ public class MessageServiceTest {
     }
 
     @Test
-    public void testGetMessage() {
+    void testGetMessage() {
         Message message = service.getMessage(UUID.fromString("d1450cd1-5b93-47fe-9e44-a3800476342e"));
         assertThat(message.getId(), is("d1450cd1-5b93-47fe-9e44-a3800476342e"));
         assertThat(message.getText(), is("Message2"));
@@ -93,7 +94,7 @@ public class MessageServiceTest {
     }
 
     @Test
-    public void testCreateMessage() {
+    void testCreateMessage() {
         Message newMessage = new Message();
         newMessage.setTenantCode("tenant2");
         newMessage.setText("text");
@@ -101,6 +102,7 @@ public class MessageServiceTest {
         newMessage.setSeverity(Severity.WARNING);
         newMessage.setAlertType(AlertType.HIDDEN);
         newMessage.setRecipientType(RecipientType.RECIPIENT);
+        newMessage.setMessageType(MessageType.USER);
         newMessage.setChannel(new Channel("email", "Email", "email-queue"));
         Recipient recipient = new Recipient();
         recipient.setName("name");
@@ -113,6 +115,7 @@ public class MessageServiceTest {
         assertThat(message.getSeverity(), is(newMessage.getSeverity()));
         assertThat(message.getAlertType(), is(newMessage.getAlertType()));
         assertThat(message.getRecipientType(), is(newMessage.getRecipientType()));
+        assertThat(message.getMessageType(), is(newMessage.getMessageType()));
         assertThat(message.getChannel().getId(), is(newMessage.getChannel().getId()));
         assertThat(message.getRecipients().size(), is(1));
         assertThat(message.getRecipients().get(0).getName(), is(recipient.getName()));
