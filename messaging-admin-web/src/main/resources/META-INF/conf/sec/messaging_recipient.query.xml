@@ -11,7 +11,7 @@
         <like field-id="name" filter-id="name">name={name}</like>
         <in field-id="roleCodes" filter-id="roleCodes">roleCodes={roleCodes}</in>
         <eq field-id="regionId" filter-id="regionId">regionId={regionId}</eq>
-        <eq field-id="organizationId" filter-id="organizationId">organizationId={organizationId}</eq>
+        <in field-id="organizationId" filter-id="organizationId">organizationId={organizationId}</in>
     </filters>
     
     <fields>
@@ -21,6 +21,6 @@
         <field id="email" mapping="['email']"/>
         <field id="roleCodes" select="false"/>
         <field id="regionId" select="false"/>
-        <field id="organizationId" select="false"/>
+        <field id="organizationId" select="false" domain="integer[]"/>
     </fields>
 </query>

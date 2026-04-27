@@ -25,7 +25,7 @@ messaging-service:
       limits:
         memory: 512Mi
         cpu: 700m
-      request:
+      requests:
         memory: 300Mi
         cpu: 10m
     env:
@@ -52,7 +52,7 @@ messaging-service:
       limits:
         memory: 512Mi
         cpu: 700m
-      request:
+      requests:
         memory: 300Mi
         cpu: 10m
     env:
@@ -61,7 +61,7 @@ messaging-service:
       SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
       NOVUS_MESSAGING_RECIPIENT_PROVIDER_URL: https://security-dev.i-novus.ru/service/api
       NOVUS_MESSAGING_RECIPIENT_PROVIDER_TYPE: security
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: http://kafka:9092
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       SPRING_MAIL_USERNAME: someuser
       SPRING_MAIL_HOST: maildev.i-novus.ru
       JAVA_OPTS: -Xmx200m

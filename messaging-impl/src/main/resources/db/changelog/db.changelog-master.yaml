@@ -360,3 +360,11 @@ databaseChangeLog:
             encoding: utf8
             path: sql/EGISZFRLOZREG-6357.sql
             relativeToChangelogFile: true
+  - changeSet:
+      id: EGISZNRPLATFORM-2034
+      author: stabakaeva
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: sql/EGISZNRPLATFORM-2034.sql
+            relativeToChangelogFile: true

@@ -42,6 +42,8 @@
         <field id="roles"/>
         <field id="region"/>
         <field id="organization"/>
+        <field id="organizationName" mapping="['organization']"
+               normalize="#this != null ? T(java.lang.String).join(', ', #this.![get('name')]) : null"/>
         <field id="attachments"/>
         <field id="templateCode"/>
         <field id="templateCodes" domain="string[]" name="Коды шаблона уведомления"/>

@@ -133,7 +133,7 @@ public class Message extends TableImpl<MessageRecord> {
      * The column <code>messaging.message.organization</code>. Организации,
      * сотрудникам которых отправлено уведомление
      */
-    public final TableField<MessageRecord, Integer> ORGANIZATION = createField(DSL.name("organization"), SQLDataType.INTEGER, this, "Организации, сотрудникам которых отправлено уведомление");
+    public final TableField<MessageRecord, String> ORGANIZATION = createField(DSL.name("organization"), SQLDataType.VARCHAR, this, "Организации, сотрудникам которых отправлено уведомление");
 
     /**
      * The column <code>messaging.message.role</code>. Роли, которым отправлено
