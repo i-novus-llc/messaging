@@ -2,7 +2,6 @@ package ru.inovus.messaging.impl.service;
 
 import org.jooq.Record;
 import org.jooq.*;
-import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -62,6 +61,7 @@ public class MessageService {
         channel.setName(channelRecord.getName());
         channel.setQueueName(channelRecord.getQueueName());
         message.setChannel(channel);
+        message.setMessageType(record.getMessageType());
         message.setRecipientType(record.getRecipientType());
         message.setTenantCode(record.getTenantCode());
         message.setTemplateCode(record.getTemplateCode());
@@ -99,11 +99,11 @@ public class MessageService {
         dsl
                 .insertInto(MESSAGE)
                 .columns(MESSAGE.ID, MESSAGE.CAPTION, MESSAGE.TEXT, MESSAGE.SEVERITY, MESSAGE.ALERT_TYPE,
-                        MESSAGE.SENT_AT, MESSAGE.TENANT_CODE, MESSAGE.RECIPIENT_TYPE, MESSAGE.TEMPLATE_CODE,
-                        MESSAGE.CHANNEL_CODE, MESSAGE.ROLE, MESSAGE.ORGANIZATION, MESSAGE.REGION)
+                        MESSAGE.SENT_AT, MESSAGE.TENANT_CODE, MESSAGE.RECIPIENT_TYPE, MESSAGE.MESSAGE_TYPE,
+                        MESSAGE.TEMPLATE_CODE, MESSAGE.CHANNEL_CODE, MESSAGE.ROLE, MESSAGE.ORGANIZATION, MESSAGE.REGION)
                 .values(id, message.getCaption(), message.getText(), message.getSeverity(), message.getAlertType(),
                         message.getSentAt(), message.getTenantCode(),
-                        message.getRecipientType(), message.getTemplateCode(),
+                        message.getRecipientType(), message.getMessageType(), message.getTemplateCode(),
                         message.getChannel() != null ? message.getChannel().getId() : null,
                         joinRoles(message.getRoles()),
                         joinOrganizations(message.getOrganization()),
