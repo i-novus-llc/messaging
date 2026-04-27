@@ -7,10 +7,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.jooq.impl.DSL;
 import ru.inovus.messaging.api.criteria.FeedCriteria;
 import ru.inovus.messaging.api.model.Feed;
 import ru.inovus.messaging.api.model.FeedCount;
+import ru.inovus.messaging.api.model.FeedStatistics;
 import ru.inovus.messaging.api.model.enums.MessageStatusType;
+import ru.inovus.messaging.api.model.enums.MessageType;
+import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecipientRecord;
 import ru.inovus.messaging.impl.jooq.tables.records.MessageRecord;
 
@@ -21,7 +25,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.jooq.impl.DSL.exists;
 import static ru.inovus.messaging.impl.jooq.Tables.*;
 
 /**
@@ -82,8 +85,8 @@ public class FeedService {
                 .select(MESSAGE.fields())
                 .select(MESSAGE_RECIPIENT.fields())
                 .from(MESSAGE)
-                .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID))
-                .leftJoin(CHANNEL).on(CHANNEL.CODE.eq(MESSAGE.CHANNEL_CODE))
+                .join(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID))
+                .join(CHANNEL).on(CHANNEL.CODE.eq(MESSAGE.CHANNEL_CODE))
                 .where(conditions);
         int count = dsl.fetchCount(query);
 
@@ -136,21 +139,23 @@ public class FeedService {
      */
     @Transactional
     public void markReadAll(String tenantCode, String username, FeedCriteria criteria) {
-        List<Condition> messageConditions = new ArrayList<>();
-        messageConditions.add(MESSAGE.ID.eq(MESSAGE_RECIPIENT.MESSAGE_ID));
-        messageConditions.add(MESSAGE.TENANT_CODE.eq(tenantCode));
+        List<Condition> conditions = new ArrayList<>();
+        conditions.add(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID));
+        conditions.add(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username));
+        conditions.add(MESSAGE_RECIPIENT.STATUS.ne(MessageStatusType.READ));
+        conditions.add(MESSAGE.TENANT_CODE.eq(tenantCode));
         Optional.ofNullable(criteria.getMessageType())
-                .ifPresent(messageType -> messageConditions.add(MESSAGE.MESSAGE_TYPE.eq(messageType)));
+                .ifPresent(messageType -> conditions.add(MESSAGE.MESSAGE_TYPE.eq(messageType)));
         Optional.ofNullable(criteria.getRecipientType())
-                .ifPresent(recipientType -> messageConditions.add(MESSAGE.RECIPIENT_TYPE.eq(recipientType)));
+                .ifPresent(recipientType -> conditions.add(MESSAGE.RECIPIENT_TYPE.eq(recipientType)));
 
         LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
         dsl
                 .update(MESSAGE_RECIPIENT)
                 .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
                 .set(MESSAGE_RECIPIENT.STATUS, MessageStatusType.READ)
-                .where(MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username),
-                        exists(dsl.selectOne().from(MESSAGE).where(messageConditions)))
+                .from(MESSAGE)
+                .where(conditions)
                 .execute();
     }
 
@@ -162,13 +167,52 @@ public class FeedService {
      */
     @Transactional
     public void markRead(String username, UUID messageId) {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
         dsl.update(MESSAGE_RECIPIENT)
                 .set(MESSAGE_RECIPIENT.STATUS_TIME, now)
                 .set(MESSAGE_RECIPIENT.STATUS, MessageStatusType.READ)
                 .where(MESSAGE_RECIPIENT.MESSAGE_ID.eq(messageId),
                         MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username))
                 .execute();
+    }
+
+    /**
+     * Получение счётчиков уведомлений пользователя
+     *
+     * @param tenantCode Код тенанта
+     * @param username   Имя пользователя
+     * @return Счётчики уведомлений
+     */
+    public FeedStatistics getFeedStatistics(String tenantCode, String username) {
+        return dsl
+                .select(
+                        DSL.count(),
+                        DSL.count().filterWhere(MESSAGE_RECIPIENT.STATUS.eq(MessageStatusType.READ)),
+                        DSL.count().filterWhere(MESSAGE_RECIPIENT.STATUS.eq(MessageStatusType.SENT)),
+                        DSL.count().filterWhere(MESSAGE.MESSAGE_TYPE.eq(MessageType.USER)),
+                        DSL.count().filterWhere(MESSAGE.MESSAGE_TYPE.eq(MessageType.SYSTEM)),
+                        DSL.count().filterWhere(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.RECIPIENT)),
+                        DSL.count().filterWhere(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.USER_GROUP_BY_ROLE))
+                )
+                .from(MESSAGE)
+                .join(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID))
+                .join(CHANNEL).on(CHANNEL.CODE.eq(MESSAGE.CHANNEL_CODE))
+                .where(
+                        MESSAGE.TENANT_CODE.eq(tenantCode),
+                        MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username),
+                        CHANNEL.IS_INTERNAL.eq(Boolean.TRUE)
+                )
+                .fetchOne(record -> {
+                    FeedStatistics stats = new FeedStatistics();
+                    stats.setTotal(record.value1());
+                    stats.setRead(record.value2());
+                    stats.setUnread(record.value3());
+                    stats.setUser(record.value4());
+                    stats.setSystem(record.value5());
+                    stats.setRecipient(record.value6());
+                    stats.setUserGroupByRole(record.value7());
+                    return stats;
+                });
     }
 
     /**
@@ -182,8 +226,8 @@ public class FeedService {
         Integer count = dsl
                 .selectCount()
                 .from(MESSAGE)
-                .leftJoin(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID))
-                .leftJoin(CHANNEL).on(MESSAGE.CHANNEL_CODE.eq(CHANNEL.CODE))
+                .join(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID))
+                .join(CHANNEL).on(MESSAGE.CHANNEL_CODE.eq(CHANNEL.CODE))
                 .where(
                         MESSAGE.TENANT_CODE.eq(tenantCode),
                         MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username),
