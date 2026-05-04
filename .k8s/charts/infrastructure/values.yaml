@@ -2,7 +2,7 @@
 genericServices:
   messaging-db:
     port: 5432
-    imageName: n2o-components/messaging/db
+    imageName: /n2o-components/messaging/db
     imageTag: ${docker.image.tag}
     imagePullPolicy: IfNotPresent
     storageClassName: 'nfs-retain'
