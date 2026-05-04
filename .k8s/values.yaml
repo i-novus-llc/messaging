@@ -19,7 +19,7 @@ messaging-service:
   messaging-frontend:
     replicaCount: 1
     enabled: true
-    imageName: messaging/frontend
+    imageName: n2o-components/messaging/frontend
     actuatorPath: "actuator"
     resources:
       limits:
@@ -45,7 +45,7 @@ messaging-service:
       initialDelaySeconds: 120
     replicaCount: 1
     enabled: true
-    imageName: messaging/backend
+    imageName: n2o-components/messaging/backend
     actuatorPath: "actuator"
     overrideDbName: "messaging"
     resources:
