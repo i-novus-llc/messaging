@@ -14,4 +14,12 @@ messaging-service:
 infrastructure:
   genericServices:
     messaging-db:
+      storageClassName: 'nfs-retain'
+      volumes:
+        - name: messaging-db-data
+          persistentVolumeClaim:
+            claimName: messaging-db-data
+      volumeMounts:
+        - name: messaging-db-data
+          mountPath: /pg/14
       enabled: true
