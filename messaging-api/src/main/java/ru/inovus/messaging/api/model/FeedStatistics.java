@@ -16,7 +16,7 @@ public class FeedStatistics {
     @ApiModelProperty("Количество прочитанных уведомлений")
     private int read;
 
-    @ApiModelProperty("Количество непрочитанных уведомлений (статус 'Отправлено')")
+    @ApiModelProperty("Количество непрочитанных уведомлений")
     private int unread;
 
     @ApiModelProperty("Количество пользовательских уведомлений")
@@ -30,4 +30,10 @@ public class FeedStatistics {
 
     @ApiModelProperty("Количество уведомлений с типом получателя 'Пользователи, отфильтрованные по роли'")
     private int userGroupByRole;
+
+    @ApiModelProperty("Количество уведомлений с типом получателя 'Пользователи, отфильтрованные по региону'")
+    private int userGroupByRegion;
+
+    @ApiModelProperty("Количество уведомлений с типом получателя 'Пользователи, отфильтрованные по медицинской организации'")
+    private int userGroupByOrganization;
 }

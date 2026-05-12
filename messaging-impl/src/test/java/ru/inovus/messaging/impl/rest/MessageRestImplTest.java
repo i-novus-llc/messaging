@@ -10,7 +10,7 @@ import org.mockito.Captor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.inovus.messaging.TestApp;
 import ru.inovus.messaging.api.criteria.MessageCriteria;
@@ -52,13 +52,13 @@ class MessageRestImplTest {
     @Autowired
     private MessageHelper messageHelper;
 
-    @MockBean
+    @MockitoBean
     private MqProvider mqProvider;
 
-    @MockBean
+    @MockitoBean
     private RecipientService recipientService;
 
-    @MockBean
+    @MockitoBean
     private SecurityProviderRest securityProviderRest;
 
     @Captor
