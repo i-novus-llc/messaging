@@ -17,7 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.kafka.test.context.EmbeddedKafka;
@@ -30,6 +29,7 @@ import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.socket.WebSocketHttpHeaders;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
@@ -67,7 +67,7 @@ import static org.hamcrest.Matchers.notNullValue;
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EmbeddedKafka
 @ContextConfiguration(classes = KafkaMqProvider.class)
-public class WebChannelTest extends N2oTestBase {
+class WebChannelTest extends N2oTestBase {
     protected static final String TENANT_CODE = "tenant";
     protected static final String USERNAME = "test-user";
 
@@ -83,13 +83,13 @@ public class WebChannelTest extends N2oTestBase {
     private WebSocketController webSocketController;
     @Value("${novus.messaging.queue.status}")
     private String statusQueue;
-    @MockBean
+    @MockitoBean
     private FeedRest feedRest;
 
     @LocalServerPort
     private Integer port;
 
-    private String URL;
+    private String url;
 
     private CompletableFuture<Object> completableFuture;
 
@@ -98,9 +98,9 @@ public class WebChannelTest extends N2oTestBase {
     private CountDownLatch latch;
 
     @BeforeEach
-    public void init() throws Exception {
+    void init() {
         super.setUp();
-        URL = "ws://localhost:" + port + properties.getEndPoint();
+        url = "ws://localhost:" + port + properties.getEndPoint();
         completableFuture = new CompletableFuture<>();
 
         List<Transport> transports = Collections.singletonList(new WebSocketTransport(new StandardWebSocketClient()));
@@ -125,7 +125,7 @@ public class WebChannelTest extends N2oTestBase {
     }
 
     @Test
-    public void testSendMessage() throws Exception {
+    void testSendMessage() throws Exception {
         // publish session subscribe event
         publisher.publishEvent(createSessionSubscribeEvent());
 
@@ -165,7 +165,7 @@ public class WebChannelTest extends N2oTestBase {
     }
 
     @Test
-    public void testSendFeedCount() throws Exception {
+    void testSendFeedCount() throws Exception {
         // create feed count
         FeedCount feedCount = new FeedCount(TENANT_CODE, USERNAME, 5);
 
@@ -185,7 +185,7 @@ public class WebChannelTest extends N2oTestBase {
     }
 
     @Test
-    public void testSendMessageStatusSuccess() throws Exception {
+    void testSendMessageStatusSuccess() throws Exception {
         // publish session subscribe event
         publisher.publishEvent(createSessionSubscribeEvent());
 
@@ -217,7 +217,7 @@ public class WebChannelTest extends N2oTestBase {
     }
 
     @Test
-    public void testMarkReadMessage() throws Exception {
+    void testMarkReadMessage() throws Exception {
         StompSession stompSession = getStompSessionWithHeaders();
         assertThat(stompSession, notNullValue());
 
@@ -246,7 +246,7 @@ public class WebChannelTest extends N2oTestBase {
     }
 
     @Test
-    public void testMarkReadAllMessage() throws Exception {
+    void testMarkReadAllMessage() throws Exception {
         StompSession stompSession = getStompSessionWithHeaders();
         assertThat(stompSession, notNullValue());
 
@@ -292,7 +292,7 @@ public class WebChannelTest extends N2oTestBase {
     private StompSession getStompSessionWithHeaders() throws InterruptedException, java.util.concurrent.ExecutionException, java.util.concurrent.TimeoutException {
         StompHeaders connectHeaders = new StompHeaders();
         connectHeaders.add("username", USERNAME);
-        return stompClient.connect(URL, new WebSocketHttpHeaders(), connectHeaders, new StompSessionHandlerAdapter() {
+        return stompClient.connect(url, new WebSocketHttpHeaders(), connectHeaders, new StompSessionHandlerAdapter() {
         }).get(1, SECONDS);
     }
 

@@ -116,7 +116,10 @@ class FeedServiceTest {
 
     @Test
     void testGetMessageFeedByRecipientType() {
-        // user2: Message6 (RECIPIENT), Message7 (RECIPIENT), Message8 (USER_GROUP_BY_ROLE)
+        // user2: Message6 (RECIPIENT), Message7 (RECIPIENT),
+        //        Message8/9/10 (USER_GROUP_BY_ROLE),
+        //        Message11 (USER_GROUP_BY_REGION),
+        //        Message12 (USER_GROUP_BY_ORGANIZATION)
 
         // filter by RECIPIENT → Message6, Message7
         FeedCriteria criteria = new FeedCriteria();
@@ -124,58 +127,83 @@ class FeedServiceTest {
         Page<Feed> feed = service.getMessageFeed(TENANT_CODE, USERNAME2, criteria);
         assertThat(feed.getTotalElements(), is(2L));
 
-        // filter by USER_GROUP_BY_ROLE → Message8
+        // filter by USER_GROUP_BY_ROLE → Message8, Message9, Message10 (sorted by sentAt desc)
         criteria.setRecipientType(RecipientType.USER_GROUP_BY_ROLE);
         feed = service.getMessageFeed(TENANT_CODE, USERNAME2, criteria);
-        assertThat(feed.getTotalElements(), is(1L));
+        assertThat(feed.getTotalElements(), is(3L));
         assertThat(feed.getContent().getFirst().getId(), is("33333333-0000-0000-0000-000000000003"));
 
-        // filter by USER_GROUP_BY_ORGANIZATION → no results
+        // filter by USER_GROUP_BY_REGION → Message11
+        criteria.setRecipientType(RecipientType.USER_GROUP_BY_REGION);
+        feed = service.getMessageFeed(TENANT_CODE, USERNAME2, criteria);
+        assertThat(feed.getTotalElements(), is(1L));
+        assertThat(feed.getContent().getFirst().getId(), is("66666666-0000-0000-0000-000000000006"));
+
+        // filter by USER_GROUP_BY_ORGANIZATION → Message12
         criteria.setRecipientType(RecipientType.USER_GROUP_BY_ORGANIZATION);
         feed = service.getMessageFeed(TENANT_CODE, USERNAME2, criteria);
-        assertThat(feed.getTotalElements(), is(0L));
+        assertThat(feed.getTotalElements(), is(1L));
+        assertThat(feed.getContent().getFirst().getId(), is("77777777-0000-0000-0000-000000000007"));
     }
 
     @Test
     void testGetFeedStatistics() {
+        // user2:
+        //   Message6 (SYSTEM/RECIPIENT/SENT),
+        //   Message7 (USER/RECIPIENT/SENT),
+        //   Message8 (SYSTEM/USER_GROUP_BY_ROLE/SENT),
+        //   Message9 (USER/USER_GROUP_BY_ROLE/SCHEDULED),
+        //   Message10 (SYSTEM/USER_GROUP_BY_ROLE/FAILED),
+        //   Message11 (USER/USER_GROUP_BY_REGION/SENT),
+        //   Message12 (SYSTEM/USER_GROUP_BY_ORGANIZATION/SENT)
         FeedStatistics stats = service.getFeedStatistics(TENANT_CODE, USERNAME2);
 
-        assertThat(stats.getTotal(), is(3));
+        assertThat(stats.getTotal(), is(7));
         assertThat(stats.getRead(), is(0));
-        assertThat(stats.getUnread(), is(3));
-        assertThat(stats.getSystem(), is(2));
-        assertThat(stats.getUser(), is(1));
+        // unread = all messages except READ
+        assertThat(stats.getUnread(), is(7));
+        assertThat(stats.getSystem(), is(4));
+        assertThat(stats.getUser(), is(3));
         assertThat(stats.getRecipient(), is(2));
-        assertThat(stats.getUserGroupByRole(), is(1));
+        assertThat(stats.getUserGroupByRole(), is(3));
+        assertThat(stats.getUserGroupByRegion(), is(1));
+        assertThat(stats.getUserGroupByOrganization(), is(1));
     }
 
     @Test
     @Transactional
     void testMarkReadAllWithMessageTypeFilter() {
-        // user2 has 3 unread: Message6 (SYSTEM), Message7 (USER), Message8 (SYSTEM)
-        assertThat(service.getFeedCount(TENANT_CODE, USERNAME2).getCount(), is(3));
+        // user2 has 7 unread: Message6 (SYSTEM/SENT), Message7 (USER/SENT), Message8 (SYSTEM/SENT),
+        //                     Message9 (USER/SCHEDULED), Message10 (SYSTEM/FAILED),
+        //                     Message11 (USER/SENT), Message12 (SYSTEM/SENT)
+        assertThat(service.getFeedCount(TENANT_CODE, USERNAME2).getCount(), is(7));
 
-        // mark only SYSTEM messages as read → Message6 and Message8 get marked
+        // mark only SYSTEM messages as read → Message6, Message8, Message10, Message12 get marked
         FeedCriteria criteria = new FeedCriteria();
         criteria.setMessageType(MessageType.SYSTEM);
         service.markReadAll(TENANT_CODE, USERNAME2, criteria);
 
-        // Message7 (USER) still unread → count = 1
-        assertThat(service.getFeedCount(TENANT_CODE, USERNAME2).getCount(), is(1));
+        // Message7, Message9, Message11 (all USER) still unread → count = 3
+        assertThat(service.getFeedCount(TENANT_CODE, USERNAME2).getCount(), is(3));
     }
 
     @Test
     @Transactional
     void testMarkReadAllWithRecipientTypeFilter() {
-        // user2 has 3 unread: Message6 (RECIPIENT), Message7 (RECIPIENT), Message8 (USER_GROUP_BY_ROLE)
-        assertThat(service.getFeedCount(TENANT_CODE, USERNAME2).getCount(), is(3));
+        // user2 has 7 unread: Message6 (RECIPIENT/SENT), Message7 (RECIPIENT/SENT),
+        //                     Message8 (USER_GROUP_BY_ROLE/SENT),
+        //                     Message9 (USER_GROUP_BY_ROLE/SCHEDULED),
+        //                     Message10 (USER_GROUP_BY_ROLE/FAILED),
+        //                     Message11 (USER_GROUP_BY_REGION/SENT),
+        //                     Message12 (USER_GROUP_BY_ORGANIZATION/SENT)
+        assertThat(service.getFeedCount(TENANT_CODE, USERNAME2).getCount(), is(7));
 
         // mark only RECIPIENT messages as read → Message6 and Message7 get marked
         FeedCriteria criteria = new FeedCriteria();
         criteria.setRecipientType(RecipientType.RECIPIENT);
         service.markReadAll(TENANT_CODE, USERNAME2, criteria);
 
-        // Message8 (USER_GROUP_BY_ROLE) still unread → count = 1
-        assertThat(service.getFeedCount(TENANT_CODE, USERNAME2).getCount(), is(1));
+        // Message8..Message12 (non-RECIPIENT) still unread → count = 5
+        assertThat(service.getFeedCount(TENANT_CODE, USERNAME2).getCount(), is(5));
     }
 }
