@@ -15,9 +15,9 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.inovus.messaging.TestApp;
 import ru.inovus.messaging.api.criteria.RecipientCriteria;
@@ -42,7 +42,7 @@ import static org.mockito.Mockito.when;
 @TestPropertySource("classpath:application.properties")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @EnableTestcontainersPg
-public class AttachmentServiceTest {
+class AttachmentServiceTest {
 
     private static final String FIRST_FILE_NAME = "test_file_name_1.pdf";
     private static final String SECOND_FILE_NAME = "test_file_name_2.pdf";
@@ -52,7 +52,7 @@ public class AttachmentServiceTest {
     private static final UUID THIRD_MESSAGE_ID = UUID.fromString("6aa72600-1290-41ae-8429-e36ce46f60af");
     @Autowired
     private AttachmentService service;
-    @MockBean
+    @MockitoBean
     private AmazonS3 s3client;
     @Autowired
     private DocumentUtils documentUtils;

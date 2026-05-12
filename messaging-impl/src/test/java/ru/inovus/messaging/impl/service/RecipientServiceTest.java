@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.inovus.messaging.TestApp;
 import ru.inovus.messaging.api.criteria.RecipientCriteria;
@@ -44,17 +44,17 @@ import static org.mockito.Mockito.when;
 @EmbeddedKafka
 @EnableTestcontainersPg
 @EnableAutoConfiguration(exclude = KafkaAutoConfiguration.class)
-public class RecipientServiceTest {
+class RecipientServiceTest {
     @Autowired
     private RecipientService service;
 
     @Autowired
     private MqProvider mqProvider;
 
-    @MockBean
+    @MockitoBean
     private RecipientProvider recipientProvider;
 
-    @MockBean
+    @MockitoBean
     private SecurityProviderRest securityProviderRest;
 
     @Value("${novus.messaging.queue.feed-count}")
@@ -64,7 +64,7 @@ public class RecipientServiceTest {
 
 
     @Test
-    public void testGetRecipients() {
+    void testGetRecipients() {
         RecipientCriteria criteria = new RecipientCriteria();
 
         // should be empty without messageId
@@ -80,7 +80,7 @@ public class RecipientServiceTest {
     }
 
     @Test
-    public void testGetAll() {
+    void testGetAll() {
         when(recipientProvider.getRecipients(any())).thenReturn(getProviderRecipientsPage());
         List<Recipient> recipients = service.getAll();
         assertThat(recipients.size(), is(2));
@@ -95,7 +95,7 @@ public class RecipientServiceTest {
     }
 
     @Test
-    public void testUpdateStatus() throws InterruptedException {
+    void testUpdateStatus() throws InterruptedException {
         RecipientCriteria criteria = new RecipientCriteria();
         criteria.setMessageId(UUID.fromString("a2bd666b-1684-4005-a10f-f14224f66d0a"));
 
@@ -171,7 +171,8 @@ public class RecipientServiceTest {
 
         assertThat(feedCount[0].getTenantCode(), is(TENANT_CODE));
         assertThat(feedCount[0].getUsername(), is("web2"));
-        assertThat(feedCount[0].getCount(), is(0));
+        // unread = STATUS != READ: Message1/web2 is SCHEDULED (still unread), Message2/web2 was SENT → READ
+        assertThat(feedCount[0].getCount(), is(1));
     }
 
     private Page<ProviderRecipient> getProviderRecipientsPage() {

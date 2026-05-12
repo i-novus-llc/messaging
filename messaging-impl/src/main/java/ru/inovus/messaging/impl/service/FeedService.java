@@ -188,11 +188,13 @@ public class FeedService {
                 .select(
                         DSL.count(),
                         DSL.count().filterWhere(MESSAGE_RECIPIENT.STATUS.eq(MessageStatusType.READ)),
-                        DSL.count().filterWhere(MESSAGE_RECIPIENT.STATUS.eq(MessageStatusType.SENT)),
+                        DSL.count().filterWhere(MESSAGE_RECIPIENT.STATUS.ne(MessageStatusType.READ)),
                         DSL.count().filterWhere(MESSAGE.MESSAGE_TYPE.eq(MessageType.USER)),
                         DSL.count().filterWhere(MESSAGE.MESSAGE_TYPE.eq(MessageType.SYSTEM)),
                         DSL.count().filterWhere(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.RECIPIENT)),
-                        DSL.count().filterWhere(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.USER_GROUP_BY_ROLE))
+                        DSL.count().filterWhere(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.USER_GROUP_BY_ROLE)),
+                        DSL.count().filterWhere(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.USER_GROUP_BY_REGION)),
+                        DSL.count().filterWhere(MESSAGE.RECIPIENT_TYPE.eq(RecipientType.USER_GROUP_BY_ORGANIZATION))
                 )
                 .from(MESSAGE)
                 .join(MESSAGE_RECIPIENT).on(MESSAGE_RECIPIENT.MESSAGE_ID.eq(MESSAGE.ID))
@@ -211,6 +213,8 @@ public class FeedService {
                     stats.setSystem(record.value5());
                     stats.setRecipient(record.value6());
                     stats.setUserGroupByRole(record.value7());
+                    stats.setUserGroupByRegion(record.value8());
+                    stats.setUserGroupByOrganization(record.value9());
                     return stats;
                 });
     }
@@ -232,7 +236,7 @@ public class FeedService {
                         MESSAGE.TENANT_CODE.eq(tenantCode),
                         MESSAGE_RECIPIENT.RECIPIENT_USERNAME.eq(username),
                         CHANNEL.IS_INTERNAL.eq(Boolean.TRUE),
-                        MESSAGE_RECIPIENT.STATUS.eq(MessageStatusType.SENT))
+                        MESSAGE_RECIPIENT.STATUS.ne(MessageStatusType.READ))
                 .fetchOne().value1();
         return new FeedCount(tenantCode, username, count);
     }

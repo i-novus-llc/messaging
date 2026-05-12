@@ -73,7 +73,29 @@
             INSERT INTO messaging.message_recipient (id, message_id, recipient_username, status)
             VALUES (10, '33333333-0000-0000-0000-000000000003', 'user2', 'SENT');
 
-            SELECT setval('messaging.message_recipient_id_seq', 11, false);
+            <!-- messages for tenant3/user2 with non-SENT/non-READ statuses (must still count as unread) -->
+            INSERT INTO messaging.message (id, text, severity, alert_type, tenant_code, sent_at, recipient_type, channel_code, message_type)
+            VALUES ('44444444-0000-0000-0000-000000000004', 'Message9', 'INFO', 'POPUP', 'tenant3', '2021-09-15 00:00:00', 'USER_GROUP_BY_ROLE', 'web', 'USER');
+            INSERT INTO messaging.message_recipient (id, message_id, recipient_username, status)
+            VALUES (11, '44444444-0000-0000-0000-000000000004', 'user2', 'SCHEDULED');
+
+            INSERT INTO messaging.message (id, text, severity, alert_type, tenant_code, sent_at, recipient_type, channel_code, message_type)
+            VALUES ('55555555-0000-0000-0000-000000000005', 'Message10', 'DANGER', 'POPUP', 'tenant3', '2021-07-15 00:00:00', 'USER_GROUP_BY_ROLE', 'web', 'SYSTEM');
+            INSERT INTO messaging.message_recipient (id, message_id, recipient_username, status)
+            VALUES (12, '55555555-0000-0000-0000-000000000005', 'user2', 'FAILED');
+
+            <!-- messages for tenant3/user2 with previously uncounted RecipientType values -->
+            INSERT INTO messaging.message (id, text, severity, alert_type, tenant_code, sent_at, recipient_type, channel_code, message_type)
+            VALUES ('66666666-0000-0000-0000-000000000006', 'Message11', 'INFO', 'POPUP', 'tenant3', '2021-06-15 00:00:00', 'USER_GROUP_BY_REGION', 'web', 'USER');
+            INSERT INTO messaging.message_recipient (id, message_id, recipient_username, status)
+            VALUES (13, '66666666-0000-0000-0000-000000000006', 'user2', 'SENT');
+
+            INSERT INTO messaging.message (id, text, severity, alert_type, tenant_code, sent_at, recipient_type, channel_code, message_type)
+            VALUES ('77777777-0000-0000-0000-000000000007', 'Message12', 'DANGER', 'POPUP', 'tenant3', '2021-05-15 00:00:00', 'USER_GROUP_BY_ORGANIZATION', 'web', 'SYSTEM');
+            INSERT INTO messaging.message_recipient (id, message_id, recipient_username, status)
+            VALUES (14, '77777777-0000-0000-0000-000000000007', 'user2', 'SENT');
+
+            SELECT setval('messaging.message_recipient_id_seq', 15, false);
         </sql>
     </changeSet>
 </databaseChangeLog>
