@@ -9,11 +9,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.inovus.messaging.api.model.Message;
 import ru.inovus.messaging.api.model.MessageStatus;
@@ -41,7 +41,7 @@ import static org.mockito.Mockito.*;
                 "spring.mail.username=test-user"})
 @EmbeddedKafka
 @ContextConfiguration(classes = KafkaMqProvider.class)
-public class EmailChannelTest {
+class EmailChannelTest {
 
     @Autowired
     private MqProvider mqProvider;
@@ -55,12 +55,12 @@ public class EmailChannelTest {
     @Autowired
     private EmailChannelProperties properties;
 
-    @MockBean
+    @MockitoBean
     private JavaMailSender mailSender;
 
 
     @Test
-    public void testSendMessageViaEmailQueue() throws Exception {
+    void testSendMessageViaEmailQueue() throws Exception {
         Message message = new Message();
         message.setCaption("Test caption");
         message.setText("Message");
@@ -95,7 +95,7 @@ public class EmailChannelTest {
     }
 
     @Test
-    public void testSendMessageStatusSuccess() throws InterruptedException {
+    void testSendMessageStatusSuccess() throws InterruptedException {
         Message message = new Message();
         message.setId("6f711616-1617-11ec-9621-0242ac130003");
         message.setCaption("Test caption");
@@ -128,7 +128,7 @@ public class EmailChannelTest {
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
-    public void testSendMessageStatusFailed() throws InterruptedException {
+    void testSendMessageStatusFailed() throws InterruptedException {
         Message message = new Message();
         message.setId("6f711616-1617-11ec-9621-0242ac130002");
         message.setTenantCode("tenant");
