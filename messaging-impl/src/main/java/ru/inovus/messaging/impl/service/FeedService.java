@@ -73,7 +73,8 @@ public class FeedService {
         Optional.ofNullable(criteria.getMessageType())
                 .ifPresent(messageType -> conditions.add(MESSAGE.MESSAGE_TYPE.eq(messageType)));
         Optional.ofNullable(criteria.getRecipientType())
-                .ifPresent(recipientType -> conditions.add(MESSAGE.RECIPIENT_TYPE.eq(recipientType)));
+                .filter(recipientTypes -> !recipientTypes.isEmpty())
+                .ifPresent(recipientTypes -> conditions.add(MESSAGE.RECIPIENT_TYPE.in(recipientTypes)));
 
         if (Boolean.TRUE.equals(criteria.getIsRead())) {
             conditions.add(MESSAGE_RECIPIENT.STATUS.eq(MessageStatusType.READ));
@@ -147,7 +148,8 @@ public class FeedService {
         Optional.ofNullable(criteria.getMessageType())
                 .ifPresent(messageType -> conditions.add(MESSAGE.MESSAGE_TYPE.eq(messageType)));
         Optional.ofNullable(criteria.getRecipientType())
-                .ifPresent(recipientType -> conditions.add(MESSAGE.RECIPIENT_TYPE.eq(recipientType)));
+                .filter(recipientTypes -> !recipientTypes.isEmpty())
+                .ifPresent(recipientTypes -> conditions.add(MESSAGE.RECIPIENT_TYPE.in(recipientTypes)));
 
         LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
         dsl

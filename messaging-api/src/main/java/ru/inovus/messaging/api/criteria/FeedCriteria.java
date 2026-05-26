@@ -24,6 +24,7 @@ import ru.inovus.messaging.api.model.enums.Severity;
 
 import jakarta.ws.rs.QueryParam;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -50,6 +51,6 @@ public class FeedCriteria extends BaseMessagingCriteria {
     private MessageType messageType;
 
     @QueryParam("recipientType")
-    @ApiParam("Тип получателя уведомления")
-    private RecipientType recipientType;
+    @ApiParam("Типы получателей уведомления")
+    private List<RecipientType> recipientType;
 }
