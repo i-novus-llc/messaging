@@ -96,6 +96,12 @@
             VALUES (14, '77777777-0000-0000-0000-000000000007', 'user2', 'SENT');
 
             SELECT setval('messaging.message_recipient_id_seq', 15, false);
+
+            <!-- recipient groups and group templates -->
+            INSERT INTO messaging.recipient_group (id, code, name, tenant_code)
+            VALUES (9, 'test_group', 'Test Group', 'tenant');
+            INSERT INTO messaging.recipient_group_template (recipient_group_id, message_template_id, message_template_code)
+            VALUES (9, 1, 'mt1');
         </sql>
     </changeSet>
 </databaseChangeLog>
