@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import static java.util.Objects.nonNull;
 import static ru.inovus.messaging.impl.jooq.Sequences.MESSAGE_TEMPLATE_ID_SEQ;
 import static ru.inovus.messaging.impl.jooq.Tables.MESSAGE_TEMPLATE;
+import static ru.inovus.messaging.impl.jooq.Tables.RECIPIENT_GROUP_TEMPLATE;
 
 /**
  * Сервис шаблонов уведомлений
@@ -166,6 +167,14 @@ public class MessageTemplateService {
      */
     @Transactional
     public void deleteTemplate(String tenantCode, Integer id) {
+        boolean isReferenced = dsl.fetchExists(
+                dsl.selectOne()
+                        .from(RECIPIENT_GROUP_TEMPLATE)
+                        .where(RECIPIENT_GROUP_TEMPLATE.MESSAGE_TEMPLATE_ID.eq(id))
+        );
+        if (isReferenced)
+            throw new UserException(messageHelper.obtainMessage("messaging.exception.messageTemplate.referenced"));
+
         dsl
                 .deleteFrom(MESSAGE_TEMPLATE)
                 .where(MESSAGE_TEMPLATE.ID.eq(id), MESSAGE_TEMPLATE.TENANT_CODE.eq(tenantCode))
