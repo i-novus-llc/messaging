@@ -1,5 +1,6 @@
 package ru.inovus.messaging.impl.service;
 
+import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.platform.test.autoconfigure.pg.EnableTestcontainersPg;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +20,7 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApp.class,
@@ -100,6 +102,12 @@ class MessageTemplateServiceTest {
         template = service.getTemplate(TENANT_CODE, "mt2");
         assertThat(template.getId(), is(2));
         assertThat(template.getCode(), is("mt2"));
+    }
+
+    @Test
+    void testDeleteTemplateReferencedByGroup() {
+        assertThrows(UserException.class, () -> service.deleteTemplate(TENANT_CODE, 1));
+        assertThat(service.getTemplate(TENANT_CODE, 1).getId(), is(1));
     }
 
     @Test
