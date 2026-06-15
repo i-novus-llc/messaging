@@ -16,13 +16,12 @@
 package ru.inovus.messaging.api.criteria;
 
 import io.swagger.annotations.ApiParam;
+import jakarta.ws.rs.QueryParam;
 import lombok.Getter;
 import lombok.Setter;
 import ru.inovus.messaging.api.model.enums.MessageType;
-import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.model.enums.Severity;
 
-import jakarta.ws.rs.QueryParam;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -52,5 +51,5 @@ public class FeedCriteria extends BaseMessagingCriteria {
 
     @QueryParam("recipientType")
     @ApiParam("Типы получателей уведомления")
-    private List<RecipientType> recipientType;
+    private List<String> recipientType;
 }
