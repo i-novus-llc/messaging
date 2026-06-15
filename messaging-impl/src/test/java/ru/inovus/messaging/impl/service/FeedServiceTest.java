@@ -7,16 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 import ru.inovus.messaging.TestApp;
 import ru.inovus.messaging.api.criteria.FeedCriteria;
 import ru.inovus.messaging.api.model.Feed;
 import ru.inovus.messaging.api.model.FeedCount;
 import ru.inovus.messaging.api.model.FeedStatistics;
 import ru.inovus.messaging.api.model.enums.MessageType;
-import ru.inovus.messaging.api.model.enums.RecipientType;
 import ru.inovus.messaging.api.model.enums.Severity;
-
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -124,30 +122,30 @@ class FeedServiceTest {
 
         // filter by RECIPIENT → Message6, Message7
         FeedCriteria criteria = new FeedCriteria();
-        criteria.setRecipientType(List.of(RecipientType.RECIPIENT));
+        criteria.setRecipientType(List.of("RECIPIENT"));
         Page<Feed> feed = service.getMessageFeed(TENANT_CODE, USERNAME2, criteria);
         assertThat(feed.getTotalElements(), is(2L));
 
         // filter by USER_GROUP_BY_ROLE → Message8, Message9, Message10 (sorted by sentAt desc)
-        criteria.setRecipientType(List.of(RecipientType.USER_GROUP_BY_ROLE));
+        criteria.setRecipientType(List.of("USER_GROUP_BY_ROLE"));
         feed = service.getMessageFeed(TENANT_CODE, USERNAME2, criteria);
         assertThat(feed.getTotalElements(), is(3L));
         assertThat(feed.getContent().getFirst().getId(), is("33333333-0000-0000-0000-000000000003"));
 
         // filter by USER_GROUP_BY_REGION → Message11
-        criteria.setRecipientType(List.of(RecipientType.USER_GROUP_BY_REGION));
+        criteria.setRecipientType(List.of("USER_GROUP_BY_REGION"));
         feed = service.getMessageFeed(TENANT_CODE, USERNAME2, criteria);
         assertThat(feed.getTotalElements(), is(1L));
         assertThat(feed.getContent().getFirst().getId(), is("66666666-0000-0000-0000-000000000006"));
 
         // filter by USER_GROUP_BY_ORGANIZATION → Message12
-        criteria.setRecipientType(List.of(RecipientType.USER_GROUP_BY_ORGANIZATION));
+        criteria.setRecipientType(List.of("USER_GROUP_BY_ORGANIZATION"));
         feed = service.getMessageFeed(TENANT_CODE, USERNAME2, criteria);
         assertThat(feed.getTotalElements(), is(1L));
         assertThat(feed.getContent().getFirst().getId(), is("77777777-0000-0000-0000-000000000007"));
 
         // filter by multiple types (RECIPIENT + USER_GROUP_BY_REGION) → Message6, Message7, Message11
-        criteria.setRecipientType(List.of(RecipientType.RECIPIENT, RecipientType.USER_GROUP_BY_REGION));
+        criteria.setRecipientType(List.of("RECIPIENT", "USER_GROUP_BY_REGION"));
         feed = service.getMessageFeed(TENANT_CODE, USERNAME2, criteria);
         assertThat(feed.getTotalElements(), is(3L));
     }
@@ -206,10 +204,10 @@ class FeedServiceTest {
 
         // mark only RECIPIENT messages as read → Message6 and Message7 get marked
         FeedCriteria criteria = new FeedCriteria();
-        criteria.setRecipientType(List.of(RecipientType.RECIPIENT));
+        criteria.setRecipientType(List.of("RECIPIENT"));
         service.markReadAll(TENANT_CODE, USERNAME2, criteria);
 
-        // Message8..Message12 (non-RECIPIENT) still unread → count = 5
+        // Message8...Message12 (non-RECIPIENT) still unread → count = 5
         assertThat(service.getFeedCount(TENANT_CODE, USERNAME2).getCount(), is(5));
     }
 }
