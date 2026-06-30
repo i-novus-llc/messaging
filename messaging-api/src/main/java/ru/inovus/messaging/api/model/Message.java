@@ -86,8 +86,8 @@ public class Message implements Serializable {
     @ApiModelProperty("Код шаблона уведомления")
     private String templateCode;
 
-    @ApiModelProperty("Коды шаблонов уведомлений")
-    private List<String> templateCodes;
+    @ApiModelProperty("Идентификаторы шаблонов уведомлений")
+    private List<Integer> templateIds;
 
     @JsonIgnore
     private String tenantCode;

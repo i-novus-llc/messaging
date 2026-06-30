@@ -23,7 +23,7 @@ public class RecipientGroupCriteria extends BaseMessagingCriteria {
     @ApiParam("Имена пользователей группы получателей")
     private List<String> recipientNames;
 
-    @QueryParam("templateCodes")
-    @ApiParam("Коды шаблонов группы получателей")
-    private List<String> templateCodes;
+    @QueryParam("templateIds")
+    @ApiParam("Идентификаторы шаблонов группы получателей")
+    private List<Integer> templateIds;
 }
