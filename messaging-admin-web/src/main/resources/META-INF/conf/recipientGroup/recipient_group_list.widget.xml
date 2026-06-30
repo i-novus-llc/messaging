@@ -6,7 +6,7 @@
             <input-select id="recipientName" label="ФИО получателя"
                           query-id="messaging_recipient"
                           label-field-id="name" search-filter-id="id" type="multi"/>
-            <input-select id="templateCode" label="Код шаблона уведомления"
+            <input-select id="templateIds" label="Код шаблона уведомления"
                           query-id="messaging_msg_template"
                           label-field-id="code" type="multi"/>
         </row>

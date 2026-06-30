@@ -17,7 +17,7 @@
         <eq field-id="name" filter-id="name">name={name}</eq>
         <eq field-id="code" filter-id="code">code={code}</eq>
         <eq field-id="recipientName" filter-id="recipientName*.id">recipientNames={recipientName*.id}</eq>
-        <eq field-id="templateCode" filter-id="templateCode*.code">templateCodes={templateCode*.code}</eq>
+        <eq field-id="templateIds" filter-id="templateIds*.id">templateIds={templateIds*.id}</eq>
     </filters>
 
     <fields>
@@ -29,6 +29,7 @@
         <field id="recipients*.id" domain="integer[]" name="СНИЛС участников" mapping="['recipients*.username']"/>
         <field id="recipientName" domain="string[]" name="ФИО участников" mapping="['recipients*.name']"/>
         <field id="templates" domain="object[]" name="Шаблоны уведомления" mapping="['templates']"/>
+        <field id="templateIds" domain="integer[]" name="Идентификаторы шаблона уведомления" mapping="['templates*.id']" select="false"/>
         <field id="templateCode" domain="string[]" name="Коды шаблона уведомления" mapping="['templates*.code']"/>
     </fields>
 

@@ -147,8 +147,12 @@ public class MessageService {
         Optional.ofNullable(criteria.getSentAtEnd())
                 .ifPresent(end -> conditions.add(MESSAGE.SENT_AT.lessOrEqual(end)));
 
-        if (criteria.getTemplateCodes() != null && !criteria.getTemplateCodes().isEmpty()) {
-            conditions.add(MESSAGE.TEMPLATE_CODE.in(criteria.getTemplateCodes()));
+        if (criteria.getTemplateIds() != null && !criteria.getTemplateIds().isEmpty()) {
+            conditions.add(MESSAGE.TEMPLATE_CODE.in(
+                    dsl.select(MESSAGE_TEMPLATE.CODE)
+                            .from(MESSAGE_TEMPLATE)
+                            .where(MESSAGE_TEMPLATE.ID.in(criteria.getTemplateIds()))
+            ));
         }
 
         SelectConditionStep<Record> query = dsl

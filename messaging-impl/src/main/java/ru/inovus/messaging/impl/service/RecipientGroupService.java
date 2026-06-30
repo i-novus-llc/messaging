@@ -91,19 +91,19 @@ public class RecipientGroupService {
         var countQuery = dsl.selectDistinct(RECIPIENT_GROUP.ID)
                 .from(RECIPIENT_GROUP);
 
-        if (criteria.getTemplateCodes() != null && !criteria.getTemplateCodes().isEmpty()) {
-            List<String> targetTemplateCodes = criteria.getTemplateCodes();
+        if (criteria.getTemplateIds() != null && !criteria.getTemplateIds().isEmpty()) {
+            List<Integer> targetTemplateIds = criteria.getTemplateIds();
             query.join(RECIPIENT_GROUP_TEMPLATE)
                     .on(RECIPIENT_GROUP_TEMPLATE.RECIPIENT_GROUP_ID.eq(RECIPIENT_GROUP.ID))
-                    .where(RECIPIENT_GROUP_TEMPLATE.MESSAGE_TEMPLATE_CODE.in(targetTemplateCodes));
+                    .where(RECIPIENT_GROUP_TEMPLATE.MESSAGE_TEMPLATE_ID.in(targetTemplateIds));
             query.groupBy(RECIPIENT_GROUP.ID)
-                    .having(DSL.countDistinct(RECIPIENT_GROUP_TEMPLATE.MESSAGE_TEMPLATE_ID).ge(targetTemplateCodes.size()));
+                    .having(DSL.countDistinct(RECIPIENT_GROUP_TEMPLATE.MESSAGE_TEMPLATE_ID).ge(targetTemplateIds.size()));
 
             countQuery.join(RECIPIENT_GROUP_TEMPLATE)
                     .on(RECIPIENT_GROUP_TEMPLATE.RECIPIENT_GROUP_ID.eq(RECIPIENT_GROUP.ID))
-                    .where(RECIPIENT_GROUP_TEMPLATE.MESSAGE_TEMPLATE_CODE.in(targetTemplateCodes));
+                    .where(RECIPIENT_GROUP_TEMPLATE.MESSAGE_TEMPLATE_ID.in(targetTemplateIds));
             countQuery.groupBy(RECIPIENT_GROUP.ID)
-                    .having(DSL.countDistinct(RECIPIENT_GROUP_TEMPLATE.MESSAGE_TEMPLATE_ID).ge(targetTemplateCodes.size()));
+                    .having(DSL.countDistinct(RECIPIENT_GROUP_TEMPLATE.MESSAGE_TEMPLATE_ID).ge(targetTemplateIds.size()));
         }
 
         if (criteria.getRecipientNames() != null && !criteria.getRecipientNames().isEmpty()) {
