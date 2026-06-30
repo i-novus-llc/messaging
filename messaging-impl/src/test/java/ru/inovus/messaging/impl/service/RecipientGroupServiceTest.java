@@ -194,13 +194,13 @@ public class RecipientGroupServiceTest {
         assertThat(rg.getName(), is("Group31"));
 
         criteria.setName(null);
-        criteria.setTemplateCodes(List.of("mt2"));
+        criteria.setTemplateIds(List.of(2));
         list = service.getRecipientGroups(TENANT_CODE, criteria);
         assertThat(list.getTotalElements(), is(2L));
         assertThat(getTemplateByCode(list.getContent().get(0).getTemplates(), "mt2"), notNullValue());
         assertThat(getTemplateByCode(list.getContent().get(1).getTemplates(), "mt2"), notNullValue());
 
-        criteria.setTemplateCodes(null);
+        criteria.setTemplateIds(null);
         criteria.setRecipientNames(List.of("userName1"));
         list = service.getRecipientGroups(TENANT_CODE, criteria);
         assertThat(list.getTotalElements(), is(2L));
