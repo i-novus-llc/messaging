@@ -79,6 +79,14 @@ class MessageServiceTest {
         criteria.setChannelCode("web");
         messages = service.getMessages(TENANT_CODE, criteria);
         assertThat(messages.getTotalElements(), is(2L));
+
+        // filter by template ids
+        criteria = new MessageCriteria();
+        criteria.setTemplateIds(List.of(2));
+        messages = service.getMessages(TENANT_CODE, criteria);
+        assertThat(messages.getTotalElements(), is(1L));
+        assertThat(messages.getContent().get(0).getText(), is("Message2"));
+        assertThat(messages.getContent().get(0).getTemplateCode(), is("mt2"));
     }
 
     @Test
