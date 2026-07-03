@@ -47,4 +47,8 @@ public class MessageCriteria extends BaseMessagingCriteria {
     @QueryParam("templateIds")
     @ApiParam("Идентификаторы шаблонов")
     private List<Integer> templateIds;
+
+    @QueryParam("templateCodes")
+    @ApiParam("Коды шаблонов")
+    private List<String> templateCodes;
 }
