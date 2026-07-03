@@ -87,6 +87,14 @@ class MessageServiceTest {
         assertThat(messages.getTotalElements(), is(1L));
         assertThat(messages.getContent().get(0).getText(), is("Message2"));
         assertThat(messages.getContent().get(0).getTemplateCode(), is("mt2"));
+
+        // filter by template codes
+        criteria = new MessageCriteria();
+        criteria.setTemplateCodes(List.of("mt2"));
+        messages = service.getMessages(TENANT_CODE, criteria);
+        assertThat(messages.getTotalElements(), is(1L));
+        assertThat(messages.getContent().get(0).getText(), is("Message2"));
+        assertThat(messages.getContent().get(0).getTemplateCode(), is("mt2"));
     }
 
     @Test
