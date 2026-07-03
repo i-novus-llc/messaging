@@ -155,6 +155,10 @@ public class MessageService {
             ));
         }
 
+        if (criteria.getTemplateCodes() != null && !criteria.getTemplateCodes().isEmpty()) {
+            conditions.add(MESSAGE.TEMPLATE_CODE.in(criteria.getTemplateCodes()));
+        }
+
         SelectConditionStep<Record> query = dsl
                 .select(MESSAGE.fields())
                 .select(CHANNEL.fields())

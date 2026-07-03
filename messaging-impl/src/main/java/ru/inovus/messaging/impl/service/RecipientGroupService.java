@@ -93,6 +93,7 @@ public class RecipientGroupService {
 
         if (criteria.getTemplateIds() != null && !criteria.getTemplateIds().isEmpty()) {
             List<Integer> targetTemplateIds = criteria.getTemplateIds();
+
             query.join(RECIPIENT_GROUP_TEMPLATE)
                     .on(RECIPIENT_GROUP_TEMPLATE.RECIPIENT_GROUP_ID.eq(RECIPIENT_GROUP.ID))
                     .where(RECIPIENT_GROUP_TEMPLATE.MESSAGE_TEMPLATE_ID.in(targetTemplateIds));
@@ -104,6 +105,22 @@ public class RecipientGroupService {
                     .where(RECIPIENT_GROUP_TEMPLATE.MESSAGE_TEMPLATE_ID.in(targetTemplateIds));
             countQuery.groupBy(RECIPIENT_GROUP.ID)
                     .having(DSL.countDistinct(RECIPIENT_GROUP_TEMPLATE.MESSAGE_TEMPLATE_ID).ge(targetTemplateIds.size()));
+        }
+
+        if (criteria.getTemplateCodes() != null && !criteria.getTemplateCodes().isEmpty()) {
+            List<String> targetTemplateCodes = criteria.getTemplateCodes();
+
+            query.join(RECIPIENT_GROUP_TEMPLATE)
+                    .on(RECIPIENT_GROUP_TEMPLATE.RECIPIENT_GROUP_ID.eq(RECIPIENT_GROUP.ID))
+                    .where(RECIPIENT_GROUP_TEMPLATE.MESSAGE_TEMPLATE_CODE.in(targetTemplateCodes));
+            query.groupBy(RECIPIENT_GROUP.ID)
+                    .having(DSL.countDistinct(RECIPIENT_GROUP_TEMPLATE.MESSAGE_TEMPLATE_ID).ge(targetTemplateCodes.size()));
+
+            countQuery.join(RECIPIENT_GROUP_TEMPLATE)
+                    .on(RECIPIENT_GROUP_TEMPLATE.RECIPIENT_GROUP_ID.eq(RECIPIENT_GROUP.ID))
+                    .where(RECIPIENT_GROUP_TEMPLATE.MESSAGE_TEMPLATE_CODE.in(targetTemplateCodes));
+            countQuery.groupBy(RECIPIENT_GROUP.ID)
+                    .having(DSL.countDistinct(RECIPIENT_GROUP_TEMPLATE.MESSAGE_TEMPLATE_ID).ge(targetTemplateCodes.size()));
         }
 
         if (criteria.getRecipientNames() != null && !criteria.getRecipientNames().isEmpty()) {
