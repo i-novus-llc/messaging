@@ -17,4 +17,9 @@ infrastructure:
   genericServices:
     messaging-db:
       enabled: true
-      storageClassName:	nfs-delete
+      volumes:
+        - name: messaging-db-data
+          emptyDir: {}
+      volumeMounts:
+        - name: messaging-db-data
+          mountPath: /pg/14
