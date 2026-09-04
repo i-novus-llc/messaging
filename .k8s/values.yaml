@@ -43,6 +43,8 @@ messaging-service:
   messaging-backend:
     startupProbe:
       initialDelaySeconds: 120
+      periodSeconds: 10
+      failureThreshold: 30
     replicaCount: 1
     enabled: true
     imageName: n2o-components/messaging/backend
