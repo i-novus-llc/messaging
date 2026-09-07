@@ -39,6 +39,8 @@ messaging-service:
       N2O_CONFIG_WS_ENDPOINT: https://security-dev.i-novus.ru/service/ws
       SPRING_DATA_REDIS_HOST: redis
       JAVA_OPTS: -Xmx200m
+    ingress:
+      path: /
 
   messaging-backend:
     startupProbe:
@@ -69,6 +71,8 @@ messaging-service:
       JAVA_OPTS: -Xmx200m
       SERVER_PORT: 8080
       SPRING_DATA_REDIS_HOST: redis
+    ingress:
+      path: /api
 
 
 infrastructure:
