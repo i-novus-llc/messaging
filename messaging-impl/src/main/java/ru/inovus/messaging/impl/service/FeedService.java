@@ -133,7 +133,7 @@ public class FeedService {
     public Feed getMessageAndRead(UUID messageId, String username) {
         Feed result = getMessage(messageId, username);
         if (result != null)
-            markRead(username, messageId);
+            doMarkRead(username, messageId);
         return result;
     }
 
@@ -180,6 +180,10 @@ public class FeedService {
      */
     @Transactional
     public void markRead(String username, UUID messageId) {
+        doMarkRead(username, messageId);
+    }
+
+    private void doMarkRead(String username, UUID messageId) {
         LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
         dsl.update(MESSAGE_RECIPIENT)
                 .set(MESSAGE_RECIPIENT.STATUS_TIME, now)

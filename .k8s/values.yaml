@@ -23,7 +23,7 @@ messaging-service:
     actuatorPath: "actuator"
     resources:
       limits:
-        memory: 512Mi
+        memory: 700Mi
         cpu: 700m
       requests:
         memory: 300Mi
@@ -54,13 +54,12 @@ messaging-service:
     overrideDbName: "messaging"
     resources:
       limits:
-        memory: 512Mi
+        memory: 800Mi
         cpu: 700m
       requests:
         memory: 300Mi
         cpu: 10m
     env:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://messaging-db/postgres
       SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_USER_NAME_ATTRIBUTE: preferred_username
       SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
       NOVUS_MESSAGING_RECIPIENT_PROVIDER_URL: https://security-dev.i-novus.ru/service/api
@@ -69,7 +68,6 @@ messaging-service:
       SPRING_MAIL_USERNAME: someuser
       SPRING_MAIL_HOST: maildev.i-novus.ru
       JAVA_OPTS: -Xmx200m
-      SERVER_PORT: 8080
       SPRING_DATA_REDIS_HOST: redis
     ingress:
       path: /api
