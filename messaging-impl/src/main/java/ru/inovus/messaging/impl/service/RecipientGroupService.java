@@ -34,6 +34,9 @@ import static ru.inovus.messaging.impl.jooq.Tables.RECIPIENT_GROUP_TEMPLATE;
 @Service
 public class RecipientGroupService {
 
+    private static final String USERS = "users";
+    private static final String TEMPLATES = "templates";
+
     @Autowired
     private DSLContext dsl;
 
@@ -46,8 +49,8 @@ public class RecipientGroupService {
         result.setCode(record.getCode());
         result.setDescription(record.getDescription());
         result.setTenantCode(record.getTenantCode());
-        result.setRecipients((List<Recipient>) rec.get("users"));
-        result.setTemplates((List<MessageTemplate>) rec.get("templates"));
+        result.setRecipients((List<Recipient>) rec.get(USERS));
+        result.setTemplates((List<MessageTemplate>) rec.get(TEMPLATES));
         return result;
     };
 
@@ -79,12 +82,12 @@ public class RecipientGroupService {
                                 DSL.select(RECIPIENT_GROUP_USER.RECIPIENT_NAME, RECIPIENT_GROUP_USER.RECIPIENT_USERNAME)
                                         .from(RECIPIENT_GROUP_USER)
                                         .where(RECIPIENT_GROUP_USER.RECIPIENT_GROUP_ID.eq(RECIPIENT_GROUP.ID))
-                        ).convertFrom(r -> r.map(RECIPIENT_MAPPER)).as("users"),
+                        ).convertFrom(r -> r.map(RECIPIENT_MAPPER)).as(USERS),
                         DSL.multiset(
                                 DSL.select(RECIPIENT_GROUP_TEMPLATE.MESSAGE_TEMPLATE_ID, RECIPIENT_GROUP_TEMPLATE.MESSAGE_TEMPLATE_CODE)
                                         .from(RECIPIENT_GROUP_TEMPLATE)
                                         .where(RECIPIENT_GROUP_TEMPLATE.RECIPIENT_GROUP_ID.eq(RECIPIENT_GROUP.ID))
-                        ).convertFrom(r -> r.map(TEMPLATE_MAPPER)).as("templates")
+                        ).convertFrom(r -> r.map(TEMPLATE_MAPPER)).as(TEMPLATES)
                 )
                 .from(RECIPIENT_GROUP);
 
@@ -157,12 +160,12 @@ public class RecipientGroupService {
                                 DSL.select(RECIPIENT_GROUP_USER.RECIPIENT_NAME, RECIPIENT_GROUP_USER.RECIPIENT_USERNAME)
                                         .from(RECIPIENT_GROUP_USER)
                                         .where(RECIPIENT_GROUP_USER.RECIPIENT_GROUP_ID.eq(RECIPIENT_GROUP.ID))
-                        ).convertFrom(r -> r.map(RECIPIENT_MAPPER)).as("users"),
+                        ).convertFrom(r -> r.map(RECIPIENT_MAPPER)).as(USERS),
                         DSL.multiset(
                                 DSL.select(RECIPIENT_GROUP_TEMPLATE.MESSAGE_TEMPLATE_ID, RECIPIENT_GROUP_TEMPLATE.MESSAGE_TEMPLATE_CODE)
                                         .from(RECIPIENT_GROUP_TEMPLATE)
                                         .where(RECIPIENT_GROUP_TEMPLATE.RECIPIENT_GROUP_ID.eq(RECIPIENT_GROUP.ID))
-                        ).convertFrom(r -> r.map(TEMPLATE_MAPPER)).as("templates")
+                        ).convertFrom(r -> r.map(TEMPLATE_MAPPER)).as(TEMPLATES)
                 )
                 .from(RECIPIENT_GROUP);
 

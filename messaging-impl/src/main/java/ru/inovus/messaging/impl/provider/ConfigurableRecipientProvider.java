@@ -31,6 +31,8 @@ import static java.util.Objects.nonNull;
 @Slf4j
 public class ConfigurableRecipientProvider implements RecipientProvider {
 
+    private static final String USERNAME = "username";
+
     @Setter
     private RestTemplate restTemplate;
 
@@ -87,21 +89,17 @@ public class ConfigurableRecipientProvider implements RecipientProvider {
     }
 
     private List<ProviderRecipient> mapUsers(Map<String, Object> response) {
-        Object content = null;
-        if (userResponseContentLocation.length > 1)
-            for (int i = 0; i < userResponseContentLocation.length; i++) {
-                if (i == userResponseContentLocation.length - 1)
-                    content = ((Map<String, Object>) content).get(userResponseContentLocation[userResponseContentLocation.length - 1]);
-                else
-                    content = response.get(userResponseContentLocation[i]);
-            }
-        else
-            content = response.get(userResponseContentLocation[0]);
+        Object content = response.get(userResponseContentLocation[0]);
+        for (int i = 1; i < userResponseContentLocation.length && content != null; i++)
+            content = ((Map<String, Object>) content).get(userResponseContentLocation[i]);
+
         List<ProviderRecipient> result = new ArrayList<>();
+        if (content == null)
+            return result;
         for (Map<String, Object> responseUser : (List<Map<String, Object>>) content) {
             ProviderRecipient user = new ProviderRecipient();
-            if (userMapping.containsKey("username"))
-                user.setUsername((String) responseUser.get(userMapping.get("username")));
+            if (userMapping.containsKey(USERNAME))
+                user.setUsername((String) responseUser.get(userMapping.get(USERNAME)));
             if (userMapping.containsKey("fio")) user.setFio((String) responseUser.get(userMapping.get("fio")));
             if (userMapping.containsKey("email")) user.setEmail((String) responseUser.get(userMapping.get("email")));
             if (userMapping.containsKey("surname"))
@@ -116,8 +114,8 @@ public class ConfigurableRecipientProvider implements RecipientProvider {
 
     private String buildQueryParam(ProviderRecipientCriteria criteria) {
         Map<String, Object> params = new HashMap<>();
-        if (userCriteriaMapping.containsKey("username"))
-            params.put(userCriteriaMapping.get("username"), criteria.getUsername());
+        if (userCriteriaMapping.containsKey(USERNAME))
+            params.put(userCriteriaMapping.get(USERNAME), criteria.getUsername());
         if (userCriteriaMapping.containsKey("name")) params.put(userCriteriaMapping.get("name"), criteria.getName());
         if (userCriteriaMapping.containsKey("fio")) params.put(userCriteriaMapping.get("fio"), criteria.getFio());
         if (userCriteriaMapping.containsKey("page-size"))
