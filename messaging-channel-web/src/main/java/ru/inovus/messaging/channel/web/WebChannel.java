@@ -14,6 +14,7 @@ import ru.inovus.messaging.channel.api.queue.MqProvider;
 import ru.inovus.messaging.channel.api.queue.TopicMqConsumer;
 import ru.inovus.messaging.channel.web.controller.MessageController;
 
+import java.security.Principal;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -49,8 +50,9 @@ public class WebChannel extends AbstractChannel {
     public void handleSessionSubscribe(SessionSubscribeEvent event) {
         SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
         String dest = headers.getDestination();
-        if (dest != null && dest.endsWith("/message") && headers.getUser() != null) {
-            MqConsumer consumer = new TopicMqConsumer(headers.getSessionId(), getTenantCode(dest), headers.getUser().getName(),
+        Principal user = headers.getUser();
+        if (dest != null && dest.endsWith("/message") && user != null) {
+            MqConsumer consumer = new TopicMqConsumer(headers.getSessionId(), getTenantCode(dest), user.getName(),
                     webTopicName, message -> sendTo((Message) message, headers));
             mqProvider.subscribe(consumer);
         }
