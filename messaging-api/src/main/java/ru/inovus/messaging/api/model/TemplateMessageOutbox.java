@@ -47,6 +47,7 @@ public class TemplateMessageOutbox implements Serializable {
     private String groupCode;
 
     @ApiModelProperty("Заменители плейсхолдеров в тексте шаблона")
+    @SuppressWarnings("java:S1948")
     private Map<String, Object> placeholders;
 
     @JsonIgnore
