@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
  */
 public class LocalDateTimeSerializer extends JsonSerializer<LocalDateTime> {
 
-    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY-MM-dd\'T\'HH:mm:ss");
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd\'T\'HH:mm:ss");
 
     @Override
     public void serialize(LocalDateTime localDateTime, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
