@@ -21,7 +21,7 @@ public class ObjectSerializer implements Serializer<Object>, Deserializer<Object
 
     @Override
     public void configure(Map<String, ?> configs, boolean isKey) {
-
+        // no configuration needed
     }
 
     @Override
@@ -39,6 +39,6 @@ public class ObjectSerializer implements Serializer<Object>, Deserializer<Object
 
     @Override
     public void close() {
-
+        // nothing to release
     }
 }
