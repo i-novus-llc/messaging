@@ -89,27 +89,34 @@ public class ConfigurableRecipientProvider implements RecipientProvider {
     }
 
     private List<ProviderRecipient> mapUsers(Map<String, Object> response) {
-        Object content = response.get(userResponseContentLocation[0]);
-        for (int i = 1; i < userResponseContentLocation.length && content != null; i++)
-            content = ((Map<String, Object>) content).get(userResponseContentLocation[i]);
-
+        Object content = resolveContent(response);
         List<ProviderRecipient> result = new ArrayList<>();
         if (content == null)
             return result;
-        for (Map<String, Object> responseUser : (List<Map<String, Object>>) content) {
-            ProviderRecipient user = new ProviderRecipient();
-            if (userMapping.containsKey(USERNAME))
-                user.setUsername((String) responseUser.get(userMapping.get(USERNAME)));
-            if (userMapping.containsKey("fio")) user.setFio((String) responseUser.get(userMapping.get("fio")));
-            if (userMapping.containsKey("email")) user.setEmail((String) responseUser.get(userMapping.get("email")));
-            if (userMapping.containsKey("surname"))
-                user.setSurname((String) responseUser.get(userMapping.get("surname")));
-            if (userMapping.containsKey("name")) user.setName((String) responseUser.get(userMapping.get("name")));
-            if (userMapping.containsKey("patronymic"))
-                user.setPatronymic((String) responseUser.get(userMapping.get("patronymic")));
-            result.add(user);
-        }
+        for (Map<String, Object> responseUser : (List<Map<String, Object>>) content)
+            result.add(mapUser(responseUser));
         return result;
+    }
+
+    private Object resolveContent(Map<String, Object> response) {
+        Object content = response.get(userResponseContentLocation[0]);
+        for (int i = 1; i < userResponseContentLocation.length && content != null; i++)
+            content = ((Map<String, Object>) content).get(userResponseContentLocation[i]);
+        return content;
+    }
+
+    private ProviderRecipient mapUser(Map<String, Object> responseUser) {
+        ProviderRecipient user = new ProviderRecipient();
+        if (userMapping.containsKey(USERNAME))
+            user.setUsername((String) responseUser.get(userMapping.get(USERNAME)));
+        if (userMapping.containsKey("fio")) user.setFio((String) responseUser.get(userMapping.get("fio")));
+        if (userMapping.containsKey("email")) user.setEmail((String) responseUser.get(userMapping.get("email")));
+        if (userMapping.containsKey("surname"))
+            user.setSurname((String) responseUser.get(userMapping.get("surname")));
+        if (userMapping.containsKey("name")) user.setName((String) responseUser.get(userMapping.get("name")));
+        if (userMapping.containsKey("patronymic"))
+            user.setPatronymic((String) responseUser.get(userMapping.get("patronymic")));
+        return user;
     }
 
     private String buildQueryParam(ProviderRecipientCriteria criteria) {
@@ -128,27 +135,11 @@ public class ConfigurableRecipientProvider implements RecipientProvider {
     private String buildQueryParam(Map<String, Object> map) {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, Object> entry : map.entrySet()) {
-            if (isNull(entry.getValue())) continue;
-            if (sb.length() > 0)
+            if (isNull(entry.getValue()))
+                continue;
+            if (!sb.isEmpty())
                 sb.append("&");
-            if (!(entry.getValue() instanceof Iterable))
-                sb.append(String.format("%s=%s",
-                        entry.getKey(),
-                        entry.getValue().toString()
-                ));
-            else if (entry.getValue() instanceof Iterable) {
-                Iterator iterator = ((Iterable) entry.getValue()).iterator();
-                if (!iterator.hasNext()) sb.deleteCharAt(sb.length() - 1);
-                while (iterator.hasNext()) {
-                    Object next = iterator.next();
-                    if (isNull(next)) continue;
-                    sb.append(String.format("%s=%s",
-                            entry.getKey(),
-                            next.toString()));
-                    if (iterator.hasNext())
-                        sb.append("&");
-                }
-            }
+            sb.append(String.format("%s=%s", entry.getKey(), entry.getValue()));
         }
         return sb.toString();
     }
