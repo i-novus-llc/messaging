@@ -41,13 +41,13 @@ public class KafkaConfig {
 
     @Bean
     @ConditionalOnMissingBean
-    public ProducerFactory<?, ?> producerFactory() {
+    public ProducerFactory<String, Object> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public KafkaTemplate<?, ?> kafkaTemplate() {
+    public KafkaTemplate<String, Object> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 }

@@ -22,11 +22,11 @@ public class EmbeddedKafkaTestConfiguration {
 
     @Bean
     @ConditionalOnBean(EmbeddedKafkaBroker.class)
-    public KafkaTemplate<?, ?> kafkaTemplate(EmbeddedKafkaBroker embeddedKafkaBroker) {
+    public KafkaTemplate<String, Object> kafkaTemplate(EmbeddedKafkaBroker embeddedKafkaBroker) {
         Map<String, Object> configs = new HashMap<>(KafkaTestUtils.producerProps(embeddedKafkaBroker));
-        ProducerFactory<?, ?> producer = new DefaultKafkaProducerFactory<>(
+        ProducerFactory<String, Object> producer = new DefaultKafkaProducerFactory<>(
                 configs, new StringSerializer(), new ObjectSerializer());
-        return new KafkaTemplate(producer);
+        return new KafkaTemplate<>(producer);
     }
 
     @Bean
