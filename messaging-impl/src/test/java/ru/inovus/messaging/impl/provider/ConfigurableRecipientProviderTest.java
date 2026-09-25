@@ -3,10 +3,12 @@ package ru.inovus.messaging.impl.provider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -21,9 +23,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 
 @ExtendWith(SpringExtension.class)
 public class ConfigurableRecipientProviderTest {
@@ -38,7 +43,53 @@ public class ConfigurableRecipientProviderTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    //        todo нужен тест построения query-param
+    @Test
+    public void testBuildQueryParams() {
+        restTemplate = Mockito.mock(RestTemplate.class);
+        Mockito.doReturn(new ResponseEntity<>(HttpStatus.OK))
+                .when(restTemplate).exchange(any(String.class), any(HttpMethod.class), any(HttpEntity.class), any(Class.class));
+        userRoleProvider.setRestTemplate(restTemplate);
+
+        ProviderRecipientCriteria criteria = new ProviderRecipientCriteria();
+        criteria.setUsername("user");
+        criteria.setFio("Ivanov");
+        criteria.setPageSize(20);
+        criteria.setPageNumber(3);
+        userRoleProvider.getRecipients(criteria);
+
+        ArgumentCaptor<String> urlCaptor = ArgumentCaptor.forClass(String.class);
+        Mockito.verify(restTemplate).exchange(urlCaptor.capture(), eq(HttpMethod.GET), any(HttpEntity.class), eq(Map.class));
+        String url = urlCaptor.getValue();
+        assertTrue(url.startsWith("http://user:9999?"));
+        Set<String> params = Set.of(url.substring(url.indexOf('?') + 1).split("&"));
+        assertEquals(Set.of("Cthulhu=user", "666=Ivanov", "size=20", "page=3"), params);
+    }
+
+    @Test
+    public void testGetUsersEmptyResponse() {
+        restTemplate = Mockito.mock(RestTemplate.class);
+        Mockito.doReturn(new ResponseEntity<>(HttpStatus.OK))
+                .when(restTemplate).exchange(any(String.class), any(HttpMethod.class), any(HttpEntity.class), any(Class.class));
+        userRoleProvider.setRestTemplate(restTemplate);
+
+        Page<ProviderRecipient> page = userRoleProvider.getRecipients(new ProviderRecipientCriteria());
+        assertTrue(page.getContent().isEmpty());
+        assertEquals(0, page.getTotalElements());
+    }
+
+    @Test
+    public void testGetUsersWithoutContent() {
+        restTemplate = Mockito.mock(RestTemplate.class);
+        Map<String, Object> mockResponse = new HashMap<>();
+        mockResponse.put("totalMent", 0);
+        Mockito.doReturn(new ResponseEntity<>(mockResponse, HttpStatus.OK))
+                .when(restTemplate).exchange(any(String.class), any(HttpMethod.class), any(HttpEntity.class), any(Class.class));
+        userRoleProvider.setRestTemplate(restTemplate);
+
+        Page<ProviderRecipient> page = userRoleProvider.getRecipients(new ProviderRecipientCriteria());
+        assertTrue(page.getContent().isEmpty());
+        assertEquals(0, page.getTotalElements());
+    }
 
     @Test
     public void testGetUsers() {
