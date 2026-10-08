@@ -98,16 +98,16 @@ public class Message implements Serializable {
     @ApiModelProperty("Вложения")
     private List<AttachmentResponse> attachments;
 
-    @Override
-    public Message clone() {
-        Message newMessage = new Message();
-        newMessage.setId(this.getId());
-        newMessage.setCaption(this.getCaption());
-        newMessage.setText(this.getText());
-        newMessage.setSeverity(this.getSeverity());
-        newMessage.setAlertType(this.getAlertType());
-        newMessage.setRecipients(List.copyOf(this.recipients));
-        newMessage.setTenantCode(this.getTenantCode());
-        return newMessage;
+    public Message() {
+    }
+
+    public Message(Message message) {
+        this.id = message.getId();
+        this.caption = message.getCaption();
+        this.text = message.getText();
+        this.severity = message.getSeverity();
+        this.alertType = message.getAlertType();
+        this.recipients = message.getRecipients() != null ? List.copyOf(message.getRecipients()) : null;
+        this.tenantCode = message.getTenantCode();
     }
 }

@@ -157,7 +157,7 @@ public class MessageRestImpl implements MessageRest {
 
         Channel channel = channelService.getChannel(message.getChannel().getId());
 
-        Message newMessage = message.clone();
+        Message newMessage = new Message(message);
         Optional.ofNullable(attachmentService).ifPresent(as -> newMessage.setAttachments(as.findAll(UUID.fromString(message.getId()))));
 
         mqProvider.publish(newMessage, channel.getQueueName());
