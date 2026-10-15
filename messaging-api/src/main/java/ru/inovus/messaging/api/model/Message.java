@@ -101,6 +101,12 @@ public class Message implements Serializable {
     public Message() {
     }
 
+    /**
+     * Создание копии уведомления для отправки в канал.
+     * Переносятся только поля, необходимые получателю.
+     *
+     * @param message Исходное уведомление
+     */
     public Message(Message message) {
         this.id = message.getId();
         this.caption = message.getCaption();
