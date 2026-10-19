@@ -10,7 +10,7 @@
     <parent>
         <groupId>net.n2oapp.platform</groupId>
         <artifactId>n2o-boot-platform-parent</artifactId>
-        <version>7.1.2</version>
+        <version>7.2.0</version>
         <relativePath/>
     </parent>
 
@@ -21,8 +21,6 @@
         <jacoco.skip>true</jacoco.skip>
         <lombok.version>1.18.38</lombok.version>
         <amazonaws.version>1.12.772</amazonaws.version>
-        <feign.version>13.6</feign.version>
-        <cxf.version>4.1.3</cxf.version>
     </properties>
 
     <name>Messaging</name>
@@ -123,6 +121,36 @@
                 <groupId>ru.i-novus.messaging</groupId>
                 <artifactId>messaging-web</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.n2oapp.framework</groupId>
+                <artifactId>n2o-api</artifactId>
+                <version>${n2o.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.n2oapp.framework</groupId>
+                <artifactId>n2o-config</artifactId>
+                <version>${n2o.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.n2oapp.framework</groupId>
+                <artifactId>n2o-spring-boot-starter</artifactId>
+                <version>${n2o.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.n2oapp.framework</groupId>
+                <artifactId>n2o-web</artifactId>
+                <version>${n2o.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.n2oapp.framework</groupId>
+                <artifactId>n2o-access</artifactId>
+                <version>${n2o.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.n2oapp.framework</groupId>
+                <artifactId>n2o-autoconfigure</artifactId>
+                <version>${n2o.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
